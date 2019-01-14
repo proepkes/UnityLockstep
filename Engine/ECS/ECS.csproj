@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Movement.cs" />
+    <Compile Include="Components\TickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
@@ -74,6 +75,8 @@
     <Compile Include="Generated\Contexts.cs" />
     <Compile Include="Generated\Game\GameEntity.cs" />
     <Compile Include="Generated\Input\InputEntity.cs" />
+    <Compile Include="Systems\GameSystems.cs" />
+    <Compile Include="Systems\TickSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\HealthComponent.cs" />

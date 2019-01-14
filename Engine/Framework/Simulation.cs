@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;  
 using BEPUphysics;
+using Entitas;
 using FixMath.NET;
 using Lockstep.Framework.Networking.Messages;
 using Lockstep.Framework.Pathfinding;
@@ -7,10 +8,14 @@ using Lockstep.Framework.Pathfinding;
 namespace Lockstep.Framework
 {
     public class Simulation
-    {                          
+    {                 
+        private Systems _systems;
+
+
         public const int FRAMERATE = 20;
 
-        public Space Space { get; }
+        public Space Space { get; private set; }
+
 
         public int FrameDelay { get; set; }
 
@@ -21,7 +26,7 @@ namespace Lockstep.Framework
         private uint _lastFramePointer;
 
         private Fix64Random _random;
-        private readonly ICommandHandler _commandHandler;
+        private ICommandHandler _commandHandler;
 
         private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>();   
 
@@ -37,19 +42,20 @@ namespace Lockstep.Framework
                     return _lastFramePointer - FrameCounter - FrameDelay > 0;
                 }
             }
-        }                                          
+        }             
 
-        public Simulation(ICommandHandler commandHandler)
+        public void Init(Contexts contexts, ICommandHandler commandHandler, int seed)
         {
-            _random = new Fix64Random(0);
-            _commandHandler = commandHandler;
-            GridManager.Initialize();
-            Space = new Space();                                   
-        }
+            Space = new Space();
 
-        public void SetSeed(int seed)
-        {
             _random = new Fix64Random(seed);
+
+            _systems = new GameSystems(contexts);
+            _systems.Initialize();
+
+            GridManager.Initialize();
+
+            _commandHandler = commandHandler;
         }
 
         public void AddFrame(Frame frame)
