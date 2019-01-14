@@ -98,10 +98,7 @@ namespace Lockstep.Framework
 
 
         public void Simulate()
-        {
-
-            var e = Contexts.sharedInstance.game.CreateEntity();
-            e.AddHealth(100);
+        {  
             if (!CanSimulate)
             {
                 return;
