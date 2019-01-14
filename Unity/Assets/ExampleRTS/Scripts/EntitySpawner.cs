@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class EntitySpawner : LockstepBehaviour
+public class EntitySpawner : MonoBehaviour
 {
     public int Count;
     public Transform Position;

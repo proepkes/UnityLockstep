@@ -1,12 +1,10 @@
 ﻿using System;   
 using LiteNetLib;
-using LiteNetLib.Utils;
-using Lockstep;
+using LiteNetLib.Utils;  
 using Lockstep.Framework.Networking;
 using Lockstep.Framework.Networking.Messages;        
 using UnityEngine;
-
-[Flags]
+           
 public enum CommandTag : ushort
 {
     None,
