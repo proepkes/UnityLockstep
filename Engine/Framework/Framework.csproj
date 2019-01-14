@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Lockstep.Framework</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="BEPUphysics">
+      <HintPath>..\Dependencies\BEPUphysics.dll</HintPath>
+    </Reference>
+    <Reference Include="BEPUutilities">
+      <HintPath>..\Dependencies\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteNetLib">
+      <HintPath>..\Dependencies\LiteNetLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
