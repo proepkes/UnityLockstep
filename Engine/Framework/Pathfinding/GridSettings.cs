@@ -16,7 +16,7 @@ namespace Lockstep.Framework.Pathfinding
 
         public GridSettings()
         {
-            Init(256, 256, (long) Fix64.FromRaw(-128), (long) Fix64.FromRaw(-128), true);
+            Init(512, 512, (long) Fix64.FromRaw(0), (long) Fix64.FromRaw(0), true);
         }
 
         public GridSettings(int width, int height, long xOffset, long yOffset, bool useDiagonalConnections)

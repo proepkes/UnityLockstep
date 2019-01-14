@@ -2,6 +2,8 @@
 
 A WIP implementation of the Serverbeat-Protocol described here: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/
 
+[![Video](http://img.youtube.com/vi/bNwlnO4BzFw/0.jpg)](https://www.youtube.com/watch?v=bNwlnO4BzFw "UnityLockstep")
+
 ## Getting started
 
 1. Open Engine/Lockstep.sln
