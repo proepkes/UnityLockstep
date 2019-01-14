@@ -51,17 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\HealthComponent.cs" />
-    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
-    <Compile Include="Generated\Input\InputComponentsLookup.cs" />
-    <Compile Include="Generated\Game\GameAttribute.cs" />
-    <Compile Include="Generated\Input\InputAttribute.cs" />
-    <Compile Include="Generated\Game\GameContext.cs" />
-    <Compile Include="Generated\Input\InputContext.cs" />
-    <Compile Include="Generated\Game\GameMatcher.cs" />
-    <Compile Include="Generated\Input\InputMatcher.cs" />
-    <Compile Include="Generated\Contexts.cs" />
-    <Compile Include="Generated\Game\GameEntity.cs" />
-    <Compile Include="Generated\Input\InputEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
