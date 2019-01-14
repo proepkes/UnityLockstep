@@ -216,13 +216,13 @@ FakesAssemblies/
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
 
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
+Unity/[Ll]ibrary/
+Unity/[Tt]emp/
+Unity/[Oo]bj/
+Unity/[Bb]uild/
+Unity/[Bb]uilds/
 
-/Assets/AssetStoreTools*
+Unity/Assets/AssetStoreTools*
 
 # Visual Studio 2015 cache directory
 /.vs/
