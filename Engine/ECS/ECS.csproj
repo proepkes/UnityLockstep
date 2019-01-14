@@ -59,8 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\DirectionComponent.cs" />
-    <Compile Include="Components\PositionComponent.cs" />
+    <Compile Include="Components\Movement.cs" />
+    <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
+    <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
