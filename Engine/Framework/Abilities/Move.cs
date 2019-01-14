@@ -398,13 +398,7 @@ namespace Lockstep.Framework.Abilities
 				adjust *= timescaledAcceleration / (mag);
 			}
 			return adjust;
-		}
-                                     
-
-		protected void OnExecute (Command com)
-		{  
-		}
-                
+		}        
 
 		public void Arrive ()
 		{

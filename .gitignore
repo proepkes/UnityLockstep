@@ -255,3 +255,5 @@ Unity/Unity\.sln
 Unity/Assembly-CSharp\.csproj
 
 Unity/Assembly-CSharp-Editor\.csproj
+/Entitas
+/Engine/ECS/Jenny

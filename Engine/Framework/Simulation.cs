@@ -98,7 +98,7 @@ namespace Lockstep.Framework
 
 
         public void Simulate()
-        {
+        {                                                           
             if (!CanSimulate)
             {
                 return;

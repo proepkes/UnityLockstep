@@ -6,11 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ECS\ECS.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="BEPUphysics">
       <HintPath>..\Dependencies\BEPUphysics.dll</HintPath>
     </Reference>
     <Reference Include="BEPUutilities">
       <HintPath>..\Dependencies\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Entitas">
+      <HintPath>..\Dependencies\Entitas.dll</HintPath>
     </Reference>
     <Reference Include="FixMath.NET">
       <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
