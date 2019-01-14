@@ -9,12 +9,12 @@ A WIP implementation of the Serverbeat-Protocol described here: https://www.redd
 3. Open SampleScene in Unity
 4. Hit play and click on connect button
    
-### Adding Multiplayer
+### Getting Multiplayer
 
 1. Build and run the Unityproject
 2. Set the servers' roomsize to 2 (currently done by code in Program.cs)
 3. Hit play in Unity so you should now have two instances of the game running
-4. Connect in both instances to the server
+4. Connect both instances to the server
 5. Right click on the terrain moves all spawned cubes on both players
 
 ## Dependencies
