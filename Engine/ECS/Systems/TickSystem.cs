@@ -19,7 +19,7 @@ public sealed class TickSystem : IInitializeSystem, IExecuteSystem
 
     public void Execute()
     {
-        if (_contexts.meta.isGameStatePaused)
+        if (_contexts.gameState.isGameStatePaused)
         {
             return;
         }

@@ -1,13 +1,13 @@
 ﻿using Entitas;
 using Entitas.CodeGeneration.Attributes;    
 
-[Meta]
+[GameState]
 [Unique]
 public class GameStatePausedComponent : IComponent
 {
 }
 
-[Meta]
+[GameState]
 [Unique]
 public class GameStateInGameComponent : IComponent
 {

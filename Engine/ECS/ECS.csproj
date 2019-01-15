@@ -59,30 +59,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generated\Meta\Components\MetaGameStatePausedComponent.cs" />
-    <Compile Include="Generated\Meta\Components\MetaGameStateInGameComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
     <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMovingComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
-    <Compile Include="Generated\Meta\MetaComponentsLookup.cs" />
+    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
+    <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
-    <Compile Include="Generated\Meta\MetaAttribute.cs" />
+    <Compile Include="Generated\GameState\GameStateAttribute.cs" />
+    <Compile Include="Generated\Config\ConfigAttribute.cs" />
     <Compile Include="Generated\Game\GameContext.cs" />
     <Compile Include="Generated\Input\InputContext.cs" />
-    <Compile Include="Generated\Meta\MetaContext.cs" />
+    <Compile Include="Generated\GameState\GameStateContext.cs" />
+    <Compile Include="Generated\Config\ConfigContext.cs" />
     <Compile Include="Generated\Game\GameMatcher.cs" />
     <Compile Include="Generated\Input\InputMatcher.cs" />
-    <Compile Include="Generated\Meta\MetaMatcher.cs" />
+    <Compile Include="Generated\GameState\GameStateMatcher.cs" />
+    <Compile Include="Generated\Config\ConfigMatcher.cs" />
     <Compile Include="Generated\Contexts.cs" />
     <Compile Include="Generated\Game\GameEntity.cs" />
     <Compile Include="Generated\Input\InputEntity.cs" />
-    <Compile Include="Generated\Meta\MetaEntity.cs" />
+    <Compile Include="Generated\GameState\GameStateEntity.cs" />
+    <Compile Include="Generated\Config\ConfigEntity.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameState.cs" />
