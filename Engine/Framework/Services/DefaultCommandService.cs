@@ -30,9 +30,9 @@ namespace Lockstep.Framework.Services
                     var cmd = new NavigateCommand();
                     cmd.Deserialize(_dataReader);
 
-                    foreach (var id in cmd.entityIds)
+                    foreach (var id in cmd.EntityIds)
                     {       
-                        context.GetEntityWithId(id).isMoving = true;
+                        context.GetEntityWithId(id).ReplaceDestination(cmd.Destination);;
                     }                                                          
                     break;
             }

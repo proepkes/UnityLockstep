@@ -5,22 +5,22 @@ namespace Lockstep.Framework.Commands
 {
     public class NavigateCommand
     {
-        public int[] entityIds;
+        public int[] EntityIds;
 
-        public Vector2 destination;
+        public Vector2 Destination;
 
         public void Serialize(NetDataWriter writer)
         {
-            writer.PutArray(entityIds);
-            writer.Put((long) destination.X);
-            writer.Put((long) destination.Y);
+            writer.PutArray(EntityIds);
+            writer.Put((long)Destination.X);
+            writer.Put((long)Destination.Y);
         }
 
         public void Deserialize(NetDataReader reader)
         {
-            entityIds = reader.GetIntArray();
-            destination.X = reader.GetLong();
-            destination.Y = reader.GetLong();
+            EntityIds = reader.GetIntArray();
+            Destination.X = reader.GetLong();
+            Destination.Y = reader.GetLong();
         }
     }
 }

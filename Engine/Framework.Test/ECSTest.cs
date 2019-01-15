@@ -9,21 +9,16 @@ using Xunit.Abstractions;
 namespace Framework.Test
 {
     public class ECSTest
-    {
-        private readonly ITestOutputHelper _output;
-
+    {                                               
         public ECSTest(ITestOutputHelper output)
-        {
-            _output = output;
-
+        {                                      
             Console.SetOut(new Converter(output));
-        }
-
+        }      
 
         [Fact]
         public void TestGameEntityId()
         {
-            var contexts = Contexts.sharedInstance;
+            var contexts = Contexts.sharedInstance;     
 
             new LockstepSystems(contexts, new ExternalServices(null, null)).Initialize();
 

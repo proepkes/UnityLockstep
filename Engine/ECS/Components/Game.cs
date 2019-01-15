@@ -2,8 +2,7 @@
 using Entitas;
 using Entitas.CodeGeneration.Attributes;
 using FixMath.NET;
-
-
+ 
 [Game] 
 public class IdComponent : IComponent
 {
@@ -23,10 +22,10 @@ public class ControllableComponent : IComponent
 }
       
 [Game]
-public class MovingComponent : IComponent
+public class DestinationComponent : IComponent
 {
-}
-
+    public Vector2 value;
+} 
 
 [Game]
 public class PositionComponent : IComponent

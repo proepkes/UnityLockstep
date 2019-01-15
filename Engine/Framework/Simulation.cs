@@ -48,7 +48,7 @@ namespace Lockstep.Framework
 
             _random = new Fix64Random(seed);
             var services = new ExternalServices(commandService, timeService);
-
+            
             _systems = new LockstepSystems(contexts, services);
             _systems.Initialize();
 
