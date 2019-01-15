@@ -2,14 +2,9 @@
 using LiteNetLib;
 using LiteNetLib.Utils;  
 using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.Messages;        
-using UnityEngine;
-           
-public enum CommandTag : ushort
-{
-    None,
-    Move
-}
+using Lockstep.Framework.Networking.Serialization;
+using Lockstep.Framework.Services;
+using UnityEngine;   
 
 public class LockstepNetwork : MonoBehaviour
 {

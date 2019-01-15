@@ -42,14 +42,14 @@ namespace Lockstep.Framework
             }
         }             
 
-        public void Init(Contexts contexts, ICommandService commandService, ITimeService timeService, int seed)
+        public void Init(ICommandService commandService, ITimeService timeService, int seed)
         {
             Space = new Space();
 
             _random = new Fix64Random(seed);
             var services = new ExternalServices(commandService, timeService);
             
-            _systems = new LockstepSystems(contexts, services);
+            _systems = new LockstepSystems(Contexts.sharedInstance, services);
             _systems.Initialize();
 
             GridManager.Initialize();               

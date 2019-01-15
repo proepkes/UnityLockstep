@@ -72,6 +72,7 @@
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
+    <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Service\ServiceComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
@@ -98,6 +99,11 @@
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
     <Compile Include="Generated\Service\ServiceEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
+    <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
+    <Compile Include="Generated\Events\Interfaces\IPositionListener.cs" />
+    <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
+    <Compile Include="Generated\Events\GameEventSystems.cs" />
+    <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\Frame.cs" />

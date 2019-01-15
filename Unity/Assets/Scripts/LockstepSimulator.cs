@@ -1,11 +1,11 @@
 ﻿using LiteNetLib.Utils;
-using Lockstep.Framework;
-using Lockstep.Framework.Abilities;
-using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.Messages;        
+using Lockstep.Framework;              
+using Lockstep.Framework.Networking;             
+using Lockstep.Framework.Networking.Serialization;
+using Lockstep.Framework.Services;
 using UnityEngine;                            
 
-public class LockstepSimulator : MonoBehaviour, ICommandHandler
+public class LockstepSimulator : MonoBehaviour
 {
     private readonly NetDataReader commandReader = new NetDataReader();
 
@@ -14,7 +14,7 @@ public class LockstepSimulator : MonoBehaviour, ICommandHandler
 
     private void Awake()
     {
-        simulation = new Simulation(this)
+        simulation = new Simulation
         {
             FrameDelay = 2,
         };
@@ -34,7 +34,7 @@ public class LockstepSimulator : MonoBehaviour, ICommandHandler
                 pkt.Deserialize(reader);
                 Time.fixedDeltaTime = 1f/pkt.TargetFPS;
 
-                simulation.SetSeed(pkt.Seed);
+                simulation.Init(new DefaultCommandService(), null, pkt.Seed);
 
                 simulationStarted = true;
                 break;
@@ -49,29 +49,29 @@ public class LockstepSimulator : MonoBehaviour, ICommandHandler
         }
     }        
 
-    public void Handle(Command command)
-    {
-        commandReader.SetSource(command.Data);
-        HandleCommand((CommandTag)commandReader.GetUShort(), commandReader);
-    }
+    //public void Handle(Command command)
+    //{
+    //    commandReader.SetSource(command.Data);
+    //    HandleCommand((CommandTag)commandReader.GetUShort(), commandReader);
+    //}
 
-    private void HandleCommand(CommandTag commandTag, NetDataReader reader)
-    {
-        switch (commandTag)
-        {
-            case CommandTag.Move:
-                var pkt = new MovePacket();
-                pkt.Deserialize(reader);
+    //private void HandleCommand(CommandTag commandTag, NetDataReader reader)
+    //{
+    //    switch (commandTag)
+    //    {
+    //        case CommandTag.Move:
+    //            var pkt = new MovePacket();
+    //            pkt.Deserialize(reader);
 
-                var d = new BEPUutilities.Vector2(pkt.PosX, pkt.PosY);                  
+    //            var d = new BEPUutilities.Vector2(pkt.PosX, pkt.PosY);                  
 
-                foreach (LockstepAgent entity in simulation.GetEntities())
-                {
-                    entity.GetAbility<Move>().StartMove(d);
-                }
-                break;
-        }
-    }
+    //            foreach (LockstepAgent entity in simulation.GetEntities())
+    //            {
+    //                entity.GetAbility<Move>().StartMove(d);
+    //            }
+    //            break;
+    //    }
+    //}
 
     public void RegisterEntity(ILockstepEntity entity)
     {

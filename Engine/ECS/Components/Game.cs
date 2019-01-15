@@ -27,7 +27,7 @@ public class DestinationComponent : IComponent
     public Vector2 value;
 } 
 
-[Game]
+[Game, Event(EventTarget.Self)]
 public class PositionComponent : IComponent
 {
     public Vector2 value;

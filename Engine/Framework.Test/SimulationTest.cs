@@ -21,14 +21,12 @@ namespace Framework.Test
 
         [Fact]
         public void TestCommandService()
-        {
-            var contexts = Contexts.sharedInstance;     
-
+        {       
             var commandService = new Mock<ICommandService>();
             var timeService = new Mock<ITimeService>();
 
             var sim = new Simulation();
-            sim.Init(contexts, commandService.Object, timeService.Object, 0);
+            sim.Init(commandService.Object, timeService.Object, 0);
                                  
             for (var i = 0; i < 10; i++)
             {
@@ -36,7 +34,7 @@ namespace Framework.Test
                 sim.AddFrame(new Frame { Commands = new[] { command } });
                 sim.Simulate();
 
-                commandService.Verify(service => service.Process(contexts.game, command), Times.Exactly(1));
+                commandService.Verify(service => service.Process(It.IsAny<GameContext>(), command), Times.Exactly(1));
             }
         }
 
@@ -50,7 +48,7 @@ namespace Framework.Test
             var destination = new Vector2(11, 22);
 
             var sim = new Simulation();
-            sim.Init(contexts, commandService, timeService.Object, 0);      
+            sim.Init(commandService, timeService.Object, 0);      
 
             var e = contexts.game.CreateEntity();
 
