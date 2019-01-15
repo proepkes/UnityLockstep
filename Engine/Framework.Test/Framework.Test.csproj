@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="BEPUutilities">
+      <HintPath>..\Dependencies\BEPUutilities.dll</HintPath>
+    </Reference>
     <Reference Include="DesperateDevs.Utils">
       <HintPath>..\Dependencies\DesperateDevs.Utils.dll</HintPath>
     </Reference>
@@ -33,6 +36,9 @@
     </Reference>
     <Reference Include="FixMath.NET">
       <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteNetLib">
+      <HintPath>..\Dependencies\LiteNetLib.dll</HintPath>
     </Reference>
   </ItemGroup>
 

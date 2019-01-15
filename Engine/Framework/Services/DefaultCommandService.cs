@@ -1,19 +1,41 @@
-﻿
-using ECS.Data;
+﻿using ECS.Data;
 using LiteNetLib.Utils;
+using Lockstep.Framework.Commands;
 
-class DefaultCommandService : ICommandService
+namespace Lockstep.Framework.Services
 {
-    private NetDataReader dataReader;
-
-    public DefaultCommandService()
+    public enum CommandTag : byte
     {
-        dataReader = new NetDataReader();
+        Navigate,
     }
 
-    public void Process(InputContext context, Command command)
+
+    public class DefaultCommandService : ICommandService
     {
-        dataReader.SetSource(command.Data);
-        
-    }        
-}  
+        private readonly NetDataReader _dataReader;
+
+        public DefaultCommandService()
+        {
+            _dataReader = new NetDataReader();
+        }
+
+        public void Process(GameContext context, Command command)
+        {
+            _dataReader.SetSource(command.Data);
+
+            var commandTag = (CommandTag)_dataReader.GetByte();
+            switch (commandTag)
+            {
+                case CommandTag.Navigate:
+                    var cmd = new NavigateCommand();
+                    cmd.Deserialize(_dataReader);
+
+                    foreach (var id in cmd.entityIds)
+                    {       
+                        context.GetEntityWithId(id).isMoving = true;
+                    }                                                          
+                    break;
+            }
+        }        
+    }
+}

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -64,12 +64,10 @@
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputSelectCommandComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputNavigationCommandComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputNavigateCommandComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMovingComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using ECS.Data;
 using LiteNetLib.Utils;
 
-namespace Lockstep.Framework.Networking.Messages
+namespace Lockstep.Framework.Networking.Serialization
 {
     /// <summary>
     /// Class to deserialize a the data from <see cref="FramePacker"/>

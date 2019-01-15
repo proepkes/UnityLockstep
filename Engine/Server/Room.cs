@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using ECS.Data;
 using LiteNetLib;
 using LiteNetLib.Utils;   
 using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.Messages;          
+using Lockstep.Framework.Networking.Serialization;
 
 namespace Server
 {

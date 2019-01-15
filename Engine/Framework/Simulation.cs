@@ -21,8 +21,7 @@ namespace Lockstep.Framework
 
         public uint FrameCounter { get; private set; }
 
-
-        private ulong _entityCounter;
+                                         
         private uint _lastFramePointer;
 
         private Fix64Random _random;                  

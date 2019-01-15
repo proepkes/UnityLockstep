@@ -21,14 +21,7 @@ public class TeamComponent : IComponent
 public class ControllableComponent : IComponent
 {
 }
-
-
-[Game]
-public class MovableComponent : IComponent
-{
-}
-
-
+      
 [Game]
 public class MovingComponent : IComponent
 {

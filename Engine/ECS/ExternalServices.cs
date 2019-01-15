@@ -21,5 +21,5 @@ public interface ITimeService
 
 public interface ICommandService
 {
-    void Process(InputContext context, Command command);
+    void Process(GameContext context, Command command);
 }

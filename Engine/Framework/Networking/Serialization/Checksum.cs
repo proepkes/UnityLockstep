@@ -1,6 +1,6 @@
 ﻿using LiteNetLib.Utils;
 
-namespace Lockstep.Framework.Networking.Messages
+namespace Lockstep.Framework.Networking.Serialization
 {
     public class Checksum
     {

@@ -3,7 +3,6 @@ using BEPUphysics.Entities;
 using BEPUutilities;
 using FixMath.NET;
 using Lockstep.Framework.FastCollections;
-using Lockstep.Framework.Networking.Messages;
 using Lockstep.Framework.Pathfinding;
 
 namespace Lockstep.Framework.Abilities

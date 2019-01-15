@@ -29,10 +29,10 @@ public class ProcessFrameSystem : ReactiveSystem<InputEntity>, IInitializeSystem
 
     protected override void Execute(List<InputEntity> entities)
     {           
-        var entity = entities.First();
+        var entity = entities.SingleEntity();
         foreach (var command in entity.frame.Commands)
         {                                              
-            _commandService.Process(_contexts.input, command);
+            _commandService.Process(_contexts.game, command);
         }
     }
 }     

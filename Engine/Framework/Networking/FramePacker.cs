@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ECS.Data;
 using LiteNetLib.Utils;
-using Lockstep.Framework.Networking.Messages;       
+using Lockstep.Framework.Networking.Serialization;
 
 namespace Lockstep.Framework.Networking
 {
@@ -34,19 +35,21 @@ namespace Lockstep.Framework.Networking
 
             }         
 
-            var frame = new Frame {FrameNumber = _frameCounter++, Commands = commands}; 
-            frame.Serialize(_buffer);
+            var frame = new Frame { Commands = commands}; 
+            frame.Serialize(_buffer, _frameCounter);
 
-            _frames.Add(frame.FrameNumber, new byte[_buffer.Length]);
-            Array.Copy(_buffer.Data, _frames[frame.FrameNumber], _buffer.Length);
+            _frames.Add(_frameCounter, new byte[_buffer.Length]);
+            Array.Copy(_buffer.Data, _frames[_frameCounter], _buffer.Length);
 
 
             _buffer.Reset();
             //add previous frames for redundancy
-            var countFrames = WriteFrames(_buffer, frame.FrameNumber, MAX_BUFFERSIZE - writer.Length - 8); //MTU - existingBytes - countframes(=4) - bytesLength(=4)
+            var countFrames = WriteFrames(_buffer, _frameCounter, MAX_BUFFERSIZE - writer.Length - 8); //MTU - existingBytes - countframes(=4) - bytesLength(=4)
                                                                 
             writer.Put(countFrames);
-            writer.PutBytesWithLength(_buffer.Data, 0, _buffer.Length);                                                     
+            writer.PutBytesWithLength(_buffer.Data, 0, _buffer.Length);
+
+            _frameCounter++;
         }
 
         public void AddCommand(Command command)
