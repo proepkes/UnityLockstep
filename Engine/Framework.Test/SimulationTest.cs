@@ -1,13 +1,12 @@
 using System;
-using System.IO;
-using System.Linq;
+using System.IO;     
 using System.Text;
 using ECS.Data;
-using Lockstep.Framework;
-using Moq;
-using Shouldly;
+using FixMath.NET;
+using Lockstep.Framework;                      
+using Moq;        
 using Xunit;
-using Xunit.Abstractions;
+using Xunit.Abstractions;            
 
 namespace Framework.Test
 {
@@ -44,23 +43,51 @@ namespace Framework.Test
         }
 
         [Fact]
-        public void TestSimulate()
+        public void TestCommandService()
         {
             var contexts = Contexts.sharedInstance;
 
-            var ch = new Mock<ICommandHandler>();
+            var commandService = new Mock<ICommandService>();
+            var timeService = new Mock<ITimeService>();                                                                
 
             var sim = new Simulation();
-            sim.Init(contexts, ch.Object, 0);
+            sim.Init(contexts, commandService.Object, timeService.Object, 0);
 
 
             uint ticks = 10;
 
-            for (var i = 0; i < ticks; i++)
+            for (uint i = 0; i < ticks; i++)
             {
-                sim.AddFrame(new Frame());
-                sim.Simulate();  
-            }    
+                var command = new Command();
+                sim.AddFrame(new Frame { Commands = new[]{ command } });
+                sim.Simulate();
+
+                commandService.Verify(service => service.Process(contexts.input, command), Times.Exactly(1));
+            } 
+        }
+
+        [Fact]
+        public void TestTimeService()
+        {
+            var contexts = Contexts.sharedInstance;
+
+            var commandService = new Mock<ICommandService>();
+            var timeService = new Mock<ITimeService>();
+            timeService.Setup(service => service.FixedDeltaTime).Returns(() => Fix64.One / 20);
+
+
+            var sim = new Simulation();
+            sim.Init(contexts, commandService.Object, timeService.Object, 0);
+
+
+            uint ticks = 10;
+
+            for (uint i = 0; i < ticks; i++)
+            {
+                var command = new Command();
+                sim.AddFrame(new Frame { Commands = new[] { command } });
+                sim.Simulate();            
+            }
         }
     }
 }

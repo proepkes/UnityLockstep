@@ -31,6 +31,9 @@
     <Reference Include="Entitas.CodeGeneration.Attributes">
       <HintPath>..\Dependencies\Entitas.CodeGeneration.Attributes.dll</HintPath>
     </Reference>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

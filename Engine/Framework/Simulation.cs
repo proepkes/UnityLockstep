@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;  
 using BEPUphysics;
-using ECS.Data;
+using ECS.Data;      
 using Entitas;
 using FixMath.NET;                           
 using Lockstep.Framework.Pathfinding;
@@ -25,8 +25,7 @@ namespace Lockstep.Framework
         private ulong _entityCounter;
         private uint _lastFramePointer;
 
-        private Fix64Random _random;
-        private ICommandHandler _commandHandler;
+        private Fix64Random _random;                  
 
         private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>();   
 
@@ -44,18 +43,17 @@ namespace Lockstep.Framework
             }
         }             
 
-        public void Init(Contexts contexts, ICommandHandler commandHandler, int seed)
+        public void Init(Contexts contexts, ICommandService commandService, ITimeService timeService, int seed)
         {
             Space = new Space();
 
             _random = new Fix64Random(seed);
+            var services = new ExternalServices(commandService, timeService);
 
-            _systems = new GameSystems(contexts);
+            _systems = new LockstepSystems(contexts, services);
             _systems.Initialize();
 
-            GridManager.Initialize();
-
-            _commandHandler = commandHandler;
+            GridManager.Initialize();               
         }
 
         public void AddFrame(Frame frame)
@@ -111,7 +109,7 @@ namespace Lockstep.Framework
                 currentFrame = _frames[FrameCounter++];
             }
 
-            Contexts.sharedInstance.input.ReplaceFrame(currentFrame.FrameNumber, currentFrame.Commands);
+            Contexts.sharedInstance.input.ReplaceFrame(currentFrame.Commands);
 
             _systems.Execute();
             _systems.Cleanup();

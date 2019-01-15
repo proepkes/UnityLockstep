@@ -1,22 +1,38 @@
-﻿using Entitas;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Entitas;
 
-public class ProcessFrameSystem : IExecuteSystem, ICleanupSystem
-{                                           
+public class ProcessFrameSystem : ReactiveSystem<InputEntity>, IInitializeSystem
+{
     private readonly Contexts _contexts;
-    private readonly InputContext _context;
+    private ICommandService _commandService;
 
-    public ProcessFrameSystem(Contexts contexts)
-    {                                                   
+    public ProcessFrameSystem(Contexts contexts) : base(contexts.input)
+    {
         _contexts = contexts;
-        _context = contexts.input;    
-    }         
-
-    public void Execute()
-    {   
-        var entity = _context.frameEntity;       
     }
 
-    public void Cleanup()
-    {                                                  
+    public void Initialize()
+    {
+        _commandService = _contexts.service.commandService.instance;
+    }
+
+    protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
+    {          
+        return context.CreateCollector(InputMatcher.Frame);
+    }
+
+    protected override bool Filter(InputEntity entity)
+    {                                   
+        return entity.hasFrame && entity.frame.Commands != null;
+    }
+
+    protected override void Execute(List<InputEntity> entities)
+    {           
+        var entity = entities.First();
+        foreach (var command in entity.frame.Commands)
+        {                                              
+            _commandService.Process(_contexts.input, command);
+        }
     }
 }     
