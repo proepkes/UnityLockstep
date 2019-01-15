@@ -1,4 +1,5 @@
-﻿using Entitas;
+﻿using System;
+using Entitas;
 
 public sealed class TickSystem : IInitializeSystem, IExecuteSystem
 {
@@ -23,8 +24,8 @@ public sealed class TickSystem : IInitializeSystem, IExecuteSystem
         {
             return;
         }
-
-        InputEntity entity = _context.tickEntity;
+                                        
+        var entity = _context.tickEntity;
         entity.ReplaceTick(entity.tick.value + 1);
     }
 }

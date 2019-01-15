@@ -104,7 +104,10 @@ namespace Lockstep.Framework
 
 
         public void Simulate()
-        {  
+        {             
+            _systems.Execute();
+            _systems.Cleanup();
+
             if (!CanSimulate)
             {
                 return;
@@ -144,7 +147,6 @@ namespace Lockstep.Framework
                       
             Space.Update();
 
-            _systems.Execute();
         }      
     }
 }

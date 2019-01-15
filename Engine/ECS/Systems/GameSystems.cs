@@ -1,15 +1,4 @@
-﻿public class Feature : Entitas.Systems
-{      
-    public Feature(string name)
-    {
-    }
-
-    public Feature()
-    {
-    }
-}
-
-public sealed class GameSystems : Entitas.Systems
+﻿public sealed class GameSystems : Entitas.Systems
 {
     public GameSystems(Contexts contexts)
     {
