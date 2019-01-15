@@ -1,9 +1,11 @@
-﻿public sealed class GameSystems : Entitas.Systems
+﻿using Entitas;
+
+public sealed class GameSystems : Systems
 {
     public GameSystems(Contexts contexts)
     {
         //// Input
-        Add(new TickSystem(contexts));
+        Add(new ProcessFrameSystem(contexts));
         //Add(new ProcessInputSystem(contexts));
 
         //// Update

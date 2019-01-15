@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;  
 using BEPUphysics;
+using ECS.Data;
 using Entitas;
-using FixMath.NET;
-using Lockstep.Framework.Networking.Messages;
+using FixMath.NET;                           
 using Lockstep.Framework.Pathfinding;
 
 namespace Lockstep.Framework
@@ -104,48 +104,56 @@ namespace Lockstep.Framework
 
 
         public void Simulate()
-        {             
-            _systems.Execute();
-            _systems.Cleanup();
-
-            if (!CanSimulate)
-            {
-                return;
-            }
-
+        {
             Frame currentFrame;
             lock (_frames)
             {
                 currentFrame = _frames[FrameCounter++];
             }
 
-            lock (_pendingEntities)
-            {                                         
-                foreach (var entity in _pendingEntities)
-                {
-                    entity.ID = _entityCounter;
-                    _entities[_entityCounter] = entity;
-                    if (entity is ILockstepAgent agent)
-                    {
-                        Space.Add(agent.Body);
-                    }
+            Contexts.sharedInstance.input.ReplaceFrame(currentFrame.FrameNumber, currentFrame.Commands);
 
-                    _entityCounter++;
-                }
-                _pendingEntities.Clear();
-            } 
+            _systems.Execute();
+            _systems.Cleanup();
 
-            foreach (var command in currentFrame.Commands)
-            {
-                _commandHandler.Handle(command);   
-            }  
+            //if (!CanSimulate)
+            //{
+            //    return;
+            //}
 
-            foreach (var entity in _entities.Values)
-            {
-                entity.Simulate();                        
-            }
+            //Frame currentFrame;
+            //lock (_frames)
+            //{
+            //    currentFrame = _frames[FrameCounter++];
+            //}
+
+            //lock (_pendingEntities)
+            //{                                         
+            //    foreach (var entity in _pendingEntities)
+            //    {
+            //        entity.ID = _entityCounter;
+            //        _entities[_entityCounter] = entity;
+            //        if (entity is ILockstepAgent agent)
+            //        {
+            //            Space.Add(agent.Body);
+            //        }
+
+            //        _entityCounter++;
+            //    }
+            //    _pendingEntities.Clear();
+            //} 
+
+            //foreach (var command in currentFrame.Commands)
+            //{
+            //    _commandHandler.Handle(command);   
+            //}  
+
+            //foreach (var entity in _entities.Values)
+            //{
+            //    entity.Simulate();                        
+            //}
                       
-            Space.Update();
+            //Space.Update();
 
         }      
     }

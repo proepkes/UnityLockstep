@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -59,50 +59,61 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Service.cs" />
+    <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMovingComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
+    <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
-    <Compile Include="Generated\Input\InputComponentsLookup.cs" />
+    <Compile Include="Generated\Service\ServiceComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
     <Compile Include="Generated\GameState\GameStateAttribute.cs" />
+    <Compile Include="Generated\Service\ServiceAttribute.cs" />
     <Compile Include="Generated\Config\ConfigAttribute.cs" />
     <Compile Include="Generated\Game\GameContext.cs" />
     <Compile Include="Generated\Input\InputContext.cs" />
     <Compile Include="Generated\GameState\GameStateContext.cs" />
+    <Compile Include="Generated\Service\ServiceContext.cs" />
     <Compile Include="Generated\Config\ConfigContext.cs" />
     <Compile Include="Generated\Game\GameMatcher.cs" />
     <Compile Include="Generated\Input\InputMatcher.cs" />
     <Compile Include="Generated\GameState\GameStateMatcher.cs" />
+    <Compile Include="Generated\Service\ServiceMatcher.cs" />
     <Compile Include="Generated\Config\ConfigMatcher.cs" />
     <Compile Include="Generated\Contexts.cs" />
     <Compile Include="Generated\Game\GameEntity.cs" />
     <Compile Include="Generated\Input\InputEntity.cs" />
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
+    <Compile Include="Generated\Service\ServiceEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
+    <Compile Include="Systems\ServiceRegistrationSystems .cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Input.cs" />
+    <Compile Include="Data\Command.cs" />
+    <Compile Include="Data\Frame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameState.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Movement.cs" />
-    <Compile Include="Components\TickComponent.cs" />
+    <Compile Include="Components\Game.cs" />
+    <Compile Include="Services\ICommandService.cs" />
+    <Compile Include="Services\Services.cs" />
+    <Compile Include="Systems\ProcessFrameSystem.cs" />
     <Compile Include="Systems\GameSystems.cs" />
-    <Compile Include="Systems\TickSystem.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Components\HealthComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

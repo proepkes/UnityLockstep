@@ -20,3 +20,8 @@ public class DirectionComponent : IComponent
 {
     public Fix64 value;
 }
+
+public sealed class HealthComponent : IComponent
+{
+    public int value;
+}
