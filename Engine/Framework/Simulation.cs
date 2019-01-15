@@ -140,9 +140,11 @@ namespace Lockstep.Framework
             foreach (var entity in _entities.Values)
             {
                 entity.Simulate();                        
-            }                
-
+            }
+                      
             Space.Update();
+
+            _systems.Execute();
         }      
     }
 }

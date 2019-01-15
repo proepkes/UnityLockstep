@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -59,22 +59,37 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Movement.cs" />
-    <Compile Include="Components\TickComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
+    <Compile Include="Generated\Meta\Components\MetaGameStatePausedComponent.cs" />
+    <Compile Include="Generated\Meta\Components\MetaGameStateInGameComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameMovingComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
+    <Compile Include="Generated\Meta\MetaComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
+    <Compile Include="Generated\Meta\MetaAttribute.cs" />
     <Compile Include="Generated\Game\GameContext.cs" />
     <Compile Include="Generated\Input\InputContext.cs" />
+    <Compile Include="Generated\Meta\MetaContext.cs" />
     <Compile Include="Generated\Game\GameMatcher.cs" />
     <Compile Include="Generated\Input\InputMatcher.cs" />
+    <Compile Include="Generated\Meta\MetaMatcher.cs" />
     <Compile Include="Generated\Contexts.cs" />
     <Compile Include="Generated\Game\GameEntity.cs" />
     <Compile Include="Generated\Input\InputEntity.cs" />
+    <Compile Include="Generated\Meta\MetaEntity.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\GameState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Movement.cs" />
+    <Compile Include="Components\TickComponent.cs" />
     <Compile Include="Systems\GameSystems.cs" />
     <Compile Include="Systems\TickSystem.cs" />
   </ItemGroup>

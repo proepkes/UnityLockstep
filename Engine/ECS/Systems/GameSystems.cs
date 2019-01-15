@@ -14,7 +14,7 @@ public sealed class GameSystems : Entitas.Systems
     public GameSystems(Contexts contexts)
     {
         //// Input
-        //Add(new InputSystem(contexts));
+        Add(new TickSystem(contexts));
         //Add(new ProcessInputSystem(contexts));
 
         //// Update

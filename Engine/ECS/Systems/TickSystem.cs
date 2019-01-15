@@ -14,17 +14,17 @@ public sealed class TickSystem : IInitializeSystem, IExecuteSystem
 
     public void Initialize()
     {
-        //_context.SetTick(0);
+        _context.SetTick(0);
     }
 
     public void Execute()
     {
-        //if (_contexts.meta.isGameStatePaused)
-        //{
-        //    return;
-        //}
+        if (_contexts.meta.isGameStatePaused)
+        {
+            return;
+        }
 
-        //InputEntity entity = _context.tickEntity;
-        //entity.ReplaceTick(entity.tick.value + 1);
+        InputEntity entity = _context.tickEntity;
+        entity.ReplaceTick(entity.tick.value + 1);
     }
 }
