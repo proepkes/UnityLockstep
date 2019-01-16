@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;        
 using Entitas;
 
-public class ProcessFrameSystem : IInitializeSystem, IExecuteSystem
+public class EmitInputSystem : IInitializeSystem, IExecuteSystem, ICleanupSystem
 {
-    private GameContext _gameContext;
     private InputContext _inputContext;
     private ServiceContext _serviceContext;
 
+    readonly IGroup<InputEntity> _inputs;
+
     private ICommandService _commandService;
 
-    public ProcessFrameSystem(Contexts contexts)
+    public EmitInputSystem(Contexts contexts)
     {
-        _gameContext = contexts.game;
         _inputContext = contexts.input;
         _serviceContext = contexts.service;
     }
@@ -25,7 +25,12 @@ public class ProcessFrameSystem : IInitializeSystem, IExecuteSystem
     {
         foreach (var command in _inputContext.frame.Commands)
         {
-            _commandService.Process(_gameContext, command);
+            _commandService.Process(_inputContext, command);
         }
+    }
+
+    public void Cleanup()
+    {
+        _inputContext.DestroyAllEntities();
     }
 }     

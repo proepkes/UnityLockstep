@@ -19,7 +19,7 @@ namespace Lockstep.Framework.Services
             _dataReader = new NetDataReader();
         }
 
-        public void Process(GameContext context, Command command)
+        public void Process(InputContext context, Command command)
         {
             _dataReader.SetSource(command.Data);
 
@@ -30,10 +30,10 @@ namespace Lockstep.Framework.Services
                     var cmd = new NavigateCommand();
                     cmd.Deserialize(_dataReader);
 
-                    foreach (var id in cmd.EntityIds)
-                    {       
-                        context.GetEntityWithId(id).ReplaceDestination(cmd.Destination);;
-                    }                                                          
+                    var e = context.CreateEntity();
+                    e.AddGameEntityIds(cmd.EntityIds);
+                    e.AddInputPosition(cmd.Destination);
+                         
                     break;
             }
         }        

@@ -10,9 +10,14 @@ public class FrameComponent : IComponent
 }         
 
 [Input]
-public class NavigateCommandComponent : IComponent
+public class InputPositionComponent : IComponent
 {
-    public int[] EntityIds;
-    public Vector2 Destination;
+    public Vector2 value;
+}
+
+[Input]
+public class GameEntityIdsComponent : IComponent
+{
+    public int[] value;
 }
 

@@ -31,7 +31,7 @@ public interface IGridService
 
 public interface ICommandService
 {
-    void Process(GameContext context, Command command);
+    void Process(InputContext context, Command command);
 }
 
 public interface IViewService

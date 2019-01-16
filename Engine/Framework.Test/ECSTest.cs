@@ -28,8 +28,8 @@ namespace Framework.Test
             {
                 var e = contexts.game.CreateEntity();
                 e.hasId.ShouldBeTrue();
-                e.id.value.ShouldNotBeOneOf(contexts.game.GetEntities().Where(entity => entity != e).Select(entity => entity.id.value).ToArray());
             }
+            contexts.game.GetEntities().Select(entity => entity.id.value).ShouldBeUnique();
         }
     }
 }

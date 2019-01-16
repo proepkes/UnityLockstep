@@ -1,6 +1,7 @@
 using System;         
 using BEPUutilities;
-using ECS.Data;       
+using ECS.Data;
+using Entitas;
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
@@ -35,42 +36,34 @@ namespace Framework.Test
                 sim.AddFrame(new Frame { Commands = new[] { command } });
                 sim.Simulate();
 
-                commandService.Verify(service => service.Process(It.IsAny<GameContext>(), command), Times.Exactly(1));
+                commandService.Verify(service => service.Process(It.IsAny<InputContext>(), command), Times.Exactly(1));
             }
         }
 
         [Fact]
-        public void TestGameEntityHasDestinationAfterNavigationCommand()
-        {
-            var contexts = Contexts.sharedInstance;     
-
+        public void TestInputEntityAfterNavigationCommand()
+        { 
             var commandService = new DefaultCommandService();
             var timeService = new Mock<ITimeService>();
             var gridService = new Mock<IGridService>();
 
             var destination = new Vector2(11, 22);
 
-            var sim = new Simulation();
-            sim.Init(commandService, timeService.Object, gridService.Object, 0);      
-
-            var e = contexts.game.CreateEntity();
-
             var serializer = new NetDataWriter();
-            serializer.Put((byte) CommandTag.Navigate);
-            new NavigateCommand { Destination = destination, EntityIds = new []{ e.id.value }}.Serialize(serializer);   
-
-            sim.AddFrame(new Frame { Commands = new Command[0] });
-            sim.Simulate();
-
-            e.hasDestination.ShouldBeFalse();
+            serializer.Put((byte)CommandTag.Navigate);
+            new NavigateCommand { Destination = destination, EntityIds = new int[0] }.Serialize(serializer);
 
             var command = new Command { Data = serializer.Data };
+
+            var sim = new Simulation();
+            sim.Init(commandService, timeService.Object, gridService.Object, 0);
             sim.AddFrame(new Frame { Commands = new[] { command } });
             sim.Simulate();
 
-            e.hasDestination.ShouldBeTrue();
-            e.destination.value.X.ShouldBe(destination.X);
-            e.destination.value.Y.ShouldBe(destination.Y);
+            var inputEntitiesWithInputPosition = Contexts.sharedInstance.input.GetGroup(InputMatcher.InputPosition);
+            inputEntitiesWithInputPosition.count.ShouldBe(1);
+            inputEntitiesWithInputPosition.GetSingleEntity().inputPosition.value.X.ShouldBe(destination.X);
+            inputEntitiesWithInputPosition.GetSingleEntity().inputPosition.value.Y.ShouldBe(destination.Y);
         }                         
     }
 }

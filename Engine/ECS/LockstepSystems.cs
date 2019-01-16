@@ -8,6 +8,6 @@ public sealed class LockstepSystems : Systems
         contexts.game.OnEntityCreated += (context, entity) => (entity as GameEntity)?.AddId(entity.creationIndex);
 
         Add(new RegisterServicesSystem(contexts, externalServices));
-        Add(new ProcessFrameSystem(contexts));
+        Add(new EmitInputSystem(contexts));
     }       
 }     

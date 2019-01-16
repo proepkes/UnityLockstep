@@ -108,7 +108,7 @@ namespace Lockstep.Framework
                 currentFrame = _frames[FrameCounter++];
             }
 
-            Contexts.sharedInstance.input.ReplaceFrame(currentFrame.Commands);
+            Contexts.sharedInstance.input.SetFrame(currentFrame.Commands);
 
             _systems.Execute();
             _systems.Cleanup();
