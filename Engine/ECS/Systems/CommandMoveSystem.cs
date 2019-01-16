@@ -26,7 +26,7 @@ namespace ECS.Systems
         {
             foreach (InputEntity e in entities)
             {
-                //TODO: Add FilterSystem to only iterate over gameEntites that are controlled by the local player
+                //TODO: Add FilterSystem to only iterate over gameEntites that are controlled by the player who sent the command
                 foreach (var entityId in e.gameEntityIds.value)
                 {
                     _gameContext.GetEntityWithId(entityId).ReplaceDestination(e.inputPosition.value);
