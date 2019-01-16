@@ -14,6 +14,7 @@ public class RegisterServicesSystem : IInitializeSystem
     public void Initialize()
     {
         _serviceContext.SetCommandService(_externalServices.Command);
-        _serviceContext.SetTimeService(_externalServices.Time);  
+        _serviceContext.SetTimeService(_externalServices.Time);
+        _serviceContext.SetGridService(_externalServices.Grid);
     }
 }

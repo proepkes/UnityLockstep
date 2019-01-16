@@ -9,17 +9,20 @@
 public static class ServiceComponentsLookup {
 
     public const int CommandService = 0;
-    public const int TimeService = 1;
+    public const int GridService = 1;
+    public const int TimeService = 2;
 
-    public const int TotalComponents = 2;
+    public const int TotalComponents = 3;
 
     public static readonly string[] componentNames = {
         "CommandService",
+        "GridService",
         "TimeService"
     };
 
     public static readonly System.Type[] componentTypes = {
         typeof(CommandServiceComponent),
+        typeof(GridServiceComponent),
         typeof(TimeServiceComponent)
     };
 }

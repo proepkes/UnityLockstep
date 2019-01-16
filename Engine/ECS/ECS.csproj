@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Generated\Service\Components\ServiceCommandServiceComponent.cs" />
     <Compile Include="Generated\Service\Components\ServiceTimeServiceComponent.cs" />
+    <Compile Include="Generated\Service\Components\ServiceGridServiceComponent.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Service\ServiceComponentsLookup.cs" />

@@ -34,7 +34,7 @@ public class PositionComponent : IComponent
 }   
 
 [Game]
-public class DirectionComponent : IComponent
+public class VelocityComponent : IComponent
 {
     public Fix64 value;
 } 

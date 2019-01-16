@@ -24,9 +24,10 @@ namespace Framework.Test
         {       
             var commandService = new Mock<ICommandService>();
             var timeService = new Mock<ITimeService>();
+            var gridService = new Mock<IGridService>();
 
             var sim = new Simulation();
-            sim.Init(commandService.Object, timeService.Object, 0);
+            sim.Init(commandService.Object, timeService.Object, gridService.Object, 0);
                                  
             for (var i = 0; i < 10; i++)
             {
@@ -45,10 +46,12 @@ namespace Framework.Test
 
             var commandService = new DefaultCommandService();
             var timeService = new Mock<ITimeService>();
+            var gridService = new Mock<IGridService>();
+
             var destination = new Vector2(11, 22);
 
             var sim = new Simulation();
-            sim.Init(commandService, timeService.Object, 0);      
+            sim.Init(commandService, timeService.Object, gridService.Object, 0);      
 
             var e = contexts.game.CreateEntity();
 
