@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BEPUutilities;
-using ECS.Data;
-using Entitas;
+using ECS.Data;     
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
@@ -26,8 +25,8 @@ namespace Framework.Test
         {       
             var commandService = new Mock<IInputParseService>();   
 
-            var sim = new Simulation();
-            sim.Init(new List<IService>{ commandService.Object }, 0);
+            var sim = new Simulation(new List<IService> { commandService.Object });
+            sim.Init(0);
                                  
             for (var i = 0; i < 10; i++)
             {
@@ -52,8 +51,8 @@ namespace Framework.Test
 
             var command = new SerializedInput { Data = serializer.Data };
 
-            var sim = new Simulation();
-            sim.Init(new List<IService> { commandService }, 0);
+            var sim = new Simulation(new List<IService> { commandService });
+            sim.Init(0);
             sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
             sim.Simulate();
 

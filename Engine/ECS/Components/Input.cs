@@ -26,3 +26,9 @@ public class NavigationInputComponent : IComponent
 {
 
 }
+
+[Input]
+public class SpawnInputComponent : IComponent
+{
+    public string assetName;
+}

@@ -3,7 +3,7 @@ using LiteNetLib.Utils;
 
 namespace Lockstep.Framework.Commands
 {
-    public class NavigateCommand
+    public class NavigateCommand : ISerilalizableCommand
     {
         public int[] EntityIds;
 

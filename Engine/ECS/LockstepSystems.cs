@@ -10,8 +10,9 @@ public sealed class LockstepSystems : Systems
     {
         contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex);
 
-        Add(new LoadAssetSystem(contexts, externalServices.FirstOrDefault(service => service is IViewService) as IViewService));
         Add(new EmitInputSystem(contexts, externalServices.FirstOrDefault(service => service is IInputParseService) as IInputParseService));
+        Add(new InputToCreateGameEntitySystem(contexts));
+        Add(new LoadAssetSystem(contexts, externalServices.FirstOrDefault(service => service is IViewService) as IViewService));
         Add(new InputToGameEntityDestinationSystem(contexts));  
     }       
 }     

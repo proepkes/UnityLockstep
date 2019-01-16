@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;  
-using BEPUphysics;
+using BEPUphysics;    
 using ECS.Data;      
 using Entitas;
 using FixMath.NET;                           
@@ -14,7 +14,7 @@ namespace Lockstep.Framework
 
         public const int FRAMERATE = 20;
 
-        public Space Space { get; private set; }
+        public Space Space { get; }
 
 
         public int FrameDelay { get; set; }
@@ -26,33 +26,36 @@ namespace Lockstep.Framework
 
         private Fix64Random _random;                  
 
-        private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>();   
-
-        private readonly List<ILockstepEntity> _pendingEntities = new List<ILockstepEntity>();
-        private readonly Dictionary<ulong, ILockstepEntity> _entities = new Dictionary<ulong, ILockstepEntity>();
-
+        private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>();
+             
         public bool CanSimulate
         {
             get
             {
                 lock (_frames)
-                {            
+                {
                     return _lastFramePointer - FrameCounter - FrameDelay > 0;
                 }
             }
-        }             
+        }
 
-        public void Init(ICollection<IService> services, int seed)
+        public Simulation(ICollection<IService> services)
         {
             Space = new Space();
 
+            _systems = new LockstepSystems(Contexts.sharedInstance, services);
+        }
+          
+
+        public void Init(int seed)
+        {  
             _random = new Fix64Random(seed);    
             
-            _systems = new LockstepSystems(Contexts.sharedInstance, services);
             _systems.Initialize();
 
             GridManager.Initialize();               
         }
+
 
         public void AddFrame(Frame frame)
         {
@@ -60,35 +63,11 @@ namespace Lockstep.Framework
             {      
                 _frames[_lastFramePointer++] = frame;
             }
-        }
-
-        public void EnqueueEntity(ILockstepEntity entity)
-        {
-            lock (_pendingEntities)
-            {
-                _pendingEntities.Add(entity);
-            }
-        }
-
-        public ICollection<ILockstepEntity> GetEntities()
-        {
-            return _entities.Values;
-        }
-
-        public T GetEntity<T>(ulong id) where T : ILockstepEntity
-        {
-            return (T) _entities[id];
-        }
-
+        }             
+                   
         public ulong CalculateChecksum()
         {
-            ulong hash = 3;
-
-            foreach (var entity in _entities.Values)
-            {
-                hash ^= entity.GetHashCode();
-            }
-
+            ulong hash = 3;      
             return hash;
         }
 

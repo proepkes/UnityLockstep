@@ -1,5 +1,4 @@
-﻿using FixMath.NET;
-using Lockstep.Framework.Services;
+﻿using FixMath.NET;                  
 using UnityEngine;
 
 public class MouseInput : MonoBehaviour
@@ -17,9 +16,12 @@ public class MouseInput : MonoBehaviour
                                            
     void Update()
     {
+       
         if (Input.GetMouseButtonDown(1))
-        {
-            var pos = GetWorldPos(Input.mousePosition);
+        {      
+            var spawner = FindObjectOfType<EntitySpawner>();
+            spawner.Spawn();
+            //var pos = GetWorldPos(Input.mousePosition);
             //LockstepNetwork.Instance.SendCommand(CommandTag.Navigate, new MovePacket{ AgentIDs = new ushort[0], PosX = pos.X, PosY = pos.Y});
         }
     }

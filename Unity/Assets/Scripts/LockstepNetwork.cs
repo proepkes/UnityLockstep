@@ -1,6 +1,7 @@
 ﻿using System;   
 using LiteNetLib;
-using LiteNetLib.Utils;  
+using LiteNetLib.Utils;
+using Lockstep.Framework.Commands;
 using Lockstep.Framework.Networking;
 using Lockstep.Framework.Networking.Serialization;
 using Lockstep.Framework.Services;
@@ -32,7 +33,8 @@ public class LockstepNetwork : MonoBehaviour
             dataReader.Recycle();
         };
 
-        client = new NetManager(listener); 
+        client = new NetManager(listener);
+        client.Start();
     }
                                         
     void Update()
@@ -54,11 +56,11 @@ public class LockstepNetwork : MonoBehaviour
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
 
-    public void SendCommand(CommandTag tag, ICommandPacket message)
+    public void SendCommand(CommandTag tag, ISerilalizableCommand message)
     {
         var writer = new NetDataWriter();
         writer.Put((byte) MessageTag.Command);
-        writer.Put((ushort) tag);                                         
+        writer.Put((byte) tag);                                         
         message.Serialize(writer);
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }

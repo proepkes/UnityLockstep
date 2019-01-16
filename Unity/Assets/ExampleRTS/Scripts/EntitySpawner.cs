@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using LiteNetLib.Utils;
+using Lockstep.Framework.Commands;
+using Lockstep.Framework.Networking;
+using Lockstep.Framework.Services;
+using UnityEngine;
 
 public class EntitySpawner : MonoBehaviour
 {
     public int Count;
     public Transform Position;
-    public GameObject EntityPrefab;
+    public GameObject Prefab;
 
     private void Start()
     {           
@@ -15,10 +19,10 @@ public class EntitySpawner : MonoBehaviour
         var sim = FindObjectOfType<LockstepSimulator>();
         for (int j = 0; j < Count; j++)
         {
-            var e = GameObject.Instantiate(EntityPrefab.gameObject).GetComponent<UnityLSAgent>();
-            e.Init(Position.position);
+            var x = new NetDataWriter();
+            var z = new NetDataReader();         
 
-            sim.RegisterEntity(e.agent);
+            LockstepNetwork.Instance.SendCommand(CommandTag.Spawn, new SpawnCommand { AssetName = Prefab.name });
         }
 
     }

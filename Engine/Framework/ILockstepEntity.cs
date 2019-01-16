@@ -7,7 +7,7 @@ namespace Lockstep.Framework
     {
         ulong ID { get; set; }
 
-        void Simulate();
+        string GetAssetName();
 
         ulong GetHashCode();
     }

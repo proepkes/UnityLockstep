@@ -7,18 +7,21 @@ using Lockstep.Framework.Services;
 using UnityEngine;                            
 
 public class LockstepSimulator : MonoBehaviour
-{
-    private readonly NetDataReader commandReader = new NetDataReader();
-
-    private Simulation simulation;      
-    private bool simulationStarted;
+{                                                                        
+    private Simulation _simulation;      
+    private bool _simulationStarted;
 
     private void Awake()
     {
-        simulation = new Simulation
-        {
-            FrameDelay = 2,
-        };
+        _simulation = new Simulation(
+            new List<IService>
+            {
+                new DefaultInputParseService(),
+                new UnityViewService()
+            })
+            {
+                FrameDelay = 2,
+            };
     }     
 
     private void Start()
@@ -35,13 +38,9 @@ public class LockstepSimulator : MonoBehaviour
                 pkt.Deserialize(reader);
                 Time.fixedDeltaTime = 1f/pkt.TargetFPS;
 
-                simulation.Init(new List<IService>
-                {
-                    new DefaultCommandService(),
-                    new UnityViewService()
-                }, pkt.Seed);
+                _simulation.Init(pkt.Seed);
 
-                simulationStarted = true;
+                _simulationStarted = true;
                 break;
             case MessageTag.Frame:
                 //Server sends in ReliableOrdered-mode, so we only care about the latest frame
@@ -49,53 +48,27 @@ public class LockstepSimulator : MonoBehaviour
                 var pkg = new FramePackage(1);
                 pkg.Deserialize(reader);
 
-                simulation.AddFrame(pkg.Frames[0]); 
+                _simulation.AddFrame(pkg.Frames[0]);
+
+                //TODO: only for debugging
+                _simulation.Simulate();
                 break;
         }
-    }        
-
-    //public void Handle(Command command)
-    //{
-    //    commandReader.SetSource(command.Data);
-    //    HandleCommand((CommandTag)commandReader.GetUShort(), commandReader);
-    //}
-
-    //private void HandleCommand(CommandTag commandTag, NetDataReader reader)
-    //{
-    //    switch (commandTag)
-    //    {
-    //        case CommandTag.Move:
-    //            var pkt = new MovePacket();
-    //            pkt.Deserialize(reader);
-
-    //            var d = new BEPUutilities.Vector2(pkt.PosX, pkt.PosY);                  
-
-    //            foreach (LockstepAgent entity in simulation.GetEntities())
-    //            {
-    //                entity.GetAbility<Move>().StartMove(d);
-    //            }
-    //            break;
-    //    }
-    //}
-
-    public void RegisterEntity(ILockstepEntity entity)
-    {
-        simulation.EnqueueEntity(entity);
-    }
-                             
+    }            
+            
 
     void FixedUpdate()
     {
-        if (!simulationStarted)
+        if (!_simulationStarted)
         {
             return;
         }   
 
-        simulation.Simulate(); 
+        //simulation.Simulate(); 
 
-        if (simulation.FrameCounter % 10 == 0)
-        {
-            LockstepNetwork.Instance.SendChecksum(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
-        }                               
+        //if (simulation.FrameCounter % 10 == 0)
+        //{
+        //    LockstepNetwork.Instance.SendChecksum(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
+        //}                               
     }     
 }

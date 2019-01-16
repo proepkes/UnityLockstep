@@ -9,11 +9,12 @@ namespace ECS.Systems
 
         public InputToGameEntityDestinationSystem(Contexts contexts) : base(contexts.input)
         {
+            _gameContext = contexts.game;
         }
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            return context.CreateCollector(InputMatcher.NavigationInput.Added());
+            return context.CreateCollector(InputMatcher.NavigationInput);
         }
 
         protected override bool Filter(InputEntity entity)

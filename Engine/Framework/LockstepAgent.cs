@@ -61,9 +61,14 @@ namespace Lockstep.Framework
             {
                 ability.Simulate();
             }
-		}                          
+		}
 
-		public ulong GetHashCode()
+        public string GetAssetName()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public ulong GetHashCode()
 		{
 			ulong hash = 3;          
 			hash ^= this.ID;

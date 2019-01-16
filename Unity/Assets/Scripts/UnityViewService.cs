@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Entitas;
+using Entitas.Unity;
 
 public interface IViewController
 {
@@ -22,6 +23,7 @@ public class UnityViewService : IViewService
         var viewGo = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + assetName));
         if (viewGo != null)
         {
+            viewGo.Link(entity);
             var viewController = viewGo.GetComponent<IViewController>();
             viewController?.InitializeView(contexts, entity);
                                                                                    
