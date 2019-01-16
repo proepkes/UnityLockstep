@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Generated\Service\Components\ServiceCommandServiceComponent.cs" />
     <Compile Include="Generated\Service\Components\ServiceTimeServiceComponent.cs" />
+    <Compile Include="Generated\Service\Components\ServiceViewServiceComponent.cs" />
     <Compile Include="Generated\Service\Components\ServiceGridServiceComponent.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Generated\Input\Components\InputGameEntityIdsComponent.cs" />
     <Compile Include="Generated\Input\Components\InputNavigationInputComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Components\Service.cs" />
     <Compile Include="LockstepSystems.cs" />
     <Compile Include="Systems\InputToGameEntityDestinationSystem.cs" />
+    <Compile Include="Systems\LoadAssetSystem.cs" />
     <Compile Include="Systems\RegisterServicesSystem.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -13,7 +13,7 @@ namespace Server
     {
         public bool Running { get; private set; }    
 
-        private const int TargetFps = 20;
+        private const int TargetFps = 1;
         private const int ServerPort = 9050;       
         private const string ClientKey = "SomeConnectionKey";
 

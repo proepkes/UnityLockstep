@@ -1,4 +1,5 @@
-﻿using LiteNetLib.Utils;
+﻿using System.Collections.Generic;
+using LiteNetLib.Utils;
 using Lockstep.Framework;              
 using Lockstep.Framework.Networking;             
 using Lockstep.Framework.Networking.Serialization;
@@ -34,7 +35,11 @@ public class LockstepSimulator : MonoBehaviour
                 pkt.Deserialize(reader);
                 Time.fixedDeltaTime = 1f/pkt.TargetFPS;
 
-                simulation.Init(new DefaultCommandService(), null, pkt.Seed);
+                simulation.Init(new List<IService>()
+                {
+                    new DefaultCommandService(),
+                    new UnityViewService()
+                }, pkt.Seed);
 
                 simulationStarted = true;
                 break;

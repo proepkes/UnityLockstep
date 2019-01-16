@@ -9,6 +9,12 @@ public class IdComponent : IComponent
     [PrimaryEntityIndex]
     public int value;
 }
+ 
+[Game]
+public class AssetComponent : IComponent
+{
+    public string name;
+}
 
 [Game]
 public class TeamComponent : IComponent

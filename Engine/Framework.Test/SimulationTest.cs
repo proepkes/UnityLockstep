@@ -1,4 +1,5 @@
-using System;         
+using System;
+using System.Collections.Generic;
 using BEPUutilities;
 using ECS.Data;
 using Entitas;
@@ -23,12 +24,10 @@ namespace Framework.Test
         [Fact]
         public void TestCommandService()
         {       
-            var commandService = new Mock<ICommandService>();
-            var timeService = new Mock<ITimeService>();
-            var gridService = new Mock<IGridService>();
+            var commandService = new Mock<ICommandService>();   
 
             var sim = new Simulation();
-            sim.Init(commandService.Object, timeService.Object, gridService.Object, 0);
+            sim.Init(new List<IService>{ commandService.Object }, 0);
                                  
             for (var i = 0; i < 10; i++)
             {
@@ -43,9 +42,7 @@ namespace Framework.Test
         [Fact]
         public void TestInputEntityAfterNavigationCommand()
         { 
-            var commandService = new DefaultCommandService();
-            var timeService = new Mock<ITimeService>();
-            var gridService = new Mock<IGridService>();
+            var commandService = new DefaultCommandService();     
 
             var destination = new Vector2(11, 22);
 
@@ -56,7 +53,7 @@ namespace Framework.Test
             var command = new Command { Data = serializer.Data };
 
             var sim = new Simulation();
-            sim.Init(commandService, timeService.Object, gridService.Object, 0);
+            sim.Init(new List<IService> { commandService }, 0);
             sim.AddFrame(new Frame { Commands = new[] { command } });
             sim.Simulate();
 

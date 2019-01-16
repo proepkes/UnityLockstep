@@ -14,6 +14,12 @@ public sealed class TimeServiceComponent : IComponent
 }
 
 [Service, Unique]
+public sealed class ViewServiceComponent : IComponent
+{
+    public IViewService instance;
+}
+
+[Service, Unique]
 public sealed class GridServiceComponent : IComponent
 {
     public IGridService instance;
