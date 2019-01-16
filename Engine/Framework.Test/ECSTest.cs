@@ -20,7 +20,7 @@ namespace Framework.Test
         {
             var contexts = Contexts.sharedInstance;     
 
-            new LockstepSystems(contexts, new ExternalServices(null, null, null, null)).Initialize();
+            new LockstepSystems(contexts, new List<IService>()).Initialize();
 
             uint ticks = 10;
 

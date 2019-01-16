@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 
-public class LoadAssetSystem : ReactiveSystem<GameEntity>, IInitializeSystem
+public class LoadAssetSystem : ReactiveSystem<GameEntity>
 {
     readonly Contexts _contexts;
-    IViewService _viewService;                     
+    readonly IViewService _viewService;                     
 
-    public LoadAssetSystem(Contexts contexts) : base(contexts.game)
+    public LoadAssetSystem(Contexts contexts, IViewService viewService) : base(contexts.game)
     {
         _contexts = contexts;
-    }
-
-    public void Initialize()
-    {
-        // grab the view service instance from the meta context
-        _viewService = _contexts.service.viewService.instance;
-    }
+        _viewService = viewService;
+    }                            
 
     protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
     {

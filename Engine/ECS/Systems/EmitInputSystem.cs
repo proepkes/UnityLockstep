@@ -1,24 +1,19 @@
-﻿using System.Collections.Generic;        
-using Entitas;
+﻿using Entitas;
 
 public class EmitInputSystem : IInitializeSystem, IExecuteSystem, ICleanupSystem
 {
-    private InputContext _inputContext;
-    private ServiceContext _serviceContext;
-
-    readonly IGroup<InputEntity> _inputs;
+    private InputContext _inputContext;  
 
     private ICommandService _commandService;
 
-    public EmitInputSystem(Contexts contexts)
+    public EmitInputSystem(Contexts contexts, ICommandService commandService)
     {
         _inputContext = contexts.input;
-        _serviceContext = contexts.service;
+        _commandService = commandService;
     }
 
     public void Initialize()
-    {
-        _commandService = _serviceContext.commandService.instance;
+    {                                                               
     }
 
     public void Execute()

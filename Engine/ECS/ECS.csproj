@@ -59,10 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Generated\Service\Components\ServiceCommandServiceComponent.cs" />
-    <Compile Include="Generated\Service\Components\ServiceTimeServiceComponent.cs" />
-    <Compile Include="Generated\Service\Components\ServiceViewServiceComponent.cs" />
-    <Compile Include="Generated\Service\Components\ServiceGridServiceComponent.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
@@ -78,10 +74,10 @@
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
-    <Compile Include="Generated\Service\ServiceComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\Service\ServiceComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
@@ -114,11 +110,9 @@
     <Compile Include="Data\Frame.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Service.cs" />
     <Compile Include="LockstepSystems.cs" />
     <Compile Include="Systems\InputToGameEntityDestinationSystem.cs" />
     <Compile Include="Systems\LoadAssetSystem.cs" />
-    <Compile Include="Systems\RegisterServicesSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Input.cs" />

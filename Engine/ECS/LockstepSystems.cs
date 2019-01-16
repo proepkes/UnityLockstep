@@ -1,15 +1,17 @@
 ﻿
+using System.Collections.Generic;
+using System.Linq;
 using ECS.Systems;
 using Entitas;
 
 public sealed class LockstepSystems : Systems
 {
-    public LockstepSystems(Contexts contexts, ExternalServices externalServices)
+    public LockstepSystems(Contexts contexts, ICollection<IService> externalServices)
     {
-        contexts.game.OnEntityCreated += (context, entity) => (entity as GameEntity)?.AddId(entity.creationIndex);
+        contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex);
 
-        Add(new RegisterServicesSystem(contexts, externalServices));
-        Add(new EmitInputSystem(contexts));
-        Add(new InputToGameEntityDestinationSystem(contexts));
+        Add(new LoadAssetSystem(contexts, externalServices.FirstOrDefault(service => service is IViewService) as IViewService));
+        Add(new EmitInputSystem(contexts, externalServices.FirstOrDefault(service => service is ICommandService) as ICommandService));
+        Add(new InputToGameEntityDestinationSystem(contexts));  
     }       
 }     

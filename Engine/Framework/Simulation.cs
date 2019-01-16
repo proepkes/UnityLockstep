@@ -48,7 +48,7 @@ namespace Lockstep.Framework
 
             _random = new Fix64Random(seed);    
             
-            _systems = new LockstepSystems(Contexts.sharedInstance, new ExternalServices(services));
+            _systems = new LockstepSystems(Contexts.sharedInstance, services);
             _systems.Initialize();
 
             GridManager.Initialize();               
