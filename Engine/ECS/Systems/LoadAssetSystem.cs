@@ -28,7 +28,5 @@ public class LoadAssetSystem : ReactiveSystem<GameEntity>
         {                                                 
              _viewService.LoadAsset(_contexts, e, e.asset.name);   
         }
-    }
-    
-    
+    } 
 }

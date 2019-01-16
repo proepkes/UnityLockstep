@@ -13,7 +13,7 @@ public interface IGridService : IService
     Vector2 GetCellSize();        
 }
 
-public interface IInputParseService : IService
+public interface IParseInputService : IService
 {
     void Parse(InputContext context, SerializedInput serializedInput);
 }

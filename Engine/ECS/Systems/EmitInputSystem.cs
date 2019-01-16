@@ -4,19 +4,19 @@ public class EmitInputSystem : IExecuteSystem, ICleanupSystem
 {
     private readonly InputContext _inputContext; 
 
-    private readonly IInputParseService _inputParseService;
+    private readonly IParseInputService _parseInputService;
 
-    public EmitInputSystem(Contexts contexts, IInputParseService inputParseService)
+    public EmitInputSystem(Contexts contexts, IParseInputService parseInputService)
     {
         _inputContext = contexts.input;
-        _inputParseService = inputParseService;
+        _parseInputService = parseInputService;
     }     
 
     public void Execute()
     {
         foreach (var input in _inputContext.frame.SerializedInputs)
         {
-            _inputParseService.Parse(_inputContext, input);
+            _parseInputService.Parse(_inputContext, input);
         }
     }
 

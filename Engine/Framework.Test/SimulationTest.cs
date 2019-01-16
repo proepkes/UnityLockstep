@@ -13,6 +13,7 @@ using Xunit.Abstractions;
 
 namespace Framework.Test
 {
+    //TODO: tests currently don't work parallel, probably because of Context.sharedInstance
     public class SimulationTest
     {                                               
         public SimulationTest(ITestOutputHelper output)
@@ -21,11 +22,11 @@ namespace Framework.Test
         }
 
         [Fact]
-        public void TestCommandService()
+        public void TestInputParserGetsCalled()
         {       
-            var commandService = new Mock<IInputParseService>();   
+            var inputParser = new Mock<IParseInputService>();   
 
-            var sim = new Simulation(new List<IService> { commandService.Object });
+            var sim = new Simulation(new List<IService> { inputParser.Object });
             sim.Init(0);
                                  
             for (var i = 0; i < 10; i++)
@@ -34,14 +35,14 @@ namespace Framework.Test
                 sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
                 sim.Simulate();
 
-                commandService.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
+                inputParser.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
             }
         }
 
         [Fact]
         public void TestInputEntityAfterNavigationCommand()
         { 
-            var commandService = new DefaultInputParseService();     
+            var inputParser = new DefaultParseInputService();     
 
             var destination = new Vector2(11, 22);
 
@@ -51,11 +52,12 @@ namespace Framework.Test
 
             var command = new SerializedInput { Data = serializer.Data };
 
-            var sim = new Simulation(new List<IService> { commandService });
+            var sim = new Simulation(new List<IService> { inputParser });
             sim.Init(0);
             sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
             sim.Simulate();
 
+            //TODO: new system deletes all inputs
             var inputEntitiesWithInputPosition = Contexts.sharedInstance.input.GetGroup(InputMatcher.MousePosition);
             inputEntitiesWithInputPosition.count.ShouldBe(1);
             inputEntitiesWithInputPosition.GetSingleEntity().mousePosition.value.X.ShouldBe(destination.X);

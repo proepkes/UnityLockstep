@@ -26,8 +26,8 @@ namespace ECS.Systems
         {
             foreach (InputEntity e in entities)
             {             
-                var playerEntity = _gameContext.CreateEntity();
-                playerEntity.AddAsset(e.spawnInput.assetName); 
+                var gameEntity = _gameContext.CreateEntity();
+                gameEntity.AddAsset(e.spawnInput.assetName); 
             }
         }
     }

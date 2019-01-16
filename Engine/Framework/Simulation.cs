@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;  
 using BEPUphysics;    
-using ECS.Data;      
-using Entitas;
+using ECS.Data; 
 using FixMath.NET;                           
 using Lockstep.Framework.Pathfinding;
 
@@ -9,7 +8,7 @@ namespace Lockstep.Framework
 {
     public class Simulation
     {                 
-        private Systems _systems;
+        private readonly LockstepSystems _systems;
 
 
         public const int FRAMERATE = 20;
@@ -84,12 +83,9 @@ namespace Lockstep.Framework
             lock (_frames)
             {
                 currentFrame = _frames[FrameCounter++];
-            }
+            }       
 
-            Contexts.sharedInstance.input.SetFrame(currentFrame.SerializedInputs);
-
-            _systems.Execute();
-            _systems.Cleanup();
+            _systems.Simulate(currentFrame);    
 
             //if (!CanSimulate)
             //{

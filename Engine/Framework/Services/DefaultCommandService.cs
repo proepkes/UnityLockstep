@@ -11,12 +11,12 @@ namespace Lockstep.Framework.Services
         Navigate,
     }
 
-    public class DefaultInputParseService : IInputParseService
+    public class DefaultParseInputService : IParseInputService
     {
         private readonly NetDataReader _dataReader;
         private readonly Dictionary<CommandTag, ISerilalizableCommand> _commandMap = new Dictionary<CommandTag, ISerilalizableCommand>() ;
 
-        public DefaultInputParseService()
+        public DefaultParseInputService()
         {
             _dataReader = new NetDataReader();
             _commandMap.Add(CommandTag.Spawn, new SpawnCommand());
