@@ -6,11 +6,11 @@ using Entitas.CodeGeneration.Attributes;
 [Input, Unique]
 public class FrameComponent : IComponent
 {
-    public Command[] Commands;
+    public SerializedInput[] SerializedInputs;
 }         
 
 [Input]
-public class InputPositionComponent : IComponent
+public class MousePositionComponent : IComponent
 {
     public Vector2 value;
 }

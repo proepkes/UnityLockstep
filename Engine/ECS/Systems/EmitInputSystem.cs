@@ -1,26 +1,22 @@
 ﻿using Entitas;
 
-public class EmitInputSystem : IInitializeSystem, IExecuteSystem, ICleanupSystem
+public class EmitInputSystem : IExecuteSystem, ICleanupSystem
 {
-    private InputContext _inputContext;  
+    private readonly InputContext _inputContext; 
 
-    private ICommandService _commandService;
+    private readonly IInputParseService _inputParseService;
 
-    public EmitInputSystem(Contexts contexts, ICommandService commandService)
+    public EmitInputSystem(Contexts contexts, IInputParseService inputParseService)
     {
         _inputContext = contexts.input;
-        _commandService = commandService;
-    }
-
-    public void Initialize()
-    {                                                               
-    }
+        _inputParseService = inputParseService;
+    }     
 
     public void Execute()
     {
-        foreach (var command in _inputContext.frame.Commands)
+        foreach (var input in _inputContext.frame.SerializedInputs)
         {
-            _commandService.Process(_inputContext, command);
+            _inputParseService.Parse(_inputContext, input);
         }
     }
 

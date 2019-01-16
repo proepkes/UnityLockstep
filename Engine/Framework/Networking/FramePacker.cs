@@ -16,7 +16,7 @@ namespace Lockstep.Framework.Networking
         private uint _frameCounter;
 
         private readonly NetDataWriter _buffer = new NetDataWriter();
-        private readonly List<Command> _commands = new List<Command>();
+        private readonly List<SerializedInput> _commands = new List<SerializedInput>();
         private readonly Dictionary<uint, byte[]> _frames = new Dictionary<uint, byte[]>();     
 
         /// <summary>
@@ -27,15 +27,15 @@ namespace Lockstep.Framework.Networking
         {
             _buffer.Reset();
 
-            Command[] commands;
+            SerializedInput[] serializedInputs;
             lock (_commands)
             {        
-                commands = _commands.ToArray();
+                serializedInputs = _commands.ToArray();
                 _commands.Clear();
 
             }         
 
-            var frame = new Frame { Commands = commands}; 
+            var frame = new Frame { SerializedInputs = serializedInputs}; 
             frame.Serialize(_buffer, _frameCounter);
 
             _frames.Add(_frameCounter, new byte[_buffer.Length]);
@@ -52,11 +52,11 @@ namespace Lockstep.Framework.Networking
             _frameCounter++;
         }
 
-        public void AddCommand(Command command)
+        public void AddCommand(SerializedInput serializedInput)
         {             
             lock (_commands)
             {
-                _commands.Add(command);
+                _commands.Add(serializedInput);
             }
         }
 

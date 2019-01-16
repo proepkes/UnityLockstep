@@ -107,7 +107,7 @@ namespace Lockstep.Framework
                 currentFrame = _frames[FrameCounter++];
             }
 
-            Contexts.sharedInstance.input.SetFrame(currentFrame.Commands);
+            Contexts.sharedInstance.input.SetFrame(currentFrame.SerializedInputs);
 
             _systems.Execute();
             _systems.Cleanup();
@@ -139,9 +139,9 @@ namespace Lockstep.Framework
             //    _pendingEntities.Clear();
             //} 
 
-            //foreach (var command in currentFrame.Commands)
+            //foreach (var serializedInput in currentFrame.SerializedInputs)
             //{
-            //    _commandHandler.Handle(command);   
+            //    _commandHandler.Handle(serializedInput);   
             //}  
 
             //foreach (var entity in _entities.Values)

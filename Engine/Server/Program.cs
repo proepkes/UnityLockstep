@@ -9,7 +9,7 @@ namespace Server
         {                    
             var room = new Room();                              
 
-            room.Open(2);         
+            room.Open(1);         
 
             while (!Console.KeyAvailable)
             {

@@ -24,25 +24,25 @@ namespace Framework.Test
         [Fact]
         public void TestCommandService()
         {       
-            var commandService = new Mock<ICommandService>();   
+            var commandService = new Mock<IInputParseService>();   
 
             var sim = new Simulation();
             sim.Init(new List<IService>{ commandService.Object }, 0);
                                  
             for (var i = 0; i < 10; i++)
             {
-                var command = new Command();
-                sim.AddFrame(new Frame { Commands = new[] { command } });
+                var command = new SerializedInput();
+                sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
                 sim.Simulate();
 
-                commandService.Verify(service => service.Process(It.IsAny<InputContext>(), command), Times.Exactly(1));
+                commandService.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
             }
         }
 
         [Fact]
         public void TestInputEntityAfterNavigationCommand()
         { 
-            var commandService = new DefaultCommandService();     
+            var commandService = new DefaultInputParseService();     
 
             var destination = new Vector2(11, 22);
 
@@ -50,17 +50,17 @@ namespace Framework.Test
             serializer.Put((byte)CommandTag.Navigate);
             new NavigateCommand { Destination = destination, EntityIds = new int[0] }.Serialize(serializer);
 
-            var command = new Command { Data = serializer.Data };
+            var command = new SerializedInput { Data = serializer.Data };
 
             var sim = new Simulation();
             sim.Init(new List<IService> { commandService }, 0);
-            sim.AddFrame(new Frame { Commands = new[] { command } });
+            sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
             sim.Simulate();
 
-            var inputEntitiesWithInputPosition = Contexts.sharedInstance.input.GetGroup(InputMatcher.InputPosition);
+            var inputEntitiesWithInputPosition = Contexts.sharedInstance.input.GetGroup(InputMatcher.MousePosition);
             inputEntitiesWithInputPosition.count.ShouldBe(1);
-            inputEntitiesWithInputPosition.GetSingleEntity().inputPosition.value.X.ShouldBe(destination.X);
-            inputEntitiesWithInputPosition.GetSingleEntity().inputPosition.value.Y.ShouldBe(destination.Y);
+            inputEntitiesWithInputPosition.GetSingleEntity().mousePosition.value.X.ShouldBe(destination.X);
+            inputEntitiesWithInputPosition.GetSingleEntity().mousePosition.value.Y.ShouldBe(destination.Y);
         }                         
     }
 }

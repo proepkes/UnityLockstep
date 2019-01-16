@@ -13,16 +13,12 @@ public interface IGridService : IService
     Vector2 GetCellSize();        
 }
 
-public interface ICommandService : IService
+public interface IInputParseService : IService
 {
-    void Process(InputContext context, Command command);
+    void Parse(InputContext context, SerializedInput serializedInput);
 }
 
 public interface IViewService : IService
-{
-    // create a view from a premade asset (e.g. a prefab)
-    void LoadAsset(
-        Contexts contexts,
-        IEntity entity,
-        string assetName);
+{                                                        
+    void LoadAsset(Contexts contexts, IEntity entity, string assetName);
 }

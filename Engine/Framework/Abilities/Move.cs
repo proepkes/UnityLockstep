@@ -207,7 +207,7 @@ namespace Lockstep.Framework.Abilities
 		uint GetNodeHash (GridNode node)
 		{
 			//TODO: At the moment, the CombinePathVersion is based on the destination... essentially caching the path to the last destination
-			//Should this be based on commands instead?
+			//Should this be based on serializedInputs instead?
 			//Also, a lot of redundancy can be moved into MovementGroupHelper... i.e. getting destination node 
 			uint ret = (uint)(node.gridX * GridManager.Width);
 			ret += (uint)node.gridY;
@@ -404,7 +404,7 @@ namespace Lockstep.Framework.Abilities
 			StopMove ();
             
 
-			//TODO: Reset this variables when changing destination/command
+			//TODO: Reset this variables when changing destination/serializedInput
 			AutoStopPauser = 0;
 			CollisionStopPauser = 0;
 			StopPauseLooker = 0;

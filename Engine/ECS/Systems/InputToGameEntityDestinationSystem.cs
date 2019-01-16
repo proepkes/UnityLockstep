@@ -18,17 +18,17 @@ namespace ECS.Systems
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasGameEntityIds && entity.hasInputPosition;
+            return entity.hasGameEntityIds && entity.hasMousePosition;
         }
 
         protected override void Execute(List<InputEntity> entities)
         {
             foreach (InputEntity e in entities)
             {
-                //TODO: Add FilterSystem to only iterate over gameEntites that are controlled by the player who sent the command
+                //TODO: Add FilterSystem to only iterate over gameEntites that are controlled by the player who sent the serializedInput
                 foreach (var entityId in e.gameEntityIds.value)
                 {
-                    _gameContext.GetEntityWithId(entityId).ReplaceDestination(e.inputPosition.value);
+                    _gameContext.GetEntityWithId(entityId).ReplaceDestination(e.mousePosition.value);
                 }
             }
         }

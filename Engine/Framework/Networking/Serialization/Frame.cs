@@ -8,8 +8,8 @@ namespace Lockstep.Framework.Networking.Serialization
         public static void Serialize(this Frame frame, NetDataWriter writer, uint FrameNumber)
         {
             writer.Put(FrameNumber);
-            writer.Put(frame.Commands.Length);
-            foreach (var command in frame.Commands)
+            writer.Put(frame.SerializedInputs.Length);
+            foreach (var command in frame.SerializedInputs)
             {
                 writer.PutBytesWithLength(command.Data);
             }
@@ -25,11 +25,11 @@ namespace Lockstep.Framework.Networking.Serialization
             frameNumber = reader.GetUInt();
             var packetsLen = reader.GetInt();
 
-            frame.Commands = new Command[packetsLen];
+            frame.SerializedInputs = new SerializedInput[packetsLen];
 
             for (int i = 0; i < packetsLen; i++)
             {
-                frame.Commands[i] = new Command { Data = reader.GetBytesWithLength() };
+                frame.SerializedInputs[i] = new SerializedInput { Data = reader.GetBytesWithLength() };
             }
         }
     }     

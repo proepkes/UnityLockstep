@@ -35,7 +35,7 @@ public class LockstepSimulator : MonoBehaviour
                 pkt.Deserialize(reader);
                 Time.fixedDeltaTime = 1f/pkt.TargetFPS;
 
-                simulation.Init(new List<IService>()
+                simulation.Init(new List<IService>
                 {
                     new DefaultCommandService(),
                     new UnityViewService()

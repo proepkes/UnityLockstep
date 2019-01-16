@@ -2,6 +2,6 @@
 {
     public class Frame
     {                                          
-        public Command[] Commands { get; set; }     
+        public SerializedInput[] SerializedInputs { get; set; }     
     }     
 }

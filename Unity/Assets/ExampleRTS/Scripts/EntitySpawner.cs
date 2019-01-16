@@ -7,7 +7,11 @@ public class EntitySpawner : MonoBehaviour
     public GameObject EntityPrefab;
 
     private void Start()
-    {                                
+    {           
+    }
+
+    public void Spawn()
+    {
         var sim = FindObjectOfType<LockstepSimulator>();
         for (int j = 0; j < Count; j++)
         {
@@ -16,5 +20,6 @@ public class EntitySpawner : MonoBehaviour
 
             sim.RegisterEntity(e.agent);
         }
-    }     
+
+    }
 }

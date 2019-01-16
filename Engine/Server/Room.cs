@@ -72,7 +72,7 @@ namespace Server
                 switch (messageTag)
                 {
                     case MessageTag.Command:  
-                        _framePacker?.AddCommand(new Command { Data = reader.GetRemainingBytes() });
+                        _framePacker?.AddCommand(new SerializedInput { Data = reader.GetRemainingBytes() });
                         break;
                     case MessageTag.Checksum:
                         var pkt = new Checksum();

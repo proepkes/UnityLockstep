@@ -9,19 +9,18 @@ namespace Lockstep.Framework.Services
         Navigate,
     }
 
-
-    public class DefaultCommandService : ICommandService
+    public class DefaultInputParseService : IInputParseService
     {
         private readonly NetDataReader _dataReader;
 
-        public DefaultCommandService()
+        public DefaultInputParseService()
         {
             _dataReader = new NetDataReader();
         }
 
-        public void Process(InputContext context, Command command)
+        public void Parse(InputContext context, SerializedInput serializedInput)
         {
-            _dataReader.SetSource(command.Data);
+            _dataReader.SetSource(serializedInput.Data);
 
             var commandTag = (CommandTag)_dataReader.GetByte();
             switch (commandTag)
@@ -34,7 +33,7 @@ namespace Lockstep.Framework.Services
 
                     e.isNavigationInput = true;
                     e.AddGameEntityIds(cmd.EntityIds);
-                    e.AddInputPosition(cmd.Destination);
+                    e.AddMousePosition(cmd.Destination);
                          
                     break;
             }

@@ -14,7 +14,7 @@ public class LoadAssetSystem : ReactiveSystem<GameEntity>
 
     protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
     {
-        return context.CreateCollector(GameMatcher.Asset.Added());
+        return context.CreateCollector(GameMatcher.Asset);
     }
 
     protected override bool Filter(GameEntity entity)
