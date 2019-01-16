@@ -31,6 +31,8 @@ namespace Lockstep.Framework.Services
                     cmd.Deserialize(_dataReader);
 
                     var e = context.CreateEntity();
+
+                    e.isNavigationInput = true;
                     e.AddGameEntityIds(cmd.EntityIds);
                     e.AddInputPosition(cmd.Destination);
                          

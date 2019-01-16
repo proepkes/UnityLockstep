@@ -67,6 +67,7 @@
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
     <Compile Include="Generated\Input\Components\InputInputPositionComponent.cs" />
     <Compile Include="Generated\Input\Components\InputGameEntityIdsComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputNavigationInputComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
@@ -113,7 +114,7 @@
   <ItemGroup>
     <Compile Include="Components\Service.cs" />
     <Compile Include="LockstepSystems.cs" />
-    <Compile Include="Systems\Game\AddControllableSystem.cs" />
+    <Compile Include="Systems\CommandMoveSystem.cs" />
     <Compile Include="Systems\RegisterServicesSystem.cs" />
   </ItemGroup>
   <ItemGroup>

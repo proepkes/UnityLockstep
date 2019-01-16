@@ -21,3 +21,8 @@ public class GameEntityIdsComponent : IComponent
     public int[] value;
 }
 
+[Input]
+public class NavigationInputComponent : IComponent
+{
+
+}

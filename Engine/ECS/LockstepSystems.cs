@@ -1,4 +1,5 @@
 ﻿
+using ECS.Systems;
 using Entitas;
 
 public sealed class LockstepSystems : Systems
@@ -9,5 +10,6 @@ public sealed class LockstepSystems : Systems
 
         Add(new RegisterServicesSystem(contexts, externalServices));
         Add(new EmitInputSystem(contexts));
+        Add(new CommandMoveSystem(contexts));
     }       
 }     
