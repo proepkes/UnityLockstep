@@ -114,7 +114,7 @@
   <ItemGroup>
     <Compile Include="Components\Service.cs" />
     <Compile Include="LockstepSystems.cs" />
-    <Compile Include="Systems\CommandMoveSystem.cs" />
+    <Compile Include="Systems\InputToGameEntityDestinationSystem.cs" />
     <Compile Include="Systems\RegisterServicesSystem.cs" />
   </ItemGroup>
   <ItemGroup>

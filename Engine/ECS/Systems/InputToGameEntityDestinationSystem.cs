@@ -4,11 +4,11 @@ using Entitas;
 
 namespace ECS.Systems
 {
-    class CommandMoveSystem : ReactiveSystem<InputEntity>
+    class InputToGameEntityDestinationSystem : ReactiveSystem<InputEntity>
     {
         private readonly GameContext _gameContext;
 
-        public CommandMoveSystem(Contexts contexts) : base(contexts.input)
+        public InputToGameEntityDestinationSystem(Contexts contexts) : base(contexts.input)
         {
         }
 

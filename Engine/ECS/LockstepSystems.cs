@@ -10,6 +10,6 @@ public sealed class LockstepSystems : Systems
 
         Add(new RegisterServicesSystem(contexts, externalServices));
         Add(new EmitInputSystem(contexts));
-        Add(new CommandMoveSystem(contexts));
+        Add(new InputToGameEntityDestinationSystem(contexts));
     }       
 }     
