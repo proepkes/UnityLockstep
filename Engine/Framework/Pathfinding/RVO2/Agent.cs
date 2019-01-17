@@ -520,7 +520,7 @@ namespace RVO
          */
         private bool linearProgram1(IList<Line> lines, int lineNo, Fix64 radius, Vector2 optVelocity, bool directionOpt, ref Vector2 result)
         {
-            Fix64 dotProduct = lines[lineNo].point * lines[lineNo].direction;
+            Fix64 dotProduct = Vector2.Dot(lines[lineNo].point, lines[lineNo].direction);
             Fix64 discriminant = RVOMath.sqr(dotProduct) + RVOMath.sqr(radius) - RVOMath.absSq(lines[lineNo].point);
 
             if (discriminant < F64.C0)
@@ -554,12 +554,12 @@ namespace RVO
                 if (denominator >= F64.C0)
                 {
                     /* Line i bounds line lineNo on the right. */
-                    tRight = Math.Min(tRight, t);
+                    tRight = Math64.Min(tRight, t);
                 }
                 else
                 {
                     /* Line i bounds line lineNo on the left. */
-                    tLeft = Math.Max(tLeft, t);
+                    tLeft = Math64.Max(tLeft, t);
                 }
 
                 if (tLeft > tRight)
@@ -694,16 +694,14 @@ namespace RVO
                         if (RVOMath.fabs(determinant) <= RVOMath.RVO_EPSILON)
                         {
                             /* Line i and line j are parallel. */
-                            if (lines[i].direction * lines[j].direction > F64.C0)
+                            if (Vector2.Dot(lines[i].direction, lines[j].direction) > F64.C0)
                             {
                                 /* Line i and line j point in the same direction. */
                                 continue;
                             }
-                            else
-                            {
-                                /* Line i and line j point in opposite direction. */
-                                line.point = 0.5f * (lines[i].point + lines[j].point);
-                            }
+
+                            /* Line i and line j point in opposite direction. */
+                            line.point = F64.C0p5 * (lines[i].point + lines[j].point);
                         }
                         else
                         {
@@ -729,6 +727,18 @@ namespace RVO
                     distance = RVOMath.det(lines[i].direction, lines[i].point - result);
                 }
             }
+        }
+    }
+
+    public static class Math64
+    {
+        public static Fix64 Min(Fix64 a, Fix64 b)
+        {
+            return a < b ? a : b;
+        }
+        public static Fix64 Max(Fix64 a, Fix64 b)
+        {
+            return a > b ? a : b;
         }
     }
 }

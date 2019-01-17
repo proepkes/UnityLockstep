@@ -267,17 +267,17 @@ namespace RVO
 
             for (int i = begin + 1; i < end; ++i)
             {
-                agentTree_[node].maxX_ = Math.Max(agentTree_[node].maxX_, agents_[i].position_.X);
-                agentTree_[node].minX_ = Math.Min(agentTree_[node].minX_, agents_[i].position_.X);
-                agentTree_[node].maxY_ = Math.Max(agentTree_[node].maxY_, agents_[i].position_.Y);
-                agentTree_[node].minY_ = Math.Min(agentTree_[node].minY_, agents_[i].position_.Y);
+                agentTree_[node].maxX_ = Math64.Max(agentTree_[node].maxX_, agents_[i].position_.X);
+                agentTree_[node].minX_ = Math64.Min(agentTree_[node].minX_, agents_[i].position_.X);
+                agentTree_[node].maxY_ = Math64.Max(agentTree_[node].maxY_, agents_[i].position_.Y);
+                agentTree_[node].minY_ = Math64.Min(agentTree_[node].minY_, agents_[i].position_.Y);
             }
 
             if (end - begin > MAX_LEAF_SIZE)
             {
                 /* No leaf node. */
                 bool isVertical = agentTree_[node].maxX_ - agentTree_[node].minX_ > agentTree_[node].maxY_ - agentTree_[node].minY_;
-                Fix64 splitValue = 0.5f * (isVertical ? agentTree_[node].maxX_ + agentTree_[node].minX_ : agentTree_[node].maxY_ + agentTree_[node].minY_);
+                Fix64 splitValue = F64.C0p5 * (isVertical ? agentTree_[node].maxX_ + agentTree_[node].minX_ : agentTree_[node].maxY_ + agentTree_[node].minY_);
 
                 int left = begin;
                 int right = end;
@@ -498,8 +498,8 @@ namespace RVO
             }
             else
             {
-                Fix64 distSqLeft = RVOMath.sqr(Math.Max(F64.C0, agentTree_[agentTree_[node].left_].minX_ - agent.position_.X)) + RVOMath.sqr(Math.Max(F64.C0, agent.position_.X - agentTree_[agentTree_[node].left_].maxX_)) + RVOMath.sqr(Math.Max(F64.C0, agentTree_[agentTree_[node].left_].minY_ - agent.position_.Y)) + RVOMath.sqr(Math.Max(F64.C0, agent.position_.Y - agentTree_[agentTree_[node].left_].maxY_));
-                Fix64 distSqRight = RVOMath.sqr(Math.Max(F64.C0, agentTree_[agentTree_[node].right_].minX_ - agent.position_.X)) + RVOMath.sqr(Math.Max(F64.C0, agent.position_.X - agentTree_[agentTree_[node].right_].maxX_)) + RVOMath.sqr(Math.Max(F64.C0, agentTree_[agentTree_[node].right_].minY_ - agent.position_.Y)) + RVOMath.sqr(Math.Max(F64.C0, agent.position_.Y - agentTree_[agentTree_[node].right_].maxY_));
+                Fix64 distSqLeft = RVOMath.sqr(Math64.Max(F64.C0, agentTree_[agentTree_[node].left_].minX_ - agent.position_.X)) + RVOMath.sqr(Math64.Max(F64.C0, agent.position_.X - agentTree_[agentTree_[node].left_].maxX_)) + RVOMath.sqr(Math64.Max(F64.C0, agentTree_[agentTree_[node].left_].minY_ - agent.position_.Y)) + RVOMath.sqr(Math64.Max(F64.C0, agent.position_.Y - agentTree_[agentTree_[node].left_].maxY_));
+                Fix64 distSqRight = RVOMath.sqr(Math64.Max(F64.C0, agentTree_[agentTree_[node].right_].minX_ - agent.position_.X)) + RVOMath.sqr(Math64.Max(F64.C0, agent.position_.X - agentTree_[agentTree_[node].right_].maxX_)) + RVOMath.sqr(Math64.Max(F64.C0, agentTree_[agentTree_[node].right_].minY_ - agent.position_.Y)) + RVOMath.sqr(Math64.Max(F64.C0, agent.position_.Y - agentTree_[agentTree_[node].right_].maxY_));
 
                 if (distSqLeft < distSqRight)
                 {
