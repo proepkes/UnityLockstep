@@ -29,8 +29,7 @@
  *
  * <http://gamma.cs.unc.edu/RVO2/>
  */
-
-using System;
+                 
 using BEPUutilities;
 using FixMath.NET;
 

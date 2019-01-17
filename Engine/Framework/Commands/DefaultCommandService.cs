@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ECS.Data;
 using LiteNetLib.Utils;
 using Lockstep.Framework.Commands;
@@ -28,7 +29,8 @@ namespace Lockstep.Framework.Services
         {
             _dataReader.SetSource(serializedInput.Data);
 
-            var commandTag = (CommandTag)_dataReader.GetByte();
+            Console.WriteLine(_dataReader.AvailableBytes);
+            var commandTag = (CommandTag)_dataReader.GetUShort();
 
             var cmd = _commandMap[commandTag];
             cmd.Deserialize(_dataReader);

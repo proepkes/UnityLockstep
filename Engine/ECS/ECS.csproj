@@ -107,6 +107,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LockstepSystems.cs" />
+    <Compile Include="RVO2\Agent.cs" />
+    <Compile Include="RVO2\KdTree.cs" />
+    <Compile Include="RVO2\Line.cs" />
+    <Compile Include="RVO2\Obstacle.cs" />
+    <Compile Include="RVO2\RVOMath.cs" />
+    <Compile Include="RVO2\Simulator.cs" />
+    <Compile Include="Systems\SetAgentPosition.cs" />
     <Compile Include="Systems\InputToCreateGameEntitySystem.cs" />
     <Compile Include="Systems\InputToGameEntityDestinationSystem.cs" />
     <Compile Include="Systems\LoadAssetSystem.cs" />
@@ -126,8 +133,6 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Systems\Flowfield\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

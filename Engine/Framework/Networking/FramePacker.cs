@@ -53,7 +53,7 @@ namespace Lockstep.Framework.Networking
         }
 
         public void AddInput(SerializedInput serializedInput)
-        {             
+        {
             lock (_inputs)
             {
                 _inputs.Add(serializedInput);

@@ -20,9 +20,12 @@ public class EntitySpawner : MonoBehaviour
         for (int j = 0; j < Count; j++)
         {
             var x = new NetDataWriter();
-            var z = new NetDataReader();         
+            new SpawnCommand { AssetName = Prefab.name }.Serialize(x);
+            var z = new NetDataReader(x.Data);
+            
+            new SpawnCommand ().Deserialize(z);
 
-            LockstepNetwork.Instance.SendCommand(CommandTag.Spawn, new SpawnCommand { AssetName = Prefab.name });
+            LockstepNetwork.Instance.SendInput(CommandTag.Spawn, new SpawnCommand { AssetName = Prefab.name });
         }
 
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using ECS.Data;
 using ECS.Systems;
 using Entitas;
+using RVO;
 
 public sealed class LockstepSystems : Systems
 {
@@ -17,7 +18,9 @@ public sealed class LockstepSystems : Systems
         Add(new EmitInputSystem(contexts, externalServices.FirstOrDefault(service => service is IParseInputService) as IParseInputService));
         Add(new InputToCreateGameEntitySystem(contexts));
         Add(new LoadAssetSystem(contexts, externalServices.FirstOrDefault(service => service is IViewService) as IViewService));
-        Add(new InputToGameEntityDestinationSystem(contexts));  
+        Add(new InputToGameEntityDestinationSystem(contexts)); 
+        Add(new SetAgentPosition(contexts));
+        Add(new GameEventSystems(contexts));
     }
 
     public void Simulate(Frame frame)
@@ -26,5 +29,8 @@ public sealed class LockstepSystems : Systems
 
         Execute();
         Cleanup();
+
+
+        Simulator.Instance.doStep();
     }
 }     

@@ -4,6 +4,7 @@ using Lockstep.Framework;
 using Lockstep.Framework.Networking;             
 using Lockstep.Framework.Networking.Serialization;
 using Lockstep.Framework.Services;
+using RVO;
 using UnityEngine;                            
 
 public class LockstepSimulator : MonoBehaviour
@@ -16,7 +17,7 @@ public class LockstepSimulator : MonoBehaviour
         _simulation = new Simulation(
             new List<IService>
             {
-                new DefaultInputParseService(),
+                new DefaultParseInputService(),
                 new UnityViewService()
             })
             {
@@ -33,13 +34,13 @@ public class LockstepSimulator : MonoBehaviour
     {
         switch (messageTag)
         {
-            case MessageTag.Init:
+            case MessageTag.StartSimulation:
                 var pkt = new Init();
                 pkt.Deserialize(reader);
                 Time.fixedDeltaTime = 1f/pkt.TargetFPS;
 
                 _simulation.Init(pkt.Seed);
-
+                 Simulator.Instance.SetNumWorkers(0);
                 _simulationStarted = true;
                 break;
             case MessageTag.Frame:

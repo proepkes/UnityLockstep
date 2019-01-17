@@ -45,8 +45,7 @@ public class LockstepNetwork : MonoBehaviour
     private void OnDestroy()
     {
         client.Stop();       
-    }
-
+    }     
 
     public void SendChecksum(Checksum checksum)
     {
@@ -56,12 +55,13 @@ public class LockstepNetwork : MonoBehaviour
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
 
-    public void SendCommand(CommandTag tag, ISerilalizableCommand message)
+    public void SendInput(CommandTag ctag, ISerilalizableCommand message)
     {
         var writer = new NetDataWriter();
-        writer.Put((byte) MessageTag.Command);
-        writer.Put((byte) tag);                                         
+        writer.Put((byte) MessageTag.Input);
+        writer.Put((ushort) ctag);                                         
         message.Serialize(writer);
+        Debug.Log(writer.Length + " bytes");
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
                

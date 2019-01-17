@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using BEPUutilities;
 using Entitas;
+using RVO;
 
 namespace ECS.Systems
 {
@@ -27,7 +29,9 @@ namespace ECS.Systems
             foreach (InputEntity e in entities)
             {             
                 var gameEntity = _gameContext.CreateEntity();
-                gameEntity.AddAsset(e.spawnInput.assetName); 
+                gameEntity.AddAsset(e.spawnInput.assetName);
+
+                Simulator.Instance.addAgent(gameEntity.id.value, Vector2.Zero);
             }
         }
     }

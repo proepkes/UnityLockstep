@@ -29,8 +29,7 @@
  *
  * <http://gamma.cs.unc.edu/RVO2/>
  */
-
-using System;
+                
 using System.Collections.Generic;
 using System.Threading;
 using BEPUutilities;
@@ -75,8 +74,8 @@ namespace RVO
             {
                 for (int agentNo = start_; agentNo < end_; ++agentNo)
                 {
-                    Simulator.Instance.agents_[agentNo].computeNeighbors();
-                    Simulator.Instance.agents_[agentNo].computeNewVelocity();
+                    Instance.agents_[agentNo].computeNeighbors();
+                    Instance.agents_[agentNo].computeNewVelocity();
                 }
 
                 doneEvent_.Set();
@@ -92,7 +91,7 @@ namespace RVO
             {
                 for (int agentNo = start_; agentNo < end_; ++agentNo)
                 {
-                    Simulator.Instance.agents_[agentNo].update();
+                    Instance.agents_[agentNo].update();
                 }
 
                 doneEvent_.Set();
@@ -103,22 +102,13 @@ namespace RVO
         internal IList<Obstacle> obstacles_;
         internal KdTree kdTree_;
         internal Fix64 timeStep_;
-
-        private static Simulator instance_ = new Simulator();
-
         private Agent defaultAgent_;
         private ManualResetEvent[] doneEvents_;
         private Worker[] workers_;
         private int numWorkers_;
         private Fix64 globalTime_;
 
-        public static Simulator Instance
-        {
-            get
-            {
-                return instance_;
-            }
-        }
+        public static Simulator Instance { get; } = new Simulator();
 
         /**
          * <summary>Adds a new agent with default properties to the simulation.
@@ -130,23 +120,25 @@ namespace RVO
          * <param name="position">The two-dimensional starting position of this
          * agent.</param>
          */
-        public int addAgent(Vector2 position)
+        public int addAgent(int entityId, Vector2 position)
         {
             if (defaultAgent_ == null)
             {
                 return -1;
             }
 
-            Agent agent = new Agent();
-            agent.id_ = agents_.Count;
-            agent.maxNeighbors_ = defaultAgent_.maxNeighbors_;
-            agent.maxSpeed_ = defaultAgent_.maxSpeed_;
-            agent.neighborDist_ = defaultAgent_.neighborDist_;
-            agent.position_ = position;
-            agent.radius_ = defaultAgent_.radius_;
-            agent.timeHorizon_ = defaultAgent_.timeHorizon_;
-            agent.timeHorizonObst_ = defaultAgent_.timeHorizonObst_;
-            agent.velocity_ = defaultAgent_.velocity_;
+            Agent agent = new Agent
+            {
+                id_ = entityId,
+                maxNeighbors_ = defaultAgent_.maxNeighbors_,
+                maxSpeed_ = defaultAgent_.maxSpeed_,
+                neighborDist_ = defaultAgent_.neighborDist_,
+                position_ = position,
+                radius_ = defaultAgent_.radius_,
+                timeHorizon_ = defaultAgent_.timeHorizon_,
+                timeHorizonObst_ = defaultAgent_.timeHorizonObst_,
+                velocity_ = defaultAgent_.velocity_
+            };
             agents_.Add(agent);
 
             return agent.id_;
@@ -188,16 +180,18 @@ namespace RVO
          */
         public int addAgent(Vector2 position, Fix64 neighborDist, int maxNeighbors, Fix64 timeHorizon, Fix64 timeHorizonObst, Fix64 radius, Fix64 maxSpeed, Vector2 velocity)
         {
-            Agent agent = new Agent();
-            agent.id_ = agents_.Count;
-            agent.maxNeighbors_ = maxNeighbors;
-            agent.maxSpeed_ = maxSpeed;
-            agent.neighborDist_ = neighborDist;
-            agent.position_ = position;
-            agent.radius_ = radius;
-            agent.timeHorizon_ = timeHorizon;
-            agent.timeHorizonObst_ = timeHorizonObst;
-            agent.velocity_ = velocity;
+            Agent agent = new Agent
+            {
+                id_ = agents_.Count,
+                maxNeighbors_ = maxNeighbors,
+                maxSpeed_ = maxSpeed,
+                neighborDist_ = neighborDist,
+                position_ = position,
+                radius_ = radius,
+                timeHorizon_ = timeHorizon,
+                timeHorizonObst_ = timeHorizonObst,
+                velocity_ = velocity
+            };
             agents_.Add(agent);
 
             return agent.id_;
@@ -227,8 +221,7 @@ namespace RVO
 
             for (int i = 0; i < vertices.Count; ++i)
             {
-                Obstacle obstacle = new Obstacle();
-                obstacle.point_ = vertices[i];
+                Obstacle obstacle = new Obstacle {point_ = vertices[i]};
 
                 if (i != 0)
                 {
@@ -848,8 +841,7 @@ namespace RVO
 
             if (numWorkers_ <= 0)
             {
-                int completionPorts;
-                ThreadPool.GetMinThreads(out numWorkers_, out completionPorts);
+                ThreadPool.GetMinThreads(out numWorkers_, out _);
             }
             workers_ = null;
         }

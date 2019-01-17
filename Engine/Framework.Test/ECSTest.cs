@@ -53,5 +53,17 @@ namespace Framework.Test
                 inputParser.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
             }
         }
+
+        [Fact]
+        public void TestPositionListenerGetsCalled()
+        {
+            var inputParser = new Mock<IParseInputService>();
+            var viewService = new Mock<IViewService>();
+
+            var sim = new Simulation(new List<IService> { inputParser.Object, viewService.Object });
+            sim.Init(0); 
+
+            //TODO impl
+        }
     }
 }
