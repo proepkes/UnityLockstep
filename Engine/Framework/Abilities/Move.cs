@@ -241,9 +241,8 @@ namespace Lockstep.Framework.Abilities
 												//}
 											}
 											straightPath = false;
-										} else {
 										}
-									} else {
+                                    } else {
 										if (Pathfinder.NeedsPath (currentNode, destinationNode, this.GridSize)) {
 											if (Pathfinder.FindPath (Destination, currentNode, destinationNode, myPath,
 												    GridSize, GetNodeHash (destinationNode))) {
@@ -260,21 +259,17 @@ namespace Lockstep.Framework.Abilities
 										}
 									}
 								}
-							} else {
-
 							}
-						} else {
+                        } else {
 							hasPath = false;
 							//if (IsFormationMoving) {
 							//	StartMove (MyMovementGroup.Destination);
 							//	IsFormationMoving = false;
 							//}
 						}
-					} else {
-
 					}
 
-					if (straightPath) {
+                    if (straightPath) {
 						targetPos = Destination;
 					} else if (hasPath) {
 						if (pathIndex >= myPath.Count) {

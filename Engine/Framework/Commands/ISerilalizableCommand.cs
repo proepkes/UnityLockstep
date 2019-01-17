@@ -7,5 +7,7 @@ namespace Lockstep.Framework.Commands
         void Serialize(NetDataWriter writer);
 
         void Deserialize(NetDataReader reader);
+
+        void Execute(InputContext context);
     }
 }

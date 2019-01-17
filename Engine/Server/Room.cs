@@ -71,8 +71,8 @@ namespace Server
                 var messageTag = (MessageTag)reader.GetByte();
                 switch (messageTag)
                 {
-                    case MessageTag.Command:  
-                        _framePacker?.AddCommand(new SerializedInput { Data = reader.GetRemainingBytes() });
+                    case MessageTag.Input:  
+                        _framePacker?.AddInput(new SerializedInput { Data = reader.GetRemainingBytes() });
                         break;
                     case MessageTag.Checksum:
                         var pkt = new Checksum();
@@ -121,13 +121,16 @@ namespace Server
             var writer = new NetDataWriter();
 
             byte playerId = 0;
+
+            //Create a new seed and send it with a start-message to all clients
+            //The message also contains the respective player-id and the servers' frame rate 
             var seed = new Random().Next(int.MinValue, int.MaxValue);
             foreach (var peer in _server.ConnectedPeerList)
             {
                 _peerIds[peer.Id] = playerId++;
 
                 writer.Reset();
-                writer.Put((byte)MessageTag.Init);
+                writer.Put((byte)MessageTag.StartSimulation);
                 new Init { Seed = seed, TargetFPS = TargetFps, PlayerID = _peerIds[peer.Id] }.Serialize(writer); 
                 peer.Send(writer, DeliveryMethod.ReliableOrdered);  
             }

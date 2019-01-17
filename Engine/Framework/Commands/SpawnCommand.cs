@@ -22,5 +22,11 @@ namespace Lockstep.Framework.Commands
             Position.X = reader.GetLong();
             Position.Y = reader.GetLong();
         }
+
+        public void Execute(InputContext context)
+        {
+            var e = context.CreateEntity();
+            e.AddSpawnInput(AssetName);
+        }
     }
 }

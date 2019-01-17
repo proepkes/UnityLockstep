@@ -5,11 +5,12 @@ using Lockstep.Framework.Commands;
 
 namespace Lockstep.Framework.Services
 {
-    public enum CommandTag : byte
+    public enum CommandTag : ushort
     {
         Spawn,
         Navigate,
     }
+
 
     public class DefaultParseInputService : IParseInputService
     {
@@ -31,22 +32,7 @@ namespace Lockstep.Framework.Services
 
             var cmd = _commandMap[commandTag];
             cmd.Deserialize(_dataReader);
-            InputEntity e;
-            switch (commandTag)
-            {
-                case CommandTag.Spawn:           
-                    e = context.CreateEntity();
-                    e.AddSpawnInput(((SpawnCommand)cmd).AssetName);                              
-                    break;
-                case CommandTag.Navigate:            
-
-                    e = context.CreateEntity();
-                    e.isNavigationInput = true;
-                    e.AddGameEntityIds(((NavigateCommand)cmd).EntityIds);
-                    e.AddMousePosition(((NavigateCommand)cmd).Destination);
-
-                    break;
-            }
+            cmd.Execute(context);
         }        
     }
 }

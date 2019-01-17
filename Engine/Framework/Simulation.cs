@@ -46,22 +46,26 @@ namespace Lockstep.Framework
         }
           
 
-        public void Init(int seed)
+        public Simulation Init(int seed)
         {  
             _random = new Fix64Random(seed);    
             
             _systems.Initialize();
 
-            GridManager.Initialize();               
+            GridManager.Initialize();
+
+            return this;
         }
 
 
-        public void AddFrame(Frame frame)
+        public Simulation AddFrame(Frame frame)
         {
             lock (_frames)
             {      
                 _frames[_lastFramePointer++] = frame;
             }
+
+            return this;
         }             
                    
         public ulong CalculateChecksum()
@@ -77,7 +81,7 @@ namespace Lockstep.Framework
         }
 
 
-        public void Simulate()
+        public Simulation Simulate()
         {
             Frame currentFrame;
             lock (_frames)
@@ -125,6 +129,8 @@ namespace Lockstep.Framework
             //}
                       
             //Space.Update();
+
+            return this;
 
         }      
     }

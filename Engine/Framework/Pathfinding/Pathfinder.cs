@@ -50,10 +50,6 @@ namespace Lockstep.Framework.Pathfinding
 
 		public static uint CombineIteration {get; private set;}
         #endregion
-        #region Broadphase variables
-
-
-        #endregion
 
 		public static bool FindPath(Vector2 Start, Vector2 End, FastList<Vector2> outputVectorPath, int unitHalfSize = 1)
         {

@@ -16,7 +16,7 @@ namespace Lockstep.Framework.Networking
         private uint _frameCounter;
 
         private readonly NetDataWriter _buffer = new NetDataWriter();
-        private readonly List<SerializedInput> _commands = new List<SerializedInput>();
+        private readonly List<SerializedInput> _inputs = new List<SerializedInput>();
         private readonly Dictionary<uint, byte[]> _frames = new Dictionary<uint, byte[]>();     
 
         /// <summary>
@@ -28,10 +28,10 @@ namespace Lockstep.Framework.Networking
             _buffer.Reset();
 
             SerializedInput[] serializedInputs;
-            lock (_commands)
+            lock (_inputs)
             {        
-                serializedInputs = _commands.ToArray();
-                _commands.Clear();
+                serializedInputs = _inputs.ToArray();
+                _inputs.Clear();
 
             }         
 
@@ -52,11 +52,11 @@ namespace Lockstep.Framework.Networking
             _frameCounter++;
         }
 
-        public void AddCommand(SerializedInput serializedInput)
+        public void AddInput(SerializedInput serializedInput)
         {             
-            lock (_commands)
+            lock (_inputs)
             {
-                _commands.Add(serializedInput);
+                _inputs.Add(serializedInput);
             }
         }
 
@@ -77,6 +77,47 @@ namespace Lockstep.Framework.Networking
             }
 
             return i;
+        }
+    }
+
+    /// <summary>
+    /// Class to deserialize a the data from <see cref="FramePacker"/>
+    /// </summary>
+    public class FramePackage
+    {
+        public FramePackage(uint maxFrames = 0)
+        {
+            MaxFrames = maxFrames;
+        }
+
+        public uint CountFrames { get; set; }
+
+        public Frame[] Frames { get; set; }
+
+        /// <summary>
+        /// Defines how many frames should be deserialized. 0 means all that were received
+        /// </summary>
+        public uint MaxFrames { get; set; }
+
+        public void Deserialize(NetDataReader reader)
+        {
+            CountFrames = reader.GetUInt();
+            var buffer = reader.GetBytesWithLength();
+
+            var frames = new List<Frame>();
+
+            var bufferReader = new NetDataReader(buffer);
+
+            CountFrames = MaxFrames == 0 ? CountFrames : Math.Min(CountFrames, MaxFrames);
+
+            for (var i = 0; i < CountFrames; i++)
+            {
+                var frame = new Frame();
+                frame.Deserialize(new NetDataReader(bufferReader.GetBytesWithLength()));
+                frames.Add(frame);
+            }
+
+            Frames = frames.ToArray();
         }
     }
 }
