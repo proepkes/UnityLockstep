@@ -18,14 +18,10 @@ public class MouseInput : MonoBehaviour
     }
                                            
     void Update()
-    {
-       
+    {                   
         if (Input.GetMouseButtonDown(1))
         {      
-            var spawner = FindObjectOfType<EntitySpawner>();
-            spawner.Spawn();
-            //var pos = GetWorldPos(Input.mousePosition);
-            //LockstepNetwork.Instance.SendCommand(CommandTag.Navigate, new MovePacket{ AgentIDs = new ushort[0], PosX = pos.X, PosY = pos.Y});
+            FindObjectOfType<EntitySpawner>().Spawn();                                                                           
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
