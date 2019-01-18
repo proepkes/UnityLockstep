@@ -3,11 +3,11 @@ using Entitas;
 using FixMath.NET;
 using RVO;
 
-public class SetAgentPosition : IExecuteSystem
+public class SetPositionToAgentsPositionSystem : IExecuteSystem
 {
     private readonly GameContext _context;             
 
-    public SetAgentPosition(Contexts contexts)
+    public SetPositionToAgentsPositionSystem(Contexts contexts)
     {
         _context = contexts.game;        
     }     

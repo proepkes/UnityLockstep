@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
-using BEPUutilities;
 using Entitas;
-using FixMath.NET;
-using RVO;
 
 namespace ECS.Systems
 {

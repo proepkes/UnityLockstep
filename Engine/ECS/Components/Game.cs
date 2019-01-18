@@ -37,7 +37,13 @@ public class DestinationComponent : IComponent
 public class PositionComponent : IComponent
 {
     public Vector2 value;
-}   
+}
+
+[Game]
+public class MovingComponent : IComponent
+{
+
+}
 
 [Game]
 public class VelocityComponent : IComponent

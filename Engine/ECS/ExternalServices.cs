@@ -22,3 +22,8 @@ public interface IViewService : IService
 {                                                        
     void LoadAsset(Contexts contexts, IEntity entity, string assetName);
 }
+
+public interface IPathfindingService : IService
+{
+    void UpdateAgents();
+}

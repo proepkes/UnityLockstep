@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -72,6 +72,7 @@
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameMovingComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
@@ -113,7 +114,9 @@
     <Compile Include="RVO2\Obstacle.cs" />
     <Compile Include="RVO2\RVOMath.cs" />
     <Compile Include="RVO2\Simulator.cs" />
-    <Compile Include="Systems\SetAgentPosition.cs" />
+    <Compile Include="Systems\Pathfinding\RemoveDestinationOnArrivalSystem.cs" />
+    <Compile Include="Systems\Pathfinding\UpdatePreferredVelocity.cs" />
+    <Compile Include="Systems\SetPositionToAgentsPositionSystem.cs" />
     <Compile Include="Systems\InputToCreateGameEntitySystem.cs" />
     <Compile Include="Systems\InputToGameEntityDestinationSystem.cs" />
     <Compile Include="Systems\LoadAssetSystem.cs" />
