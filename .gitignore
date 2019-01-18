@@ -255,10 +255,10 @@ Unity/Unity\.sln
 Unity/Assembly-CSharp\.csproj
 
 Unity/Assembly-CSharp-Editor\.csproj
-/Engine/Jenny-Server.bat
-/Engine/Jenny-Server
-/Engine/Jenny-Auto-Import.bat
-/Engine/Jenny-Auto-Import
 /Engine/Jenny
 /Unity/Assets/Integration/DesperateDevs
 /Unity/Assets/Integration/Entitas
+/Engine/ECS/Jenny-Server.bat
+/Engine/ECS/Jenny-Server
+/Engine/ECS/Jenny-Auto-Import.bat
+/Engine/ECS/Jenny-Auto-Import
