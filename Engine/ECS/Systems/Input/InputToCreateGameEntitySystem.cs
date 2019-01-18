@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using BEPUutilities;
-using Entitas;
-using RVO;
+﻿using System.Collections.Generic;    
+using Entitas;     
 
 namespace ECS.Systems
 {
@@ -21,7 +19,7 @@ namespace ECS.Systems
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasSpawnInput;
+            return entity.hasSpawnInput && entity.hasInputPosition;
         }
 
         protected override void Execute(List<InputEntity> entities)
@@ -29,9 +27,10 @@ namespace ECS.Systems
             foreach (InputEntity e in entities)
             {             
                 var gameEntity = _gameContext.CreateEntity();
-                gameEntity.AddAsset(e.spawnInput.assetName);
+                gameEntity.AddAsset(e.spawnInput.assetName); 
+                gameEntity.AddPosition(e.inputPosition.value);
+                gameEntity.isMovable = e.spawnInput.movable;   
 
-                Simulator.Instance.addAgent(gameEntity.id.value, Vector2.Zero);
             }
         }
     }

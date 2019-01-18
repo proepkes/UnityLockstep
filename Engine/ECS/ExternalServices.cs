@@ -25,5 +25,12 @@ public interface IViewService : IService
 
 public interface IPathfindingService : IService
 {
-    void UpdateAgents();
+    void AddAgent(GameEntity entity, Vector2 position);
+    void UpdateAgents(GameEntity[] entities);
+    Vector2 GetAgentPosition(int agentId);
+}
+      
+public interface ILogger : IService
+{
+    void Warn(string message);
 }

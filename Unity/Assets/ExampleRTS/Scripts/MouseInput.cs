@@ -26,7 +26,7 @@ public class MouseInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             var pos = GetWorldPos(Input.mousePosition);
-            LockstepNetwork.Instance.SendInput(CommandTag.Navigate, new NavigateCommand { Destination = new BEPUutilities.Vector2(pos.X, pos.Y), EntityIds = new []
+            LockstepNetwork.Instance.SendInput(new NavigateCommand { Destination = new BEPUutilities.Vector2(pos.X, pos.Y), EntityIds = new []
             {
                 Contexts.sharedInstance.game.GetEntities().First().id.value
             }}); 

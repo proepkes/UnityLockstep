@@ -8,18 +8,18 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly MovingComponent movingComponent = new MovingComponent();
+    static readonly MovableComponent movableComponent = new MovableComponent();
 
-    public bool isMoving {
-        get { return HasComponent(GameComponentsLookup.Moving); }
+    public bool isMovable {
+        get { return HasComponent(GameComponentsLookup.Movable); }
         set {
-            if (value != isMoving) {
-                var index = GameComponentsLookup.Moving;
+            if (value != isMovable) {
+                var index = GameComponentsLookup.Movable;
                 if (value) {
                     var componentPool = GetComponentPool(index);
                     var component = componentPool.Count > 0
                             ? componentPool.Pop()
-                            : movingComponent;
+                            : movableComponent;
 
                     AddComponent(index, component);
                 } else {
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherMoving;
+    static Entitas.IMatcher<GameEntity> _matcherMovable;
 
-    public static Entitas.IMatcher<GameEntity> Moving {
+    public static Entitas.IMatcher<GameEntity> Movable {
         get {
-            if (_matcherMoving == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Moving);
+            if (_matcherMovable == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Movable);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherMoving = matcher;
+                _matcherMovable = matcher;
             }
 
-            return _matcherMoving;
+            return _matcherMovable;
         }
     }
 }

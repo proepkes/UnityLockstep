@@ -11,17 +11,19 @@ public partial class InputEntity {
     public SpawnInputComponent spawnInput { get { return (SpawnInputComponent)GetComponent(InputComponentsLookup.SpawnInput); } }
     public bool hasSpawnInput { get { return HasComponent(InputComponentsLookup.SpawnInput); } }
 
-    public void AddSpawnInput(string newAssetName) {
+    public void AddSpawnInput(string newAssetName, bool newMovable) {
         var index = InputComponentsLookup.SpawnInput;
         var component = (SpawnInputComponent)CreateComponent(index, typeof(SpawnInputComponent));
         component.assetName = newAssetName;
+        component.movable = newMovable;
         AddComponent(index, component);
     }
 
-    public void ReplaceSpawnInput(string newAssetName) {
+    public void ReplaceSpawnInput(string newAssetName, bool newMovable) {
         var index = InputComponentsLookup.SpawnInput;
         var component = (SpawnInputComponent)CreateComponent(index, typeof(SpawnInputComponent));
         component.assetName = newAssetName;
+        component.movable = newMovable;
         ReplaceComponent(index, component);
     }
 

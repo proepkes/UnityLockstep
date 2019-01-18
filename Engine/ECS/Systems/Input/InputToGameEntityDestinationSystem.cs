@@ -5,10 +5,12 @@ namespace ECS.Systems
 {
     class InputToGameEntityDestinationSystem : ReactiveSystem<InputEntity>
     {
+        private readonly ILogger _logger;
         private readonly GameContext _gameContext;
 
-        public InputToGameEntityDestinationSystem(Contexts contexts) : base(contexts.input)
+        public InputToGameEntityDestinationSystem(Contexts contexts, ILogger logger) : base(contexts.input)
         {
+            _logger = logger;
             _gameContext = contexts.game;
         }
 
@@ -19,7 +21,7 @@ namespace ECS.Systems
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasGameEntityIds && entity.hasMousePosition;
+            return entity.hasGameEntityIds && entity.hasInputPosition;
         }
 
         protected override void Execute(List<InputEntity> entities)
@@ -29,7 +31,13 @@ namespace ECS.Systems
                 //TODO: Add PlayerControlledSystem to only iterate over gameEntites that are controlled by the player who sent the serializedInput
                 foreach (var entityId in e.gameEntityIds.value)
                 {
-                    _gameContext.GetEntityWithId(entityId).ReplaceDestination(e.mousePosition.value);
+                    var gameEntity = _gameContext.GetEntityWithId(entityId);
+                    if (!gameEntity.isMovable)
+                    {
+                        _logger?.Warn("Adding a destination to a non-movable entity");
+                    }
+
+                    gameEntity.ReplaceDestination(e.inputPosition.value);
                 }
             }
         }

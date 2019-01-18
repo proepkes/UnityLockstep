@@ -2,15 +2,15 @@
 using ECS.Data;
 using Entitas;
 using Entitas.CodeGeneration.Attributes;
-
+      
 [Input, Unique]
 public class FrameComponent : IComponent
 {
     public SerializedInput[] SerializedInputs;
-}         
+}
 
 [Input]
-public class MousePositionComponent : IComponent
+public class InputPositionComponent : IComponent
 {
     public Vector2 value;
 }
@@ -31,4 +31,5 @@ public class NavigationInputComponent : IComponent
 public class SpawnInputComponent : IComponent
 {
     public string assetName;
-}
+    public bool movable;
+} 

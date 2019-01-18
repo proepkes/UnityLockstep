@@ -25,7 +25,7 @@ public class EntitySpawner : MonoBehaviour
             
             new SpawnCommand ().Deserialize(z);
 
-            LockstepNetwork.Instance.SendInput(CommandTag.Spawn, new SpawnCommand { AssetName = Prefab.name });
+            LockstepNetwork.Instance.SendInput(new SpawnCommand { AssetName = Prefab.name });
         }
 
     }

@@ -56,36 +56,8 @@ namespace RVO
          */
         public static Fix64 abs(Vector2 vector)
         {
-            return sqrt(absSq(vector));
-        }
-
-        /**
-         * <summary>Computes the squared length of a specified two-dimensional
-         * vector.</summary>
-         *
-         * <returns>The squared length of the two-dimensional vector.</returns>
-         *
-         * <param name="vector">The two-dimensional vector whose squared length
-         * is to be computed.</param>
-         */
-        public static Fix64 absSq(Vector2 vector)
-        {
-            return  Vector2.Dot(vector, vector);
-        }
-
-        /**
-         * <summary>Computes the normalization of the specified two-dimensional
-         * vector.</summary>
-         *
-         * <returns>The normalization of the two-dimensional vector.</returns>
-         *
-         * <param name="vector">The two-dimensional vector whose normalization
-         * is to be computed.</param>
-         */
-        public static Vector2 normalize(Vector2 vector)
-        {
-            return vector / abs(vector);
-        }
+            return Fix64.Sqrt(vector.LengthSquared());
+        }        
 
         /**
          * <summary>Computes the determinant of a two-dimensional square matrix
@@ -120,33 +92,21 @@ namespace RVO
          */
         internal static Fix64 distSqPointLineSegment(Vector2 vector1, Vector2 vector2, Vector2 vector3)
         {
-            Fix64 r = Vector2.Dot(vector3 - vector1, vector2 - vector1) / absSq(vector2 - vector1);
+            Fix64 r = Vector2.Dot(vector3 - vector1, vector2 - vector1) / (vector2 - vector1).LengthSquared();
 
             if (r < F64.C0)
             {
-                return absSq(vector3 - vector1);
+                return (vector3 - vector1).LengthSquared();
             }
 
             if (r > F64.C1)
             {
-                return absSq(vector3 - vector2);
+                return (vector3 - vector2).LengthSquared();
             }
 
-            return absSq(vector3 - (vector1 + r * (vector2 - vector1)));
+            return (vector3 - (vector1 + r * (vector2 - vector1))).LengthSquared();
         }
-
-        /**
-         * <summary>Computes the absolute value of a float.</summary>
-         *
-         * <returns>The absolute value of the float.</returns>
-         *
-         * <param name="scalar">The float of which to compute the absolute
-         * value.</param>
-         */
-        internal static Fix64 fabs(Fix64 scalar)
-        {
-            return Fix64.Abs(scalar);
-        }
+           
 
         /**
          * <summary>Computes the signed distance from a line connecting the
@@ -163,31 +123,6 @@ namespace RVO
         internal static Fix64 leftOf(Vector2 a, Vector2 b, Vector2 c)
         {
             return det(a - c, b - a);
-        }
-
-        /**
-         * <summary>Computes the square of a float.</summary>
-         *
-         * <returns>The square of the float.</returns>
-         *
-         * <param name="scalar">The float to be squared.</param>
-         */
-        internal static Fix64 sqr(Fix64 scalar)
-        {
-            return Fix64.Pow2(scalar);
-        }
-
-        /**
-         * <summary>Computes the square root of a float.</summary>
-         *
-         * <returns>The square root of the float.</returns>
-         *
-         * <param name="scalar">The float of which to compute the square root.
-         * </param>
-         */
-        internal static Fix64 sqrt(Fix64 scalar)
-        {
-            return Fix64.Sqrt(scalar);
-        }
+        }     
     }
 }

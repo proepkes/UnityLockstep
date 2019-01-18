@@ -1,5 +1,4 @@
-﻿using Entitas;
-using RVO;
+﻿using Entitas;     
 
 namespace ECS.Systems.Pathfinding
 {
@@ -10,14 +9,14 @@ namespace ECS.Systems.Pathfinding
 
         public RemoveDestinationOnArrivalSystem(Contexts contexts)
         {
-            _movingEntites = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Position, GameMatcher.Destination));
+            _movingEntites = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Movable, GameMatcher.Destination));
         }
 
         public void Execute()
         {
-            foreach (GameEntity e in _movingEntites.GetEntities())
+            foreach (var e in _movingEntites.GetEntities())
             {
-                if (RVOMath.absSq(e.position.value - e.destination.value) < 400)
+                if ((e.position.value - e.destination.value).Length() < 1)
                 {
                     e.RemoveDestination();
                 }

@@ -14,6 +14,9 @@ public class EmitInputSystem : IExecuteSystem, ICleanupSystem
 
     public void Execute()
     {
+        if (_inputContext.frame.SerializedInputs == null)
+            return;
+
         foreach (var input in _inputContext.frame.SerializedInputs)
         {
             _parseInputService.Parse(_inputContext, input);

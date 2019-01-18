@@ -11,13 +11,13 @@ public static class GameComponentsLookup {
     public const int Asset = 0;
     public const int Controllable = 1;
     public const int Destination = 2;
-    public const int Health = 3;
-    public const int Id = 4;
-    public const int Moving = 5;
-    public const int Position = 6;
-    public const int PositionListener = 7;
-    public const int Team = 8;
-    public const int Velocity = 9;
+    public const int DestinationRemovedListener = 3;
+    public const int Health = 4;
+    public const int Id = 5;
+    public const int Movable = 6;
+    public const int Position = 7;
+    public const int PositionListener = 8;
+    public const int Team = 9;
 
     public const int TotalComponents = 10;
 
@@ -25,25 +25,25 @@ public static class GameComponentsLookup {
         "Asset",
         "Controllable",
         "Destination",
+        "DestinationRemovedListener",
         "Health",
         "Id",
-        "Moving",
+        "Movable",
         "Position",
         "PositionListener",
-        "Team",
-        "Velocity"
+        "Team"
     };
 
     public static readonly System.Type[] componentTypes = {
         typeof(AssetComponent),
         typeof(ControllableComponent),
         typeof(DestinationComponent),
+        typeof(DestinationRemovedListenerComponent),
         typeof(HealthComponent),
         typeof(IdComponent),
-        typeof(MovingComponent),
+        typeof(MovableComponent),
         typeof(PositionComponent),
         typeof(PositionListenerComponent),
-        typeof(TeamComponent),
-        typeof(VelocityComponent)
+        typeof(TeamComponent)
     };
 }

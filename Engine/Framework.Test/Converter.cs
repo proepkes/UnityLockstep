@@ -23,4 +23,18 @@ namespace Framework.Test
             _output.WriteLine(format, args);
         }
     }
+
+    class TestLogger : ILogger
+    {
+        private readonly ITestOutputHelper _outputHelper;
+
+        public TestLogger(ITestOutputHelper outputHelper)
+        {
+            _outputHelper = outputHelper;
+        }
+        public void Warn(string message)
+        {
+            _outputHelper.WriteLine($"Warn: {message}");
+        }
+    }
 }

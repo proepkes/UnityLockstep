@@ -1,35 +1,39 @@
 ﻿using BEPUutilities;
 using LiteNetLib.Utils;
+using Lockstep.Framework.Services;
 
 namespace Lockstep.Framework.Commands
 {
-    public class NavigateCommand : ISerilalizableCommand
+    public class NavigateCommand : CommandBase
     {
         public int[] EntityIds;
 
-        public Vector2 Destination;
+        public Vector2 Destination;  
 
-        public void Serialize(NetDataWriter writer)
+        public NavigateCommand() : base(CommandTag.Navigate)
+        {
+        }      
+
+        protected override void OnSerialize(NetDataWriter writer)
         {
             writer.PutArray(EntityIds);
             writer.Put((long)Destination.X);
             writer.Put((long)Destination.Y);
         }
 
-
-        public void Deserialize(NetDataReader reader)
+        protected override void OnDeserialize(NetDataReader reader)
         {
             EntityIds = reader.GetIntArray();
             Destination.X = reader.GetLong();
             Destination.Y = reader.GetLong();
         }
 
-        public void Execute(InputContext context)
+        public override void Execute(InputContext context)
         {
             var e = context.CreateEntity();
             e.isNavigationInput = true;
             e.AddGameEntityIds(EntityIds);
-            e.AddMousePosition(Destination);
+            e.AddInputPosition(Destination);
         }
     }
 }

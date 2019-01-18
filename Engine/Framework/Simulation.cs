@@ -2,8 +2,7 @@
 using BEPUphysics;
 using BEPUutilities;
 using ECS.Data; 
-using FixMath.NET;                           
-using Lockstep.Framework.Pathfinding;
+using FixMath.NET;                      
 using RVO;
 
 namespace Lockstep.Framework
@@ -52,13 +51,7 @@ namespace Lockstep.Framework
         {  
             _random = new Fix64Random(seed);    
             
-            _systems.Initialize();
-
-            GridManager.Initialize();
-
-            Simulator.Instance.setTimeStep(F64.C0p25);
-            Simulator.Instance.setAgentDefaults(15, 10, 5, 5, 2, 2, new Vector2(0, 0));
-            Simulator.Instance.SetNumWorkers(0);
+            _systems.Initialize();                      
             return this;
         }
 

@@ -3,8 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.Serialization;
-using Lockstep.Framework.Services;
+using Lockstep.Framework.Networking.Serialization;   
 using UnityEngine;   
 
 public class LockstepNetwork : MonoBehaviour
@@ -55,11 +54,10 @@ public class LockstepNetwork : MonoBehaviour
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
 
-    public void SendInput(CommandTag ctag, ISerilalizableCommand message)
+    public void SendInput(ISerilalizableCommand message)
     {
         var writer = new NetDataWriter();
-        writer.Put((byte) MessageTag.Input);
-        writer.Put((ushort) ctag);                                         
+        writer.Put((byte) MessageTag.Input);                                       
         message.Serialize(writer);
         Debug.Log(writer.Length + " bytes");
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);

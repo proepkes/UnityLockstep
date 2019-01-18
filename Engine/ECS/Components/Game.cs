@@ -26,8 +26,8 @@ public class TeamComponent : IComponent
 public class ControllableComponent : IComponent
 {
 }
-      
-[Game]
+
+[Game, Event(EventTarget.Self, EventType.Removed)]
 public class DestinationComponent : IComponent
 {
     public Vector2 value;
@@ -40,16 +40,10 @@ public class PositionComponent : IComponent
 }
 
 [Game]
-public class MovingComponent : IComponent
+public class MovableComponent : IComponent
 {
 
-}
-
-[Game]
-public class VelocityComponent : IComponent
-{
-    public Fix64 value;
-} 
+}        
 
 [Game]
 public sealed class HealthComponent : IComponent
