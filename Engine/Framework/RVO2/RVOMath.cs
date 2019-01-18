@@ -29,11 +29,11 @@
  *
  * <http://gamma.cs.unc.edu/RVO2/>
  */
-                 
+
 using BEPUutilities;
 using FixMath.NET;
 
-namespace RVO
+namespace Lockstep.Framework.RVO2
 {
     /**
      * <summary>Contains functions and constants used in multiple classes.

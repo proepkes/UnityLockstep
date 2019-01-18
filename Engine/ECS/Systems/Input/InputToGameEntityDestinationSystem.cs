@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 
-namespace ECS.Systems
+namespace ECS.Systems.Input
 {
     class InputToGameEntityDestinationSystem : ReactiveSystem<InputEntity>
     {

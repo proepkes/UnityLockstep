@@ -30,12 +30,11 @@
  * <http://gamma.cs.unc.edu/RVO2/>
  */
 
-using System;
 using System.Collections.Generic;
 using BEPUutilities;
 using FixMath.NET;
 
-namespace RVO
+namespace Lockstep.Framework.RVO2
 {
     /**
      * <summary>Defines an agent in the simulation.</summary>

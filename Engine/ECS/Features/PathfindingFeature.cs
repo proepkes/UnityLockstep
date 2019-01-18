@@ -1,4 +1,6 @@
-﻿namespace ECS.Systems.Pathfinding
+﻿using ECS.Systems.Pathfinding;
+
+namespace ECS.Features
 {
     public sealed class PathfindingFeature : Feature
     {

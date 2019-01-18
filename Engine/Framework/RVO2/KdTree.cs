@@ -31,11 +31,10 @@
  */
 
 using System.Collections.Generic;
-using System;
 using BEPUutilities;
 using FixMath.NET;
 
-namespace RVO
+namespace Lockstep.Framework.RVO2
 {
     /**
      * <summary>Defines k-D trees for agents and static obstacles in the

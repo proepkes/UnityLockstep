@@ -2,8 +2,7 @@
 using BEPUphysics;
 using BEPUutilities;
 using ECS.Data; 
-using FixMath.NET;                      
-using RVO;
+using FixMath.NET;
 
 namespace Lockstep.Framework
 {

@@ -32,7 +32,7 @@
 
 using BEPUutilities;
 
-namespace RVO
+namespace Lockstep.Framework.RVO2
 {
     /**
      * <summary>Defines static obstacles in the simulation.</summary>

@@ -1,30 +1,33 @@
 ﻿using Entitas;
 
-public class EmitInputSystem : IExecuteSystem, ICleanupSystem
+namespace ECS.Systems.Input
 {
-    private readonly InputContext _inputContext; 
-
-    private readonly IParseInputService _parseInputService;
-
-    public EmitInputSystem(Contexts contexts, IParseInputService parseInputService)
+    public class EmitInputSystem : IExecuteSystem, ICleanupSystem
     {
-        _inputContext = contexts.input;
-        _parseInputService = parseInputService;
-    }     
+        private readonly InputContext _inputContext; 
 
-    public void Execute()
-    {
-        if (_inputContext.frame.SerializedInputs == null)
-            return;
+        private readonly IParseInputService _parseInputService;
 
-        foreach (var input in _inputContext.frame.SerializedInputs)
+        public EmitInputSystem(Contexts contexts, IParseInputService parseInputService)
         {
-            _parseInputService.Parse(_inputContext, input);
-        }
-    }
+            _inputContext = contexts.input;
+            _parseInputService = parseInputService;
+        }     
 
-    public void Cleanup()
-    {
-        _inputContext.DestroyAllEntities();
+        public void Execute()
+        {
+            if (_inputContext.frame.SerializedInputs == null)
+                return;
+
+            foreach (var input in _inputContext.frame.SerializedInputs)
+            {
+                _parseInputService.Parse(_inputContext, input);
+            }
+        }
+
+        public void Cleanup()
+        {
+            _inputContext.DestroyAllEntities();
+        }
     }
 }     

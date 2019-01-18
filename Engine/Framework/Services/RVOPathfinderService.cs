@@ -2,9 +2,9 @@
 using System.Linq;
 using BEPUutilities;
 using FixMath.NET;
-using RVO;
+using Lockstep.Framework.RVO2;
 
-namespace Lockstep.Framework.DefaultServices
+namespace Lockstep.Framework.Services
 {
     public class RVOPathfinderService : IPathfindingService
 
