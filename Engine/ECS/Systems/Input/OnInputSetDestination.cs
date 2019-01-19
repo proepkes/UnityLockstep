@@ -3,12 +3,12 @@ using Entitas;
 
 namespace ECS.Systems.Input
 {
-    public class InputToGameEntityDestinationSystem : ReactiveSystem<InputEntity>
+    public class OnInputSetDestination : ReactiveSystem<InputEntity>
     {
         private readonly ILogger _logger;
         private readonly GameContext _gameContext;
 
-        public InputToGameEntityDestinationSystem(Contexts contexts, ILogger logger) : base(contexts.input)
+        public OnInputSetDestination(Contexts contexts, ILogger logger) : base(contexts.input)
         {
             _logger = logger;
             _gameContext = contexts.game;

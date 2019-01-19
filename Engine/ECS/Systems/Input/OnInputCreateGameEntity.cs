@@ -3,11 +3,11 @@ using Entitas;
 
 namespace ECS.Systems.Input
 {
-    public class InputToCreateGameEntitySystem : ReactiveSystem<InputEntity>
+    public class OnInputCreateGameEntity : ReactiveSystem<InputEntity>
     {                                                   
         private readonly GameContext _gameContext;
 
-        public InputToCreateGameEntitySystem(Contexts contexts) : base(contexts.input)
+        public OnInputCreateGameEntity(Contexts contexts) : base(contexts.input)
         {                                 
             _gameContext = contexts.game;
         }

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -75,6 +75,7 @@
     <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationRemovedListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
@@ -98,10 +99,13 @@
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
     <Compile Include="Generated\Events\Components\DestinationListenerComponent.cs" />
+    <Compile Include="Generated\Events\Components\DestinationRemovedListenerComponent.cs" />
     <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
     <Compile Include="Generated\Events\Interfaces\IDestinationListener.cs" />
+    <Compile Include="Generated\Events\Interfaces\IDestinationRemovedListener.cs" />
     <Compile Include="Generated\Events\Interfaces\IPositionListener.cs" />
     <Compile Include="Generated\Events\Systems\DestinationEventSystem.cs" />
+    <Compile Include="Generated\Events\Systems\DestinationRemovedEventSystem.cs" />
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
@@ -115,13 +119,13 @@
   <ItemGroup>
     <Compile Include="LockstepSystems.cs" />
     <Compile Include="Features\PathfindingFeature.cs" />
-    <Compile Include="Systems\Pathfinding\RegisterMovableEntityToPathfinderSystem.cs" />
-    <Compile Include="Systems\Pathfinding\UpdatePathfinderSystem.cs" />
-    <Compile Include="Systems\Pathfinding\RemoveDestinationOnArrivalSystem.cs" />
-    <Compile Include="Systems\Pathfinding\SyncAgentPositionSystem.cs" />
-    <Compile Include="Systems\Input\InputToCreateGameEntitySystem.cs" />
-    <Compile Include="Systems\Input\InputToGameEntityDestinationSystem.cs" />
-    <Compile Include="Systems\Input\LoadAssetSystem.cs" />
+    <Compile Include="Systems\Pathfinding\OnGameEntityMovableRegisterToPathfinder.cs" />
+    <Compile Include="Systems\Pathfinding\UpdatePathfinder.cs" />
+    <Compile Include="Systems\Pathfinding\CheckDestinationReached.cs" />
+    <Compile Include="Systems\Pathfinding\SyncAgentPosition.cs" />
+    <Compile Include="Systems\Input\OnInputCreateGameEntity.cs" />
+    <Compile Include="Systems\Input\OnInputSetDestination.cs" />
+    <Compile Include="Systems\Input\OnGameEntityLoadAsset.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Input.cs" />

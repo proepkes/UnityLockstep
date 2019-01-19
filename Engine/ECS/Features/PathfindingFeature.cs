@@ -6,10 +6,10 @@ namespace ECS.Features
     {
         public PathfindingFeature(Contexts contexts, IPathfindingService pathfindingService)
         {
-            Add(new RegisterMovableEntityToPathfinderSystem(contexts, pathfindingService));
-            Add(new RemoveDestinationOnArrivalSystem(contexts));   
-            Add(new UpdatePathfinderSystem(contexts, pathfindingService));
-            Add(new SyncAgentPositionSystem(contexts, pathfindingService));
+            Add(new OnGameEntityMovableRegisterToPathfinder(contexts, pathfindingService));
+            Add(new CheckDestinationReached(contexts));   
+            Add(new UpdatePathfinder(contexts, pathfindingService));
+            Add(new SyncAgentPosition(contexts, pathfindingService));
 
         }
     }

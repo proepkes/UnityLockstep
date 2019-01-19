@@ -1,14 +1,13 @@
-﻿using System.Collections.Generic;
-using BEPUutilities;
+﻿using System.Collections.Generic;    
 using Entitas;
 
 namespace ECS.Systems.Pathfinding
 {
-    public class RegisterMovableEntityToPathfinderSystem : ReactiveSystem<GameEntity>
+    public class OnGameEntityMovableRegisterToPathfinder : ReactiveSystem<GameEntity>
     {
         private readonly IPathfindingService _pathfindingService;
 
-        public RegisterMovableEntityToPathfinderSystem(Contexts contexts, IPathfindingService pathfindingService) : base(contexts.game)
+        public OnGameEntityMovableRegisterToPathfinder(Contexts contexts, IPathfindingService pathfindingService) : base(contexts.game)
         {
             _pathfindingService = pathfindingService;
         }
