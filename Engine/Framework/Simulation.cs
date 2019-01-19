@@ -8,10 +8,7 @@ namespace Lockstep.Framework
 {
     public class Simulation
     {                 
-        private readonly LockstepSystems _systems;
-
-
-        public const int FRAMERATE = 20;
+        private readonly LockstepSystems _systems;   
 
         public Space Space { get; }
 
@@ -38,11 +35,11 @@ namespace Lockstep.Framework
             }
         }
 
-        public Simulation(ServiceContainer serviceContainer)
+        public Simulation(Contexts contexts, ServiceContainer serviceContainer)
         {
             Space = new Space();
 
-            _systems = new LockstepSystems(Contexts.sharedInstance, serviceContainer);
+            _systems = new LockstepSystems(contexts, serviceContainer);
         }
           
 
@@ -128,7 +125,6 @@ namespace Lockstep.Framework
             //Space.Update();
 
             return this;
-
         }      
     }
 }

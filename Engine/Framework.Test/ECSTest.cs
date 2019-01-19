@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 //TODO: tests currently don't work parallel, probably because of Context.sharedInstance
 namespace Framework.Test
-{
+{           
     public class ECSTest
     {                                               
         public ECSTest(ITestOutputHelper output)
@@ -21,7 +21,7 @@ namespace Framework.Test
         [Fact]
         public void TestGameEntityId()
         {
-            var contexts = Contexts.sharedInstance;   
+            var contexts = new Contexts();   
                                   
             var container = new ServiceContainer();
             container
@@ -39,26 +39,6 @@ namespace Framework.Test
             }
             contexts.game.GetEntities().Select(entity => entity.id.value).ShouldBeUnique();
             contexts.game.count.ShouldBe(numEntities);
-        }
-
-        [Fact]
-        public void TestInputParserGetsCalled()
-        {
-            var inputParser = new Mock<IParseInputService>();
-            var container = new ServiceContainer();
-            container.Register(inputParser.Object);
-
-            var sim = new Simulation(container);
-            sim.Init(0);
-
-            for (var i = 0; i < 10; i++)
-            {
-                var command = new SerializedInput();
-                sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
-                sim.Simulate();
-
-                inputParser.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
-            }
-        }  
+        } 
     }
 }
