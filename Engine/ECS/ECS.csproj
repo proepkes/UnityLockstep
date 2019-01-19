@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -119,13 +119,13 @@
   <ItemGroup>
     <Compile Include="LockstepSystems.cs" />
     <Compile Include="Features\PathfindingFeature.cs" />
-    <Compile Include="Systems\Pathfinding\RegisterMovableEntityToPathfinderSystem.cs" />
-    <Compile Include="Systems\Pathfinding\UpdatePathfinderSystem.cs" />
-    <Compile Include="Systems\Pathfinding\RemoveDestinationOnArrivalSystem.cs" />
-    <Compile Include="Systems\Pathfinding\SyncAgentPositionSystem.cs" />
-    <Compile Include="Systems\Input\InputToCreateGameEntitySystem.cs" />
-    <Compile Include="Systems\Input\InputToGameEntityDestinationSystem.cs" />
-    <Compile Include="Systems\Input\LoadAssetSystem.cs" />
+    <Compile Include="Systems\Pathfinding\OnGameEntityMovableRegisterToPathfinder.cs" />
+    <Compile Include="Systems\Pathfinding\UpdatePathfinder.cs" />
+    <Compile Include="Systems\Pathfinding\CheckDestinationReached.cs" />
+    <Compile Include="Systems\Pathfinding\SyncAgentPosition.cs" />
+    <Compile Include="Systems\Input\OnInputCreateGameEntity.cs" />
+    <Compile Include="Systems\Input\OnInputSetDestination.cs" />
+    <Compile Include="Systems\Input\OnGameEntityLoadAsset.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Input.cs" />

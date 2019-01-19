@@ -3,12 +3,12 @@ using Entitas;
 
 namespace ECS.Systems.Input
 {
-    public class LoadAssetSystem : ReactiveSystem<GameEntity>
+    public class OnGameEntityLoadAsset : ReactiveSystem<GameEntity>
     {
         readonly Contexts _contexts;
         readonly IViewService _viewService;                     
 
-        public LoadAssetSystem(Contexts contexts, IViewService viewService) : base(contexts.game)
+        public OnGameEntityLoadAsset(Contexts contexts, IViewService viewService) : base(contexts.game)
         {
             _contexts = contexts;
             _viewService = viewService;
