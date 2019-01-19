@@ -5,7 +5,7 @@ using Lockstep.Framework;
 using Lockstep.Framework.Networking;             
 using Lockstep.Framework.Networking.Serialization;
 using Lockstep.Framework.Services;
-using Lockstep.Framework.Services.Pathfinding;
+using Lockstep.Framework.Services.Navigation;    
 using UnityEngine;                            
 
 public class LockstepSimulator : MonoBehaviour
@@ -15,11 +15,13 @@ public class LockstepSimulator : MonoBehaviour
 
     private void Awake()
     {
-        _simulation = new Simulation( new ServiceContainer()
-            .Register<IPathfindingService>(new SimplePathfinderService())
-            .Register<IParseInputService>(new ParseInputService())
-            .Register<IViewService>(new UnityViewService())
-            .Register<ILogger>(new UnityLogger())) 
+        _simulation = new Simulation(
+            Contexts.sharedInstance, 
+            new ServiceContainer()
+                .Register<INavigationService>(new SimpleNavigationService())
+                .Register<IParseInputService>(new ParseInputService())
+                .Register<IViewService>(new UnityViewService())
+                .Register<ILogger>(new UnityLogger())) 
             {
                 FrameDelay = 2,
             };

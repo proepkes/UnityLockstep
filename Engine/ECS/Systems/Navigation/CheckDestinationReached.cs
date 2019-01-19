@@ -1,6 +1,6 @@
-﻿using Entitas;     
+﻿using Entitas;
 
-namespace ECS.Systems.Pathfinding
+namespace ECS.Systems.Navigation
 {
     public class CheckDestinationReached : IExecuteSystem
     {

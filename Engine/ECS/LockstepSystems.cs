@@ -14,7 +14,7 @@ public sealed class LockstepSystems : Systems
                                
         Add(new InputFeature(contexts, serviceContainer));
 
-        Add(new PathfindingFeature(contexts, serviceContainer));
+        Add(new NavigationFeature(contexts, serviceContainer));
 
         Add(new GameEventSystems(contexts));
     }

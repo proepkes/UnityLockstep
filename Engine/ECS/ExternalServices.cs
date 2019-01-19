@@ -23,12 +23,14 @@ public interface IViewService : IService
     void LoadAsset(Contexts contexts, IEntity entity, string assetName);
 }
 
-public interface IPathfindingService : IService
+public interface INavigationService : IService
 {
     void AddAgent(GameEntity entity, Vector2 position);
 
-    //TODO: pathfinder should use internal positioning-system
-    void UpdateAgents(GameEntity[] entities);
+    void UpdateDestination(int[] agentIds, Vector2 newDestination);
+                                                                 
+    void UpdateAgents();
+
     Vector2 GetAgentPosition(int agentId);
 }
       

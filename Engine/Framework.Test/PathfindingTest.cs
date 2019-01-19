@@ -7,7 +7,7 @@ using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Services;
-using Lockstep.Framework.Services.Pathfinding;
+using Lockstep.Framework.Services.Navigation;
 using Moq;        
 using Shouldly;       
 using Xunit;
@@ -27,7 +27,7 @@ namespace Framework.Test
 
 
         [Fact]
-        public void TestRvo()
+        public void TestWithRvo()
         {             
             var contexts = new Contexts();
             var serializer = new NetDataWriter();
@@ -35,7 +35,7 @@ namespace Framework.Test
 
             var container = new ServiceContainer()
                 .Register<IParseInputService>(new ParseInputService())
-                .Register<IPathfindingService>(new RVOPathfinderService())
+                .Register<INavigationService>(new RVONavigationService())
                 .Register<ILogger>(new TestLogger(_output))
                 .Register(new Mock<IViewService>().Object);
 
@@ -100,7 +100,7 @@ namespace Framework.Test
 
             var container = new ServiceContainer()
                 .Register<IParseInputService>(new ParseInputService())
-                .Register<IPathfindingService>(new SimplePathfinderService())
+                .Register<INavigationService>(new SimpleNavigationService())
                 .Register<ILogger>(new TestLogger(_output))
                 .Register(new Mock<IViewService>().Object);   
 

@@ -118,13 +118,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LockstepSystems.cs" />
-    <Compile Include="Features\PathfindingFeature.cs" />
-    <Compile Include="Systems\Pathfinding\OnGameEntityMovableRegisterToPathfinder.cs" />
-    <Compile Include="Systems\Pathfinding\UpdatePathfinder.cs" />
-    <Compile Include="Systems\Pathfinding\CheckDestinationReached.cs" />
-    <Compile Include="Systems\Pathfinding\SyncAgentPosition.cs" />
+    <Compile Include="Features\NavigationFeature.cs" />
+    <Compile Include="Systems\Navigation\OnGameEntityMovableRegisterToPathfinder.cs" />
+    <Compile Include="Systems\Navigation\UpdateNavigationService.cs" />
+    <Compile Include="Systems\Navigation\CheckDestinationReached.cs" />
+    <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
     <Compile Include="Systems\Input\OnInputCreateGameEntity.cs" />
-    <Compile Include="Systems\Input\OnInputSetDestination.cs" />
+    <Compile Include="Systems\Navigation\OnInputSetDestination.cs" />
     <Compile Include="Systems\Input\OnGameEntityLoadAsset.cs" />
   </ItemGroup>
   <ItemGroup>

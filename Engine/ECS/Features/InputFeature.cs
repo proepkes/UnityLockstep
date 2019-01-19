@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using ECS.Systems.Input;    
+using ECS.Systems.Input;
+using ECS.Systems.Navigation;
 
 namespace ECS.Features
 {
@@ -11,7 +12,6 @@ namespace ECS.Features
             Add(new EmitInputSystem(contexts, serviceContainer.Get<IParseInputService>()));
             Add(new OnInputCreateGameEntity(contexts));
             Add(new OnGameEntityLoadAsset(contexts, serviceContainer.Get<IViewService>()));
-            Add(new OnInputSetDestination(contexts, serviceContainer.Get<ILogger>()));
         }
     }
 
