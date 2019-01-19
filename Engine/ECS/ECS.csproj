@@ -75,6 +75,7 @@
     <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationRemovedListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
@@ -98,10 +99,13 @@
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
     <Compile Include="Generated\Events\Components\DestinationListenerComponent.cs" />
+    <Compile Include="Generated\Events\Components\DestinationRemovedListenerComponent.cs" />
     <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
     <Compile Include="Generated\Events\Interfaces\IDestinationListener.cs" />
+    <Compile Include="Generated\Events\Interfaces\IDestinationRemovedListener.cs" />
     <Compile Include="Generated\Events\Interfaces\IPositionListener.cs" />
     <Compile Include="Generated\Events\Systems\DestinationEventSystem.cs" />
+    <Compile Include="Generated\Events\Systems\DestinationRemovedEventSystem.cs" />
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
