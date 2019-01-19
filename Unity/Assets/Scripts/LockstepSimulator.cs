@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ECS.Features;
 using LiteNetLib.Utils;
 using Lockstep.Framework;              
 using Lockstep.Framework.Networking;             
@@ -14,14 +15,11 @@ public class LockstepSimulator : MonoBehaviour
 
     private void Awake()
     {
-        _simulation = new Simulation(
-            new List<IService>
-            {
-                new SimplePathfinderService(),
-                new ParseInputService(),
-                new UnityViewService(),
-                new UnityLogger()
-            })
+        _simulation = new Simulation( new ServiceContainer()
+            .Register<IPathfindingService>(new SimplePathfinderService())
+            .Register<IParseInputService>(new ParseInputService())
+            .Register<IViewService>(new UnityViewService())
+            .Register<ILogger>(new UnityLogger())) 
             {
                 FrameDelay = 2,
             };

@@ -1,18 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;      
-using ECS.Systems.Input;
+using ECS.Systems.Input;    
 
 namespace ECS.Features
 {
     public sealed class InputFeature : Feature
     {
-        public InputFeature(Contexts contexts, ICollection<IService> externalServices)
+        public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
         {    
-            Add(new EmitInputSystem(contexts, externalServices.FirstOrDefault(service => service is IParseInputService) as IParseInputService));
+            Add(new EmitInputSystem(contexts, serviceContainer.Get<IParseInputService>()));
             Add(new OnInputCreateGameEntity(contexts));
-            Add(new OnGameEntityLoadAsset(contexts, externalServices.FirstOrDefault(service => service is IViewService) as IViewService));
-            Add(new OnInputSetDestination(contexts, externalServices.FirstOrDefault(service => service is ILogger) as ILogger));
+            Add(new OnGameEntityLoadAsset(contexts, serviceContainer.Get<IViewService>()));
+            Add(new OnInputSetDestination(contexts, serviceContainer.Get<ILogger>()));
+        }
+    }
+
+    public class ServiceContainer
+    {
+        private readonly Dictionary<string, IService> _instances = new Dictionary<string, IService>();
+
+        public ServiceContainer Register<T>(T instance) where T : IService
+        {
+            var key = typeof(T).FullName;
+            if (key != null)
+            {
+                _instances.Add(key, instance);
+            }
+
+            return this;
+        }
+
+        public T Get<T>() where T : IService
+        {
+            var key = typeof(T).FullName;
+            if (key == null || !_instances.ContainsKey(key))
+            {
+                return default(T);
+            }
+
+            return (T) _instances[key];
         }
     }
 }

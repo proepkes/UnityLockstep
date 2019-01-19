@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;  
-using BEPUphysics;
-using BEPUutilities;
-using ECS.Data; 
-using FixMath.NET;
+using BEPUphysics;   
+using ECS.Data;
+using ECS.Features;
+using FixMath.NET;     
 
 namespace Lockstep.Framework
 {
@@ -38,11 +38,11 @@ namespace Lockstep.Framework
             }
         }
 
-        public Simulation(ICollection<IService> services)
+        public Simulation(ServiceContainer serviceContainer)
         {
             Space = new Space();
 
-            _systems = new LockstepSystems(Contexts.sharedInstance, services);
+            _systems = new LockstepSystems(Contexts.sharedInstance, serviceContainer);
         }
           
 

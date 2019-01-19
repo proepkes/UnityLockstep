@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using BEPUutilities;
+﻿using System;      
 using ECS.Data;
+using ECS.Features;
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Services;
 using Moq;
-using Shouldly;
+using Shouldly;        
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,6 +24,10 @@ namespace Framework.Test
         {
             var inputParser = new ParseInputService();
 
+            var container = new ServiceContainer();
+            container.Register<IParseInputService>(inputParser);
+            container.Register(new Mock<IViewService>().Object);
+
             var serializer = new NetDataWriter();         
             new SpawnCommand
             {
@@ -36,7 +38,7 @@ namespace Framework.Test
 
             var command = new SerializedInput { Data = serializer.Data };
 
-            new Simulation(new List<IService> { inputParser, new Mock<IViewService>().Object })
+            new Simulation(container)
                 .Init(0)
                 .AddFrame(new Frame { SerializedInputs = new[] { command } })
                 .Simulate();

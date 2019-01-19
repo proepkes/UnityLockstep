@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System;  
 using System.Linq;
 using ECS.Data;
+using ECS.Features;
 using Lockstep.Framework;
 using Moq;
-using Shouldly;
+using Shouldly;       
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,9 +21,14 @@ namespace Framework.Test
         [Fact]
         public void TestGameEntityId()
         {
-            var contexts = Contexts.sharedInstance;     
+            var contexts = Contexts.sharedInstance;   
+                                  
+            var container = new ServiceContainer();
+            container
+                .Register(new Mock<IParseInputService>().Object)
+                .Register(new Mock<IViewService>().Object);
 
-            new LockstepSystems(contexts, new List<IService>()).Initialize();
+            new LockstepSystems(contexts, container).Initialize();
 
             const int numEntities = 10;
 
@@ -40,8 +45,10 @@ namespace Framework.Test
         public void TestInputParserGetsCalled()
         {
             var inputParser = new Mock<IParseInputService>();
+            var container = new ServiceContainer();
+            container.Register(inputParser.Object);
 
-            var sim = new Simulation(new List<IService> { inputParser.Object });
+            var sim = new Simulation(container);
             sim.Init(0);
 
             for (var i = 0; i < 10; i++)

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System;                          
 using System.Linq;    
 using BEPUutilities;
-using ECS.Data;        
+using ECS.Data;
+using ECS.Features;
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Services;
 using Lockstep.Framework.Services.Pathfinding;
 using Moq;        
-using Shouldly;
+using Shouldly;       
 using Xunit;
 using Xunit.Abstractions;
 
@@ -30,21 +30,21 @@ namespace Framework.Test
         public void TestRvo()
         {
             var serializer = new NetDataWriter();
-            var destination = new Vector2(111, 22);
-            
+            var destination = new Vector2(111, 22);   
+
+            var container = new ServiceContainer();              
+            container.Register<IParseInputService>(new ParseInputService());
+            container.Register<IPathfindingService>(new RVOPathfinderService());
+            container.Register<ILogger>(new TestLogger(_output));
+            container.Register(new Mock<IViewService>().Object);
+
             new SpawnCommand
             {
                 Movable = true
             }.Serialize(serializer);
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input
-            var sim = new Simulation(new List<IService>
-                {
-                    new TestLogger(_output),
-                    new ParseInputService(),
-                    new RVOPathfinderService(),
-                    new Mock<IViewService>().Object
-                 })
+            var sim = new Simulation(container)
                 .Init(0)
                 .AddFrame(new Frame
                 {
@@ -95,8 +95,14 @@ namespace Framework.Test
             var serializer = new NetDataWriter();        
             new SpawnCommand().Serialize(serializer);
 
+            var container = new ServiceContainer();   
+            container.Register<IParseInputService>(new ParseInputService());
+            container.Register<IPathfindingService>(new SimplePathfinderService());
+            container.Register<ILogger>(new TestLogger(_output));
+            container.Register(new Mock<IViewService>().Object);   
+
             //Initialize a new simulation and add a gameentity
-            var sim = new Simulation(new List<IService> { new ParseInputService(), new RVOPathfinderService(), new Mock<IViewService>().Object })
+            var sim = new Simulation(container)
                 .Init(0)
                 .AddFrame(new Frame
                 {
