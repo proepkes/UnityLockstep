@@ -33,7 +33,7 @@
 using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Framework.RVO2
+namespace Lockstep.Framework.Services.Pathfinding.RVO2
 {
     /**
      * <summary>Contains functions and constants used in multiple classes.

@@ -7,6 +7,7 @@ using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Services;
+using Lockstep.Framework.Services.Pathfinding;
 using Moq;        
 using Shouldly;
 using Xunit;

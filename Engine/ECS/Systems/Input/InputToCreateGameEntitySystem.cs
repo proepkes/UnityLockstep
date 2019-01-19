@@ -3,7 +3,7 @@ using Entitas;
 
 namespace ECS.Systems.Input
 {
-    class InputToCreateGameEntitySystem : ReactiveSystem<InputEntity>
+    public class InputToCreateGameEntitySystem : ReactiveSystem<InputEntity>
     {                                                   
         private readonly GameContext _gameContext;
 

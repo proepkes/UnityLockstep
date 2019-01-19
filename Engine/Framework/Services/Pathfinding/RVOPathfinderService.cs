@@ -2,9 +2,9 @@
 using System.Linq;
 using BEPUutilities;
 using FixMath.NET;
-using Lockstep.Framework.RVO2;
+using Lockstep.Framework.Services.Pathfinding.RVO2;
 
-namespace Lockstep.Framework.Services
+namespace Lockstep.Framework.Services.Pathfinding
 {
     public class RVOPathfinderService : IPathfindingService
 
@@ -40,7 +40,7 @@ namespace Lockstep.Framework.Services
         {
             //Calc. preferred velocity
             foreach (var entity in entities)
-            {
+            {                
                 Vector2 goalVector = entity.destination.value - entity.position.value;
 
                 if (goalVector.LengthSquared() > Fix64.One)

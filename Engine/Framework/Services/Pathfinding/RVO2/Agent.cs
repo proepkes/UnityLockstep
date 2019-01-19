@@ -34,7 +34,7 @@ using System.Collections.Generic;
 using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Framework.RVO2
+namespace Lockstep.Framework.Services.Pathfinding.RVO2
 {
     /**
      * <summary>Defines an agent in the simulation.</summary>

@@ -6,31 +6,31 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-public sealed class DestinationRemovedEventSystem : Entitas.ReactiveSystem<GameEntity> {
+public sealed class DestinationEventSystem : Entitas.ReactiveSystem<GameEntity> {
 
-    readonly System.Collections.Generic.List<IDestinationRemovedListener> _listenerBuffer;
+    readonly System.Collections.Generic.List<IDestinationListener> _listenerBuffer;
 
-    public DestinationRemovedEventSystem(Contexts contexts) : base(contexts.game) {
-        _listenerBuffer = new System.Collections.Generic.List<IDestinationRemovedListener>();
+    public DestinationEventSystem(Contexts contexts) : base(contexts.game) {
+        _listenerBuffer = new System.Collections.Generic.List<IDestinationListener>();
     }
 
     protected override Entitas.ICollector<GameEntity> GetTrigger(Entitas.IContext<GameEntity> context) {
         return Entitas.CollectorContextExtension.CreateCollector(
-            context, Entitas.TriggerOnEventMatcherExtension.Removed(GameMatcher.Destination)
+            context, Entitas.TriggerOnEventMatcherExtension.Added(GameMatcher.Destination)
         );
     }
 
     protected override bool Filter(GameEntity entity) {
-        return !entity.hasDestination && entity.hasDestinationRemovedListener;
+        return entity.hasDestination && entity.hasDestinationListener;
     }
 
     protected override void Execute(System.Collections.Generic.List<GameEntity> entities) {
         foreach (var e in entities) {
-            
+            var component = e.destination;
             _listenerBuffer.Clear();
-            _listenerBuffer.AddRange(e.destinationRemovedListener.value);
+            _listenerBuffer.AddRange(e.destinationListener.value);
             foreach (var listener in _listenerBuffer) {
-                listener.OnDestinationRemoved(e);
+                listener.OnDestination(e, component.value);
             }
         }
     }

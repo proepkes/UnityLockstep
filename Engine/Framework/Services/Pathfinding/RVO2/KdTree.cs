@@ -34,7 +34,7 @@ using System.Collections.Generic;
 using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Framework.RVO2
+namespace Lockstep.Framework.Services.Pathfinding.RVO2
 {
     /**
      * <summary>Defines k-D trees for agents and static obstacles in the

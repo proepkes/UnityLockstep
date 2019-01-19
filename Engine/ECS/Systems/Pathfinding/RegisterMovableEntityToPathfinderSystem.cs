@@ -27,7 +27,7 @@ namespace ECS.Systems.Pathfinding
         {
             foreach (var entity in entities)
             {
-                _pathfindingService.AddAgent(entity, Vector2.Zero); 
+                _pathfindingService.AddAgent(entity, entity.position.value); 
             } 
         }
     }

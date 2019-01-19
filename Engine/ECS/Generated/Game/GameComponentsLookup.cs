@@ -11,7 +11,7 @@ public static class GameComponentsLookup {
     public const int Asset = 0;
     public const int Controllable = 1;
     public const int Destination = 2;
-    public const int DestinationRemovedListener = 3;
+    public const int DestinationListener = 3;
     public const int Health = 4;
     public const int Id = 5;
     public const int Movable = 6;
@@ -25,7 +25,7 @@ public static class GameComponentsLookup {
         "Asset",
         "Controllable",
         "Destination",
-        "DestinationRemovedListener",
+        "DestinationListener",
         "Health",
         "Id",
         "Movable",
@@ -38,7 +38,7 @@ public static class GameComponentsLookup {
         typeof(AssetComponent),
         typeof(ControllableComponent),
         typeof(DestinationComponent),
-        typeof(DestinationRemovedListenerComponent),
+        typeof(DestinationListenerComponent),
         typeof(HealthComponent),
         typeof(IdComponent),
         typeof(MovableComponent),

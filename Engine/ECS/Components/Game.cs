@@ -27,7 +27,7 @@ public class ControllableComponent : IComponent
 {
 }
 
-[Game, Event(EventTarget.Self, EventType.Removed)]
+[Game, Event(EventTarget.Self)]
 public class DestinationComponent : IComponent
 {
     public Vector2 value;

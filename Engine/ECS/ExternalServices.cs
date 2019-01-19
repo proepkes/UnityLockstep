@@ -26,6 +26,8 @@ public interface IViewService : IService
 public interface IPathfindingService : IService
 {
     void AddAgent(GameEntity entity, Vector2 position);
+
+    //TODO: pathfinder should use internal positioning-system
     void UpdateAgents(GameEntity[] entities);
     Vector2 GetAgentPosition(int agentId);
 }

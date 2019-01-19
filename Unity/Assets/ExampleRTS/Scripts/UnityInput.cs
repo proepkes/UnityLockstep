@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using FixMath.NET;
-using Lockstep.Framework.Commands;
-using Lockstep.Framework.Services;
+using Lockstep.Framework.Commands; 
 using UnityEngine;
 
-public class MouseInput : MonoBehaviour
+public class UnityInput : MonoBehaviour
 {              
     public static BEPUutilities.Vector2 GetWorldPos(Vector2 screenPos)
     {
@@ -20,16 +19,18 @@ public class MouseInput : MonoBehaviour
     void Update()
     {                   
         if (Input.GetMouseButtonDown(1))
-        {      
-            FindObjectOfType<EntitySpawner>().Spawn();                                                                           
+        {
+
+            var pos = GetWorldPos(Input.mousePosition);
+            FindObjectOfType<EntitySpawner>().Spawn(pos);                                                                           
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
             var pos = GetWorldPos(Input.mousePosition);
-            LockstepNetwork.Instance.SendInput(new NavigateCommand { Destination = new BEPUutilities.Vector2(pos.X, pos.Y), EntityIds = new []
-            {
-                Contexts.sharedInstance.game.GetEntities().First().id.value
-            }}); 
+            LockstepNetwork.Instance.SendInput(new NavigateCommand {
+                Destination = new BEPUutilities.Vector2(pos.X, pos.Y),
+                EntityIds = Contexts.sharedInstance.game.GetEntities().Select(entity => entity.id.value).ToArray()
+            }); 
         }
     }
 }

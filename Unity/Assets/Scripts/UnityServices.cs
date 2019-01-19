@@ -35,3 +35,11 @@ public class UnityViewService : IViewService
         }
     }
 }
+
+public class UnityLogger : ILogger
+{
+    public void Warn(string message)
+    {
+        Debug.LogWarning(message);
+    }
+}

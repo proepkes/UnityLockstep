@@ -32,7 +32,7 @@
 
 using BEPUutilities;
 
-namespace Lockstep.Framework.RVO2
+namespace Lockstep.Framework.Services.Pathfinding.RVO2
 {
     /**
      * <summary>Defines static obstacles in the simulation.</summary>

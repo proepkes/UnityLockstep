@@ -77,3 +77,4 @@ MonoBehaviour:
   Count: 1
   Position: {fileID: 8743372031795298299}
   Prefab: {fileID: 6983145694885263932, guid: 24e2acaaa3c159748824ae994e0c01a3, type: 3}
+  Movable: 1
