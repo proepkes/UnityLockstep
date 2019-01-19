@@ -1,92 +1,73 @@
 ﻿using System.Collections.Generic;  
 using BEPUphysics;
+using BEPUutilities;
+using ECS.Data; 
 using FixMath.NET;
-using Lockstep.Framework.Networking.Messages;
-using Lockstep.Framework.Pathfinding;
 
 namespace Lockstep.Framework
 {
     public class Simulation
-    {                          
+    {                 
+        private readonly LockstepSystems _systems;
+
+
         public const int FRAMERATE = 20;
 
         public Space Space { get; }
+
 
         public int FrameDelay { get; set; }
 
         public uint FrameCounter { get; private set; }
 
-
-        private ulong _entityCounter;
+                                         
         private uint _lastFramePointer;
 
-        private Fix64Random _random;
-        private readonly ICommandHandler _commandHandler;
+        private Fix64Random _random;                  
 
-        private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>();   
-
-        private readonly List<ILockstepEntity> _pendingEntities = new List<ILockstepEntity>();
-        private readonly Dictionary<ulong, ILockstepEntity> _entities = new Dictionary<ulong, ILockstepEntity>();
-
+        private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>();
+             
         public bool CanSimulate
         {
             get
             {
                 lock (_frames)
-                {            
+                {
                     return _lastFramePointer - FrameCounter - FrameDelay > 0;
                 }
             }
-        }                                          
-
-        public Simulation(ICommandHandler commandHandler)
-        {
-            _random = new Fix64Random(0);
-            _commandHandler = commandHandler;
-            GridManager.Initialize();
-            Space = new Space();                                   
         }
 
-        public void SetSeed(int seed)
+        public Simulation(ICollection<IService> services)
         {
-            _random = new Fix64Random(seed);
+            Space = new Space();
+
+            _systems = new LockstepSystems(Contexts.sharedInstance, services);
+        }
+          
+
+        public Simulation Init(int seed)
+        {  
+            _random = new Fix64Random(seed);    
+            
+            _systems.Initialize();                      
+            return this;
         }
 
-        public void AddFrame(Frame frame)
+
+        public Simulation AddFrame(Frame frame)
         {
             lock (_frames)
             {      
                 _frames[_lastFramePointer++] = frame;
             }
-        }
 
-        public void EnqueueEntity(ILockstepEntity entity)
-        {
-            lock (_pendingEntities)
-            {
-                _pendingEntities.Add(entity);
-            }
-        }
-
-        public ICollection<ILockstepEntity> GetEntities()
-        {
-            return _entities.Values;
-        }
-
-        public T GetEntity<T>(ulong id) where T : ILockstepEntity
-        {
-            return (T) _entities[id];
-        }
-
+            return this;
+        }             
+                   
         public ulong CalculateChecksum()
         {
-            ulong hash = 3;
-
-            foreach (var entity in _entities.Values)
-            {
-                hash ^= entity.GetHashCode();
-            }
-
+            ulong hash = 3;      
             return hash;
         }
 
@@ -97,46 +78,57 @@ namespace Lockstep.Framework
         }
 
 
-        public void Simulate()
-        {  
-            if (!CanSimulate)
-            {
-                return;
-            }
-
+        public Simulation Simulate()
+        {
             Frame currentFrame;
             lock (_frames)
             {
                 currentFrame = _frames[FrameCounter++];
-            }
+            }       
 
-            lock (_pendingEntities)
-            {                                         
-                foreach (var entity in _pendingEntities)
-                {
-                    entity.ID = _entityCounter;
-                    _entities[_entityCounter] = entity;
-                    if (entity is ILockstepAgent agent)
-                    {
-                        Space.Add(agent.Body);
-                    }
+            _systems.Simulate(currentFrame);    
 
-                    _entityCounter++;
-                }
-                _pendingEntities.Clear();
-            } 
+            //if (!CanSimulate)
+            //{
+            //    return;
+            //}
 
-            foreach (var command in currentFrame.Commands)
-            {
-                _commandHandler.Handle(command);   
-            }  
+            //Frame currentFrame;
+            //lock (_frames)
+            //{
+            //    currentFrame = _frames[FrameCounter++];
+            //}
 
-            foreach (var entity in _entities.Values)
-            {
-                entity.Simulate();                        
-            }                
+            //lock (_pendingEntities)
+            //{                                         
+            //    foreach (var entity in _pendingEntities)
+            //    {
+            //        entity.ID = _entityCounter;
+            //        _entities[_entityCounter] = entity;
+            //        if (entity is ILockstepAgent agent)
+            //        {
+            //            Space.Add(agent.Body);
+            //        }
 
-            Space.Update();
+            //        _entityCounter++;
+            //    }
+            //    _pendingEntities.Clear();
+            //} 
+
+            //foreach (var serializedInput in currentFrame.SerializedInputs)
+            //{
+            //    _commandHandler.Handle(serializedInput);   
+            //}  
+
+            //foreach (var entity in _entities.Values)
+            //{
+            //    entity.Simulate();                        
+            //}
+                      
+            //Space.Update();
+
+            return this;
+
         }      
     }
 }

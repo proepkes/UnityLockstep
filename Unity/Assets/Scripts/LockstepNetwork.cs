@@ -1,15 +1,10 @@
 ﻿using System;   
 using LiteNetLib;
-using LiteNetLib.Utils;  
+using LiteNetLib.Utils;
+using Lockstep.Framework.Commands;
 using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.Messages;        
-using UnityEngine;
-           
-public enum CommandTag : ushort
-{
-    None,
-    Move
-}
+using Lockstep.Framework.Networking.Serialization;   
+using UnityEngine;   
 
 public class LockstepNetwork : MonoBehaviour
 {
@@ -37,7 +32,8 @@ public class LockstepNetwork : MonoBehaviour
             dataReader.Recycle();
         };
 
-        client = new NetManager(listener); 
+        client = new NetManager(listener);
+        client.Start();
     }
                                         
     void Update()
@@ -48,8 +44,7 @@ public class LockstepNetwork : MonoBehaviour
     private void OnDestroy()
     {
         client.Stop();       
-    }
-
+    }     
 
     public void SendChecksum(Checksum checksum)
     {
@@ -59,12 +54,12 @@ public class LockstepNetwork : MonoBehaviour
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
 
-    public void SendCommand(CommandTag tag, ICommandPacket message)
+    public void SendInput(ISerilalizableCommand message)
     {
         var writer = new NetDataWriter();
-        writer.Put((byte) MessageTag.Command);
-        writer.Put((ushort) tag);                                         
+        writer.Put((byte) MessageTag.Input);                                       
         message.Serialize(writer);
+        Debug.Log(writer.Length + " bytes");
         client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
                

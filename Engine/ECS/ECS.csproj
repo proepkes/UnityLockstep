@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -59,27 +59,85 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Movement.cs" />
-    <Compile Include="Generated\Game\Components\GameDirectionComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputInputPositionComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputGameEntityIdsComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputNavigationInputComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputSpawnInputComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
-    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
+    <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
+    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
+    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
+    <Compile Include="Generated\GameState\GameStateAttribute.cs" />
+    <Compile Include="Generated\Config\ConfigAttribute.cs" />
     <Compile Include="Generated\Game\GameContext.cs" />
     <Compile Include="Generated\Input\InputContext.cs" />
+    <Compile Include="Generated\GameState\GameStateContext.cs" />
+    <Compile Include="Generated\Config\ConfigContext.cs" />
     <Compile Include="Generated\Game\GameMatcher.cs" />
     <Compile Include="Generated\Input\InputMatcher.cs" />
+    <Compile Include="Generated\GameState\GameStateMatcher.cs" />
+    <Compile Include="Generated\Config\ConfigMatcher.cs" />
     <Compile Include="Generated\Contexts.cs" />
     <Compile Include="Generated\Game\GameEntity.cs" />
     <Compile Include="Generated\Input\InputEntity.cs" />
+    <Compile Include="Generated\GameState\GameStateEntity.cs" />
+    <Compile Include="Generated\Config\ConfigEntity.cs" />
+    <Compile Include="Generated\Events\Components\DestinationListenerComponent.cs" />
+    <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
+    <Compile Include="Generated\Events\Interfaces\IDestinationListener.cs" />
+    <Compile Include="Generated\Events\Interfaces\IPositionListener.cs" />
+    <Compile Include="Generated\Events\Systems\DestinationEventSystem.cs" />
+    <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
+    <Compile Include="Generated\Events\GameEventSystems.cs" />
+    <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\HealthComponent.cs" />
+    <Compile Include="Features\InputFeature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Data\Frame.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LockstepSystems.cs" />
+    <Compile Include="Features\PathfindingFeature.cs" />
+    <Compile Include="Systems\Pathfinding\RegisterMovableEntityToPathfinderSystem.cs" />
+    <Compile Include="Systems\Pathfinding\UpdatePathfinderSystem.cs" />
+    <Compile Include="Systems\Pathfinding\RemoveDestinationOnArrivalSystem.cs" />
+    <Compile Include="Systems\Pathfinding\SyncAgentPositionSystem.cs" />
+    <Compile Include="Systems\Input\InputToCreateGameEntitySystem.cs" />
+    <Compile Include="Systems\Input\InputToGameEntityDestinationSystem.cs" />
+    <Compile Include="Systems\Input\LoadAssetSystem.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Input.cs" />
+    <Compile Include="Data\SerializedInput.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\GameState.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game.cs" />
+    <Compile Include="ExternalServices.cs" />
+    <Compile Include="Systems\Input\EmitInputSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,20 +1,23 @@
-﻿using UnityEngine;
+﻿using Lockstep.Framework.Commands;    
+using UnityEngine;
+using Vector2 = BEPUutilities.Vector2;
 
 public class EntitySpawner : MonoBehaviour
 {
-    public int Count;
-    public Transform Position;
-    public GameObject EntityPrefab;
+    public int Count;             
+    public GameObject Prefab;
+    public bool Movable;   
 
-    private void Start()
-    {                                
-        var sim = FindObjectOfType<LockstepSimulator>();
+    public void Spawn(Vector2 position)
+    {                                                      
         for (int j = 0; j < Count; j++)
-        {
-            var e = GameObject.Instantiate(EntityPrefab.gameObject).GetComponent<UnityLSAgent>();
-            e.Init(Position.position);
-
-            sim.RegisterEntity(e.agent);
+        {                                       
+            LockstepNetwork.Instance.SendInput(new SpawnCommand
+            {
+                AssetName = Prefab.name,
+                Movable = Movable  , Position = position
+            });
         }
-    }     
+
+    }
 }

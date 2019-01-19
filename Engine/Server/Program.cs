@@ -4,12 +4,14 @@ using System.Threading;
 namespace Server
 {
     class Program
-    {         
+    {
+        private const int RoomSize = 2;
+
         static void Main(string[] args)
         {                    
-            var room = new Room();                              
+            var room = new Room();
 
-            room.Open(2);         
+            room.Open(RoomSize);         
 
             while (!Console.KeyAvailable)
             {

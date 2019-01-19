@@ -2,9 +2,9 @@
 {
     public enum MessageTag : byte
     {
-        Init,
+        StartSimulation,
         Frame,
-        Command,
+        Input,
         Checksum,
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using ECS.Data;
 using LiteNetLib.Utils;
-using Lockstep.Framework.Networking.Messages;       
+using Lockstep.Framework.Networking.Serialization;
 
 namespace Lockstep.Framework.Networking
 {
@@ -15,7 +16,7 @@ namespace Lockstep.Framework.Networking
         private uint _frameCounter;
 
         private readonly NetDataWriter _buffer = new NetDataWriter();
-        private readonly List<Command> _commands = new List<Command>();
+        private readonly List<SerializedInput> _inputs = new List<SerializedInput>();
         private readonly Dictionary<uint, byte[]> _frames = new Dictionary<uint, byte[]>();     
 
         /// <summary>
@@ -26,34 +27,36 @@ namespace Lockstep.Framework.Networking
         {
             _buffer.Reset();
 
-            Command[] commands;
-            lock (_commands)
+            SerializedInput[] serializedInputs;
+            lock (_inputs)
             {        
-                commands = _commands.ToArray();
-                _commands.Clear();
+                serializedInputs = _inputs.ToArray();
+                _inputs.Clear();
 
             }         
 
-            var frame = new Frame {FrameNumber = _frameCounter++, Commands = commands}; 
-            frame.Serialize(_buffer);
+            var frame = new Frame { SerializedInputs = serializedInputs}; 
+            frame.Serialize(_buffer, _frameCounter);
 
-            _frames.Add(frame.FrameNumber, new byte[_buffer.Length]);
-            Array.Copy(_buffer.Data, _frames[frame.FrameNumber], _buffer.Length);
+            _frames.Add(_frameCounter, new byte[_buffer.Length]);
+            Array.Copy(_buffer.Data, _frames[_frameCounter], _buffer.Length);
 
 
             _buffer.Reset();
             //add previous frames for redundancy
-            var countFrames = WriteFrames(_buffer, frame.FrameNumber, MAX_BUFFERSIZE - writer.Length - 8); //MTU - existingBytes - countframes(=4) - bytesLength(=4)
+            var countFrames = WriteFrames(_buffer, _frameCounter, MAX_BUFFERSIZE - writer.Length - 8); //MTU - existingBytes - countframes(=4) - bytesLength(=4)
                                                                 
             writer.Put(countFrames);
-            writer.PutBytesWithLength(_buffer.Data, 0, _buffer.Length);                                                     
+            writer.PutBytesWithLength(_buffer.Data, 0, _buffer.Length);
+
+            _frameCounter++;
         }
 
-        public void AddCommand(Command command)
-        {             
-            lock (_commands)
+        public void AddInput(SerializedInput serializedInput)
+        {
+            lock (_inputs)
             {
-                _commands.Add(command);
+                _inputs.Add(serializedInput);
             }
         }
 
@@ -74,6 +77,47 @@ namespace Lockstep.Framework.Networking
             }
 
             return i;
+        }
+    }
+
+    /// <summary>
+    /// Class to deserialize a the data from <see cref="FramePacker"/>
+    /// </summary>
+    public class FramePackage
+    {
+        public FramePackage(uint maxFrames = 0)
+        {
+            MaxFrames = maxFrames;
+        }
+
+        public uint CountFrames { get; set; }
+
+        public Frame[] Frames { get; set; }
+
+        /// <summary>
+        /// Defines how many frames should be deserialized. 0 means all that were received
+        /// </summary>
+        public uint MaxFrames { get; set; }
+
+        public void Deserialize(NetDataReader reader)
+        {
+            CountFrames = reader.GetUInt();
+            var buffer = reader.GetBytesWithLength();
+
+            var frames = new List<Frame>();
+
+            var bufferReader = new NetDataReader(buffer);
+
+            CountFrames = MaxFrames == 0 ? CountFrames : Math.Min(CountFrames, MaxFrames);
+
+            for (var i = 0; i < CountFrames; i++)
+            {
+                var frame = new Frame();
+                frame.Deserialize(new NetDataReader(bufferReader.GetBytesWithLength()));
+                frames.Add(frame);
+            }
+
+            Frames = frames.ToArray();
         }
     }
 }
