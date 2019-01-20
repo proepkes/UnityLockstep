@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <Configurations>Debug;Release;DebugTwoPlayers</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,6 +41,9 @@
     </Reference>
     <Reference Include="LiteNetLib">
       <HintPath>..\Dependencies\LiteNetLib.dll</HintPath>
+    </Reference>
+    <Reference Include="RVO">
+      <HintPath>..\Dependencies\RVO.dll</HintPath>
     </Reference>
   </ItemGroup>
 

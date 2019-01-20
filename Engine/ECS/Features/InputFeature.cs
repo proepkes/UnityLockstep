@@ -1,18 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;      
 using ECS.Systems.Input;
+using ECS.Systems.Navigation;
 
 namespace ECS.Features
 {
     public sealed class InputFeature : Feature
     {
-        public InputFeature(Contexts contexts, ICollection<IService> externalServices)
+        public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
         {    
-            Add(new EmitInputSystem(contexts, externalServices.FirstOrDefault(service => service is IParseInputService) as IParseInputService));
-            Add(new OnInputCreateGameEntity(contexts));
-            Add(new OnGameEntityLoadAsset(contexts, externalServices.FirstOrDefault(service => service is IViewService) as IViewService));
-            Add(new OnInputSetDestination(contexts, externalServices.FirstOrDefault(service => service is ILogger) as ILogger));
+            Add(new EmitInputSystem(contexts, serviceContainer.Get<IParseInputService>()));
+            Add(new OnInputCreateGameEntity(contexts, serviceContainer.Get<IHashService>()));
+            Add(new OnGameEntityLoadAsset(contexts, serviceContainer.Get<IViewService>()));
         }
     }
 }

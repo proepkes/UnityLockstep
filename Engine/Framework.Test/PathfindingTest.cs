@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System;                          
 using System.Linq;    
 using BEPUutilities;
-using ECS.Data;        
+using ECS;
+using ECS.Data;
+using ECS.Features;
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Services;
-using Lockstep.Framework.Services.Pathfinding;
+using Lockstep.Framework.Services.Navigation;
 using Moq;        
-using Shouldly;
+using Shouldly;       
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Framework.Test
-{
+{                                                                                 
     public class PathfindingTest
     {
         private readonly ITestOutputHelper _output;
@@ -27,24 +28,25 @@ namespace Framework.Test
 
 
         [Fact]
-        public void TestRvo()
-        {
+        public void TestWithRvo()
+        {             
+            var contexts = new Contexts();
             var serializer = new NetDataWriter();
-            var destination = new Vector2(111, 22);
-            
+            var destination = new Vector2(111, 22);   
+
+            var container = new ServiceContainer()
+                .Register<IParseInputService>(new ParseInputService())
+                .Register<INavigationService>(new RVONavigationService())
+                .Register<ILogger>(new TestLogger(_output))
+                .Register(new Mock<IViewService>().Object);
+
             new SpawnCommand
             {
                 Movable = true
             }.Serialize(serializer);
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input
-            var sim = new Simulation(new List<IService>
-                {
-                    new TestLogger(_output),
-                    new ParseInputService(),
-                    new RVOPathfinderService(),
-                    new Mock<IViewService>().Object
-                 })
+            var sim = new Simulation(contexts, container)
                 .Init(0)
                 .AddFrame(new Frame
                 {
@@ -56,7 +58,7 @@ namespace Framework.Test
                 .Simulate();
 
             //The SpawnCommand taught the system to create a new gameEntity. Now navigate it
-            var e = Contexts.sharedInstance.game.GetEntities().First();
+            var e = contexts.game.GetEntities().First();
 
             _output.WriteLine(e.position.value.ToString());
 
@@ -89,14 +91,22 @@ namespace Framework.Test
 
         [Fact]
         public void TestSpawnAndNavigateEntity()
-        {                       
+        {
+            var contexts = new Contexts();
+
             var destination = new Vector2(11, 22);
 
             var serializer = new NetDataWriter();        
             new SpawnCommand().Serialize(serializer);
 
+            var container = new ServiceContainer()
+                .Register<IParseInputService>(new ParseInputService())
+                .Register<INavigationService>(new SimpleNavigationService())
+                .Register<ILogger>(new TestLogger(_output))
+                .Register(new Mock<IViewService>().Object);   
+
             //Initialize a new simulation and add a gameentity
-            var sim = new Simulation(new List<IService> { new ParseInputService(), new RVOPathfinderService(), new Mock<IViewService>().Object })
+            var sim = new Simulation(contexts, container)
                 .Init(0)
                 .AddFrame(new Frame
                 {
@@ -108,7 +118,7 @@ namespace Framework.Test
                 .Simulate();
 
             //Navigate the new created entity
-            var e = Contexts.sharedInstance.game.GetEntities().First();
+            var e = contexts.game.GetEntities().First();
 
             serializer.Reset();                               
             new NavigateCommand { Destination = destination, EntityIds = new[] { e.id.value } }.Serialize(serializer);
@@ -122,11 +132,11 @@ namespace Framework.Test
                 })
                 .Simulate();
 
-            Contexts.sharedInstance.input.GetEntities().Length.ShouldBe(0); //There should be no inputs after a simulation was executed
+            contexts.input.GetEntities().Length.ShouldBe(0); //There should be no inputs after a simulation was executed
 
-            Contexts.sharedInstance.game.GetGroup(GameMatcher.Destination).GetEntities().Length.ShouldBe(1);
+            contexts.game.GetGroup(GameMatcher.Destination).GetEntities().Length.ShouldBe(1);
 
-            var gameEntity = Contexts.sharedInstance.game.GetGroup(GameMatcher.Destination).GetSingleEntity();
+            var gameEntity = contexts.game.GetGroup(GameMatcher.Destination).GetSingleEntity();
             gameEntity.destination.value.X.ShouldBe(destination.X);
             gameEntity.destination.value.Y.ShouldBe(destination.Y);
         }

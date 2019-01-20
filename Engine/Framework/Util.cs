@@ -65,22 +65,8 @@ namespace Lockstep.Framework
         public static int CeilToInt(this Fix64 f1)
         {
             return (int)((f1 + Fix64.One - 1).RawValue >> 32);
-        }
-        public static void Normalize(this Vector2 v, out Fix64 mag)
-        {                 
-            mag = v.Length();
-            if (mag == 0)
-            {
-                return;
-            }
+        }        
 
-            if (mag == Fix64.One)
-            {
-                return;
-            }
-
-            v.Normalize();           
-        }
         public static Vector2 Lerped(this Vector2 v, Vector2 end, Fix64 interpolationAmount)
         {                
             var startAmount = F64.C1 - interpolationAmount;
@@ -89,6 +75,36 @@ namespace Lockstep.Framework
             result.X = v.X * startAmount + end.X * interpolationAmount;
             result.Y = v.Y * startAmount + end.Y * interpolationAmount;
             return result;
+        }
+
+        public static Vector2 Normalize(Vector2 v, out Fix64 magnitude)
+        {
+            magnitude = v.Length();
+            // This is the same constant that Unity uses
+            if (magnitude > Fix64.Zero)
+            {
+                return v / magnitude;
+            }
+            else
+            {
+                return Vector2.Zero;
+            }
+        }
+        public static Vector2 ClampMagnitude(Vector2 vector, Fix64 maxLength)
+        {
+            if (vector.LengthSquared() > maxLength * maxLength)
+                return  Vector2.Normalize(vector) * maxLength;
+            return vector;
+        }
+
+        public static Vector2 ToVector2(this Vector3 v)
+        {                                                             
+            return new Vector2(v.X, v.Z);
+        }
+
+        public static Vector3 ToVector3(this Vector2 v)
+        {
+            return new Vector3(v.X, 0, v.Y);
         }
 
         public static ulong GetLongHashCode(this Vector3 v)

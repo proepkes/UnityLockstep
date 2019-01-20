@@ -1,15 +1,15 @@
 ﻿using Entitas;
 
-namespace ECS.Systems.Pathfinding
+namespace ECS.Systems.Navigation
 {
     public class SyncAgentPosition : IExecuteSystem
     {                                         
         private readonly IGroup<GameEntity> _movingEntites;
-        private readonly IPathfindingService _pathfindingService;
+        private readonly INavigationService _navigationService;
 
-        public SyncAgentPosition(Contexts contexts, IPathfindingService pathfindingService)
+        public SyncAgentPosition(Contexts contexts, INavigationService navigationService)
         {
-            _pathfindingService = pathfindingService;
+            _navigationService = navigationService;
             _movingEntites = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Movable, GameMatcher.Destination));
         }
 
@@ -17,7 +17,7 @@ namespace ECS.Systems.Pathfinding
         {
             foreach (var entity in _movingEntites.GetEntities())
             {
-                entity.ReplacePosition(_pathfindingService.GetAgentPosition(entity.id.value));
+                entity.ReplacePosition(_navigationService.GetAgentPosition(entity.id.value));
             }                                    
         }      
     }

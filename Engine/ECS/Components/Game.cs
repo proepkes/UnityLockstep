@@ -50,3 +50,9 @@ public sealed class HealthComponent : IComponent
 {
     public int value;
 }
+
+[Game]
+public sealed class HashCodeComponent : IComponent
+{
+    public long value;
+}

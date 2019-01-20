@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;    
+﻿using System.Collections.Generic;
 using Entitas;
 
-namespace ECS.Systems.Pathfinding
+namespace ECS.Systems.Navigation
 {
     public class OnGameEntityMovableRegisterToPathfinder : ReactiveSystem<GameEntity>
     {
-        private readonly IPathfindingService _pathfindingService;
+        private readonly INavigationService _navigationService;
 
-        public OnGameEntityMovableRegisterToPathfinder(Contexts contexts, IPathfindingService pathfindingService) : base(contexts.game)
+        public OnGameEntityMovableRegisterToPathfinder(Contexts contexts, INavigationService navigationService) : base(contexts.game)
         {
-            _pathfindingService = pathfindingService;
+            _navigationService = navigationService;
         }
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
@@ -26,7 +26,7 @@ namespace ECS.Systems.Pathfinding
         {
             foreach (var entity in entities)
             {
-                _pathfindingService.AddAgent(entity, entity.position.value); 
+                _navigationService.AddAgent(entity.id.value, entity.position.value); 
             } 
         }
     }

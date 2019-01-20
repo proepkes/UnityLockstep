@@ -5,7 +5,7 @@ namespace Lockstep.Framework.Networking.Serialization
     public class Checksum
     {
         public ulong FrameNumber { get; set; }
-        public ulong Value { get; set; }
+        public long Value { get; set; }
 
         public void Serialize(NetDataWriter writer)
         {
@@ -17,7 +17,7 @@ namespace Lockstep.Framework.Networking.Serialization
         {
 
             FrameNumber = reader.GetULong();
-            Value = reader.GetULong();
+            Value = reader.GetLong();
         }
     }
 }

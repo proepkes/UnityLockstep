@@ -30,6 +30,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugTwoPlayers|AnyCPU'">
+    <OutputPath>bin\DebugTwoPlayers\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="BEPUphysics">
       <HintPath>..\Dependencies\BEPUphysics.dll</HintPath>
@@ -59,9 +62,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultServices\DefaultHashService.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStateGameHashCodeComponent.cs" />
     <Compile Include="Generated\Input\Components\InputInputPositionComponent.cs" />
     <Compile Include="Generated\Input\Components\InputGameEntityIdsComponent.cs" />
     <Compile Include="Generated\Input\Components\InputNavigationInputComponent.cs" />
@@ -74,6 +79,7 @@
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameHashCodeComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationRemovedListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
@@ -111,6 +117,10 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\HashCodeFeature.cs" />
+    <Compile Include="ServiceContainer.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Features\InputFeature.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -118,13 +128,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LockstepSystems.cs" />
-    <Compile Include="Features\PathfindingFeature.cs" />
-    <Compile Include="Systems\Pathfinding\OnGameEntityMovableRegisterToPathfinder.cs" />
-    <Compile Include="Systems\Pathfinding\UpdatePathfinder.cs" />
-    <Compile Include="Systems\Pathfinding\CheckDestinationReached.cs" />
-    <Compile Include="Systems\Pathfinding\SyncAgentPosition.cs" />
+    <Compile Include="Features\NavigationFeature.cs" />
+    <Compile Include="Systems\CalculateHashCode.cs" />
+    <Compile Include="Systems\Navigation\OnGameEntityMovableRegisterToPathfinder.cs" />
+    <Compile Include="Systems\Navigation\UpdateNavigationService.cs" />
+    <Compile Include="Systems\Navigation\CheckDestinationReached.cs" />
+    <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
     <Compile Include="Systems\Input\OnInputCreateGameEntity.cs" />
-    <Compile Include="Systems\Input\OnInputSetDestination.cs" />
+    <Compile Include="Systems\Navigation\OnInputSetDestination.cs" />
     <Compile Include="Systems\Input\OnGameEntityLoadAsset.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +153,5 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

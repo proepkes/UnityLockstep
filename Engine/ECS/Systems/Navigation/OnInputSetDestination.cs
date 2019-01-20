@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 
-namespace ECS.Systems.Input
+namespace ECS.Systems.Navigation
 {
     public class OnInputSetDestination : ReactiveSystem<InputEntity>
     {
+        private readonly INavigationService _navigationService;
         private readonly ILogger _logger;
         private readonly GameContext _gameContext;
 
-        public OnInputSetDestination(Contexts contexts, ILogger logger) : base(contexts.input)
+        public OnInputSetDestination(Contexts contexts, INavigationService navigationService, ILogger logger) : base(contexts.input)
         {
+            _navigationService = navigationService;
             _logger = logger;
             _gameContext = contexts.game;
         }
@@ -29,6 +31,7 @@ namespace ECS.Systems.Input
             foreach (InputEntity e in entities)
             {
                 //TODO: Add PlayerControlledSystem to only iterate over gameEntites that are controlled by the player who sent the serializedInput
+                _navigationService.UpdateDestination(e.gameEntityIds.value, e.inputPosition.value);
                 foreach (var entityId in e.gameEntityIds.value)
                 {
                     var gameEntity = _gameContext.GetEntityWithId(entityId);

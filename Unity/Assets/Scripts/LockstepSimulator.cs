@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using ECS;          
 using LiteNetLib.Utils;
 using Lockstep.Framework;              
 using Lockstep.Framework.Networking;             
 using Lockstep.Framework.Networking.Serialization;
 using Lockstep.Framework.Services;
-using Lockstep.Framework.Services.Pathfinding;
+using Lockstep.Framework.Services.Navigation;    
 using UnityEngine;                            
 
 public class LockstepSimulator : MonoBehaviour
@@ -15,13 +16,12 @@ public class LockstepSimulator : MonoBehaviour
     private void Awake()
     {
         _simulation = new Simulation(
-            new List<IService>
-            {
-                new SimplePathfinderService(),
-                new ParseInputService(),
-                new UnityViewService(),
-                new UnityLogger()
-            })
+            Contexts.sharedInstance, 
+            new ServiceContainer()
+                .Register<INavigationService>(new SimpleNavigationService())
+                .Register<IParseInputService>(new ParseInputService())
+                .Register<IViewService>(new UnityViewService())
+                .Register<ILogger>(new UnityLogger())) 
             {
                 FrameDelay = 2,
             };
@@ -53,8 +53,9 @@ public class LockstepSimulator : MonoBehaviour
 
                 _simulation.AddFrame(pkg.Frames[0]);
 
-                //TODO: only for debugging
+                //TODO: only for debugging, frames should be buffered
                 _simulation.Simulate();
+                LockstepNetwork.Instance.SendChecksum(new Checksum { FrameNumber = _simulation.FrameCounter, Value = _simulation.HashCode });   
                 break;
         }
     }            
@@ -73,5 +74,15 @@ public class LockstepSimulator : MonoBehaviour
         //{
         //    LockstepNetwork.Instance.SendChecksum(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
         //}                               
-    }     
+    }
+    void OnGUI()
+    {
+        if (_simulationStarted)
+        {
+            GUILayout.BeginVertical(GUILayout.Width(100f));
+            GUI.color = Color.white;
+            GUILayout.Label("HashCode: " + _simulation.HashCode);
+            GUILayout.EndVertical(); 
+        }
+    }
 }

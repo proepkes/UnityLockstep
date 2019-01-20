@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System;  
 using System.Linq;
+using ECS;
 using ECS.Data;
+using ECS.Features;
 using Lockstep.Framework;
 using Moq;
-using Shouldly;
+using Shouldly;       
 using Xunit;
 using Xunit.Abstractions;
 
 //TODO: tests currently don't work parallel, probably because of Context.sharedInstance
 namespace Framework.Test
-{
+{           
     public class ECSTest
     {                                               
         public ECSTest(ITestOutputHelper output)
@@ -21,9 +22,14 @@ namespace Framework.Test
         [Fact]
         public void TestGameEntityId()
         {
-            var contexts = Contexts.sharedInstance;     
+            var contexts = new Contexts();   
+                                  
+            var container = new ServiceContainer();
+            container
+                .Register(new Mock<IParseInputService>().Object)
+                .Register(new Mock<IViewService>().Object);
 
-            new LockstepSystems(contexts, new List<IService>()).Initialize();
+            new LockstepSystems(contexts, container).Initialize();
 
             const int numEntities = 10;
 
@@ -37,21 +43,26 @@ namespace Framework.Test
         }
 
         [Fact]
-        public void TestInputParserGetsCalled()
+        public void TestHashCode()
         {
-            var inputParser = new Mock<IParseInputService>();
+            var contexts = new Contexts();
 
-            var sim = new Simulation(new List<IService> { inputParser.Object });
-            sim.Init(0);
+            var container = new ServiceContainer();
+            container
+                .Register(new Mock<IParseInputService>().Object)
+                .Register(new Mock<IViewService>().Object);
 
-            for (var i = 0; i < 10; i++)
+            new LockstepSystems(contexts, container).Initialize();
+
+            const int numEntities = 10;
+
+            for (uint i = 0; i < numEntities; i++)
             {
-                var command = new SerializedInput();
-                sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
-                sim.Simulate();
-
-                inputParser.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
+                var e = contexts.game.CreateEntity();
+                e.hasId.ShouldBeTrue();
             }
-        }  
+            contexts.game.GetEntities().Select(entity => entity.id.value).ShouldBeUnique();
+            contexts.game.count.ShouldBe(numEntities);
+        }
     }
 }
