@@ -3,23 +3,23 @@ using Entitas;
 
 namespace ECS.Systems.Navigation
 {
-    public class OnGameEntityMovableRegisterToPathfinder : ReactiveSystem<GameEntity>
+    public class OnNavigationEntityDoAddAgent : ReactiveSystem<GameEntity>
     {
         private readonly INavigationService _navigationService;
 
-        public OnGameEntityMovableRegisterToPathfinder(Contexts contexts, INavigationService navigationService) : base(contexts.game)
+        public OnNavigationEntityDoAddAgent(Contexts contexts, INavigationService navigationService) : base(contexts.game)
         {
             _navigationService = navigationService;
         }
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
         {
-            return context.CreateCollector(GameMatcher.Movable);
+            return context.CreateCollector(GameMatcher.NavigationAware);
         }
 
         protected override bool Filter(GameEntity entity)
         {
-            return entity.isMovable;
+            return entity.isNavigationAware;
         }
 
         protected override void Execute(List<GameEntity> entities)

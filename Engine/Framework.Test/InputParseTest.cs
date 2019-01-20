@@ -1,7 +1,6 @@
 ﻿using System;
 using ECS;
-using ECS.Data;
-using ECS.Features;
+using ECS.Data;       
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
@@ -35,7 +34,7 @@ namespace Framework.Test
             new SpawnCommand
             {
                 AssetName = "Test",
-                Movable = false
+                RegisterToPathfinder = false
             }.Serialize(serializer);
 
 
@@ -65,7 +64,7 @@ namespace Framework.Test
                 sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
                 sim.Simulate();
 
-                inputParser.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
+                inputParser.Verify(service => service.Parse(It.IsAny<GameContext>(), command), Times.Exactly(1));
             }
         }
     }

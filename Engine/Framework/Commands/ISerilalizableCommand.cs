@@ -8,6 +8,6 @@ namespace Lockstep.Framework.Commands
 
         void Deserialize(NetDataReader reader);
 
-        void Execute(InputContext context);
+        void Execute(GameContext context);
     }
 }

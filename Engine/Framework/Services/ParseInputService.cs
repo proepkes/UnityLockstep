@@ -26,11 +26,10 @@ namespace Lockstep.Framework.Services
             _commandMap.Add(CommandTag.Navigate, new NavigateCommand());
         }
 
-        public void Parse(InputContext context, SerializedInput serializedInput)
+        public void Parse(GameContext context, SerializedInput serializedInput)
         {
             _dataReader.SetSource(serializedInput.Data);
-
-            Console.WriteLine(_dataReader.AvailableBytes);
+                                                             
             var commandTag = (CommandTag)_dataReader.PeekUShort();
 
             var cmd = _commandMap[commandTag];

@@ -8,9 +8,7 @@ namespace ECS.Features
     {
         public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
         {    
-            Add(new EmitInputSystem(contexts, serviceContainer.Get<IParseInputService>()));
-            Add(new OnInputCreateGameEntity(contexts, serviceContainer.Get<IHashService>()));
-            Add(new OnGameEntityLoadAsset(contexts, serviceContainer.Get<IViewService>()));
+            Add(new EmitInputSystem(contexts, serviceContainer.Get<IParseInputService>()));     
         }
     }
 }

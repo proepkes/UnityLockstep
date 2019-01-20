@@ -87,5 +87,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40375afc4e892a1469132ea35c8ab9b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DrawGUI: 1
   IP: 127.0.0.1

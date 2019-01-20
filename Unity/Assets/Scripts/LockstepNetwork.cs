@@ -1,53 +1,53 @@
-﻿using System;   
+﻿using System;
+using System.Collections;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.Serialization;   
+using Lockstep.Framework.Networking.Serialization;
+using TMPro;
 using UnityEngine;   
 
 public class LockstepNetwork : MonoBehaviour
 {
     public static LockstepNetwork Instance;
 
-    public event Action<MessageTag, NetDataReader> MessageReceived;
+    public event Action<MessageTag, NetDataReader> MessageReceived;        
 
-    public bool DrawGUI;            
+    public string IP;
 
-    public string IP = "127.0.0.1";             
+    private NetManager _client;
 
-    NetManager client;
+    public bool Connected => _client.FirstPeer?.ConnectionState == ConnectionState.Connected;
 
     private void Awake()
     {
         Instance = this;
+
+        var listener = new EventBasedNetListener();
+        listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
+        {
+            MessageReceived?.Invoke((MessageTag)dataReader.GetByte(), dataReader);
+            dataReader.Recycle();
+        };
+
+        _client = new NetManager(listener);
     }
 
     void Start()
     {
-        var listener = new EventBasedNetListener();  
-        listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
-        {      
-            MessageReceived?.Invoke((MessageTag)dataReader.GetByte(), dataReader);   
-            dataReader.Recycle();
-        };
-
-        client = new NetManager(listener);
-        client.Start();
+        _client.Start();
+        StartCoroutine(Connect());
     }
                                         
     void Update()
-    { 
-        if (client.FirstPeer?.ConnectionState != ConnectionState.Connected)
-        {            
-            client.Connect(IP, 9050 /* port */, "SomeConnectionKey" /* text key or NetDataWriter */);
-        }
-        client.PollEvents();   
+    {          
+        _client.PollEvents();   
     }
 
     private void OnDestroy()
     {
-        client.Stop();       
+        _client.Stop();       
     }     
 
     public void SendHashCode(HashCode checksum)
@@ -55,7 +55,7 @@ public class LockstepNetwork : MonoBehaviour
         var writer = new NetDataWriter();
         writer.Put((byte)MessageTag.Checksum);
         checksum.Serialize(writer);   
-        client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
+        _client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
 
     public void SendInput(ISerilalizableCommand message)
@@ -64,31 +64,17 @@ public class LockstepNetwork : MonoBehaviour
         writer.Put((byte) MessageTag.Input);                                       
         message.Serialize(writer);
         Debug.Log(writer.Length + " bytes");
-        client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
+        _client.FirstPeer.Send(writer, DeliveryMethod.ReliableOrdered);
     }
-               
-    void OnGUI()
+
+    public IEnumerator Connect()
     {
-        if (!DrawGUI)
+        while (!Connected)
         {
-            return;
-        }                                                                 
-
-        if (client.FirstPeer?.ConnectionState == ConnectionState.Connected)
-        {
-            return;
+            _client.Connect(IP, 9050 /* port */, "SomeConnectionKey" /* text key or NetDataWriter */);
+            yield return new WaitForSeconds(1);
         }
 
-        GUILayout.BeginVertical(GUILayout.Width(300f));
-        GUILayout.Label("Time: " + Time.time);
-        GUI.color = Color.white;
-        GUILayout.Label("IP: ");
-        IP = GUILayout.TextField(IP);
-                                  
-        if (GUILayout.Button("Connect"))
-        {                    
-            client.Connect(IP, 9050 /* port */, "SomeConnectionKey" /* text key or NetDataWriter */);
-        }
-        GUILayout.EndVertical();
-    }
+        yield return null;
+    }          
 }

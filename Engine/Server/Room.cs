@@ -50,10 +50,7 @@ namespace Server
         }
 
         public void Open(int roomSize)
-        {                    
-           Console.WriteLine("Starting server for " + roomSize + " players...");
-            _server.Start(ServerPort);      
-
+        {                 
             _listener.ConnectionRequestEvent += request =>
             {
                 if (_server.PeersCount < roomSize)
@@ -72,7 +69,11 @@ namespace Server
                 {
                     Console.WriteLine("Room is full, starting new simulation...");
                     new Thread(Loop) { IsBackground = true }.Start(); 
-                }          
+                }
+                else
+                {
+                    Console.WriteLine(_server.PeersCount + " / " + roomSize +" players have connected.");
+                }
             };
 
             _listener.NetworkReceiveEvent += (peer, reader, method) =>
@@ -105,7 +106,15 @@ namespace Server
                     Console.WriteLine("All players left, stopping current simulation...");
                     Running = false;
                 }
+                else
+                { 
+                    Console.WriteLine(_server.PeersCount + " players remaining.");
+                }
             };
+
+            _server.Start(ServerPort);
+
+            Console.WriteLine("Server started. Waiting for " + roomSize + " players...");
         }
 
         public void Update()
@@ -157,7 +166,7 @@ namespace Server
                 Thread.Sleep(1);
             }
 
-            Console.WriteLine("Simulation stopped");    
+            Console.WriteLine("Simulation stopped");
         }
 
         private void StartSimulationOnConnectedPeers()

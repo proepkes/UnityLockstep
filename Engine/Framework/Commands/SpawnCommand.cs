@@ -8,7 +8,7 @@ namespace Lockstep.Framework.Commands
     {
         public string AssetName;
 
-        public bool Movable;
+        public bool RegisterToPathfinder;
 
         public Vector2 Position;
 
@@ -17,17 +17,21 @@ namespace Lockstep.Framework.Commands
         {
         }   
 
-        public override void Execute(InputContext context)
+        public override void Execute(GameContext context)
         {        
             var e = context.CreateEntity();
-            e.AddSpawnInput(AssetName, Movable);
-            e.AddInputPosition(Position);
+            e.AddAsset(AssetName);
+            e.AddPosition(Position);
+            if (RegisterToPathfinder)
+            {
+                e.isNavigationAware = true;
+            }
         }
 
         protected override void OnSerialize(NetDataWriter writer)
         {
             writer.Put(AssetName);
-            writer.Put(Movable);
+            writer.Put(RegisterToPathfinder);
             writer.Put((long)Position.X);
             writer.Put((long)Position.Y);
         }
@@ -35,7 +39,7 @@ namespace Lockstep.Framework.Commands
         protected override void OnDeserialize(NetDataReader reader)
         {
             AssetName = reader.GetString();
-            Movable = reader.GetBool();
+            RegisterToPathfinder = reader.GetBool();
             Position.X = reader.GetLong();
             Position.Y = reader.GetLong();
         }     

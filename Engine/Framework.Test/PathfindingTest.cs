@@ -39,7 +39,7 @@ namespace Framework.Test
 
             new SpawnCommand
             {
-                Movable = true
+                RegisterToPathfinder = true
             }.Serialize(serializer);
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input

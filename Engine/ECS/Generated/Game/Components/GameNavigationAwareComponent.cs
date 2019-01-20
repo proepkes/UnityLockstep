@@ -6,20 +6,20 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-public partial class InputEntity {
+public partial class GameEntity {
 
-    static readonly NavigationInputComponent navigationInputComponent = new NavigationInputComponent();
+    static readonly NavigationAwareComponent navigationAwareComponent = new NavigationAwareComponent();
 
-    public bool isNavigationInput {
-        get { return HasComponent(InputComponentsLookup.NavigationInput); }
+    public bool isNavigationAware {
+        get { return HasComponent(GameComponentsLookup.NavigationAware); }
         set {
-            if (value != isNavigationInput) {
-                var index = InputComponentsLookup.NavigationInput;
+            if (value != isNavigationAware) {
+                var index = GameComponentsLookup.NavigationAware;
                 if (value) {
                     var componentPool = GetComponentPool(index);
                     var component = componentPool.Count > 0
                             ? componentPool.Pop()
-                            : navigationInputComponent;
+                            : navigationAwareComponent;
 
                     AddComponent(index, component);
                 } else {
@@ -38,19 +38,19 @@ public partial class InputEntity {
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-public sealed partial class InputMatcher {
+public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<InputEntity> _matcherNavigationInput;
+    static Entitas.IMatcher<GameEntity> _matcherNavigationAware;
 
-    public static Entitas.IMatcher<InputEntity> NavigationInput {
+    public static Entitas.IMatcher<GameEntity> NavigationAware {
         get {
-            if (_matcherNavigationInput == null) {
-                var matcher = (Entitas.Matcher<InputEntity>)Entitas.Matcher<InputEntity>.AllOf(InputComponentsLookup.NavigationInput);
-                matcher.componentNames = InputComponentsLookup.componentNames;
-                _matcherNavigationInput = matcher;
+            if (_matcherNavigationAware == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.NavigationAware);
+                matcher.componentNames = GameComponentsLookup.componentNames;
+                _matcherNavigationAware = matcher;
             }
 
-            return _matcherNavigationInput;
+            return _matcherNavigationAware;
         }
     }
 }

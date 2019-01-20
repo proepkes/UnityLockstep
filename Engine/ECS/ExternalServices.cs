@@ -17,7 +17,7 @@ namespace ECS
 
     public interface IParseInputService : IService
     {
-        void Parse(InputContext context, SerializedInput serializedInput);
+        void Parse(GameContext context, SerializedInput serializedInput);
     }
 
     public interface IViewService : IService
@@ -29,7 +29,7 @@ namespace ECS
     {
         void AddAgent(int id, Vector2 position);
 
-        void UpdateDestination(int[] agentIds, Vector2 newDestination);
+        void SetDestination(int agentId, Vector2 newDestination);
                                                                  
         void UpdateAgents();
 

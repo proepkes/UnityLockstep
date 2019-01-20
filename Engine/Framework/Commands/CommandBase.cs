@@ -29,6 +29,6 @@ namespace Lockstep.Framework.Commands
 
         protected abstract void OnDeserialize(NetDataReader reader);
 
-        public abstract void Execute(InputContext context);  
+        public abstract void Execute(GameContext context);  
     }
 }

@@ -2,11 +2,11 @@
 
 namespace ECS.Systems.Navigation
 {
-    public class UpdateNavigationService : IExecuteSystem
+    public class TickNavigationService : IExecuteSystem
     {        
         private readonly INavigationService _navigationService;
 
-        public UpdateNavigationService(Contexts contexts, INavigationService navigationService)
+        public TickNavigationService(Contexts contexts, INavigationService navigationService)
         {
             _navigationService = navigationService;                                                                                
         }

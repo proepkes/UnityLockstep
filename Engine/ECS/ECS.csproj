@@ -62,25 +62,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultServices\DefaultHashService.cs" />
-    <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
-    <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameHashCodeComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputInputPositionComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputGameEntityIdsComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputNavigationInputComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputSpawnInputComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameMovableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameNavigationAwareComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHashCodeComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationRemovedListenerComponent.cs" />
@@ -119,6 +112,14 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\AgentConfig.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DefaultServices\DefaultHashService.cs" />
+    <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
+    <Compile Include="DefaultServices\Navigation\Agent.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="ServiceContainer.cs" />
   </ItemGroup>
@@ -131,13 +132,10 @@
   <ItemGroup>
     <Compile Include="Features\NavigationFeature.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
-    <Compile Include="Systems\Navigation\OnGameEntityMovableRegisterToPathfinder.cs" />
-    <Compile Include="Systems\Navigation\UpdateNavigationService.cs" />
-    <Compile Include="Systems\Navigation\CheckDestinationReached.cs" />
+    <Compile Include="Systems\Navigation\OnNavigationEntityDoAddAgent.cs" />
+    <Compile Include="Systems\Navigation\TickNavigationService.cs" />
     <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
-    <Compile Include="Systems\Input\OnInputCreateGameEntity.cs" />
-    <Compile Include="Systems\Navigation\OnInputSetDestination.cs" />
-    <Compile Include="Systems\Input\OnGameEntityLoadAsset.cs" />
+    <Compile Include="Systems\Navigation\OnNewDestinationDoSetAgentDestination.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Input.cs" />
