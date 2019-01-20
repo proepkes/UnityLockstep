@@ -1,4 +1,5 @@
-﻿using ECS.Data;
+﻿using ECS;
+using ECS.Data;
 using ECS.Features;            
 using Entitas;          
 
@@ -9,14 +10,15 @@ public sealed class LockstepSystems : Systems
     public LockstepSystems(Contexts contexts, ServiceContainer serviceContainer)
     {
         _contexts = contexts;
-        contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex);
-        
+        contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex); 
                                
         Add(new InputFeature(contexts, serviceContainer));
 
         Add(new NavigationFeature(contexts, serviceContainer));
 
         Add(new GameEventSystems(contexts));
+
+        Add(new HashCodeFeature(contexts, serviceContainer));
     }
 
     public void Simulate(Frame frame)

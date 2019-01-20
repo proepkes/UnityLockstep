@@ -12,9 +12,9 @@ namespace Lockstep.Framework.Services.Navigation
 
         private readonly IList<Agent> _agents = new List<Agent>();
 
-        public void AddAgent(GameEntity entity, Vector2 position)
+        public void AddAgent(int id, Vector2 position)
         {                
-            _agents.Add(new Agent(entity.id.value, position));
+            _agents.Add(new Agent(id, position));
         }
 
         public void UpdateDestination(int[] agentIds, Vector2 newDestination)

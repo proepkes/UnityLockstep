@@ -4,8 +4,8 @@ using System.Threading;
 namespace Server
 {
     class Program
-    {
-        private const int RoomSize = 1;
+    {                                 
+        private const int RoomSize = 2; 
 
         static void Main(string[] args)
         {                    

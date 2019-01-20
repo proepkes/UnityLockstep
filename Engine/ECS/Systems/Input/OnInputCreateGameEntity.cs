@@ -4,11 +4,13 @@ using Entitas;
 namespace ECS.Systems.Input
 {
     public class OnInputCreateGameEntity : ReactiveSystem<InputEntity>
-    {                                                   
+    {
+        private readonly IHashService _hashService;
         private readonly GameContext _gameContext;
 
-        public OnInputCreateGameEntity(Contexts contexts) : base(contexts.input)
-        {                                 
+        public OnInputCreateGameEntity(Contexts contexts, IHashService hashService) : base(contexts.input)
+        {
+            _hashService = hashService;
             _gameContext = contexts.game;
         }
 
@@ -24,13 +26,14 @@ namespace ECS.Systems.Input
 
         protected override void Execute(List<InputEntity> entities)
         {
-            foreach (InputEntity e in entities)
+            foreach (var e in entities)
             {             
                 var gameEntity = _gameContext.CreateEntity();
                 gameEntity.AddAsset(e.spawnInput.assetName); 
                 gameEntity.AddPosition(e.inputPosition.value);
-                gameEntity.isMovable = e.spawnInput.movable;   
+                gameEntity.isMovable = e.spawnInput.movable;  
 
+                gameEntity.AddHashCode(_hashService.GetHashCode(gameEntity));
             }
         }
     }

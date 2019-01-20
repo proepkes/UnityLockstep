@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ECS.Features;
+using ECS;          
 using LiteNetLib.Utils;
 using Lockstep.Framework;              
 using Lockstep.Framework.Networking;             
@@ -53,8 +53,9 @@ public class LockstepSimulator : MonoBehaviour
 
                 _simulation.AddFrame(pkg.Frames[0]);
 
-                //TODO: only for debugging
+                //TODO: only for debugging, frames should be buffered
                 _simulation.Simulate();
+                LockstepNetwork.Instance.SendChecksum(new Checksum { FrameNumber = _simulation.FrameCounter, Value = _simulation.HashCode });   
                 break;
         }
     }            
@@ -73,5 +74,15 @@ public class LockstepSimulator : MonoBehaviour
         //{
         //    LockstepNetwork.Instance.SendChecksum(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
         //}                               
-    }     
+    }
+    void OnGUI()
+    {
+        if (_simulationStarted)
+        {
+            GUILayout.BeginVertical(GUILayout.Width(100f));
+            GUI.color = Color.white;
+            GUILayout.Label("HashCode: " + _simulation.HashCode);
+            GUILayout.EndVertical(); 
+        }
+    }
 }

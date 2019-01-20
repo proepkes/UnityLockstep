@@ -26,7 +26,7 @@ namespace ECS.Systems.Navigation
         {
             foreach (var entity in entities)
             {
-                _navigationService.AddAgent(entity, entity.position.value); 
+                _navigationService.AddAgent(entity.id.value, entity.position.value); 
             } 
         }
     }

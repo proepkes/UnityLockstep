@@ -1,5 +1,6 @@
 ﻿using System;  
 using System.Linq;
+using ECS;
 using ECS.Data;
 using ECS.Features;
 using Lockstep.Framework;
@@ -39,6 +40,29 @@ namespace Framework.Test
             }
             contexts.game.GetEntities().Select(entity => entity.id.value).ShouldBeUnique();
             contexts.game.count.ShouldBe(numEntities);
-        } 
+        }
+
+        [Fact]
+        public void TestHashCode()
+        {
+            var contexts = new Contexts();
+
+            var container = new ServiceContainer();
+            container
+                .Register(new Mock<IParseInputService>().Object)
+                .Register(new Mock<IViewService>().Object);
+
+            new LockstepSystems(contexts, container).Initialize();
+
+            const int numEntities = 10;
+
+            for (uint i = 0; i < numEntities; i++)
+            {
+                var e = contexts.game.CreateEntity();
+                e.hasId.ShouldBeTrue();
+            }
+            contexts.game.GetEntities().Select(entity => entity.id.value).ShouldBeUnique();
+            contexts.game.count.ShouldBe(numEntities);
+        }
     }
 }

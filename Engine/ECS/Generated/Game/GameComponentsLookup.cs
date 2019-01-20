@@ -13,14 +13,15 @@ public static class GameComponentsLookup {
     public const int Destination = 2;
     public const int DestinationListener = 3;
     public const int DestinationRemovedListener = 4;
-    public const int Health = 5;
-    public const int Id = 6;
-    public const int Movable = 7;
-    public const int Position = 8;
-    public const int PositionListener = 9;
-    public const int Team = 10;
+    public const int HashCode = 5;
+    public const int Health = 6;
+    public const int Id = 7;
+    public const int Movable = 8;
+    public const int Position = 9;
+    public const int PositionListener = 10;
+    public const int Team = 11;
 
-    public const int TotalComponents = 11;
+    public const int TotalComponents = 12;
 
     public static readonly string[] componentNames = {
         "Asset",
@@ -28,6 +29,7 @@ public static class GameComponentsLookup {
         "Destination",
         "DestinationListener",
         "DestinationRemovedListener",
+        "HashCode",
         "Health",
         "Id",
         "Movable",
@@ -42,6 +44,7 @@ public static class GameComponentsLookup {
         typeof(DestinationComponent),
         typeof(DestinationListenerComponent),
         typeof(DestinationRemovedListenerComponent),
+        typeof(HashCodeComponent),
         typeof(HealthComponent),
         typeof(IdComponent),
         typeof(MovableComponent),

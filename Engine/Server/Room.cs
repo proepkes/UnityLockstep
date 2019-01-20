@@ -23,7 +23,7 @@ namespace Server
         private readonly NetManager _server;
         private readonly EventBasedNetListener _listener;
         private readonly Dictionary<int, byte> _peerIds = new Dictionary<int, byte>();
-        private readonly Dictionary<ulong, ulong> _checksums = new Dictionary<ulong, ulong>();
+        private readonly Dictionary<ulong, long> _checksums = new Dictionary<ulong, long>();
 
         public Room()
         {

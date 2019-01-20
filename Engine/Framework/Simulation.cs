@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;  
-using BEPUphysics;   
+using BEPUphysics;
+using ECS;
 using ECS.Data;
 using ECS.Features;
 using FixMath.NET;     
@@ -7,7 +8,8 @@ using FixMath.NET;
 namespace Lockstep.Framework
 {
     public class Simulation
-    {                 
+    {
+        private readonly Contexts _contexts;
         private readonly LockstepSystems _systems;   
 
         public Space Space { get; }
@@ -17,7 +19,9 @@ namespace Lockstep.Framework
 
         public uint FrameCounter { get; private set; }
 
-                                         
+        public long HashCode => _contexts.gameState.gameHashCode.value;
+
+
         private uint _lastFramePointer;
 
         private Fix64Random _random;                  
@@ -37,6 +41,7 @@ namespace Lockstep.Framework
 
         public Simulation(Contexts contexts, ServiceContainer serviceContainer)
         {
+            _contexts = contexts;
             Space = new Space();
 
             _systems = new LockstepSystems(contexts, serviceContainer);
@@ -60,13 +65,8 @@ namespace Lockstep.Framework
             }
 
             return this;
-        }             
-                   
-        public ulong CalculateChecksum()
-        {
-            ulong hash = 3;      
-            return hash;
         }
+ 
 
 
         public Fix64 NextRandom()

@@ -25,13 +25,18 @@ public interface IViewService : IService
 
 public interface INavigationService : IService
 {
-    void AddAgent(GameEntity entity, Vector2 position);
+    void AddAgent(int id, Vector2 position);
 
     void UpdateDestination(int[] agentIds, Vector2 newDestination);
                                                                  
     void UpdateAgents();
 
     Vector2 GetAgentPosition(int agentId);
+}
+
+public interface IHashService : IService
+{
+    long GetHashCode(GameEntity entity);
 }
       
 public interface ILogger : IService
