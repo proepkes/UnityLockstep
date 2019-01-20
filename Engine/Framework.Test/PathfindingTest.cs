@@ -2,13 +2,11 @@
 using System.Linq;    
 using BEPUutilities;
 using ECS;
-using ECS.Data;
-using ECS.Features;
+using ECS.Data;        
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
-using Lockstep.Framework.Services;
-using Lockstep.Framework.Services.Navigation;
+using Lockstep.Framework.Services;              
 using Moq;        
 using Shouldly;       
 using Xunit;
@@ -28,15 +26,14 @@ namespace Framework.Test
 
 
         [Fact]
-        public void TestWithRvo()
+        public void TestSimpleNavigationService()
         {             
             var contexts = new Contexts();
             var serializer = new NetDataWriter();
             var destination = new Vector2(111, 22);   
 
             var container = new ServiceContainer()
-                .Register<IParseInputService>(new ParseInputService())
-                .Register<INavigationService>(new RVONavigationService())
+                .Register<IParseInputService>(new ParseInputService())          
                 .Register<ILogger>(new TestLogger(_output))
                 .Register(new Mock<IViewService>().Object);
 
@@ -100,8 +97,7 @@ namespace Framework.Test
             new SpawnCommand().Serialize(serializer);
 
             var container = new ServiceContainer()
-                .Register<IParseInputService>(new ParseInputService())
-                .Register<INavigationService>(new SimpleNavigationService())
+                .Register<IParseInputService>(new ParseInputService())       
                 .Register<ILogger>(new TestLogger(_output))
                 .Register(new Mock<IViewService>().Object);   
 

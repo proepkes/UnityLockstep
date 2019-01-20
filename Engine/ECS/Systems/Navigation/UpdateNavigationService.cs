@@ -13,7 +13,7 @@ namespace ECS.Systems.Navigation
 
         public void Execute()
         {   
-            _navigationService?.UpdateAgents();  
+            _navigationService.UpdateAgents();  
         }
     }
 }

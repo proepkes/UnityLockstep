@@ -42,9 +42,6 @@
     <Reference Include="LiteNetLib">
       <HintPath>..\Dependencies\LiteNetLib.dll</HintPath>
     </Reference>
-    <Reference Include="RVO">
-      <HintPath>..\Dependencies\RVO.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

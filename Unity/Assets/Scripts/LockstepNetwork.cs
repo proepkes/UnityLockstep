@@ -37,7 +37,11 @@ public class LockstepNetwork : MonoBehaviour
     }
                                         
     void Update()
-    {
+    { 
+        if (client.FirstPeer?.ConnectionState != ConnectionState.Connected)
+        {            
+            client.Connect(IP, 9050 /* port */, "SomeConnectionKey" /* text key or NetDataWriter */);
+        }
         client.PollEvents();   
     }
 
@@ -70,7 +74,7 @@ public class LockstepNetwork : MonoBehaviour
             return;
         }                                                                 
 
-        if (client.FirstPeer?.ConnectionState == LiteNetLib.ConnectionState.Connected)
+        if (client.FirstPeer?.ConnectionState == ConnectionState.Connected)
         {
             return;
         }
@@ -82,8 +86,7 @@ public class LockstepNetwork : MonoBehaviour
         IP = GUILayout.TextField(IP);
                                   
         if (GUILayout.Button("Connect"))
-        {                                     
-            client.Start();
+        {                    
             client.Connect(IP, 9050 /* port */, "SomeConnectionKey" /* text key or NetDataWriter */);
         }
         GUILayout.EndVertical();

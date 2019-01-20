@@ -33,23 +33,26 @@ namespace Lockstep.Framework.Networking
                 serializedInputs = _inputs.ToArray();
                 _inputs.Clear();
 
-            }         
+            }
 
-            var frame = new Frame { SerializedInputs = serializedInputs}; 
-            frame.Serialize(_buffer, _frameCounter);
+            var frame = new Frame { SerializedInputs = serializedInputs };
+            frame.Serialize(writer, _frameCounter++);
 
-            _frames.Add(_frameCounter, new byte[_buffer.Length]);
-            Array.Copy(_buffer.Data, _frames[_frameCounter], _buffer.Length);
+            //var frame = new Frame { SerializedInputs = serializedInputs}; 
+            //frame.Serialize(_buffer, _frameCounter);
+
+            //_frames.Add(_frameCounter, new byte[_buffer.Length]);
+            //Array.Copy(_buffer.Data, _frames[_frameCounter], _buffer.Length);
 
 
-            _buffer.Reset();
-            //add previous frames for redundancy
-            var countFrames = WriteFrames(_buffer, _frameCounter, MAX_BUFFERSIZE - writer.Length - 8); //MTU - existingBytes - countframes(=4) - bytesLength(=4)
-                                                                
-            writer.Put(countFrames);
-            writer.PutBytesWithLength(_buffer.Data, 0, _buffer.Length);
+            //_buffer.Reset();
+            ////add previous frames for redundancy
+            //var countFrames = WriteFrames(_buffer, _frameCounter, MAX_BUFFERSIZE - writer.Length - 8); //MTU - existingBytes - countframes(=4) - bytesLength(=4)
 
-            _frameCounter++;
+            //writer.Put(countFrames);
+            //writer.PutBytesWithLength(_buffer.Data, 0, _buffer.Length);
+
+            //_frameCounter++;
         }
 
         public void AddInput(SerializedInput serializedInput)
@@ -100,24 +103,28 @@ namespace Lockstep.Framework.Networking
         public uint MaxFrames { get; set; }
 
         public void Deserialize(NetDataReader reader)
-        {
-            CountFrames = reader.GetUInt();
-            var buffer = reader.GetBytesWithLength();
+        {          
+            var frame = new Frame();
+            frame.Deserialize(reader); 
+            Frames = new[] {frame};
 
-            var frames = new List<Frame>();
+            //CountFrames = reader.GetUInt();
+            //var buffer = reader.GetBytesWithLength();
 
-            var bufferReader = new NetDataReader(buffer);
+            //var frames = new List<Frame>();
 
-            CountFrames = MaxFrames == 0 ? CountFrames : Math.Min(CountFrames, MaxFrames);
+            //var bufferReader = new NetDataReader(buffer);
 
-            for (var i = 0; i < CountFrames; i++)
-            {
-                var frame = new Frame();
-                frame.Deserialize(new NetDataReader(bufferReader.GetBytesWithLength()));
-                frames.Add(frame);
-            }
+            //CountFrames = MaxFrames == 0 ? CountFrames : Math.Min(CountFrames, MaxFrames);
 
-            Frames = frames.ToArray();
+            //for (var i = 0; i < CountFrames; i++)
+            //{
+            //    var frame = new Frame();
+            //    frame.Deserialize(new NetDataReader(bufferReader.GetBytesWithLength()));
+            //    frames.Add(frame);
+            //}
+
+            //Frames = frames.ToArray();
         }
     }
 }

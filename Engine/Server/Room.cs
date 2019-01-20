@@ -125,24 +125,9 @@ namespace Server
 
             var accumulatedTime = 0.0;
 
-            Running = true;    
+            Running = true; 
 
-            var writer = new NetDataWriter();
-
-            byte playerId = 0;
-
-            //Create a new seed and send it with a start-message to all clients
-            //The message also contains the respective player-id and the servers' frame rate 
-            var seed = new Random().Next(int.MinValue, int.MaxValue);
-            foreach (var peer in _server.ConnectedPeerList)
-            {
-                _playerIds[peer.Id] = playerId++;
-
-                writer.Reset();
-                writer.Put((byte)MessageTag.StartSimulation);
-                new Init { Seed = seed, TargetFPS = TargetFps, PlayerID = _playerIds[peer.Id] }.Serialize(writer); 
-                peer.Send(writer, DeliveryMethod.ReliableOrdered);  
-            }
+            StartSimulationOnConnectedPeers();
 
             _hashCodes.Clear();
             _framePacker = new FramePacker();
@@ -151,6 +136,7 @@ namespace Server
 
             Console.WriteLine("Simulation started");
 
+            var writer = new NetDataWriter();
             while (Running)
             {       
                 timer.Tick();
@@ -172,6 +158,30 @@ namespace Server
             }
 
             Console.WriteLine("Simulation stopped");    
+        }
+
+        private void StartSimulationOnConnectedPeers()
+        {
+            var writer = new NetDataWriter();
+            byte playerId = 0;
+
+            //Create a new seed and send it with a start-message to all clients
+            //The message also contains the respective player-id and the servers' frame rate 
+            var seed = new Random().Next(int.MinValue, int.MaxValue);
+            foreach (var peer in _server.ConnectedPeerList)
+            {
+                _playerIds[peer.Id] = playerId++;
+                                    
+                writer.Put((byte) MessageTag.StartSimulation);
+                new Init
+                {
+                    Seed = seed,
+                    TargetFPS = TargetFps,
+                    PlayerID = _playerIds[peer.Id]
+                }.Serialize(writer);
+
+                peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            }
         }
     }
 }

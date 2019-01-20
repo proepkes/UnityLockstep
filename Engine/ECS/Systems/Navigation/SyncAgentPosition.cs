@@ -3,19 +3,19 @@
 namespace ECS.Systems.Navigation
 {
     public class SyncAgentPosition : IExecuteSystem
-    {                                         
-        private readonly IGroup<GameEntity> _movingEntites;
+    {                                                       
         private readonly INavigationService _navigationService;
+        private readonly GameContext _gameContext;
 
         public SyncAgentPosition(Contexts contexts, INavigationService navigationService)
         {
             _navigationService = navigationService;
-            _movingEntites = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Movable, GameMatcher.Destination));
+            _gameContext = contexts.game;
         }
 
         public void Execute()
         {
-            foreach (var entity in _movingEntites.GetEntities())
+            foreach (var entity in _gameContext.GetEntities())
             {
                 entity.ReplacePosition(_navigationService.GetAgentPosition(entity.id.value));
             }                                    

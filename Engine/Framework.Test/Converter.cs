@@ -1,5 +1,6 @@
 using System.IO;
 using System.Text;
+using ECS;
 using Xunit.Abstractions;
 
 namespace Framework.Test

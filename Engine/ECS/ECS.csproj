@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultServices\DefaultHashService.cs" />
+    <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
+    <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
@@ -127,7 +129,6 @@
     <Compile Include="Data\Frame.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LockstepSystems.cs" />
     <Compile Include="Features\NavigationFeature.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
     <Compile Include="Systems\Navigation\OnGameEntityMovableRegisterToPathfinder.cs" />
@@ -140,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Input.cs" />
-    <Compile Include="Data\SerializedInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameState.cs" />
