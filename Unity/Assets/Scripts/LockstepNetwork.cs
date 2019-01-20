@@ -46,7 +46,7 @@ public class LockstepNetwork : MonoBehaviour
         client.Stop();       
     }     
 
-    public void SendChecksum(Checksum checksum)
+    public void SendHashCode(HashCode checksum)
     {
         var writer = new NetDataWriter();
         writer.Put((byte)MessageTag.Checksum);

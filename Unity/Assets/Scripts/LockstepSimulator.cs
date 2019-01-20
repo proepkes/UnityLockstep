@@ -55,7 +55,7 @@ public class LockstepSimulator : MonoBehaviour
 
                 //TODO: only for debugging, frames should be buffered
                 _simulation.Simulate();
-                LockstepNetwork.Instance.SendChecksum(new Checksum { FrameNumber = _simulation.FrameCounter, Value = _simulation.HashCode });   
+                LockstepNetwork.Instance.SendHashCode(new HashCode { FrameNumber = _simulation.FrameCounter, Value = _simulation.HashCode });   
                 break;
         }
     }            
@@ -72,7 +72,7 @@ public class LockstepSimulator : MonoBehaviour
 
         //if (simulation.FrameCounter % 10 == 0)
         //{
-        //    LockstepNetwork.Instance.SendChecksum(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
+        //    LockstepNetwork.Instance.SendHashCode(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
         //}                               
     }
     void OnGUI()

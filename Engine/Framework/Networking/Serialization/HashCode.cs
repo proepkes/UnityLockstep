@@ -2,7 +2,7 @@
 
 namespace Lockstep.Framework.Networking.Serialization
 {
-    public class Checksum
+    public class HashCode
     {
         public ulong FrameNumber { get; set; }
         public long Value { get; set; }
