@@ -16,7 +16,7 @@ namespace ECS.Systems.Navigation
         {
             foreach (var e in _movingEntites.GetEntities())
             {
-                if ((e.position.value - e.destination.value).Length() < 1)
+                if ((e.destination.value - e.position.value).Length() < 1)
                 {
                     e.RemoveDestination();
                 }

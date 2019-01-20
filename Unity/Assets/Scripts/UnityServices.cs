@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using ECS;
+using UnityEngine;
 using Entitas;
 using Entitas.Unity;
+using ILogger = ECS.ILogger;
 
 public interface IViewController
 {

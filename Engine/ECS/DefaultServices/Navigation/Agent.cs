@@ -1,6 +1,6 @@
 ﻿using BEPUutilities;
 
-namespace Lockstep.Framework.Services.Navigation.Simple
+namespace ECS.DefaultServices.Navigation
 {
     class Agent
     {

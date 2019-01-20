@@ -6,6 +6,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;   
 using Lockstep.Framework.Networking;
 using Lockstep.Framework.Networking.Serialization;
+using HashCode = Lockstep.Framework.Networking.Serialization.HashCode;
 
 namespace Server
 {
@@ -22,8 +23,16 @@ namespace Server
 
         private readonly NetManager _server;
         private readonly EventBasedNetListener _listener;
-        private readonly Dictionary<int, byte> _peerIds = new Dictionary<int, byte>();
-        private readonly Dictionary<ulong, long> _checksums = new Dictionary<ulong, long>();
+
+        /// <summary>
+        /// Mapping: LiteNetLib peerId -> playerId
+        /// </summary>
+        private readonly Dictionary<int, byte> _playerIds = new Dictionary<int, byte>();
+
+        /// <summary>
+        /// Mapping: Framenumber -> received hashcode
+        /// </summary>
+        private readonly Dictionary<ulong, long> _hashCodes = new Dictionary<ulong, long>();
 
         public Room()
         {
@@ -75,15 +84,15 @@ namespace Server
                         _framePacker?.AddInput(new SerializedInput { Data = reader.GetRemainingBytes() });
                         break;
                     case MessageTag.Checksum:
-                        var pkt = new Checksum();
+                        var pkt = new HashCode();
                         pkt.Deserialize(reader);
-                        if (!_checksums.ContainsKey(pkt.FrameNumber))
+                        if (!_hashCodes.ContainsKey(pkt.FrameNumber))
                         {
-                            _checksums[pkt.FrameNumber] = pkt.Value;
+                            _hashCodes[pkt.FrameNumber] = pkt.Value;
                         }
                         else
                         {
-                            Console.WriteLine((_checksums[pkt.FrameNumber] == pkt.Value ? "Checksum valid" : "Desync") +": " + pkt.Value); 
+                            Console.WriteLine((_hashCodes[pkt.FrameNumber] == pkt.Value ? "HashCode valid" : "Desync") +": " + pkt.Value); 
                         }
                         break;
                 }
@@ -116,32 +125,18 @@ namespace Server
 
             var accumulatedTime = 0.0;
 
-            Running = true;    
+            Running = true; 
 
-            var writer = new NetDataWriter();
+            StartSimulationOnConnectedPeers();
 
-            byte playerId = 0;
-
-            //Create a new seed and send it with a start-message to all clients
-            //The message also contains the respective player-id and the servers' frame rate 
-            var seed = new Random().Next(int.MinValue, int.MaxValue);
-            foreach (var peer in _server.ConnectedPeerList)
-            {
-                _peerIds[peer.Id] = playerId++;
-
-                writer.Reset();
-                writer.Put((byte)MessageTag.StartSimulation);
-                new Init { Seed = seed, TargetFPS = TargetFps, PlayerID = _peerIds[peer.Id] }.Serialize(writer); 
-                peer.Send(writer, DeliveryMethod.ReliableOrdered);  
-            }
-
-            _checksums.Clear();
+            _hashCodes.Clear();
             _framePacker = new FramePacker();
 
             timer.Start();
 
             Console.WriteLine("Simulation started");
 
+            var writer = new NetDataWriter();
             while (Running)
             {       
                 timer.Tick();
@@ -163,6 +158,30 @@ namespace Server
             }
 
             Console.WriteLine("Simulation stopped");    
+        }
+
+        private void StartSimulationOnConnectedPeers()
+        {
+            var writer = new NetDataWriter();
+            byte playerId = 0;
+
+            //Create a new seed and send it with a start-message to all clients
+            //The message also contains the respective player-id and the servers' frame rate 
+            var seed = new Random().Next(int.MinValue, int.MaxValue);
+            foreach (var peer in _server.ConnectedPeerList)
+            {
+                _playerIds[peer.Id] = playerId++;
+                                    
+                writer.Put((byte) MessageTag.StartSimulation);
+                new Init
+                {
+                    Seed = seed,
+                    TargetFPS = TargetFps,
+                    PlayerID = _playerIds[peer.Id]
+                }.Serialize(writer);
+
+                peer.Send(writer, DeliveryMethod.ReliableOrdered);
+            }
         }
     }
 }

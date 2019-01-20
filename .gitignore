@@ -263,3 +263,5 @@ Unity/Assembly-CSharp-Editor\.csproj
 /Engine/ECS/Jenny-Auto-Import.bat
 /Engine/ECS/Jenny-Auto-Import
 /Unity/Assets/GraphCaches
+/Unity/Assets/Integration/RVONavigation.dll
+/Unity/Assets/Integration/RVONavigation.deps.json

@@ -2,11 +2,10 @@
 using System.Linq;
 using BEPUutilities;
 using FixMath.NET;
-using Lockstep.Framework.Services.Navigation.Simple;
 
-namespace Lockstep.Framework.Services.Navigation
+namespace ECS.DefaultServices.Navigation
 {                                   
-    public class SimpleNavigationService: INavigationService
+    public class DefaultNavigationService: INavigationService
     {
         private static readonly Fix64 AgentSpeed = Fix64.One;
 

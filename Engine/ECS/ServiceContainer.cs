@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ECS.DefaultServices;
+using ECS.DefaultServices.Navigation;         
 
 namespace ECS
 {
@@ -11,6 +12,7 @@ namespace ECS
         public ServiceContainer()
         {
             _defaults.Add(typeof(IHashService).FullName, new DefaultHashService());
+            _defaults.Add(typeof(INavigationService).FullName, new DefaultNavigationService());
         }
 
         public ServiceContainer Register<T>(T instance) where T : IService

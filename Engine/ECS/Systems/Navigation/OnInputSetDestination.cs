@@ -30,7 +30,7 @@ namespace ECS.Systems.Navigation
         {
             foreach (InputEntity e in entities)
             {
-                //TODO: Add PlayerControlledSystem to only iterate over gameEntites that are controlled by the player who sent the serializedInput
+                //TODO: Add PlayerControlledSystem to only iterate over game entities that are controlled by the player who sent the input
                 _navigationService.UpdateDestination(e.gameEntityIds.value, e.inputPosition.value);
                 foreach (var entityId in e.gameEntityIds.value)
                 {

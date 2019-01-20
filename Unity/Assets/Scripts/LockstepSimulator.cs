@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
-using ECS;          
+﻿using ECS;         
 using LiteNetLib.Utils;
 using Lockstep.Framework;              
 using Lockstep.Framework.Networking;             
 using Lockstep.Framework.Networking.Serialization;
-using Lockstep.Framework.Services;
-using Lockstep.Framework.Services.Navigation;    
-using UnityEngine;                            
+using Lockstep.Framework.Services;  
+using UnityEngine;
+using ILogger = ECS.ILogger;
 
 public class LockstepSimulator : MonoBehaviour
 {                                                                        
     private Simulation _simulation;      
     private bool _simulationStarted;
+                                                         
 
     private void Awake()
-    {
+    {                                                          
+
         _simulation = new Simulation(
             Contexts.sharedInstance, 
-            new ServiceContainer()
-                .Register<INavigationService>(new SimpleNavigationService())
+            new ServiceContainer()                      
+                //.Register<INavigationService>(new RVONavigationService())   
                 .Register<IParseInputService>(new ParseInputService())
                 .Register<IViewService>(new UnityViewService())
                 .Register<ILogger>(new UnityLogger())) 
@@ -39,7 +40,7 @@ public class LockstepSimulator : MonoBehaviour
             case MessageTag.StartSimulation:
                 var pkt = new Init();
                 pkt.Deserialize(reader);
-                Time.fixedDeltaTime = 1f/pkt.TargetFPS;
+                Time.fixedDeltaTime = 1f/pkt.TargetFPS;  
 
                 _simulation.Init(pkt.Seed);
 
@@ -55,7 +56,7 @@ public class LockstepSimulator : MonoBehaviour
 
                 //TODO: only for debugging, frames should be buffered
                 _simulation.Simulate();
-                LockstepNetwork.Instance.SendChecksum(new Checksum { FrameNumber = _simulation.FrameCounter, Value = _simulation.HashCode });   
+                LockstepNetwork.Instance.SendHashCode(new HashCode { FrameNumber = _simulation.FrameCounter, Value = _simulation.HashCode });   
                 break;
         }
     }            
@@ -72,7 +73,7 @@ public class LockstepSimulator : MonoBehaviour
 
         //if (simulation.FrameCounter % 10 == 0)
         //{
-        //    LockstepNetwork.Instance.SendChecksum(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
+        //    LockstepNetwork.Instance.SendHashCode(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
         //}                               
     }
     void OnGUI()
