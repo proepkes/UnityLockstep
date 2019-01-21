@@ -8,18 +8,18 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly MovableComponent movableComponent = new MovableComponent();
+    static readonly NavigableComponent navigableComponent = new NavigableComponent();
 
-    public bool isMovable {
-        get { return HasComponent(GameComponentsLookup.Movable); }
+    public bool isNavigable {
+        get { return HasComponent(GameComponentsLookup.Navigable); }
         set {
-            if (value != isMovable) {
-                var index = GameComponentsLookup.Movable;
+            if (value != isNavigable) {
+                var index = GameComponentsLookup.Navigable;
                 if (value) {
                     var componentPool = GetComponentPool(index);
                     var component = componentPool.Count > 0
                             ? componentPool.Pop()
-                            : movableComponent;
+                            : navigableComponent;
 
                     AddComponent(index, component);
                 } else {
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherMovable;
+    static Entitas.IMatcher<GameEntity> _matcherNavigable;
 
-    public static Entitas.IMatcher<GameEntity> Movable {
+    public static Entitas.IMatcher<GameEntity> Navigable {
         get {
-            if (_matcherMovable == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Movable);
+            if (_matcherNavigable == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Navigable);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherMovable = matcher;
+                _matcherNavigable = matcher;
             }
 
-            return _matcherMovable;
+            return _matcherNavigable;
         }
     }
 }

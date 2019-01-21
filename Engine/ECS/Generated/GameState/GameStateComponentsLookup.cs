@@ -8,21 +8,21 @@
 //------------------------------------------------------------------------------
 public static class GameStateComponentsLookup {
 
-    public const int GameHashCode = 0;
-    public const int GameStateInGame = 1;
-    public const int GameStatePaused = 2;
+    public const int GameStateInGame = 0;
+    public const int GameStatePaused = 1;
+    public const int HashCode = 2;
 
     public const int TotalComponents = 3;
 
     public static readonly string[] componentNames = {
-        "GameHashCode",
         "GameStateInGame",
-        "GameStatePaused"
+        "GameStatePaused",
+        "HashCode"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(GameHashCodeComponent),
         typeof(GameStateInGameComponent),
-        typeof(GameStatePausedComponent)
+        typeof(GameStatePausedComponent),
+        typeof(HashCodeComponent)
     };
 }

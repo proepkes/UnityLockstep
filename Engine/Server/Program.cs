@@ -5,7 +5,7 @@ namespace Server
 {
     class Program
     {                                 
-        private const int RoomSize = 3; 
+        private const int RoomSize = 2; 
 
         static void Main(string[] args)
         {                    

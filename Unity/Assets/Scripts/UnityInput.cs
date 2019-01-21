@@ -10,7 +10,7 @@ public class UnityInput : MonoBehaviour
 
     void Awake()
     {
-        controls.Player.SpawnUnit.performed += SpawnUnitOnPerformed;
+        //controls.Player.SpawnUnit.performed += SpawnUnitOnPerformed;
         controls.Player.MoveUnits.performed += NavigateUnitsOnPerformed;
     }
 
@@ -19,11 +19,11 @@ public class UnityInput : MonoBehaviour
         controls.Enable();
     }
 
-    private void SpawnUnitOnPerformed(InputAction.CallbackContext obj)
-    {                                    
-        var pos = GetWorldPos(Mouse.current.position.ReadValue());  
-        FindObjectOfType<EntitySpawner>().Spawn(pos);
-    }
+    //private void SpawnUnitOnPerformed(InputAction.CallbackContext obj)
+    //{                                    
+    //    var pos = GetWorldPos(Mouse.current.position.ReadValue());  
+    //    FindObjectOfType<RTSEntitySpawner>().Spawn(pos);
+    //}
 
     private void NavigateUnitsOnPerformed(InputAction.CallbackContext obj)
     {
@@ -44,5 +44,14 @@ public class UnityInput : MonoBehaviour
         }
         var hitPoint = ray.origin - ray.direction * (ray.origin.y / ray.direction.y);
         return new BEPUutilities.Vector2((Fix64)hitPoint.x, (Fix64)hitPoint.z);
-    } 
+    }
+
+    void Update()
+    {
+        if (Mouse.current.rightButton.isPressed)
+        {   
+            var pos = GetWorldPos(Mouse.current.position.ReadValue());
+            FindObjectOfType<RTSEntitySpawner>().Spawn(pos);
+        }
+    }
 }

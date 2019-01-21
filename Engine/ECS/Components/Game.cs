@@ -1,12 +1,17 @@
 ﻿using BEPUutilities;
 using Entitas;
-using Entitas.CodeGeneration.Attributes;
-using FixMath.NET;
+using Entitas.CodeGeneration.Attributes;   
  
 [Game] 
 public class IdComponent : IComponent
 {
     [PrimaryEntityIndex]
+    public int value;
+}
+
+[Game]
+public sealed class ConfigIdComponent : IComponent
+{
     public int value;
 }
  
@@ -37,13 +42,7 @@ public class DestinationComponent : IComponent
 public class PositionComponent : IComponent
 {
     public Vector2 value;
-}
-
-[Game]
-public class MovableComponent : IComponent
-{
-
-}        
+}     
 
 [Game]
 public sealed class HealthComponent : IComponent
@@ -52,7 +51,12 @@ public sealed class HealthComponent : IComponent
 }
 
 [Game]
-public sealed class HashCodeComponent : IComponent
-{
-    public long value;
+public sealed class NavigableComponent : IComponent
+{                      
 }
+
+[Game]
+public sealed class HashableComponent : IComponent
+{                     
+}
+

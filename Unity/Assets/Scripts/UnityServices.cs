@@ -1,8 +1,7 @@
 ﻿using ECS;
 using UnityEngine;
 using Entitas;
-using Entitas.Unity;
-using ILogger = ECS.ILogger;
+using Entitas.Unity;           
 
 public interface IViewController
 {
@@ -18,27 +17,44 @@ public interface IEventListener
     void RegisterListeners(IEntity entity);
 }
 
-public class UnityViewService : IViewService
-{                                                   
-    public void LoadAsset(Contexts contexts, IEntity entity, string assetName)
+public interface IComponentSetter
+{
+    void SetComponent(GameEntity entity);
+}
+
+public class UnityGameService : IGameService
+{
+    private readonly RTSEntityDatabase _entityDatabase;
+
+    public UnityGameService(RTSEntityDatabase entityDatabase)
     {
-        var viewGo = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/" + assetName));
+        _entityDatabase = entityDatabase;
+    }
+
+    public void LoadEntity(GameEntity entity, int configId)
+    {
+        var viewGo = Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
         if (viewGo != null)
         {
             viewGo.Link(entity);
-            var viewController = viewGo.GetComponent<IViewController>();
-            viewController?.InitializeView(contexts, entity);
-                                                                                   
+
+            var componentSetters = viewGo.GetComponents<IComponentSetter>();
+            foreach (var componentSetter in componentSetters)
+            {
+                componentSetter.SetComponent(entity);
+                Object.Destroy((MonoBehaviour) componentSetter);
+            }
+
             var eventListeners = viewGo.GetComponents<IEventListener>();
             foreach (var listener in eventListeners)
             {
                 listener.RegisterListeners(entity);
             }
         }
-    }
+    }   
 }
 
-public class UnityLogger : ILogger
+public class UnityLogger : ILogService
 {
     public void Warn(string message)
     {

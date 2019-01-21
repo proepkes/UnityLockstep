@@ -1,7 +1,6 @@
 ﻿using System;
 using ECS;
-using ECS.Data;
-using ECS.Features;
+using ECS.Data;       
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
@@ -27,16 +26,11 @@ namespace Framework.Test
             var contexts = new Contexts();
             var inputParser = new ParseInputService();
 
-            var container = new ServiceContainer();
-            container.Register<IParseInputService>(inputParser);
-            container.Register(new Mock<IViewService>().Object);
+            var container = new ServiceContainer()
+                .Register<IParseInputService>(inputParser);;
 
             var serializer = new NetDataWriter();         
-            new SpawnCommand
-            {
-                AssetName = "Test",
-                Movable = false
-            }.Serialize(serializer);
+            new SpawnCommand().Serialize(serializer);
 
 
             var command = new SerializedInput { Data = serializer.Data };
@@ -65,7 +59,7 @@ namespace Framework.Test
                 sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
                 sim.Simulate();
 
-                inputParser.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
+                inputParser.Verify(service => service.Parse(It.IsAny<GameContext>(), command), Times.Exactly(1));
             }
         }
     }

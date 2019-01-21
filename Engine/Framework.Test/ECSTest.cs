@@ -26,8 +26,7 @@ namespace Framework.Test
                                   
             var container = new ServiceContainer();
             container
-                .Register(new Mock<IParseInputService>().Object)
-                .Register(new Mock<IViewService>().Object);
+                .Register(new Mock<IParseInputService>().Object);
 
             new LockstepSystems(contexts, container).Initialize();
 
@@ -49,8 +48,7 @@ namespace Framework.Test
 
             var container = new ServiceContainer();
             container
-                .Register(new Mock<IParseInputService>().Object)
-                .Register(new Mock<IViewService>().Object);
+                .Register(new Mock<IParseInputService>().Object);
 
             new LockstepSystems(contexts, container).Initialize();
 

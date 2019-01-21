@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public HashCodeComponent hashCode { get { return (HashCodeComponent)GetComponent(GameComponentsLookup.HashCode); } }
-    public bool hasHashCode { get { return HasComponent(GameComponentsLookup.HashCode); } }
+    public ConfigIdComponent configId { get { return (ConfigIdComponent)GetComponent(GameComponentsLookup.ConfigId); } }
+    public bool hasConfigId { get { return HasComponent(GameComponentsLookup.ConfigId); } }
 
-    public void AddHashCode(long newValue) {
-        var index = GameComponentsLookup.HashCode;
-        var component = (HashCodeComponent)CreateComponent(index, typeof(HashCodeComponent));
+    public void AddConfigId(int newValue) {
+        var index = GameComponentsLookup.ConfigId;
+        var component = (ConfigIdComponent)CreateComponent(index, typeof(ConfigIdComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceHashCode(long newValue) {
-        var index = GameComponentsLookup.HashCode;
-        var component = (HashCodeComponent)CreateComponent(index, typeof(HashCodeComponent));
+    public void ReplaceConfigId(int newValue) {
+        var index = GameComponentsLookup.ConfigId;
+        var component = (ConfigIdComponent)CreateComponent(index, typeof(ConfigIdComponent));
         component.value = newValue;
         ReplaceComponent(index, component);
     }
 
-    public void RemoveHashCode() {
-        RemoveComponent(GameComponentsLookup.HashCode);
+    public void RemoveConfigId() {
+        RemoveComponent(GameComponentsLookup.ConfigId);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherHashCode;
+    static Entitas.IMatcher<GameEntity> _matcherConfigId;
 
-    public static Entitas.IMatcher<GameEntity> HashCode {
+    public static Entitas.IMatcher<GameEntity> ConfigId {
         get {
-            if (_matcherHashCode == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.HashCode);
+            if (_matcherConfigId == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.ConfigId);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherHashCode = matcher;
+                _matcherConfigId = matcher;
             }
 
-            return _matcherHashCode;
+            return _matcherConfigId;
         }
     }
 }

@@ -19,25 +19,17 @@ namespace ECS.Systems
             _hashService = hashService;
             _gameStateContext = contexts.gameState;
 
-            _hashableEntities = contexts.game.GetGroup(GameMatcher.HashCode);
+            _hashableEntities = contexts.game.GetGroup(GameMatcher.Hashable);
         }
 
         public void Initialize()
         {
-            _gameStateContext.SetGameHashCode(0);
+            _gameStateContext.SetHashCode(0);
         }
 
         public void Execute()
-        {
-            long gameHashCode = 0;
-            foreach (var entity in _hashableEntities.GetEntities())
-            {
-                var hashCode = _hashService.GetHashCode(entity);
-                entity.ReplaceHashCode(hashCode);
-
-                gameHashCode ^= hashCode;
-            }
-            _gameStateContext.ReplaceGameHashCode(gameHashCode);
+        {  
+            _gameStateContext.ReplaceHashCode(_hashService.CalculateHashCode(_hashableEntities.GetEntities()));
         }
     }
 }

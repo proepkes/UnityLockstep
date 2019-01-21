@@ -1,4 +1,5 @@
-﻿using BEPUutilities;
+﻿using System.Linq;
+using BEPUutilities;
 using LiteNetLib.Utils;
 using Lockstep.Framework.Services;
 
@@ -28,12 +29,13 @@ namespace Lockstep.Framework.Commands
             Destination.Y = reader.GetLong();
         }
 
-        public override void Execute(InputContext context)
+        public override void Execute(GameContext context)
         {
             var e = context.CreateEntity();
-            e.isNavigationInput = true;
-            e.AddGameEntityIds(EntityIds);
-            e.AddInputPosition(Destination);
+            foreach (var gameEntity in context.GetEntities().Where(entity => EntityIds.Contains(entity.id.value)))
+            {
+                gameEntity.ReplaceDestination(Destination);
+            }                                
         }
     }
 }

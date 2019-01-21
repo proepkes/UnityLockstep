@@ -2,14 +2,16 @@
 
 namespace ECS.Systems.Input
 {
-    public class EmitInputSystem : IExecuteSystem, ICleanupSystem
+    public class EmitInput : IExecuteSystem, ICleanupSystem
     {
-        private readonly InputContext _inputContext; 
+        private readonly GameContext _gameContext;
+        private readonly InputContext _inputContext;
 
         private readonly IParseInputService _parseInputService;
 
-        public EmitInputSystem(Contexts contexts, IParseInputService parseInputService)
+        public EmitInput(Contexts contexts, IParseInputService parseInputService)
         {
+            _gameContext = contexts.game;
             _inputContext = contexts.input;
             _parseInputService = parseInputService;
         }     
@@ -21,7 +23,7 @@ namespace ECS.Systems.Input
 
             foreach (var input in _inputContext.frame.SerializedInputs)
             {
-                _parseInputService.Parse(_inputContext, input);
+                _parseInputService.Parse(_gameContext, input);
             }
         }
 

@@ -9,26 +9,14 @@
 public static class InputComponentsLookup {
 
     public const int Frame = 0;
-    public const int GameEntityIds = 1;
-    public const int InputPosition = 2;
-    public const int NavigationInput = 3;
-    public const int SpawnInput = 4;
 
-    public const int TotalComponents = 5;
+    public const int TotalComponents = 1;
 
     public static readonly string[] componentNames = {
-        "Frame",
-        "GameEntityIds",
-        "InputPosition",
-        "NavigationInput",
-        "SpawnInput"
+        "Frame"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(FrameComponent),
-        typeof(GameEntityIdsComponent),
-        typeof(InputPositionComponent),
-        typeof(NavigationInputComponent),
-        typeof(SpawnInputComponent)
+        typeof(FrameComponent)
     };
 }
