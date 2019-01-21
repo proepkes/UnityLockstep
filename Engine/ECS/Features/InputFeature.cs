@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ECS.Systems;
-using ECS.Systems.Input;
+﻿using ECS.Systems.Input;
 
 namespace ECS.Features
 {                                    
@@ -13,8 +7,13 @@ namespace ECS.Features
         public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
         {
             //TODO: Add InputValidationSystem by matching input with playerId
+
             Add(new EmitInput(contexts, serviceContainer.Get<IParseInputService>())); 
-            Add(new LoadNewEntitiesIntoGame(contexts, serviceContainer.Get<IGameService>()));
+
+            Add(new OnSpawnInputDoLoadEntityIntoGame(contexts, serviceContainer.Get<IGameService>()));
+
+            Add(new OnNavigableEntityDoAddAgent(contexts, serviceContainer.Get<INavigationService>()));
+            Add(new OnNavigationInputDoSetAgentDestination(contexts, serviceContainer.Get<INavigationService>()));
         }
     }
 }

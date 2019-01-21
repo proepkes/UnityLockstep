@@ -14,16 +14,16 @@ public partial class InputEntity {
     public void AddSpawnInputData(int newEntityConfigId, BEPUutilities.Vector2 newPosition) {
         var index = InputComponentsLookup.SpawnInputData;
         var component = (SpawnInputDataComponent)CreateComponent(index, typeof(SpawnInputDataComponent));
-        component.entityConfigId = newEntityConfigId;
-        component.position = newPosition;
+        component.EntityConfigId = newEntityConfigId;
+        component.Position = newPosition;
         AddComponent(index, component);
     }
 
     public void ReplaceSpawnInputData(int newEntityConfigId, BEPUutilities.Vector2 newPosition) {
         var index = InputComponentsLookup.SpawnInputData;
         var component = (SpawnInputDataComponent)CreateComponent(index, typeof(SpawnInputDataComponent));
-        component.entityConfigId = newEntityConfigId;
-        component.position = newPosition;
+        component.EntityConfigId = newEntityConfigId;
+        component.Position = newPosition;
         ReplaceComponent(index, component);
     }
 

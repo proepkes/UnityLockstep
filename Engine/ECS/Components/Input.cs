@@ -1,8 +1,7 @@
 ﻿using BEPUutilities;
 using ECS.Data;
 using Entitas;
-using Entitas.CodeGeneration.Attributes;
-using FixMath.NET;
+using Entitas.CodeGeneration.Attributes;       
 
 [Input, Unique]
 public class FrameComponent : IComponent
@@ -21,7 +20,7 @@ public class NavigationInputDataComponent : IComponent
 [Input]
 public class SpawnInputDataComponent : IComponent
 {
-    public int entityConfigId;
+    public int EntityConfigId;
 
-    public Vector2 position;
+    public Vector2 Position;
 }

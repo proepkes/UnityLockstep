@@ -3,12 +3,12 @@ using Entitas;
 
 namespace ECS.Systems.Input
 {
-    public class LoadNewEntitiesIntoGame : ReactiveSystem<InputEntity>
+    public class OnSpawnInputDoLoadEntityIntoGame : ReactiveSystem<InputEntity>
     {
         private readonly GameContext _gameContext;            
         private readonly IGameService _gameService;
 
-        public LoadNewEntitiesIntoGame(Contexts contexts, IGameService gameService) : base(contexts.input)
+        public OnSpawnInputDoLoadEntityIntoGame(Contexts contexts, IGameService gameService) : base(contexts.input)
         {
             _gameService = gameService; 
             _gameContext = contexts.game;
@@ -29,9 +29,9 @@ namespace ECS.Systems.Input
             foreach (var entity in entities)
             {
                 var e = _gameContext.CreateEntity();
-                e.AddPosition(entity.spawnInputData.position);
+                e.AddPosition(entity.spawnInputData.Position);
 
-                _gameService.LoadEntity(e, entity.spawnInputData.entityConfigId);
+                _gameService.LoadEntity(e, entity.spawnInputData.EntityConfigId);
             }
         }   
     }

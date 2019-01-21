@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 
-namespace ECS.Systems.Navigation
+namespace ECS.Systems.Input
 {
     public class OnNavigationInputDoSetAgentDestination : ReactiveSystem<InputEntity>
     {
