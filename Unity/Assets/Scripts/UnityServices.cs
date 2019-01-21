@@ -31,9 +31,9 @@ public class UnityGameService : IGameService
         _entityDatabase = entityDatabase;
     }
 
-    public void ApplyEntity(GameEntity entity, int configId)
+    public void LoadEntity(GameEntity entity, int configId)
     {
-        var viewGo = GameObject.Instantiate(_entityDatabase.Entities[configId]).gameObject;
+        var viewGo = Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
         if (viewGo != null)
         {
             viewGo.Link(entity);

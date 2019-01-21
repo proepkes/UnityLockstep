@@ -5,7 +5,7 @@ using Vector2 = BEPUutilities.Vector2;
 public class RTSEntitySpawner : MonoBehaviour
 {
     public int Count;             
-    public RTSEntity Prefab;   
+    public GameObject Prefab;   
 
     private void Start()
     {  

@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: EntityDatabase
   m_EditorClassIdentifier: 
   Entities:
-  - {fileID: 5439425552071605859, guid: 24e2acaaa3c159748824ae994e0c01a3, type: 3}
+  - {fileID: 6983145694885263932, guid: 24e2acaaa3c159748824ae994e0c01a3, type: 3}

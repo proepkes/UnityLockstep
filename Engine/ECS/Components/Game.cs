@@ -56,8 +56,7 @@ public sealed class NavigableComponent : IComponent
 }
 
 [Game]
-public sealed class HashCodeComponent : IComponent
-{
-    public long value;
+public sealed class HashableComponent : IComponent
+{                     
 }
 

@@ -13,7 +13,7 @@ public class GameStateInGameComponent : IComponent
 }
 
 [GameState, Unique]
-public sealed class GameHashCodeComponent : IComponent
+public sealed class HashCodeComponent : IComponent
 {
     public long value;
 }

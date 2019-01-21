@@ -6,5 +6,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EntityDatabase.asset", menuName = "UnityLockstep/Entity Database")]
 public class RTSEntityDatabase : ScriptableObject
 {
-    public List<RTSEntity> Entities;  
+    public List<GameObject> Entities;  
 }

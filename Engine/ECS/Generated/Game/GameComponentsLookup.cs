@@ -14,7 +14,7 @@ public static class GameComponentsLookup {
     public const int Destination = 3;
     public const int DestinationListener = 4;
     public const int DestinationRemovedListener = 5;
-    public const int HashCode = 6;
+    public const int Hashable = 6;
     public const int Health = 7;
     public const int Id = 8;
     public const int Navigable = 9;
@@ -31,7 +31,7 @@ public static class GameComponentsLookup {
         "Destination",
         "DestinationListener",
         "DestinationRemovedListener",
-        "HashCode",
+        "Hashable",
         "Health",
         "Id",
         "Navigable",
@@ -47,7 +47,7 @@ public static class GameComponentsLookup {
         typeof(DestinationComponent),
         typeof(DestinationListenerComponent),
         typeof(DestinationRemovedListenerComponent),
-        typeof(HashCodeComponent),
+        typeof(HashableComponent),
         typeof(HealthComponent),
         typeof(IdComponent),
         typeof(NavigableComponent),

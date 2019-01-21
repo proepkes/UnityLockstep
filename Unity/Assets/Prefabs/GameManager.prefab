@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Count: 1
-  Prefab: {fileID: 5439425552071605859, guid: 24e2acaaa3c159748824ae994e0c01a3, type: 3}
+  Prefab: {fileID: 6983145694885263932, guid: 24e2acaaa3c159748824ae994e0c01a3, type: 3}
 --- !u!114 &8126595664674228011
 MonoBehaviour:
   m_ObjectHideFlags: 0

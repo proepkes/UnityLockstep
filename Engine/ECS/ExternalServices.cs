@@ -22,7 +22,7 @@ namespace ECS
 
     public interface IGameService : IService
     {                                                        
-        void ApplyEntity(GameEntity entity, int configId);
+        void LoadEntity(GameEntity entity, int configId);
     }
 
     public interface INavigationService : IService
@@ -38,7 +38,7 @@ namespace ECS
 
     public interface IHashService : IService
     {  
-        long GetHashCode(GameEntity entity);
+        long CalculateHashCode(GameEntity[] entity);
     }
       
     public interface ILogService : IService

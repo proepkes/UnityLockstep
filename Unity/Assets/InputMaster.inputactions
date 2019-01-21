@@ -22,7 +22,7 @@
                 {
                     "name": "",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "Press",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "",
                     "action": "SpawnUnit",
@@ -34,7 +34,7 @@
                 {
                     "name": "",
                     "path": "<Keyboard>/x",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "MoveUnits",

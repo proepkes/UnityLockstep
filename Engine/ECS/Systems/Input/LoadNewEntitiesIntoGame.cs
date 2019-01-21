@@ -17,7 +17,7 @@ namespace ECS.Systems.Input
         {
             foreach (var entity in _pendingEntities.GetEntities())
             {
-                _configurationService.ApplyEntity(entity, entity.configId.value);
+                _configurationService.LoadEntity(entity, entity.configId.value);
             }
         }
 

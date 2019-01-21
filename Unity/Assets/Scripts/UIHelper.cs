@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class UIHelper : MonoBehaviour
 {
+    public TMP_Text AgentCountText;
     public TMP_Text ConnectedText;
 
     // Start is called before the first frame update
@@ -16,6 +17,7 @@ public class UIHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        AgentCountText.text = "Agents: " + Contexts.sharedInstance.game.GetEntities().Length;
         ConnectedText.text = "Connected: " + LockstepNetwork.Instance.Connected;
     }
 }

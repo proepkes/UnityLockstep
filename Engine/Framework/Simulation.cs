@@ -19,7 +19,7 @@ namespace Lockstep.Framework
 
         public uint FrameCounter { get; private set; }
 
-        public long HashCode => _contexts.gameState.gameHashCode.value;
+        public long HashCode => _contexts.gameState.hashCode.value;
 
 
         private uint _lastFramePointer;

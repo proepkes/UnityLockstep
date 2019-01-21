@@ -2,7 +2,7 @@
 {
     public class DefaultGameService : IGameService
     {           
-        public void ApplyEntity(GameEntity entity, int configId)
+        public void LoadEntity(GameEntity entity, int configId)
         {
             //Do nothing
         }

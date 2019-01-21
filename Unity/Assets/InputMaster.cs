@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/ExampleRTS/InputMaster.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/InputMaster.inputactions'
 
 using System;
 using UnityEngine;
