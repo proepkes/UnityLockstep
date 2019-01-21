@@ -1,19 +1,17 @@
-﻿using LiteNetLib.Utils;
-
-namespace Lockstep.Framework.Networking.Serialization
+﻿namespace Lockstep.Framework.Networking.Serialization
 {
     public class HashCode
     {
         public ulong FrameNumber { get; set; }
         public long Value { get; set; }
 
-        public void Serialize(NetDataWriter writer)
+        public void Serialize(INetworkWriter writer)
         {
             writer.Put(FrameNumber);
             writer.Put(Value);
         }
 
-        public void Deserialize(NetDataReader reader)
+        public void Deserialize(INetworkReader reader)
         {
 
             FrameNumber = reader.GetULong();

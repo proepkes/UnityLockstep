@@ -1,32 +1,38 @@
-﻿using Entitas;
+﻿using System.Collections.Generic;
+using Entitas;
 
 namespace ECS.Systems.Input
 {
-    public class LoadNewEntitiesIntoGame : IExecuteSystem, ICleanupSystem
+    public class LoadNewEntitiesIntoGame : ReactiveSystem<InputEntity>
     {
-        private readonly IGroup<GameEntity> _pendingEntities;
-        private readonly IGameService _configurationService;
+        private readonly GameContext _gameContext;            
+        private readonly IGameService _gameService;
 
-        public LoadNewEntitiesIntoGame(Contexts contexts, IGameService configurationService)
+        public LoadNewEntitiesIntoGame(Contexts contexts, IGameService gameService) : base(contexts.input)
         {
-            _configurationService = configurationService;
-            
-            _pendingEntities = contexts.game.GetGroup(GameMatcher.ConfigId);
-        }
-        public void Execute()
-        {
-            foreach (var entity in _pendingEntities.GetEntities())
-            {
-                _configurationService.LoadEntity(entity, entity.configId.value);
-            }
+            _gameService = gameService; 
+            _gameContext = contexts.game;
         }
 
-        public void Cleanup()
+        protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            foreach (var entity in _pendingEntities.GetEntities())
-            {
-                entity.RemoveConfigId();
-            }
+            return context.CreateCollector(InputMatcher.SpawnInputData);
         }
+
+        protected override bool Filter(InputEntity entity)
+        {
+            return entity.hasSpawnInputData;
+        }
+
+        protected override void Execute(List<InputEntity> entities)
+        {
+            foreach (var entity in entities)
+            {
+                var e = _gameContext.CreateEntity();
+                e.AddPosition(entity.spawnInputData.position);
+
+                _gameService.LoadEntity(e, entity.spawnInputData.entityConfigId);
+            }
+        }   
     }
 }

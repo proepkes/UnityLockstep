@@ -4,6 +4,8 @@ using ECS.Data;
 using LiteNetLib.Utils;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
+using Lockstep.Framework.Networking;
+using Lockstep.Framework.Networking.LiteNetLib;
 using Lockstep.Framework.Services;
 using Moq;
 using Shouldly;        
@@ -24,12 +26,12 @@ namespace Framework.Test
         {
 
             var contexts = new Contexts();
-            var inputParser = new ParseInputService();
+            var inputParser = new ParseInputService(new LiteNetLibNetworkReader());
 
             var container = new ServiceContainer()
                 .Register<IParseInputService>(inputParser);;
 
-            var serializer = new NetDataWriter();         
+            var serializer = new LiteNetLibNetworkWriter();         
             new SpawnCommand().Serialize(serializer);
 
 
@@ -59,7 +61,7 @@ namespace Framework.Test
                 sim.AddFrame(new Frame { SerializedInputs = new[] { command } });
                 sim.Simulate();
 
-                inputParser.Verify(service => service.Parse(It.IsAny<GameContext>(), command), Times.Exactly(1));
+                inputParser.Verify(service => service.Parse(It.IsAny<InputContext>(), command), Times.Exactly(1));
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using LiteNetLib.Utils;
-
-namespace Lockstep.Framework.Networking.Serialization
+﻿namespace Lockstep.Framework.Networking.Serialization
 {
     public class Init
     {
@@ -10,14 +8,14 @@ namespace Lockstep.Framework.Networking.Serialization
 
         public int TargetFPS { get; set; }
 
-        public void Serialize(NetDataWriter writer)
+        public void Serialize(INetworkWriter writer)
         {
             writer.Put(Seed);
             writer.Put(PlayerID);
             writer.Put(TargetFPS);
         }
 
-        public void Deserialize(NetDataReader reader)
+        public void Deserialize(INetworkReader reader)
         {
             Seed = reader.GetInt();
             PlayerID = reader.GetByte();

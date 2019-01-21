@@ -1,7 +1,8 @@
 ﻿using ECS;         
 using LiteNetLib.Utils;
 using Lockstep.Framework;              
-using Lockstep.Framework.Networking;             
+using Lockstep.Framework.Networking;
+using Lockstep.Framework.Networking.LiteNetLib;
 using Lockstep.Framework.Networking.Serialization;
 using Lockstep.Framework.Services;  
 using UnityEngine;           
@@ -23,8 +24,8 @@ public class RTSSimulator : MonoBehaviour
         _simulation = new Simulation(
             Contexts.sharedInstance, 
             new ServiceContainer()                      
-                //.Register<INavigationService>(new RVONavigationService())   
-                .Register<IParseInputService>(new ParseInputService())
+                .Register<INavigationService>(new RVONavigationService())   
+                .Register<IParseInputService>(new ParseInputService(new LiteNetLibNetworkReader()))
                 .Register<IGameService>(new UnityGameService(EntityDatabase))
                 .Register<ILogService>(new UnityLogger())) 
             {
@@ -37,7 +38,7 @@ public class RTSSimulator : MonoBehaviour
         LockstepNetwork.Instance.MessageReceived += NetworkOnMessageReceived;
     }
 
-    private void NetworkOnMessageReceived(MessageTag messageTag, NetDataReader reader)
+    private void NetworkOnMessageReceived(MessageTag messageTag, INetworkReader reader)
     {
         switch (messageTag)
         {
@@ -61,7 +62,11 @@ public class RTSSimulator : MonoBehaviour
 
                 //TODO: only for debugging, frames should be buffered
                 _simulation.Simulate();
-                LockstepNetwork.Instance.SendHashCode(new HashCode { FrameNumber = _simulation.FrameCounter, Value = _simulation.HashCode });   
+                LockstepNetwork.Instance.SendHashCode(new HashCode
+                {
+                    FrameNumber = _simulation.FrameCounter,
+                    Value = _simulation.HashCode
+                });   
                 break;
         }
     }            

@@ -1,4 +1,4 @@
-﻿using LiteNetLib.Utils;
+﻿using Lockstep.Framework.Networking;
 using Lockstep.Framework.Services;
 
 namespace Lockstep.Framework.Commands
@@ -12,23 +12,23 @@ namespace Lockstep.Framework.Commands
             Tag = tag;
         }     
 
-        public void Serialize(NetDataWriter writer)
+        public void Serialize(INetworkWriter writer)
         {
             writer.Put((ushort) Tag);
             OnSerialize(writer);
         }
 
 
-        public void Deserialize(NetDataReader reader)
+        public void Deserialize(INetworkReader reader)
         {   
             Tag = (CommandTag) reader.GetUShort();
             OnDeserialize(reader);
         }
 
-        protected abstract void OnSerialize(NetDataWriter writer);
+        protected abstract void OnSerialize(INetworkWriter writer);
 
-        protected abstract void OnDeserialize(NetDataReader reader);
+        protected abstract void OnDeserialize(INetworkReader reader);
 
-        public abstract void Execute(GameContext context);  
+        public abstract void Execute(InputContext context);  
     }
 }

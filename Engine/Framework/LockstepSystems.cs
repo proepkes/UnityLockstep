@@ -1,7 +1,5 @@
 ﻿using ECS.Data;
-using ECS.Features;
-using ECS.Systems;
-using ECS.Systems.Input;
+using ECS.Features;          
 
 namespace ECS
 {

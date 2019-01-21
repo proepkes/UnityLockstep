@@ -1,6 +1,5 @@
-﻿using System.Linq;
-using BEPUutilities;
-using LiteNetLib.Utils;
+﻿using BEPUutilities;   
+using Lockstep.Framework.Networking;
 using Lockstep.Framework.Services;
 
 namespace Lockstep.Framework.Commands
@@ -15,27 +14,24 @@ namespace Lockstep.Framework.Commands
         {
         }      
 
-        protected override void OnSerialize(NetDataWriter writer)
+        protected override void OnSerialize(INetworkWriter writer)
         {
             writer.PutArray(EntityIds);
             writer.Put((long)Destination.X);
             writer.Put((long)Destination.Y);
         }
 
-        protected override void OnDeserialize(NetDataReader reader)
+        protected override void OnDeserialize(INetworkReader reader)
         {
             EntityIds = reader.GetIntArray();
             Destination.X = reader.GetLong();
             Destination.Y = reader.GetLong();
         }
 
-        public override void Execute(GameContext context)
+        public override void Execute(InputContext context)
         {
             var e = context.CreateEntity();
-            foreach (var gameEntity in context.GetEntities().Where(entity => EntityIds.Contains(entity.id.value)))
-            {
-                gameEntity.ReplaceDestination(Destination);
-            }                                
+            e.AddNavigationInputData(EntityIds, Destination);                              
         }
     }
 }

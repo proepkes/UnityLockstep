@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using ECS.Data;
-using LiteNetLib.Utils;
 using Lockstep.Framework.Networking.Serialization;
 
 namespace Lockstep.Framework.Networking
@@ -15,17 +13,24 @@ namespace Lockstep.Framework.Networking
 
         private uint _frameCounter;
 
-        private readonly NetDataWriter _buffer = new NetDataWriter();
+        private readonly INetworkWriter _buffer;
         private readonly List<SerializedInput> _inputs = new List<SerializedInput>();
-        private readonly Dictionary<uint, byte[]> _frames = new Dictionary<uint, byte[]>();     
+        private readonly Dictionary<uint, byte[]> _frames = new Dictionary<uint, byte[]>();
+
+        public FramePacker(INetworkWriter buffer)
+        {
+            _buffer = buffer;
+        }
 
         /// <summary>
         /// Packages all recent frames that fit into one MTU and advances to the next frame
         /// </summary>
         /// <param name="writer"></param>
-        public void Pack(NetDataWriter writer)
+        public byte[] Pack()
         {
             _buffer.Reset();
+
+            _buffer.Put((byte)MessageTag.Frame);
 
             SerializedInput[] serializedInputs;
             lock (_inputs)
@@ -36,7 +41,9 @@ namespace Lockstep.Framework.Networking
             }
 
             var frame = new Frame { SerializedInputs = serializedInputs };
-            frame.Serialize(writer, _frameCounter++);
+            frame.Serialize(_buffer, _frameCounter++);
+
+            return _buffer.Data;
 
             //var frame = new Frame { SerializedInputs = serializedInputs}; 
             //frame.Serialize(_buffer, _frameCounter);
@@ -63,24 +70,24 @@ namespace Lockstep.Framework.Networking
             }
         }
 
-        private uint WriteFrames(NetDataWriter buffer, uint currentFrame, int maxSize)
-        {
-            uint i = 0;
-            while (i <= currentFrame)
-            {
-                var nextBufferSize = _frames[currentFrame - i].Length + 4;
-                if (buffer.Length + nextBufferSize > maxSize)
-                {
-                    break;
-                }
+        //private uint WriteFrames(NetDataWriter buffer, uint currentFrame, int maxSize)
+        //{
+        //    uint i = 0;
+        //    while (i <= currentFrame)
+        //    {
+        //        var nextBufferSize = _frames[currentFrame - i].Length + 4;
+        //        if (buffer.Length + nextBufferSize > maxSize)
+        //        {
+        //            break;
+        //        }
 
-                buffer.PutBytesWithLength(_frames[currentFrame - i]); //Frames put in descending order (newest first)
+        //        buffer.PutBytesWithLength(_frames[currentFrame - i]); //Frames put in descending order (newest first)
 
-                i++;
-            }
+        //        i++;
+        //    }
 
-            return i;
-        }
+        //    return i;
+        //}
     }
 
     /// <summary>
@@ -102,7 +109,7 @@ namespace Lockstep.Framework.Networking
         /// </summary>
         public uint MaxFrames { get; set; }
 
-        public void Deserialize(NetDataReader reader)
+        public void Deserialize(INetworkReader reader)
         {          
             var frame = new Frame();
             frame.Deserialize(reader); 

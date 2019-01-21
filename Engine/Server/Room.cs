@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using ECS.Data;
-using LiteNetLib;
-using LiteNetLib.Utils;   
+using LiteNetLib;  
 using Lockstep.Framework.Networking;
+using Lockstep.Framework.Networking.LiteNetLib;
 using Lockstep.Framework.Networking.Serialization;
 using HashCode = Lockstep.Framework.Networking.Serialization.HashCode;
 
@@ -41,11 +41,11 @@ namespace Server
 
         }            
 
-        public void Distribute(NetDataWriter data)
+        public void Distribute(byte[] data)
         {                                        
             foreach (var peer in _server.ConnectedPeerList)
-            {
-                peer.Send(data, DeliveryMethod.ReliableOrdered);
+            {                
+                peer.Send(data, 0, data.Length, DeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -86,7 +86,7 @@ namespace Server
                         break;
                     case MessageTag.Checksum:
                         var pkt = new HashCode();
-                        pkt.Deserialize(reader);
+                        pkt.Deserialize(new LiteNetLibNetworkReader(reader));
                         if (!_hashCodes.ContainsKey(pkt.FrameNumber))
                         {
                             _hashCodes[pkt.FrameNumber] = pkt.Value;
@@ -129,6 +129,8 @@ namespace Server
 
         private void Loop()
         {
+            var networkWriter = new LiteNetLibNetworkWriter();
+
             var timer = new Timer();
             var dt = 1000.0 / TargetFps;
 
@@ -136,16 +138,16 @@ namespace Server
 
             Running = true; 
 
-            StartSimulationOnConnectedPeers();
+            StartSimulationOnConnectedPeers(networkWriter);
 
             _hashCodes.Clear();
-            _framePacker = new FramePacker();
+
+            _framePacker = new FramePacker(networkWriter);
 
             timer.Start();
 
             Console.WriteLine("Simulation started");
-
-            var writer = new NetDataWriter();
+                                               
             while (Running)
             {       
                 timer.Tick();
@@ -153,12 +155,8 @@ namespace Server
                 accumulatedTime += timer.DeltaTime;
 
                 while (accumulatedTime >= dt)
-                {   
-                    writer.Reset();
-                    writer.Put((byte)MessageTag.Frame);
-                    _framePacker.Pack(writer);     
-
-                    Distribute(writer);   
+                {      
+                    Distribute(_framePacker.Pack());   
 
                     accumulatedTime -= dt;
                 }
@@ -169,9 +167,8 @@ namespace Server
             Console.WriteLine("Simulation stopped");
         }
 
-        private void StartSimulationOnConnectedPeers()
-        {
-            var writer = new NetDataWriter();
+        private void StartSimulationOnConnectedPeers(INetworkWriter writer)
+        {                                     
             byte playerId = 0;
 
             //Create a new seed and send it with a start-message to all clients
@@ -189,7 +186,7 @@ namespace Server
                     PlayerID = _playerIds[peer.Id]
                 }.Serialize(writer);
 
-                peer.Send(writer, DeliveryMethod.ReliableOrdered);
+                peer.Send(writer.Data, 0, writer.Length, DeliveryMethod.ReliableOrdered);
             }
         }
     }

@@ -1,13 +1,13 @@
-﻿using LiteNetLib.Utils;
+﻿using Lockstep.Framework.Networking;
 
 namespace Lockstep.Framework.Commands
 {
     public interface ISerilalizableCommand
     {
-        void Serialize(NetDataWriter writer);
+        void Serialize(INetworkWriter writer);
 
-        void Deserialize(NetDataReader reader);
+        void Deserialize(INetworkReader reader);
 
-        void Execute(GameContext context);
+        void Execute(InputContext context);
     }
 }
