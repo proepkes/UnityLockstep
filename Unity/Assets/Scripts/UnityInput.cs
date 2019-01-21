@@ -22,7 +22,7 @@ public class UnityInput : MonoBehaviour
     private void SpawnUnitOnPerformed(InputAction.CallbackContext obj)
     {                                    
         var pos = GetWorldPos(Mouse.current.position.ReadValue());  
-        FindObjectOfType<EntitySpawner>().Spawn(pos);
+        FindObjectOfType<RTSEntitySpawner>().Spawn(pos);
     }
 
     private void NavigateUnitsOnPerformed(InputAction.CallbackContext obj)

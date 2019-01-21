@@ -4,25 +4,29 @@ using Lockstep.Framework;
 using Lockstep.Framework.Networking;             
 using Lockstep.Framework.Networking.Serialization;
 using Lockstep.Framework.Services;  
-using UnityEngine;
-using ILogger = ECS.ILogger;
-
-public class LockstepSimulator : MonoBehaviour
+using UnityEngine;           
+                              
+public class RTSSimulator : MonoBehaviour
 {                                                                        
     private Simulation _simulation;      
     private bool _simulationStarted;
+
+    public static RTSSimulator Instance;
+
+    public RTSEntityDatabase EntityDatabase;
                                                          
 
     private void Awake()
-    {                                                          
+    {
+        Instance = this;
 
         _simulation = new Simulation(
             Contexts.sharedInstance, 
             new ServiceContainer()                      
                 //.Register<INavigationService>(new RVONavigationService())   
                 .Register<IParseInputService>(new ParseInputService())
-                .Register<IViewService>(new UnityViewService())
-                .Register<ILogger>(new UnityLogger())) 
+                .Register<IGameService>(new UnityGameService(EntityDatabase))
+                .Register<ILogService>(new UnityLogger())) 
             {
                 FrameDelay = 2,
             };
@@ -42,7 +46,8 @@ public class LockstepSimulator : MonoBehaviour
                 pkt.Deserialize(reader);
                 Time.fixedDeltaTime = 1f/pkt.TargetFPS;  
 
-                _simulation.Init(pkt.Seed);
+       
+                 _simulation.Init(pkt.Seed);
 
                 _simulationStarted = true;
                 break;

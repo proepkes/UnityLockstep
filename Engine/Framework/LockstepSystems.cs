@@ -1,5 +1,7 @@
 ﻿using ECS.Data;
 using ECS.Features;
+using ECS.Systems;
+using ECS.Systems.Input;
 
 namespace ECS
 {
@@ -10,9 +12,8 @@ namespace ECS
         public LockstepSystems(Contexts contexts, ServiceContainer serviceContainer)
         {
             _contexts = contexts;
-            contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex); 
-                               
-            Add(new InputFeature(contexts, serviceContainer));
+            contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex);
+
 
             Add(new NavigationFeature(contexts, serviceContainer));
 

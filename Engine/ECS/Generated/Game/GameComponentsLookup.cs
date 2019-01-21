@@ -9,22 +9,24 @@
 public static class GameComponentsLookup {
 
     public const int Asset = 0;
-    public const int Controllable = 1;
-    public const int Destination = 2;
-    public const int DestinationListener = 3;
-    public const int DestinationRemovedListener = 4;
-    public const int HashCode = 5;
-    public const int Health = 6;
-    public const int Id = 7;
-    public const int NavigationAware = 8;
-    public const int Position = 9;
-    public const int PositionListener = 10;
-    public const int Team = 11;
+    public const int ConfigId = 1;
+    public const int Controllable = 2;
+    public const int Destination = 3;
+    public const int DestinationListener = 4;
+    public const int DestinationRemovedListener = 5;
+    public const int HashCode = 6;
+    public const int Health = 7;
+    public const int Id = 8;
+    public const int Navigable = 9;
+    public const int Position = 10;
+    public const int PositionListener = 11;
+    public const int Team = 12;
 
-    public const int TotalComponents = 12;
+    public const int TotalComponents = 13;
 
     public static readonly string[] componentNames = {
         "Asset",
+        "ConfigId",
         "Controllable",
         "Destination",
         "DestinationListener",
@@ -32,7 +34,7 @@ public static class GameComponentsLookup {
         "HashCode",
         "Health",
         "Id",
-        "NavigationAware",
+        "Navigable",
         "Position",
         "PositionListener",
         "Team"
@@ -40,6 +42,7 @@ public static class GameComponentsLookup {
 
     public static readonly System.Type[] componentTypes = {
         typeof(AssetComponent),
+        typeof(ConfigIdComponent),
         typeof(ControllableComponent),
         typeof(DestinationComponent),
         typeof(DestinationListenerComponent),
@@ -47,7 +50,7 @@ public static class GameComponentsLookup {
         typeof(HashCodeComponent),
         typeof(HealthComponent),
         typeof(IdComponent),
-        typeof(NavigationAwareComponent),
+        typeof(NavigableComponent),
         typeof(PositionComponent),
         typeof(PositionListenerComponent),
         typeof(TeamComponent)

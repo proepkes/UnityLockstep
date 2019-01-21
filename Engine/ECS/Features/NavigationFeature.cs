@@ -6,9 +6,9 @@ namespace ECS.Features
     {
         public NavigationFeature(Contexts contexts, ServiceContainer serviceContainer)
         {
-            Add(new OnNavigationEntityDoAddAgent(contexts, serviceContainer.Get<INavigationService>())); 
+            Add(new OnNavigableEntityDoAddAgent(contexts, serviceContainer.Get<INavigationService>())); 
             Add(new OnNewDestinationDoSetAgentDestination(contexts, serviceContainer.Get<INavigationService>())); 
-            Add(new TickNavigationService(contexts, serviceContainer.Get<INavigationService>()));
+            Add(new NavigationTick(contexts, serviceContainer.Get<INavigationService>()));
             Add(new SyncAgentPosition(contexts, serviceContainer.Get<INavigationService>()));   
         }
     }

@@ -26,16 +26,11 @@ namespace Framework.Test
             var contexts = new Contexts();
             var inputParser = new ParseInputService();
 
-            var container = new ServiceContainer();
-            container.Register<IParseInputService>(inputParser);
-            container.Register(new Mock<IViewService>().Object);
+            var container = new ServiceContainer()
+                .Register<IParseInputService>(inputParser);;
 
             var serializer = new NetDataWriter();         
-            new SpawnCommand
-            {
-                AssetName = "Test",
-                RegisterToPathfinder = false
-            }.Serialize(serializer);
+            new SpawnCommand().Serialize(serializer);
 
 
             var command = new SerializedInput { Data = serializer.Data };

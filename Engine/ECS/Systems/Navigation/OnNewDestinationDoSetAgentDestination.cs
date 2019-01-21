@@ -27,7 +27,7 @@ namespace ECS.Systems.Navigation
             foreach (var e in entities)
             {
                 //TODO: Add PlayerControlledSystem to only iterate over game entities that are controlled by the player who sent the input
-                _navigationService.SetDestination(e.id.value, e.destination.value);   
+                _navigationService.SetAgentDestination(e.id.value, e.destination.value);   
             }
         }
     }

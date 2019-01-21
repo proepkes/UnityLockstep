@@ -62,18 +62,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultServices\DefaultEntityConfigService.cs" />
+    <Compile Include="Features\InputFeature.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameHashCodeComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameConfigIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameNavigationAwareComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameNavigableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHashCodeComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationRemovedListenerComponent.cs" />
@@ -124,16 +127,14 @@
     <Compile Include="ServiceContainer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\InputFeature.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Data\Frame.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\NavigationFeature.cs" />
+    <Compile Include="Systems\Input\LoadNewEntitiesIntoGame.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
-    <Compile Include="Systems\Navigation\OnNavigationEntityDoAddAgent.cs" />
-    <Compile Include="Systems\Navigation\TickNavigationService.cs" />
+    <Compile Include="Systems\Navigation\OnNavigableEntityDoAddAgent.cs" />
+    <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
     <Compile Include="Systems\Navigation\OnNewDestinationDoSetAgentDestination.cs" />
   </ItemGroup>
@@ -146,7 +147,7 @@
   <ItemGroup>
     <Compile Include="Components\Game.cs" />
     <Compile Include="ExternalServices.cs" />
-    <Compile Include="Systems\Input\EmitInputSystem.cs" />
+    <Compile Include="Systems\Input\EmitInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

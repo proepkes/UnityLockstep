@@ -1,14 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ECS.Systems;
 using ECS.Systems.Input;
-using ECS.Systems.Navigation;
 
 namespace ECS.Features
-{
+{                                    
     public sealed class InputFeature : Feature
     {
         public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
-        {    
-            Add(new EmitInputSystem(contexts, serviceContainer.Get<IParseInputService>()));     
+        {
+            Add(new EmitInput(contexts, serviceContainer.Get<IParseInputService>()));
+            Add(new LoadNewEntitiesIntoGame(contexts, serviceContainer.Get<IGameService>()));
         }
     }
 }

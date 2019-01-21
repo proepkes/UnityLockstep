@@ -8,6 +8,12 @@ public class IdComponent : IComponent
     [PrimaryEntityIndex]
     public int value;
 }
+
+[Game]
+public sealed class ConfigIdComponent : IComponent
+{
+    public int value;
+}
  
 [Game]
 public class AssetComponent : IComponent
@@ -45,7 +51,7 @@ public sealed class HealthComponent : IComponent
 }
 
 [Game]
-public sealed class NavigationAwareComponent : IComponent
+public sealed class NavigableComponent : IComponent
 {                      
 }
 

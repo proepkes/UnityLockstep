@@ -25,7 +25,7 @@ namespace Framework.Test
         }
     }
 
-    class TestLogger : ILogger
+    class TestLogger : ILogService
     {
         private readonly ITestOutputHelper _outputHelper;
 

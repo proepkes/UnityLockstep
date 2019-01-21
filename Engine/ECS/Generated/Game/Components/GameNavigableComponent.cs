@@ -8,18 +8,18 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly NavigationAwareComponent navigationAwareComponent = new NavigationAwareComponent();
+    static readonly NavigableComponent navigableComponent = new NavigableComponent();
 
-    public bool isNavigationAware {
-        get { return HasComponent(GameComponentsLookup.NavigationAware); }
+    public bool isNavigable {
+        get { return HasComponent(GameComponentsLookup.Navigable); }
         set {
-            if (value != isNavigationAware) {
-                var index = GameComponentsLookup.NavigationAware;
+            if (value != isNavigable) {
+                var index = GameComponentsLookup.Navigable;
                 if (value) {
                     var componentPool = GetComponentPool(index);
                     var component = componentPool.Count > 0
                             ? componentPool.Pop()
-                            : navigationAwareComponent;
+                            : navigableComponent;
 
                     AddComponent(index, component);
                 } else {
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherNavigationAware;
+    static Entitas.IMatcher<GameEntity> _matcherNavigable;
 
-    public static Entitas.IMatcher<GameEntity> NavigationAware {
+    public static Entitas.IMatcher<GameEntity> Navigable {
         get {
-            if (_matcherNavigationAware == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.NavigationAware);
+            if (_matcherNavigable == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Navigable);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherNavigationAware = matcher;
+                _matcherNavigable = matcher;
             }
 
-            return _matcherNavigationAware;
+            return _matcherNavigable;
         }
     }
 }

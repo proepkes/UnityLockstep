@@ -2,14 +2,14 @@
 
 namespace ECS.Systems.Input
 {
-    public class EmitInputSystem : IExecuteSystem, ICleanupSystem
+    public class EmitInput : IExecuteSystem, ICleanupSystem
     {
         private readonly GameContext _gameContext;
         private readonly InputContext _inputContext;
 
         private readonly IParseInputService _parseInputService;
 
-        public EmitInputSystem(Contexts contexts, IParseInputService parseInputService)
+        public EmitInput(Contexts contexts, IParseInputService parseInputService)
         {
             _gameContext = contexts.game;
             _inputContext = contexts.input;

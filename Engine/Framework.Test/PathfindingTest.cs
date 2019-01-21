@@ -34,12 +34,11 @@ namespace Framework.Test
 
             var container = new ServiceContainer()
                 .Register<IParseInputService>(new ParseInputService())          
-                .Register<ILogger>(new TestLogger(_output))
-                .Register(new Mock<IViewService>().Object);
+                .Register<ILogService>(new TestLogger(_output));
 
             new SpawnCommand
             {
-                RegisterToPathfinder = true
+                //RegisterToPathfinder = true
             }.Serialize(serializer);
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input
@@ -98,8 +97,7 @@ namespace Framework.Test
 
             var container = new ServiceContainer()
                 .Register<IParseInputService>(new ParseInputService())       
-                .Register<ILogger>(new TestLogger(_output))
-                .Register(new Mock<IViewService>().Object);   
+                .Register<ILogService>(new TestLogger(_output));   
 
             //Initialize a new simulation and add a gameentity
             var sim = new Simulation(contexts, container)

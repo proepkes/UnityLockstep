@@ -13,23 +13,23 @@ namespace ECS
     {
         Vector2 GetWorldSize();
         Vector2 GetCellSize();        
-    }
+    }            
 
     public interface IParseInputService : IService
     {
         void Parse(GameContext context, SerializedInput serializedInput);
     }
 
-    public interface IViewService : IService
+    public interface IGameService : IService
     {                                                        
-        void LoadAsset(Contexts contexts, IEntity entity, string assetName);
+        void ApplyEntity(GameEntity entity, int configId);
     }
 
     public interface INavigationService : IService
     {
         void AddAgent(int id, Vector2 position);
 
-        void SetDestination(int agentId, Vector2 newDestination);
+        void SetAgentDestination(int agentId, Vector2 newDestination);
                                                                  
         void UpdateAgents();
 
@@ -37,11 +37,11 @@ namespace ECS
     }
 
     public interface IHashService : IService
-    {
+    {  
         long GetHashCode(GameEntity entity);
     }
       
-    public interface ILogger : IService
+    public interface ILogService : IService
     {
         void Warn(string message);
     }

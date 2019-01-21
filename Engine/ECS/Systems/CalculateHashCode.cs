@@ -30,13 +30,13 @@ namespace ECS.Systems
         public void Execute()
         {
             long gameHashCode = 0;
-            foreach (var entity in _hashableEntities.GetEntities())
+            Parallel.ForEach(_hashableEntities.GetEntities(), entity =>
             {
                 var hashCode = _hashService.GetHashCode(entity);
                 entity.ReplaceHashCode(hashCode);
 
                 gameHashCode ^= hashCode;
-            }
+            });
             _gameStateContext.ReplaceGameHashCode(gameHashCode);
         }
     }

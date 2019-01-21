@@ -16,7 +16,7 @@ namespace ECS.DefaultServices.Navigation
             _agents.Add(new Agent(id, position));
         }
 
-        public void SetDestination(int agentId, Vector2 newDestination)
+        public void SetAgentDestination(int agentId, Vector2 newDestination)
         {
             _agents.First(agent => agent.Id == agentId).Destination = newDestination;  
         }
