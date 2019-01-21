@@ -15,7 +15,12 @@ public interface IViewController
 public interface IEventListener
 {
     void RegisterListeners(IEntity entity);
-}            
+}
+
+public interface IComponentSetter
+{
+    void SetComponent(GameEntity entity);
+}
 
 public class UnityGameService : IGameService
 {
@@ -28,17 +33,24 @@ public class UnityGameService : IGameService
 
     public void ApplyEntity(GameEntity entity, int configId)
     {
-        //var viewGo = GameObject.Instantiate(_entityDatabase.Entities[configId]).gameObject;
-        //if (viewGo != null)
-        //{
-        //    viewGo.Link(entity);                              
+        var viewGo = GameObject.Instantiate(_entityDatabase.Entities[configId]).gameObject;
+        if (viewGo != null)
+        {
+            viewGo.Link(entity);
 
-        //    var eventListeners = viewGo.GetComponents<IEventListener>();
-        //    foreach (var listener in eventListeners)
-        //    {
-        //        listener.RegisterListeners(entity);
-        //    }
-        //}
+            var componentSetters = viewGo.GetComponents<IComponentSetter>();
+            foreach (var componentSetter in componentSetters)
+            {
+                componentSetter.SetComponent(entity);
+                Object.Destroy((MonoBehaviour) componentSetter);
+            }
+
+            var eventListeners = viewGo.GetComponents<IEventListener>();
+            foreach (var listener in eventListeners)
+            {
+                listener.RegisterListeners(entity);
+            }
+        }
     }   
 }
 

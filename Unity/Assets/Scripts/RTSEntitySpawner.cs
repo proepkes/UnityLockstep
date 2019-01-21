@@ -5,13 +5,11 @@ using Vector2 = BEPUutilities.Vector2;
 public class RTSEntitySpawner : MonoBehaviour
 {
     public int Count;             
-    public RTSEntity Prefab; 
-    private RTSEntityDatabase entityDatabase;    
+    public RTSEntity Prefab;   
 
     private void Start()
-    {
-        entityDatabase = RTSSimulator.Instance.EntityDatabase;    
-        if (entityDatabase.Entities.IndexOf(Prefab) < 0)
+    {  
+        if (RTSSimulator.Instance.EntityDatabase.Entities.IndexOf(Prefab) < 0)
         {
             Debug.LogError("Prefabs have to be added to the database in order to be spawnable");
         }
@@ -23,7 +21,7 @@ public class RTSEntitySpawner : MonoBehaviour
         {                                       
             LockstepNetwork.Instance.SendInput(new SpawnCommand
             {
-                EntityConfigId = entityDatabase.Entities.IndexOf(Prefab),
+                EntityConfigId = RTSSimulator.Instance.EntityDatabase.Entities.IndexOf(Prefab),
                 Position = position
             });
         }

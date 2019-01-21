@@ -19,7 +19,7 @@ namespace ECS.Systems.Navigation
 
         protected override bool Filter(GameEntity entity)
         {
-            return true;
+            return entity.hasId && entity.hasPosition && entity.isNavigable;
         }
 
         protected override void Execute(List<GameEntity> entities)

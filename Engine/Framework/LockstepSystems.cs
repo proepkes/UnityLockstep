@@ -14,6 +14,7 @@ namespace ECS
             _contexts = contexts;
             contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex);
 
+            Add(new InputFeature(contexts, serviceContainer));
 
             Add(new NavigationFeature(contexts, serviceContainer));
 
