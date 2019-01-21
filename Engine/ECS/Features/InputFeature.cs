@@ -11,8 +11,8 @@ namespace ECS.Features
             Add(new EmitInput(contexts, serviceContainer.Get<IParseInputService>())); 
 
             Add(new OnSpawnInputDoLoadEntityIntoGame(contexts, serviceContainer.Get<IGameService>()));
-
             Add(new OnNavigableEntityDoAddAgent(contexts, serviceContainer.Get<INavigationService>()));
+
             Add(new OnNavigationInputDoSetAgentDestination(contexts, serviceContainer.Get<INavigationService>()));
         }
     }
