@@ -17,7 +17,7 @@ namespace ECS
 
     public interface IParseInputService : IService
     {
-        void Parse(GameContext context, SerializedInput serializedInput);
+        void Parse(InputContext context, SerializedInput serializedInput);
     }
 
     public interface IGameService : IService

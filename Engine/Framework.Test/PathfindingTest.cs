@@ -2,12 +2,11 @@
 using System.Linq;    
 using BEPUutilities;
 using ECS;
-using ECS.Data;        
-using LiteNetLib.Utils;
+using ECS.Data;           
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
-using Lockstep.Framework.Services;              
-using Moq;        
+using Lockstep.Framework.Networking.LiteNetLib;
+using Lockstep.Framework.Services;      
 using Shouldly;       
 using Xunit;
 using Xunit.Abstractions;
@@ -29,17 +28,14 @@ namespace Framework.Test
         public void TestSimpleNavigationService()
         {             
             var contexts = new Contexts();
-            var serializer = new NetDataWriter();
+            var serializer = new LiteNetLibNetworkWriter();
             var destination = new Vector2(111, 22);   
 
             var container = new ServiceContainer()
-                .Register<IParseInputService>(new ParseInputService())          
+                .Register<IParseInputService>(new ParseInputService(new LiteNetLibNetworkReader()))          
                 .Register<ILogService>(new TestLogger(_output));
 
-            new SpawnCommand
-            {
-                //RegisterToPathfinder = true
-            }.Serialize(serializer);
+            new SpawnCommand().Serialize(serializer);
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input
             var sim = new Simulation(contexts, container)
@@ -55,8 +51,9 @@ namespace Framework.Test
 
             //The SpawnCommand taught the system to create a new gameEntity. Now navigate it
             var e = contexts.game.GetEntities().First();
+            e.isNavigable = true;
 
-            _output.WriteLine(e.position.value.ToString());
+            var before = e.position.value;
 
             serializer.Reset();                              
             new NavigateCommand
@@ -78,10 +75,10 @@ namespace Framework.Test
             for (int i = 0; i < 500; i++)
             {
                 sim.AddFrame(new Frame()).Simulate();
-            }    
-            _output.WriteLine(e.position.value.ToString());
+            }         
 
-            e.hasDestination.ShouldBeFalse();
+            e.position.value.X.ShouldNotBe(before.X);
+            e.position.value.Y.ShouldNotBe(before.Y);
         }
 
 
@@ -92,11 +89,11 @@ namespace Framework.Test
 
             var destination = new Vector2(11, 22);
 
-            var serializer = new NetDataWriter();        
+            var serializer = new LiteNetLibNetworkWriter();        
             new SpawnCommand().Serialize(serializer);
 
             var container = new ServiceContainer()
-                .Register<IParseInputService>(new ParseInputService())       
+                .Register<IParseInputService>(new ParseInputService(new LiteNetLibNetworkReader()))       
                 .Register<ILogService>(new TestLogger(_output));   
 
             //Initialize a new simulation and add a gameentity

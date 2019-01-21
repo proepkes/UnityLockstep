@@ -23,7 +23,7 @@ namespace ECS.Systems.Input
 
             foreach (var input in _inputContext.frame.SerializedInputs)
             {
-                _parseInputService.Parse(_gameContext, input);
+                _parseInputService.Parse(_inputContext, input);
             }
         }
 

@@ -9,14 +9,20 @@
 public static class InputComponentsLookup {
 
     public const int Frame = 0;
+    public const int NavigationInputData = 1;
+    public const int SpawnInputData = 2;
 
-    public const int TotalComponents = 1;
+    public const int TotalComponents = 3;
 
     public static readonly string[] componentNames = {
-        "Frame"
+        "Frame",
+        "NavigationInputData",
+        "SpawnInputData"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(FrameComponent)
+        typeof(FrameComponent),
+        typeof(NavigationInputDataComponent),
+        typeof(SpawnInputDataComponent)
     };
 }

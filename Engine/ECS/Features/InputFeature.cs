@@ -12,7 +12,8 @@ namespace ECS.Features
     {
         public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
         {
-            Add(new EmitInput(contexts, serviceContainer.Get<IParseInputService>()));
+            //TODO: Add InputValidationSystem by matching input with playerId
+            Add(new EmitInput(contexts, serviceContainer.Get<IParseInputService>())); 
             Add(new LoadNewEntitiesIntoGame(contexts, serviceContainer.Get<IGameService>()));
         }
     }
