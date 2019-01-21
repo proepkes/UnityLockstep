@@ -24,7 +24,7 @@ public class RTSSimulator : MonoBehaviour
         _simulation = new Simulation(
             Contexts.sharedInstance, 
             new ServiceContainer()                      
-                .Register<INavigationService>(new RVONavigationService())   
+                //.Register<INavigationService>(new RVONavigationService())   
                 .Register<IParseInputService>(new ParseInputService(new LiteNetLibNetworkReader()))
                 .Register<IGameService>(new UnityGameService(EntityDatabase))
                 .Register<ILogService>(new UnityLogger())) 

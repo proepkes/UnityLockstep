@@ -7,13 +7,7 @@ public class IdComponent : IComponent
 {
     [PrimaryEntityIndex]
     public int value;
-}
-
-[Game]
-public sealed class ConfigIdComponent : IComponent
-{
-    public int value;
-}
+}      
  
 [Game]
 public class AssetComponent : IComponent

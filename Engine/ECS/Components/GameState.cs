@@ -1,6 +1,5 @@
 ﻿using Entitas;
 using Entitas.CodeGeneration.Attributes;
-using FixMath.NET;
 
 [GameState, Unique]
 public class GameStatePausedComponent : IComponent

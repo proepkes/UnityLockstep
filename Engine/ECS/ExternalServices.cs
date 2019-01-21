@@ -1,6 +1,5 @@
 ﻿using BEPUutilities;
 using ECS.Data;
-using Entitas;
 
 namespace ECS
 {

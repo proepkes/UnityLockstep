@@ -1,9 +1,6 @@
 ﻿using System;  
 using System.Linq;
 using ECS;
-using ECS.Data;
-using ECS.Features;
-using Lockstep.Framework;
 using Moq;
 using Shouldly;       
 using Xunit;

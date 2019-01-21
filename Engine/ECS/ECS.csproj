@@ -69,7 +69,6 @@
     <Compile Include="Generated\Input\Components\InputNavigationInputDataComponent.cs" />
     <Compile Include="Generated\Input\Components\InputSpawnInputDataComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameConfigIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
@@ -135,12 +134,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\NavigationFeature.cs" />
-    <Compile Include="Systems\Input\LoadNewEntitiesIntoGame.cs" />
+    <Compile Include="Systems\Input\OnSpawnInputDoLoadEntityIntoGame.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
-    <Compile Include="Systems\Navigation\OnNavigableEntityDoAddAgent.cs" />
+    <Compile Include="Systems\Input\OnNavigableEntityDoAddAgent.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
-    <Compile Include="Systems\Navigation\OnNavigationInputDoSetAgentDestination.cs" />
+    <Compile Include="Systems\Input\OnNavigationInputDoSetAgentDestination.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Input.cs" />
