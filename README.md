@@ -4,22 +4,25 @@
 
 A WIP implementation of the Serverbeat-Protocol described here: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/
 
+![Overview](/Docs/Overview.svg "Overview")
+
 [![Video](http://img.youtube.com/vi/bNwlnO4BzFw/0.jpg)](https://youtu.be/49FtXbgdvHE "UnityLockstep")
 
 ## Getting started
 
 1. Open Engine/Lockstep.sln
-2. Run Server-project
+2. Run Server-project, enter "1" when asked for room-size
 3. Open SampleScene in Unity
-4. Hit play and click on connect button
+4. Hit play and wait until connection to server is established
+5. Holding right mouse button will continously spawn new agents, press 'X' to navigate all agents to your current mouse position
    
 ### Getting Multiplayer
 
 1. Build and run the Unityproject
-2. Set the servers' roomsize to 2 (currently done by code in Program.cs)
+2. Start the server. The roomsize will default to 2 after a few seconds of no input
 3. Hit play in Unity so you should now have two instances of the game running
-4. Connect both instances to the server
-5. Right click on the terrain moves all spawned cubes on both players
+4. Wait until both players are connected to the server. The server will display a message when the simulation has started.
+5. For controls, same as above
 
 ## Dependencies
 
@@ -27,7 +30,7 @@ A WIP implementation of the Serverbeat-Protocol described here: https://www.redd
 
 ## References
 
-Uses parts of LockstepFramework:
+Inspired by LockstepFramework:
 <https://github.com/SnpM/LockstepFramework>
 
 Uses a fork of BEPUPhysics for deterministic physics:
@@ -41,4 +44,4 @@ Uses FixedMath.Net for deterministic fp-calculations:
 
 ## Limitations
 
-- Physics values are limited to 1000 so keep your world small or shift the world when your values become too large
+- Physics values are limited to 1000 so keep your world in these limitations or shift the world when your values become too large
