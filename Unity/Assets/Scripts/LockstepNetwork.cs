@@ -57,11 +57,13 @@ public class LockstepNetwork : MonoBehaviour
         _client.FirstPeer.Send(writer.Data, 0, writer.Length, DeliveryMethod.ReliableOrdered);
     }
 
-    public void SendInput(Command message)
+    public void SendInput(CommandTag commandTag, ISerializable message)
     {
         var writer = new LiteNetLibSerializer();
-        writer.Put((byte) MessageTag.Input);                                       
+        writer.Put((byte) MessageTag.Input); 
+        writer.Put((ushort)commandTag);
         message.Serialize(writer);
+
         Debug.Log(writer.Length + " bytes");
         _client.FirstPeer.Send(writer.Data, 0, writer.Length, DeliveryMethod.ReliableOrdered);
     }

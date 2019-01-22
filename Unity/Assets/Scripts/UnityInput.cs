@@ -21,7 +21,7 @@ public class UnityInput : MonoBehaviour
     private void NavigateUnitsOnPerformed(InputAction.CallbackContext obj)
     {
         var pos = GetWorldPos(Mouse.current.position.ReadValue());
-        LockstepNetwork.Instance.SendInput(new NavigateCommand
+        LockstepNetwork.Instance.SendInput(CommandTag.Navigate, new NavigateCommand
         {
             Destination = new BEPUutilities.Vector2(pos.X, pos.Y),
             EntityIds = Contexts.sharedInstance.game.GetEntities().Select(entity => entity.id.value).ToArray()

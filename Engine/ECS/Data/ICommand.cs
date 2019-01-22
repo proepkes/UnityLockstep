@@ -1,7 +1,7 @@
-﻿namespace Lockstep.Framework.Commands
+﻿namespace ECS.Data
 {
     public interface ICommand
-    {                       
+    {             
         void Execute(InputContext context);
     }
 }

@@ -10,26 +10,20 @@ public static class GameComponentsLookup {
 
     public const int Asset = 0;
     public const int Controllable = 1;
-    public const int Destination = 2;
-    public const int DestinationListener = 3;
-    public const int DestinationRemovedListener = 4;
-    public const int Hashable = 5;
-    public const int Health = 6;
-    public const int Id = 7;
-    public const int Navigable = 8;
-    public const int OwnerId = 9;
-    public const int Position = 10;
-    public const int PositionListener = 11;
-    public const int Team = 12;
+    public const int Hashable = 2;
+    public const int Health = 3;
+    public const int Id = 4;
+    public const int Navigable = 5;
+    public const int OwnerId = 6;
+    public const int Position = 7;
+    public const int PositionListener = 8;
+    public const int Team = 9;
 
-    public const int TotalComponents = 13;
+    public const int TotalComponents = 10;
 
     public static readonly string[] componentNames = {
         "Asset",
         "Controllable",
-        "Destination",
-        "DestinationListener",
-        "DestinationRemovedListener",
         "Hashable",
         "Health",
         "Id",
@@ -43,9 +37,6 @@ public static class GameComponentsLookup {
     public static readonly System.Type[] componentTypes = {
         typeof(AssetComponent),
         typeof(ControllableComponent),
-        typeof(DestinationComponent),
-        typeof(DestinationListenerComponent),
-        typeof(DestinationRemovedListenerComponent),
         typeof(HashableComponent),
         typeof(HealthComponent),
         typeof(IdComponent),

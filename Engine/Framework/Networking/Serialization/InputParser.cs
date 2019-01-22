@@ -1,34 +1,33 @@
 ﻿using System;
-using ECS.Data;
-using Lockstep.Framework.Commands;
+using ECS.Data;                       
 
 namespace Lockstep.Framework.Networking.Serialization
 {                     
     public class InputParser
     {                                                  
-        private readonly Func<IDeserializer, Command> _createCommandDelegate; 
+        private readonly Func<IDeserializer, ICommand> _createCommandDelegate; 
 
-        public InputParser(Func<IDeserializer, Command> createCommandDelegate)
+        public InputParser(Func<IDeserializer, ICommand> createCommandDelegate)
         {                               
             _createCommandDelegate = createCommandDelegate;
         }  
 
-        public Frame DeserializeInput(IDeserializer deserializer)
-        {
-            var resultFrame = new Frame();
-                                                      
+        public ICommand[] DeserializeInput(IDeserializer deserializer)
+        {        
             var commandsLength = deserializer.GetInt();
 
-            resultFrame.Commands = new ICommand[commandsLength];
-            for (int i = 0; i < commandsLength; i++)
-            {
+            var result = new ICommand[commandsLength];
+                                                                 
+            for (var i = 0; i < commandsLength; i++)
+            {                                         
                 var command = _createCommandDelegate.Invoke(deserializer);
-                command.Deserialize(deserializer);
-
-                resultFrame.Commands[i] = command;
+                if (command != null)
+                {
+                    result[i] = command;
+                }
             }
 
-            return resultFrame;
+            return result;
         }            
     }
 }

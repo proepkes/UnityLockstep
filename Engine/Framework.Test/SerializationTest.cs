@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Framework.Test.LiteNetLib;
-using Lockstep.Framework.Commands;
+﻿using System.Linq;
+using ECS.Data;
+using Framework.Test.LiteNetLib;         
 using Lockstep.Framework.Networking.Messages;
 using Lockstep.Framework.Networking.Serialization;
 using Shouldly;
@@ -12,13 +9,21 @@ using Xunit;
 namespace Framework.Test
 {
     public class SerializationTest
-    {                                             
+    {
+        class TestCommand : ICommand
+        {    
+
+            public void Execute(InputContext context)
+            {                                         
+            }
+        }
+
         [Fact]
         public void TestSerialzation()
         {
             //Clientside create command, send to server
             var writer = new LiteNetLibSerializer();
-            new SpawnCommand().Serialize(writer);
+            new TestCommand();
 
             //Serverside, gather input
             var writer2 = new LiteNetLibSerializer();
@@ -31,24 +36,13 @@ namespace Framework.Test
             reader.SetSource(writer2.Data);
 
             var messageTag = reader.GetByte();
-                messageTag.ShouldBe((byte)MessageTag.Frame);
+            messageTag.ShouldBe((byte)MessageTag.Frame);
 
-            var frame = new InputParser(
-                r =>
-                {
-                    var tag = (CommandTag)r.PeekUShort();
-                    switch (tag)
-                    {
-                        case CommandTag.Spawn:
-                            return new SpawnCommand();
-                        default:
-                            return null;
-                    }
-                }).DeserializeInput(reader);  
-            
-            frame.ShouldNotBeNull();
-            frame.Commands.Length.ShouldBe(1);
-            frame.Commands.First().ShouldBeOfType<SpawnCommand>();
+            var commands = new InputParser(r => new TestCommand()).DeserializeInput(reader);
+
+            commands.ShouldNotBeNull();
+            commands.Length.ShouldBe(1);
+            commands.First().ShouldBeOfType<TestCommand>();
         }
     }
 }

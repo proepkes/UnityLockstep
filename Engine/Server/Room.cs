@@ -84,7 +84,7 @@ namespace Server
                 var messageTag = (MessageTag)reader.GetByte();
                 switch (messageTag)
                 {
-                    case MessageTag.Input:  
+                    case MessageTag.Input:
                         _inputPacker?.AddInput(reader.GetRemainingBytes());
                         break;
                     case MessageTag.Checksum:
@@ -160,6 +160,7 @@ namespace Server
                 while (accumulatedTime >= dt)
                 {       
                     _serializer.Reset();
+
                     _inputPacker.Pack(_serializer);
 
                     Distribute(_serializer.Data);   
