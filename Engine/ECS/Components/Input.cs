@@ -19,7 +19,9 @@ public class NavigationInputDataComponent : IComponent
 
 [Input]
 public class SpawnInputDataComponent : IComponent
-{
+{                    
+    public int OwnerId;
+
     public int EntityConfigId;
 
     public Vector2 Position;

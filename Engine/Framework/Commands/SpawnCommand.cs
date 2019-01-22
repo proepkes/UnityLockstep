@@ -17,7 +17,7 @@ namespace Lockstep.Framework.Commands
         public override void Execute(InputContext context)
         {        
             var e = context.CreateEntity();    
-            e.AddSpawnInputData(EntityConfigId, Position);   
+            e.AddSpawnInputData(IssuerId, EntityConfigId, Position);   
         }
 
         protected override void OnSerialize(INetworkWriter writer)

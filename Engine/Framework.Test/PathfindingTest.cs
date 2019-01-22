@@ -2,10 +2,10 @@
 using System.Linq;    
 using BEPUutilities;
 using ECS;
-using ECS.Data;           
+using ECS.Data;
+using Framework.Test.LiteNetLib;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
-using Lockstep.Framework.Networking.LiteNetLib;
 using Lockstep.Framework.Services;      
 using Shouldly;       
 using Xunit;

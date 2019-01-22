@@ -11,17 +11,19 @@ public partial class InputEntity {
     public SpawnInputDataComponent spawnInputData { get { return (SpawnInputDataComponent)GetComponent(InputComponentsLookup.SpawnInputData); } }
     public bool hasSpawnInputData { get { return HasComponent(InputComponentsLookup.SpawnInputData); } }
 
-    public void AddSpawnInputData(int newEntityConfigId, BEPUutilities.Vector2 newPosition) {
+    public void AddSpawnInputData(int newOwnerId, int newEntityConfigId, BEPUutilities.Vector2 newPosition) {
         var index = InputComponentsLookup.SpawnInputData;
         var component = (SpawnInputDataComponent)CreateComponent(index, typeof(SpawnInputDataComponent));
+        component.OwnerId = newOwnerId;
         component.EntityConfigId = newEntityConfigId;
         component.Position = newPosition;
         AddComponent(index, component);
     }
 
-    public void ReplaceSpawnInputData(int newEntityConfigId, BEPUutilities.Vector2 newPosition) {
+    public void ReplaceSpawnInputData(int newOwnerId, int newEntityConfigId, BEPUutilities.Vector2 newPosition) {
         var index = InputComponentsLookup.SpawnInputData;
         var component = (SpawnInputDataComponent)CreateComponent(index, typeof(SpawnInputDataComponent));
+        component.OwnerId = newOwnerId;
         component.EntityConfigId = newEntityConfigId;
         component.Position = newPosition;
         ReplaceComponent(index, component);

@@ -1,29 +1,22 @@
 ﻿using System.Linq;
 using FixMath.NET;
 using Lockstep.Framework.Commands; 
-using UnityEngine;
+using UnityEngine;    
 using UnityEngine.Experimental.Input;
 
 public class UnityInput : MonoBehaviour
 {
-    public InputMaster controls;
+    public InputMaster Controls;
 
     void Awake()
-    {
-        //controls.Player.SpawnUnit.performed += SpawnUnitOnPerformed;
-        controls.Player.MoveUnits.performed += NavigateUnitsOnPerformed;
+    {                                                                   
+        Controls.Player.MoveUnits.performed += NavigateUnitsOnPerformed;
     }
 
     void OnEnable()
-    {
-        controls.Enable();
-    }
-
-    //private void SpawnUnitOnPerformed(InputAction.CallbackContext obj)
-    //{                                    
-    //    var pos = GetWorldPos(Mouse.current.position.ReadValue());  
-    //    FindObjectOfType<RTSEntitySpawner>().Spawn(pos);
-    //}
+    {                                                             
+        Controls.Enable();
+    }      
 
     private void NavigateUnitsOnPerformed(InputAction.CallbackContext obj)
     {

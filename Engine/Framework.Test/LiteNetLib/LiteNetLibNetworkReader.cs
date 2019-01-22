@@ -1,6 +1,7 @@
 ﻿using LiteNetLib.Utils;
+using Lockstep.Framework;
 
-namespace Lockstep.Framework.Networking.LiteNetLib
+namespace Framework.Test.LiteNetLib
 {
     public class LiteNetLibNetworkReader : INetworkReader
     {

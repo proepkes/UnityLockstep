@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Threading;
 using ECS.Data;
-using LiteNetLib;  
+using LiteNetLib;
+using Lockstep.Framework;
 using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.LiteNetLib;
 using Lockstep.Framework.Networking.Serialization;
+using Server.LiteNetLib;
 using HashCode = Lockstep.Framework.Networking.Serialization.HashCode;
 
 namespace Server
@@ -23,6 +24,10 @@ namespace Server
 
         private readonly NetManager _server;
         private readonly EventBasedNetListener _listener;
+
+
+        private readonly INetworkWriter _networkWriter = new LiteNetLibNetworkWriter();
+        private readonly INetworkReader _networkReader = new LiteNetLibNetworkReader();
 
         /// <summary>
         /// Mapping: LiteNetLib peerId -> playerId
@@ -85,8 +90,10 @@ namespace Server
                         _framePacker?.AddInput(new SerializedInput { Data = reader.GetRemainingBytes() });
                         break;
                     case MessageTag.Checksum:
+                        _networkReader.SetSource(reader.GetRemainingBytes());
+
                         var pkt = new HashCode();
-                        pkt.Deserialize(new LiteNetLibNetworkReader(reader));
+                        pkt.Deserialize(_networkReader);
                         if (!_hashCodes.ContainsKey(pkt.FrameNumber))
                         {
                             _hashCodes[pkt.FrameNumber] = pkt.Value;
@@ -128,21 +135,19 @@ namespace Server
         }                 
 
         private void Loop()
-        {
-            var networkWriter = new LiteNetLibNetworkWriter();
-
+        {    
             var timer = new Timer();
             var dt = 1000.0 / TargetFps;
 
             var accumulatedTime = 0.0;
 
+            _hashCodes.Clear();
+            _networkWriter.Reset();
+            _framePacker = new FramePacker(_networkWriter);
+
             Running = true; 
 
-            StartSimulationOnConnectedPeers(networkWriter);
-
-            _hashCodes.Clear();
-
-            _framePacker = new FramePacker(networkWriter);
+            StartSimulationOnConnectedPeers(_networkWriter);
 
             timer.Start();
 

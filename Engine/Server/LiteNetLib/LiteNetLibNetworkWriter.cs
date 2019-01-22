@@ -1,6 +1,7 @@
 ﻿using LiteNetLib.Utils;
+using Lockstep.Framework.Networking;
 
-namespace Lockstep.Framework.Networking.LiteNetLib
+namespace Server.LiteNetLib
 {
     public class LiteNetLibNetworkWriter : INetworkWriter
     {

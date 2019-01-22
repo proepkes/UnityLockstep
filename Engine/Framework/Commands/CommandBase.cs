@@ -3,8 +3,10 @@ using Lockstep.Framework.Services;
 
 namespace Lockstep.Framework.Commands
 {
-    public abstract class CommandBase : ISerilalizableCommand 
-    {
+    public abstract class CommandBase : ISerilalizableCommand
+    {                     
+        public byte IssuerId;
+
         public CommandTag Tag { get; private set; }
 
         public CommandBase(CommandTag tag)
@@ -14,13 +16,15 @@ namespace Lockstep.Framework.Commands
 
         public void Serialize(INetworkWriter writer)
         {
+            writer.Put(IssuerId);
             writer.Put((ushort) Tag);
             OnSerialize(writer);
         }
 
 
         public void Deserialize(INetworkReader reader)
-        {   
+        {
+            IssuerId = reader.GetByte();
             Tag = (CommandTag) reader.GetUShort();
             OnDeserialize(reader);
         }

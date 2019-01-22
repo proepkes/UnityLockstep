@@ -11,7 +11,7 @@ namespace Lockstep.Framework
         }
         public static bool IsNotNull(this System.Object obj)
         {
-            return System.Object.ReferenceEquals(obj, null) == false;
+            return ReferenceEquals(obj, null) == false;
         }
 
         public static Fix64 ClampOne(this Fix64 f1)
@@ -24,7 +24,7 @@ namespace Lockstep.Framework
         }
         public static int CeilToInt(this long f1)
         {
-            return (int)((f1 + Fix64.One - 1));
+            return (int)(f1 + Fix64.One - 1);
         }
                       
         public static Fix64 Abs(this Fix64 f1)
@@ -50,17 +50,7 @@ namespace Lockstep.Framework
         public static double ToDouble(this Fix64 f1)
         {
             return (f1.RawValue / ((double)Fix64.One));
-        }
-
-        public static Fix64 GetLongHashCode(this Vector2 v)
-        {
-            return v.X * 31 + v.Y * 7;
-        }
-
-        public static int GetStateHash(this Vector2 v)
-        {
-            return (int)(v.GetLongHashCode() % int.MaxValue);
-        }
+        }        
 
         public static int CeilToInt(this Fix64 f1)
         {
@@ -85,10 +75,8 @@ namespace Lockstep.Framework
             {
                 return v / magnitude;
             }
-            else
-            {
-                return Vector2.Zero;
-            }
+
+            return Vector2.Zero;
         }
         public static Vector2 ClampMagnitude(Vector2 vector, Fix64 maxLength)
         {
@@ -105,17 +93,7 @@ namespace Lockstep.Framework
         public static Vector3 ToVector3(this Vector2 v)
         {
             return new Vector3(v.X, 0, v.Y);
-        }
-
-        public static ulong GetLongHashCode(this Vector3 v)
-        {
-            return (ulong) (long)(v.X * 31 + v.Z * 7);
-        }
-
-        public static int GetStateHash(this Vector3 v)
-        {
-            return (int)(v.GetLongHashCode() % int.MaxValue);
-        }
+        }    
     }
 
 }
