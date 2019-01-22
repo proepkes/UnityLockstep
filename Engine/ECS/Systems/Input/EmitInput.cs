@@ -4,24 +4,21 @@ namespace ECS.Systems.Input
 {
     public class EmitInput : IExecuteSystem, ICleanupSystem
     {                                              
-        private readonly InputContext _inputContext;
+        private readonly InputContext _inputContext;    
 
-        private readonly IParseInputService _parseInputService;
-
-        public EmitInput(Contexts contexts, IParseInputService parseInputService)
+        public EmitInput(Contexts contexts)
         {                                  
-            _inputContext = contexts.input;
-            _parseInputService = parseInputService;
+            _inputContext = contexts.input;    
         }     
 
         public void Execute()
         {
-            if (_inputContext.frame.SerializedInputs == null)
+            if (_inputContext.frame.value.Commands == null)
                 return;
 
-            foreach (var input in _inputContext.frame.SerializedInputs)
+            foreach (var command in _inputContext.frame.value.Commands)
             {
-                _parseInputService.Parse(_inputContext, input);
+                command.Execute(_inputContext);       
             }
         }
 

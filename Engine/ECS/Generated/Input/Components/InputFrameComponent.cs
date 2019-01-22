@@ -12,22 +12,22 @@ public partial class InputContext {
     public FrameComponent frame { get { return frameEntity.frame; } }
     public bool hasFrame { get { return frameEntity != null; } }
 
-    public InputEntity SetFrame(ECS.Data.SerializedInput[] newSerializedInputs) {
+    public InputEntity SetFrame(ECS.Data.Frame newValue) {
         if (hasFrame) {
             throw new Entitas.EntitasException("Could not set Frame!\n" + this + " already has an entity with FrameComponent!",
                 "You should check if the context already has a frameEntity before setting it or use context.ReplaceFrame().");
         }
         var entity = CreateEntity();
-        entity.AddFrame(newSerializedInputs);
+        entity.AddFrame(newValue);
         return entity;
     }
 
-    public void ReplaceFrame(ECS.Data.SerializedInput[] newSerializedInputs) {
+    public void ReplaceFrame(ECS.Data.Frame newValue) {
         var entity = frameEntity;
         if (entity == null) {
-            entity = SetFrame(newSerializedInputs);
+            entity = SetFrame(newValue);
         } else {
-            entity.ReplaceFrame(newSerializedInputs);
+            entity.ReplaceFrame(newValue);
         }
     }
 
@@ -49,17 +49,17 @@ public partial class InputEntity {
     public FrameComponent frame { get { return (FrameComponent)GetComponent(InputComponentsLookup.Frame); } }
     public bool hasFrame { get { return HasComponent(InputComponentsLookup.Frame); } }
 
-    public void AddFrame(ECS.Data.SerializedInput[] newSerializedInputs) {
+    public void AddFrame(ECS.Data.Frame newValue) {
         var index = InputComponentsLookup.Frame;
         var component = (FrameComponent)CreateComponent(index, typeof(FrameComponent));
-        component.SerializedInputs = newSerializedInputs;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceFrame(ECS.Data.SerializedInput[] newSerializedInputs) {
+    public void ReplaceFrame(ECS.Data.Frame newValue) {
         var index = InputComponentsLookup.Frame;
         var component = (FrameComponent)CreateComponent(index, typeof(FrameComponent));
-        component.SerializedInputs = newSerializedInputs;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 

@@ -14,8 +14,7 @@
           "BEPUphysics": "1.5.0.0",
           "BEPUutilities": "1.5.0.0",
           "Entitas": "0.0.0.0",
-          "FixMath.NET": "1.0.0.0",
-          "LiteNetLib": "0.8.401.0"
+          "FixMath.NET": "1.0.0.0"
         },
         "runtime": {
           "Framework.dll": {}
@@ -65,14 +64,6 @@
           "FixMath.NET.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
-          }
-        }
-      },
-      "LiteNetLib/0.8.401.0": {
-        "runtime": {
-          "LiteNetLib.dll": {
-            "assemblyVersion": "0.8.401.0",
-            "fileVersion": "0.8.401.0"
           }
         }
       },
@@ -135,11 +126,6 @@
       "sha512": ""
     },
     "FixMath.NET/1.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "LiteNetLib/0.8.401.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

@@ -1,12 +1,12 @@
 ﻿using BEPUutilities;
 using ECS.Data;
 using Entitas;
-using Entitas.CodeGeneration.Attributes;       
+using Entitas.CodeGeneration.Attributes;    
 
 [Input, Unique]
 public class FrameComponent : IComponent
 {
-    public SerializedInput[] SerializedInputs;
+    public Frame value;
 }
 
 [Input]

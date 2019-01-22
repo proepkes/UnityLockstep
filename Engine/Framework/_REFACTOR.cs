@@ -4,7 +4,7 @@
 
 
 /*
- * GENERIC COMMAND-PARSER-SERVICE, BECAUSE THE FRAMEWORK SHOULD NOT DETERMINE ANY COMMANDTAGS/COMMANDS, REPLACES DefaultCommandService 
+ * GENERIC COMMAND-PARSER-SERVICE, BECAUSE THE FRAMEWORK SHOULD NOT DETERMINE ANY COMMANDTAGS/COMMANDS, REPLACES DefaultInputService 
  */
 
 
@@ -28,12 +28,12 @@
 //    }
 //}
 
-//public class GenericParseInputService<T> : IParseInputService
+//public class GenericParseInputService<T> : IInputService
 //{
 //    private readonly IInputDecoder<T> inputDecoder;
-//    public IDictionary<T, ISerilalizableCommand> InputMap { get; }
+//    public IDictionary<T, ICommand> InputMap { get; }
 
-//    public GenericParseInputService(IInputDecoder<T> inputDecoder, IDictionary<T, ISerilalizableCommand> inputMap)
+//    public GenericParseInputService(IInputDecoder<T> inputDecoder, IDictionary<T, ICommand> inputMap)
 //    {
 //        InputMap = inputMap;
 //        this.inputDecoder = inputDecoder;
@@ -41,7 +41,7 @@
 //        CommandMap.Add(CommandTag.Navigate, new NavigateCommand());
 //    }
 
-//    public void Parse(InputContext context, SerializedInput serializedInput)
+//    public void Execute(InputContext context, SerializedInput serializedInput)
 //    {
 //        var key = inputDecoder.DecodeInput(serializedInput);
 //        InputMap[key].Deserialize();

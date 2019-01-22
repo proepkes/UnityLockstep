@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using ECS.Data;
-using LiteNetLib;
-using Lockstep.Framework;
-using Lockstep.Framework.Networking;
+using System.Threading;   
+using LiteNetLib;                       
+using Lockstep.Framework.Networking.Messages;
 using Lockstep.Framework.Networking.Serialization;
 using Server.LiteNetLib;
-using HashCode = Lockstep.Framework.Networking.Serialization.HashCode;
+using HashCode = Lockstep.Framework.Networking.Messages.HashCode;
 
 namespace Server
 {
@@ -20,14 +18,14 @@ namespace Server
         private const string ClientKey = "SomeConnectionKey";
 
 
-        private FramePacker _framePacker;
+        private InputPacker _inputPacker;
 
         private readonly NetManager _server;
         private readonly EventBasedNetListener _listener;
 
 
-        private readonly INetworkWriter _networkWriter = new LiteNetLibNetworkWriter();
-        private readonly INetworkReader _networkReader = new LiteNetLibNetworkReader();
+        private readonly ISerializer _serializer = new LiteNetLibSerializer();
+        private readonly IDeserializer _deserializer = new LiteNetLibDeserializer();
 
         /// <summary>
         /// Mapping: LiteNetLib peerId -> playerId
@@ -87,13 +85,13 @@ namespace Server
                 switch (messageTag)
                 {
                     case MessageTag.Input:  
-                        _framePacker?.AddInput(new SerializedInput { Data = reader.GetRemainingBytes() });
+                        _inputPacker?.AddInput(reader.GetRemainingBytes());
                         break;
                     case MessageTag.Checksum:
-                        _networkReader.SetSource(reader.GetRemainingBytes());
+                        _deserializer.SetSource(reader.GetRemainingBytes());
 
                         var pkt = new HashCode();
-                        pkt.Deserialize(_networkReader);
+                        pkt.Deserialize(_deserializer);
                         if (!_hashCodes.ContainsKey(pkt.FrameNumber))
                         {
                             _hashCodes[pkt.FrameNumber] = pkt.Value;
@@ -142,12 +140,12 @@ namespace Server
             var accumulatedTime = 0.0;
 
             _hashCodes.Clear();
-            _networkWriter.Reset();
-            _framePacker = new FramePacker(_networkWriter);
+            _serializer.Reset();
+            _inputPacker = new InputPacker();
 
             Running = true; 
 
-            StartSimulationOnConnectedPeers(_networkWriter);
+            StartSimulationOnConnectedPeers(_serializer);
 
             timer.Start();
 
@@ -160,8 +158,11 @@ namespace Server
                 accumulatedTime += timer.DeltaTime;
 
                 while (accumulatedTime >= dt)
-                {      
-                    Distribute(_framePacker.Pack());   
+                {       
+                    _serializer.Reset();
+                    _inputPacker.Pack(_serializer);
+
+                    Distribute(_serializer.Data);   
 
                     accumulatedTime -= dt;
                 }
@@ -172,7 +173,7 @@ namespace Server
             Console.WriteLine("Simulation stopped");
         }
 
-        private void StartSimulationOnConnectedPeers(INetworkWriter writer)
+        private void StartSimulationOnConnectedPeers(ISerializer writer)
         {                                     
             byte playerId = 0;
 

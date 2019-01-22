@@ -1,12 +1,9 @@
-﻿namespace ECS.Data
+﻿using Lockstep.Framework.Commands;    
+
+namespace ECS.Data
 {
     public class Frame
     {                                          
-        public SerializedInput[] SerializedInputs { get; set; }     
-    }
-
-    public class SerializedInput
-    {
-        public byte[] Data { get; set; }
-    }
+        public ICommand[] Commands { get; set; }           
+    }   
 }

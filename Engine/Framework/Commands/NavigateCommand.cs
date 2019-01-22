@@ -1,10 +1,10 @@
 ﻿using BEPUutilities;   
 using Lockstep.Framework.Networking;
-using Lockstep.Framework.Services;
+using Lockstep.Framework.Networking.Serialization;
 
 namespace Lockstep.Framework.Commands
 {
-    public class NavigateCommand : CommandBase
+    public class NavigateCommand : Command
     {
         public int[] EntityIds;
 
@@ -14,14 +14,14 @@ namespace Lockstep.Framework.Commands
         {
         }      
 
-        protected override void OnSerialize(INetworkWriter writer)
+        protected override void OnSerialize(ISerializer writer)
         {
             writer.PutArray(EntityIds);
             writer.Put((long)Destination.X);
             writer.Put((long)Destination.Y);
         }
 
-        protected override void OnDeserialize(INetworkReader reader)
+        protected override void OnDeserialize(IDeserializer reader)
         {
             EntityIds = reader.GetIntArray();
             Destination.X = reader.GetLong();

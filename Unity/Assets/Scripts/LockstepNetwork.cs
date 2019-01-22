@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections;
-using LiteNetLib;        
-using Lockstep.Framework;
+using LiteNetLib;
 using Lockstep.Framework.Commands;
-using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.LiteNetLib;
-using Lockstep.Framework.Networking.Serialization;  
+using Lockstep.Framework.Networking.Messages;
+using Lockstep.Framework.Networking.Serialization;
+using Server.LiteNetLib;
 using UnityEngine;   
 
 public class LockstepNetwork : MonoBehaviour
 {
     public static LockstepNetwork Instance;
 
-    public event Action<MessageTag, INetworkReader> MessageReceived;        
+    public event Action<MessageTag, IDeserializer> MessageReceived;        
 
     public string IP;
 
@@ -27,7 +26,7 @@ public class LockstepNetwork : MonoBehaviour
         var listener = new EventBasedNetListener();
         listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
         {
-            MessageReceived?.Invoke((MessageTag)dataReader.GetByte(), new LiteNetLibNetworkReader(dataReader));
+            MessageReceived?.Invoke((MessageTag)dataReader.GetByte(), new LiteNetLibDeserializer(dataReader));
             dataReader.Recycle();
         };
 
@@ -52,15 +51,15 @@ public class LockstepNetwork : MonoBehaviour
 
     public void SendHashCode(HashCode checksum)
     {
-        var writer = new LiteNetLibNetworkWriter();
+        var writer = new LiteNetLibSerializer();
         writer.Put((byte)MessageTag.Checksum);
         checksum.Serialize(writer);   
         _client.FirstPeer.Send(writer.Data, 0, writer.Length, DeliveryMethod.ReliableOrdered);
     }
 
-    public void SendInput(ISerilalizableCommand message)
+    public void SendInput(Command message)
     {
-        var writer = new LiteNetLibNetworkWriter();
+        var writer = new LiteNetLibSerializer();
         writer.Put((byte) MessageTag.Input);                                       
         message.Serialize(writer);
         Debug.Log(writer.Length + " bytes");

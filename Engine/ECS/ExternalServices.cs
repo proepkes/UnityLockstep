@@ -1,5 +1,5 @@
 ﻿using BEPUutilities;
-using ECS.Data;
+using ECS.Data;                   
 
 namespace ECS
 {
@@ -14,9 +14,9 @@ namespace ECS
         Vector2 GetCellSize();        
     }            
 
-    public interface IParseInputService : IService
+    public interface IInputService : IService
     {
-        void Parse(InputContext context, SerializedInput serializedInput);
+        Frame ReadNextFrame();
     }
 
     public interface IGameService : IService
@@ -37,7 +37,7 @@ namespace ECS
 
     public interface IHashService : IService
     {  
-        long CalculateHashCode(GameEntity[] entity);
+        long CalculateHashCode(GameEntity[] hashableEntities);
     }
       
     public interface ILogService : IService

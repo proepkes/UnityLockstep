@@ -256,8 +256,6 @@ Unity/Assembly-CSharp\.csproj
 
 Unity/Assembly-CSharp-Editor\.csproj
 /Engine/Jenny
-/Unity/Assets/Integration/DesperateDevs
-/Unity/Assets/Integration/Entitas
 /Engine/ECS/Jenny-Server.bat
 /Engine/ECS/Jenny-Server
 /Engine/ECS/Jenny-Auto-Import.bat
