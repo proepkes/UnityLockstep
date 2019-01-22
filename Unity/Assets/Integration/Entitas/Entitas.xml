@@ -1,0 +1,538 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Entitas</name>
+    </assembly>
+    <members>
+        <member name="T:Entitas.Entity">
+            Use context.CreateEntity() to create a new entity and
+            entity.Destroy() to destroy it.
+            You can add, replace and remove IComponent to an entity.
+        </member>
+        <member name="E:Entitas.Entity.OnComponentAdded">
+            Occurs when a component gets added.
+            All event handlers will be removed when
+            the entity gets destroyed by the context.
+        </member>
+        <member name="E:Entitas.Entity.OnComponentRemoved">
+            Occurs when a component gets removed.
+            All event handlers will be removed when
+            the entity gets destroyed by the context.
+        </member>
+        <member name="E:Entitas.Entity.OnComponentReplaced">
+            Occurs when a component gets replaced.
+            All event handlers will be removed when
+            the entity gets destroyed by the context.
+        </member>
+        <member name="E:Entitas.Entity.OnEntityReleased">
+            Occurs when an entity gets released and is not retained anymore.
+            All event handlers will be removed when
+            the entity gets destroyed by the context.
+        </member>
+        <member name="E:Entitas.Entity.OnDestroyEntity">
+            Occurs when calling entity.Destroy().
+            All event handlers will be removed when
+            the entity gets destroyed by the context.
+        </member>
+        <member name="P:Entitas.Entity.totalComponents">
+            The total amount of components an entity can possibly have.
+        </member>
+        <member name="P:Entitas.Entity.creationIndex">
+            Each entity has its own unique creationIndex which will be set by
+            the context when you create the entity.
+        </member>
+        <member name="P:Entitas.Entity.isEnabled">
+            The context manages the state of an entity.
+            Active entities are enabled, destroyed entities are not.
+        </member>
+        <member name="P:Entitas.Entity.componentPools">
+            componentPools is set by the context which created the entity and
+            is used to reuse removed components.
+            Removed components will be pushed to the componentPool.
+            Use entity.CreateComponent(index, type) to get a new or
+            reusable component from the componentPool.
+            Use entity.GetComponentPool(index) to get a componentPool for
+            a specific component index.
+        </member>
+        <member name="P:Entitas.Entity.contextInfo">
+            The contextInfo is set by the context which created the entity and
+            contains information about the context.
+            It's used to provide better error messages.
+        </member>
+        <member name="P:Entitas.Entity.aerc">
+            Automatic Entity Reference Counting (AERC)
+            is used internally to prevent pooling retained entities.
+            If you use retain manually you also have to
+            release it manually at some point.
+        </member>
+        <member name="M:Entitas.Entity.AddComponent(System.Int32,Entitas.IComponent)">
+            Adds a component at the specified index.
+            You can only have one component at an index.
+            Each component type must have its own constant index.
+            The prefered way is to use the
+            generated methods from the code generator.
+        </member>
+        <member name="M:Entitas.Entity.RemoveComponent(System.Int32)">
+            Removes a component at the specified index.
+            You can only remove a component at an index if it exists.
+            The prefered way is to use the
+            generated methods from the code generator.
+        </member>
+        <member name="M:Entitas.Entity.ReplaceComponent(System.Int32,Entitas.IComponent)">
+            Replaces an existing component at the specified index
+            or adds it if it doesn't exist yet.
+            The prefered way is to use the
+            generated methods from the code generator.
+        </member>
+        <member name="M:Entitas.Entity.GetComponent(System.Int32)">
+            Returns a component at the specified index.
+            You can only get a component at an index if it exists.
+            The prefered way is to use the
+            generated methods from the code generator.
+        </member>
+        <member name="M:Entitas.Entity.GetComponents">
+            Returns all added components.
+        </member>
+        <member name="M:Entitas.Entity.GetComponentIndices">
+            Returns all indices of added components.
+        </member>
+        <member name="M:Entitas.Entity.HasComponent(System.Int32)">
+            Determines whether this entity has a component
+            at the specified index.
+        </member>
+        <member name="M:Entitas.Entity.HasComponents(System.Int32[])">
+            Determines whether this entity has components
+            at all the specified indices.
+        </member>
+        <member name="M:Entitas.Entity.HasAnyComponent(System.Int32[])">
+            Determines whether this entity has a component
+            at any of the specified indices.
+        </member>
+        <member name="M:Entitas.Entity.RemoveAllComponents">
+            Removes all components.
+        </member>
+        <member name="M:Entitas.Entity.GetComponentPool(System.Int32)">
+            Returns the componentPool for the specified component index.
+            componentPools is set by the context which created the entity and
+            is used to reuse removed components.
+            Removed components will be pushed to the componentPool.
+            Use entity.CreateComponent(index, type) to get a new or
+            reusable component from the componentPool.
+        </member>
+        <member name="M:Entitas.Entity.CreateComponent(System.Int32,System.Type)">
+            Returns a new or reusable component from the componentPool
+            for the specified component index.
+        </member>
+        <member name="M:Entitas.Entity.CreateComponent``1(System.Int32)">
+            Returns a new or reusable component from the componentPool
+            for the specified component index.
+        </member>
+        <member name="P:Entitas.Entity.retainCount">
+            Returns the number of objects that retain this entity.
+        </member>
+        <member name="M:Entitas.Entity.Retain(System.Object)">
+            Retains the entity. An owner can only retain the same entity once.
+            Retain/Release is part of AERC (Automatic Entity Reference Counting)
+            and is used internally to prevent pooling retained entities.
+            If you use retain manually you also have to
+            release it manually at some point.
+        </member>
+        <member name="M:Entitas.Entity.Release(System.Object)">
+            Releases the entity. An owner can only release an entity
+            if it retains it.
+            Retain/Release is part of AERC (Automatic Entity Reference Counting)
+            and is used internally to prevent pooling retained entities.
+            If you use retain manually you also have to
+            release it manually at some point.
+        </member>
+        <member name="M:Entitas.Entity.ToString">
+            Returns a cached string to describe the entity
+            with the following format:
+            Entity_{creationIndex}(*{retainCount})({list of components})
+        </member>
+        <member name="T:Entitas.Group`1">
+            Use context.GetGroup(matcher) to get a group of entities which match
+            the specified matcher. Calling context.GetGroup(matcher) with the
+            same matcher will always return the same instance of the group.
+            The created group is managed by the context and will always be up to date.
+            It will automatically add entities that match the matcher or
+            remove entities as soon as they don't match the matcher anymore.
+        </member>
+        <member name="E:Entitas.Group`1.OnEntityAdded">
+            Occurs when an entity gets added.
+        </member>
+        <member name="E:Entitas.Group`1.OnEntityRemoved">
+            Occurs when an entity gets removed.
+        </member>
+        <member name="E:Entitas.Group`1.OnEntityUpdated">
+            Occurs when a component of an entity in the group gets replaced.
+        </member>
+        <member name="P:Entitas.Group`1.count">
+            Returns the number of entities in the group.
+        </member>
+        <member name="P:Entitas.Group`1.matcher">
+            Returns the matcher which was used to create this group.
+        </member>
+        <member name="M:Entitas.Group`1.#ctor(Entitas.IMatcher{`0})">
+            Use context.GetGroup(matcher) to get a group of entities which match
+            the specified matcher.
+        </member>
+        <member name="M:Entitas.Group`1.HandleEntitySilently(`0)">
+            This is used by the context to manage the group.
+        </member>
+        <member name="M:Entitas.Group`1.HandleEntity(`0,System.Int32,Entitas.IComponent)">
+            This is used by the context to manage the group.
+        </member>
+        <member name="M:Entitas.Group`1.UpdateEntity(`0,System.Int32,Entitas.IComponent,Entitas.IComponent)">
+            This is used by the context to manage the group.
+        </member>
+        <member name="M:Entitas.Group`1.RemoveAllEventHandlers">
+            Removes all event handlers from this group.
+            Keep in mind that this will break reactive systems and
+            entity indices which rely on this group.
+        </member>
+        <member name="M:Entitas.Group`1.ContainsEntity(`0)">
+            Determines whether this group has the specified entity.
+        </member>
+        <member name="M:Entitas.Group`1.GetEntities">
+            Returns all entities which are currently in this group.
+        </member>
+        <member name="M:Entitas.Group`1.GetEntities(System.Collections.Generic.List{`0})">
+            Fills the buffer with all entities which are currently in this group.
+        </member>
+        <member name="M:Entitas.Group`1.GetSingleEntity">
+            Returns the only entity in this group. It will return null
+            if the group is empty. It will throw an exception if the group
+            has more than one entity.
+        </member>
+        <member name="T:Entitas.Context`1">
+            A context manages the lifecycle of entities and groups.
+            You can create and destroy entities and get groups of entities.
+            The prefered way to create a context is to use the generated methods
+            from the code generator, e.g. var context = new GameContext();
+        </member>
+        <member name="E:Entitas.Context`1.OnEntityCreated">
+            Occurs when an entity gets created.
+        </member>
+        <member name="E:Entitas.Context`1.OnEntityWillBeDestroyed">
+            Occurs when an entity will be destroyed.
+        </member>
+        <member name="E:Entitas.Context`1.OnEntityDestroyed">
+            Occurs when an entity got destroyed.
+        </member>
+        <member name="E:Entitas.Context`1.OnGroupCreated">
+            Occurs when a group gets created for the first time.
+        </member>
+        <member name="P:Entitas.Context`1.totalComponents">
+            The total amount of components an entity can possibly have.
+            This value is generated by the code generator,
+            e.g ComponentLookup.TotalComponents.
+        </member>
+        <member name="P:Entitas.Context`1.componentPools">
+            Returns all componentPools. componentPools is used to reuse
+            removed components.
+            Removed components will be pushed to the componentPool.
+            Use entity.CreateComponent(index, type) to get a new or reusable
+            component from the componentPool.
+        </member>
+        <member name="P:Entitas.Context`1.contextInfo">
+            The contextInfo contains information about the context.
+            It's used to provide better error messages.
+        </member>
+        <member name="P:Entitas.Context`1.count">
+            Returns the number of entities in the context.
+        </member>
+        <member name="P:Entitas.Context`1.reusableEntitiesCount">
+            Returns the number of entities in the internal ObjectPool
+            for entities which can be reused.
+        </member>
+        <member name="P:Entitas.Context`1.retainedEntitiesCount">
+            Returns the number of entities that are currently retained by
+            other objects (e.g. Group, Collector, ReactiveSystem).
+        </member>
+        <member name="M:Entitas.Context`1.#ctor(System.Int32,System.Func{`0})">
+            The prefered way to create a context is to use the generated methods
+            from the code generator, e.g. var context = new GameContext();
+        </member>
+        <member name="M:Entitas.Context`1.#ctor(System.Int32,System.Int32,Entitas.ContextInfo,System.Func{Entitas.IEntity,Entitas.IAERC},System.Func{`0})">
+            The prefered way to create a context is to use the generated methods
+            from the code generator, e.g. var context = new GameContext();
+        </member>
+        <member name="M:Entitas.Context`1.CreateEntity">
+            Creates a new entity or gets a reusable entity from the
+            internal ObjectPool for entities.
+        </member>
+        <member name="M:Entitas.Context`1.DestroyAllEntities">
+            Destroys all entities in the context.
+            Throws an exception if there are still retained entities.
+        </member>
+        <member name="M:Entitas.Context`1.HasEntity(`0)">
+            Determines whether the context has the specified entity.
+        </member>
+        <member name="M:Entitas.Context`1.GetEntities">
+            Returns all entities which are currently in the context.
+        </member>
+        <member name="M:Entitas.Context`1.GetGroup(Entitas.IMatcher{`0})">
+            Returns a group for the specified matcher.
+            Calling context.GetGroup(matcher) with the same matcher will always
+            return the same instance of the group.
+        </member>
+        <member name="M:Entitas.Context`1.AddEntityIndex(Entitas.IEntityIndex)">
+            Adds the IEntityIndex for the specified name.
+            There can only be one IEntityIndex per name.
+        </member>
+        <member name="M:Entitas.Context`1.GetEntityIndex(System.String)">
+            Gets the IEntityIndex for the specified name.
+        </member>
+        <member name="M:Entitas.Context`1.ResetCreationIndex">
+            Resets the creationIndex back to 0.
+        </member>
+        <member name="M:Entitas.Context`1.ClearComponentPool(System.Int32)">
+            Clears the componentPool at the specified index.
+        </member>
+        <member name="M:Entitas.Context`1.ClearComponentPools">
+            Clears all componentPools.
+        </member>
+        <member name="M:Entitas.Context`1.Reset">
+            Resets the context (destroys all entities and
+            resets creationIndex back to 0).
+        </member>
+        <member name="M:Entitas.Context`1.RemoveAllEventHandlers">
+            Removes all event handlers
+            OnEntityCreated, OnEntityWillBeDestroyed,
+            OnEntityDestroyed and OnGroupCreated
+        </member>
+        <member name="T:Entitas.JobSystem`1">
+            A JobSystem calls Execute(entities) with subsets of entities
+            and distributes the workload over the specified amount of threads.
+            Don't use the generated methods like AddXyz() and ReplaceXyz() when
+            writing multi-threaded code in Entitas.
+        </member>
+        <member name="T:Entitas.Systems">
+            Systems provide a convenient way to group systems.
+            You can add IInitializeSystem, IExecuteSystem, ICleanupSystem,
+            ITearDownSystem, ReactiveSystem and other nested Systems instances.
+            All systems will be initialized and executed based on the order
+            you added them.
+        </member>
+        <member name="M:Entitas.Systems.#ctor">
+            Creates a new Systems instance.
+        </member>
+        <member name="M:Entitas.Systems.Add(Entitas.ISystem)">
+            Adds the system instance to the systems list.
+        </member>
+        <member name="M:Entitas.Systems.Initialize">
+            Calls Initialize() on all IInitializeSystem and other
+            nested Systems instances in the order you added them.
+        </member>
+        <member name="M:Entitas.Systems.Execute">
+            Calls Execute() on all IExecuteSystem and other
+            nested Systems instances in the order you added them.
+        </member>
+        <member name="M:Entitas.Systems.Cleanup">
+            Calls Cleanup() on all ICleanupSystem and other
+            nested Systems instances in the order you added them.
+        </member>
+        <member name="M:Entitas.Systems.TearDown">
+            Calls TearDown() on all ITearDownSystem  and other
+            nested Systems instances in the order you added them.
+        </member>
+        <member name="M:Entitas.Systems.ActivateReactiveSystems">
+            Activates all ReactiveSystems in the systems list.
+        </member>
+        <member name="M:Entitas.Systems.DeactivateReactiveSystems">
+            Deactivates all ReactiveSystems in the systems list.
+            This will also clear all ReactiveSystems.
+            This is useful when you want to soft-restart your application and
+            want to reuse your existing system instances.
+        </member>
+        <member name="M:Entitas.Systems.ClearReactiveSystems">
+            Clears all ReactiveSystems in the systems list.
+        </member>
+        <member name="T:Entitas.ReactiveSystem`1">
+            A ReactiveSystem calls Execute(entities) if there were changes based on
+            the specified Collector and will only pass in changed entities.
+            A common use-case is to react to changes, e.g. a change of the position
+            of an entity to update the gameObject.transform.position
+            of the related gameObject.
+        </member>
+        <member name="M:Entitas.ReactiveSystem`1.GetTrigger(Entitas.IContext{`0})">
+            Specify the collector that will trigger the ReactiveSystem.
+        </member>
+        <member name="M:Entitas.ReactiveSystem`1.Filter(`0)">
+            This will exclude all entities which don't pass the filter.
+        </member>
+        <member name="M:Entitas.ReactiveSystem`1.Activate">
+            Activates the ReactiveSystem and starts observing changes
+            based on the specified Collector.
+            ReactiveSystem are activated by default.
+        </member>
+        <member name="M:Entitas.ReactiveSystem`1.Deactivate">
+            Deactivates the ReactiveSystem.
+            No changes will be tracked while deactivated.
+            This will also clear the ReactiveSystem.
+            ReactiveSystem are activated by default.
+        </member>
+        <member name="M:Entitas.ReactiveSystem`1.Clear">
+            Clears all accumulated changes.
+        </member>
+        <member name="M:Entitas.ReactiveSystem`1.Execute">
+            Will call Execute(entities) with changed entities
+            if there are any. Otherwise it will not call Execute(entities).
+        </member>
+        <member name="M:Entitas.ContextExtension.GetEntities``1(Entitas.IContext{``0},Entitas.IMatcher{``0})">
+            Returns all entities matching the specified matcher.
+        </member>
+        <member name="M:Entitas.ContextExtension.CloneEntity``1(Entitas.IContext{``0},Entitas.IEntity,System.Boolean,System.Int32[])">
+            Creates a new entity and adds copies of all
+            specified components to it.
+            If replaceExisting is true it will replace exisintg components.
+        </member>
+        <member name="M:Entitas.GroupExtension.CreateCollector``1(Entitas.IGroup{``0},Entitas.GroupEvent)">
+            Creates a Collector for this group.
+        </member>
+        <member name="T:Entitas.Collector`1">
+            A Collector can observe one or more groups from the same context
+            and collects changed entities based on the specified groupEvent.
+        </member>
+        <member name="P:Entitas.Collector`1.collectedEntities">
+            Returns all collected entities.
+            Call collector.ClearCollectedEntities()
+            once you processed all entities.
+        </member>
+        <member name="P:Entitas.Collector`1.count">
+            Returns the number of all collected entities.
+        </member>
+        <member name="M:Entitas.Collector`1.#ctor(Entitas.IGroup{`0},Entitas.GroupEvent)">
+            Creates a Collector and will collect changed entities
+            based on the specified groupEvent.
+        </member>
+        <member name="M:Entitas.Collector`1.#ctor(Entitas.IGroup{`0}[],Entitas.GroupEvent[])">
+            Creates a Collector and will collect changed entities
+            based on the specified groupEvents.
+        </member>
+        <member name="M:Entitas.Collector`1.Activate">
+            Activates the Collector and will start collecting
+            changed entities. Collectors are activated by default.
+        </member>
+        <member name="M:Entitas.Collector`1.Deactivate">
+            Deactivates the Collector.
+            This will also clear all collected entities.
+            Collectors are activated by default.
+        </member>
+        <member name="M:Entitas.Collector`1.GetCollectedEntities``1">
+            Returns all collected entities and casts them.
+            Call collector.ClearCollectedEntities()
+            once you processed all entities.
+        </member>
+        <member name="M:Entitas.Collector`1.ClearCollectedEntities">
+            Clears all collected entities.
+        </member>
+        <member name="M:Entitas.CollectionExtension.SingleEntity(System.Collections.Generic.ICollection{Entitas.IEntity})">
+            Returns the only entity in the collection.
+            It will throw an exception if the collection doesn't have
+            exactly one entity.
+        </member>
+        <member name="M:Entitas.CollectionExtension.SingleEntity``1(System.Collections.Generic.ICollection{``0})">
+            Returns the only entity in the collection.
+            It will throw an exception if the collection doesn't have
+            exactly one entity.
+        </member>
+        <member name="M:Entitas.PublicMemberInfoEntityExtension.CopyTo(Entitas.IEntity,Entitas.IEntity,System.Boolean,System.Int32[])">
+            Adds copies of all specified components to the target entity.
+            If replaceExisting is true it will replace exisintg components.
+        </member>
+        <member name="T:Entitas.UnsafeAERC">
+            Automatic Entity Reference Counting (AERC)
+            is used internally to prevent pooling retained entities.
+            If you use retain manually you also have to
+            release it manually at some point.
+            UnsafeAERC doesn't check if the entity has already been
+            retained or released. It's faster, but you lose the information
+            about the owners.
+        </member>
+        <member name="T:Entitas.SafeAERC">
+            Automatic Entity Reference Counting (AERC)
+            is used internally to prevent pooling retained entities.
+            If you use retain manually you also have to
+            release it manually at some point.
+            SafeAERC checks if the entity has already been
+            retained or released. It's slower, but you keep the information
+            about the owners.
+        </member>
+        <member name="T:Entitas.EntitasException">
+            Base exception used by Entitas.
+        </member>
+        <member name="T:Entitas.IComponent">
+            Implement this interface if you want to create a component which
+            you can add to an entity.
+            Optionally, you can add these attributes:
+            [Unique]: the code generator will generate additional methods for
+            the context to ensure that only one entity with this component exists.
+            E.g. context.isAnimating = true or context.SetResources();
+            [MyContextName, MyOtherContextName]: You can make this component to be
+            available only in the specified contexts.
+            The code generator can generate these attributes for you.
+            More available Attributes can be found in Entitas.CodeGeneration.Attributes/Attributes.
+        </member>
+        <member name="T:Entitas.ICleanupSystem">
+            Implement this interface if you want to create a system which should
+            execute cleanup logic after execution.
+        </member>
+        <member name="T:Entitas.IExecuteSystem">
+            Implement this interface if you want to create a system which should be
+            executed every frame.
+        </member>
+        <member name="T:Entitas.IInitializeSystem">
+            Implement this interface if you want to create a system which should be
+            initialized once in the beginning.
+        </member>
+        <member name="T:Entitas.ISystem">
+            This is the base interface for all systems.
+            It's not meant to be implemented.
+            Use IInitializeSystem, IExecuteSystem,
+            ICleanupSystem or ITearDownSystem.
+        </member>
+        <member name="T:Entitas.ITearDownSystem">
+            Implement this interface if you want to create a system which should
+            tear down once in the end.
+        </member>
+        <member name="M:Entitas.CollectorContextExtension.CreateCollector``1(Entitas.IContext{``0},Entitas.IMatcher{``0})">
+            Creates a Collector.
+        </member>
+        <member name="M:Entitas.CollectorContextExtension.CreateCollector``1(Entitas.IContext{``0},Entitas.TriggerOnEvent{``0}[])">
+            Creates a Collector.
+        </member>
+        <member name="T:Entitas.MultiReactiveSystem`2">
+            A ReactiveSystem calls Execute(entities) if there were changes based on
+            the specified Collector and will only pass in changed entities.
+            A common use-case is to react to changes, e.g. a change of the position
+            of an entity to update the gameObject.transform.position
+            of the related gameObject.
+        </member>
+        <member name="M:Entitas.MultiReactiveSystem`2.GetTrigger(`1)">
+            Specify the collector that will trigger the ReactiveSystem.
+        </member>
+        <member name="M:Entitas.MultiReactiveSystem`2.Filter(`0)">
+            This will exclude all entities which don't pass the filter.
+        </member>
+        <member name="M:Entitas.MultiReactiveSystem`2.Activate">
+            Activates the ReactiveSystem and starts observing changes
+            based on the specified Collector.
+            ReactiveSystem are activated by default.
+        </member>
+        <member name="M:Entitas.MultiReactiveSystem`2.Deactivate">
+            Deactivates the ReactiveSystem.
+            No changes will be tracked while deactivated.
+            This will also clear the ReactiveSystem.
+            ReactiveSystem are activated by default.
+        </member>
+        <member name="M:Entitas.MultiReactiveSystem`2.Clear">
+            Clears all accumulated changes.
+        </member>
+        <member name="M:Entitas.MultiReactiveSystem`2.Execute">
+            Will call Execute(entities) with changed entities
+            if there are any. Otherwise it will not call Execute(entities).
+        </member>
+    </members>
+</doc>

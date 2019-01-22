@@ -1,11 +1,13 @@
-﻿using ECS.Data;
-using ECS.Features;          
+﻿using ECS;
+using ECS.Features;
 
-namespace ECS
+namespace Lockstep.Framework
 {
     public sealed class LockstepSystems : Entitas.Systems
     {
         private readonly Contexts _contexts;
+
+        public long HashCode => _contexts.gameState.hashCode.value;
 
         public LockstepSystems(Contexts contexts, ServiceContainer serviceContainer)
         {
@@ -21,10 +23,8 @@ namespace ECS
             Add(new HashCodeFeature(contexts, serviceContainer));
         }
 
-        public void Simulate(Frame frame)
-        {
-            _contexts.input.SetFrame(frame.SerializedInputs);
-
+        public void Simulate()
+        {                                             
             Execute();
             Cleanup();                   
         }

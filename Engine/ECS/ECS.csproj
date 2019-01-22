@@ -69,6 +69,7 @@
     <Compile Include="Generated\Input\Components\InputNavigationInputDataComponent.cs" />
     <Compile Include="Generated\Input\Components\InputSpawnInputDataComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameOwnerIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
@@ -114,6 +115,9 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultServices\DefaultInputService.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="DefaultServices\DefaultEntityConfigService.cs" />
     <Compile Include="Features\InputFeature.cs" />
   </ItemGroup>
@@ -127,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\HashCodeFeature.cs" />
+    <Compile Include="Data\ICommand.cs" />
     <Compile Include="ServiceContainer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Features\NavigationFeature.cs" />
+    <Compile Include="Systems\Input\ReadInput.cs" />
     <Compile Include="Systems\Input\OnSpawnInputDoLoadEntityIntoGame.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
     <Compile Include="Systems\Input\OnNavigableEntityDoAddAgent.cs" />

@@ -4,16 +4,7 @@ using FixMath.NET;
 namespace Lockstep.Framework
 {
     internal static class Util
-    {
-        public static bool IsNull(this object obj)
-        {
-            return ReferenceEquals(obj, null);
-        }
-        public static bool IsNotNull(this System.Object obj)
-        {
-            return System.Object.ReferenceEquals(obj, null) == false;
-        }
-
+    {                 
         public static Fix64 ClampOne(this Fix64 f1)
         {
             if (f1 > Fix64.One)
@@ -24,7 +15,7 @@ namespace Lockstep.Framework
         }
         public static int CeilToInt(this long f1)
         {
-            return (int)((f1 + Fix64.One - 1));
+            return (int)(f1 + Fix64.One - 1);
         }
                       
         public static Fix64 Abs(this Fix64 f1)
@@ -50,17 +41,7 @@ namespace Lockstep.Framework
         public static double ToDouble(this Fix64 f1)
         {
             return (f1.RawValue / ((double)Fix64.One));
-        }
-
-        public static Fix64 GetLongHashCode(this Vector2 v)
-        {
-            return v.X * 31 + v.Y * 7;
-        }
-
-        public static int GetStateHash(this Vector2 v)
-        {
-            return (int)(v.GetLongHashCode() % int.MaxValue);
-        }
+        }        
 
         public static int CeilToInt(this Fix64 f1)
         {
@@ -75,21 +56,8 @@ namespace Lockstep.Framework
             result.X = v.X * startAmount + end.X * interpolationAmount;
             result.Y = v.Y * startAmount + end.Y * interpolationAmount;
             return result;
-        }
+        }      
 
-        public static Vector2 Normalize(Vector2 v, out Fix64 magnitude)
-        {
-            magnitude = v.Length();
-            // This is the same constant that Unity uses
-            if (magnitude > Fix64.Zero)
-            {
-                return v / magnitude;
-            }
-            else
-            {
-                return Vector2.Zero;
-            }
-        }
         public static Vector2 ClampMagnitude(Vector2 vector, Fix64 maxLength)
         {
             if (vector.LengthSquared() > maxLength * maxLength)
@@ -105,17 +73,7 @@ namespace Lockstep.Framework
         public static Vector3 ToVector3(this Vector2 v)
         {
             return new Vector3(v.X, 0, v.Y);
-        }
-
-        public static ulong GetLongHashCode(this Vector3 v)
-        {
-            return (ulong) (long)(v.X * 31 + v.Z * 7);
-        }
-
-        public static int GetStateHash(this Vector3 v)
-        {
-            return (int)(v.GetLongHashCode() % int.MaxValue);
-        }
+        }    
     }
 
 }

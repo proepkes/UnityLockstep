@@ -2,11 +2,10 @@
 using System.Linq;    
 using BEPUutilities;
 using ECS;
-using ECS.Data;           
+using ECS.Data;
+using Framework.Test.LiteNetLib;
 using Lockstep.Framework;
-using Lockstep.Framework.Commands;
-using Lockstep.Framework.Networking.LiteNetLib;
-using Lockstep.Framework.Services;      
+using Lockstep.Framework.Commands;   
 using Shouldly;       
 using Xunit;
 using Xunit.Abstractions;
@@ -27,46 +26,39 @@ namespace Framework.Test
         [Fact]
         public void TestSimpleNavigationService()
         {             
-            var contexts = new Contexts();
-            var serializer = new LiteNetLibNetworkWriter();
+            var contexts = new Contexts();                   
             var destination = new Vector2(111, 22);   
 
-            var container = new ServiceContainer()
-                .Register<IParseInputService>(new ParseInputService(new LiteNetLibNetworkReader()))          
+            var container = new ServiceContainer()          
                 .Register<ILogService>(new TestLogger(_output));
-
-            new SpawnCommand().Serialize(serializer);
+                                                       
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input
             var sim = new Simulation(contexts, container)
                 .Init(0)
                 .AddFrame(new Frame
                 {
-                    SerializedInputs = new[]
+                    Commands = new ICommand[]
                     {
-                        new SerializedInput { Data = serializer.Data }
+                        new SpawnCommand()
                     }
                 })
                 .Simulate();
-
-            //The SpawnCommand taught the system to create a new gameEntity. Now navigate it
+                                                                                              
             var e = contexts.game.GetEntities().First();
             e.isNavigable = true;
 
-            var before = e.position.value;
-
-            serializer.Reset();                              
-            new NavigateCommand
-            {
-                Destination = destination,
-                EntityIds = new[] { e.id.value }
-            }.Serialize(serializer);
+            var before = e.position.value;  
 
             sim.AddFrame(new Frame
                 {
-                    SerializedInputs = new[]
+                    Commands = new ICommand[]
                     {
-                        new SerializedInput { Data = serializer.Data }
+                        new NavigateCommand
+                        {
+                            Destination = destination,
+                            EntityIds = new[] { e.id.value }
+                        }
                     }
                 })
                 .Simulate();
@@ -87,13 +79,9 @@ namespace Framework.Test
         {
             var contexts = new Contexts();
 
-            var destination = new Vector2(11, 22);
+            var destination = new Vector2(11, 22);    
 
-            var serializer = new LiteNetLibNetworkWriter();        
-            new SpawnCommand().Serialize(serializer);
-
-            var container = new ServiceContainer()
-                .Register<IParseInputService>(new ParseInputService(new LiteNetLibNetworkReader()))       
+            var container = new ServiceContainer()      
                 .Register<ILogService>(new TestLogger(_output));   
 
             //Initialize a new simulation and add a gameentity
@@ -101,24 +89,21 @@ namespace Framework.Test
                 .Init(0)
                 .AddFrame(new Frame
                 {
-                    SerializedInputs = new[]
+                    Commands = new[]
                     {
-                        new SerializedInput { Data = serializer.Data }
+                        new SpawnCommand()
                     }
                 })
                 .Simulate();
 
             //Navigate the new created entity
-            var e = contexts.game.GetEntities().First();
-
-            serializer.Reset();                               
-            new NavigateCommand { Destination = destination, EntityIds = new[] { e.id.value } }.Serialize(serializer);
+            var e = contexts.game.GetEntities().First();   
 
             sim.AddFrame(new Frame
                 {
-                    SerializedInputs = new[]
+                    Commands = new[]
                     {
-                        new SerializedInput { Data = serializer.Data }
+                        new NavigateCommand { Destination = destination, EntityIds = new[] { e.id.value } }
                     }
                 })
                 .Simulate();

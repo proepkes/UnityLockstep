@@ -1,6 +1,7 @@
 ﻿using System;  
 using System.Linq;
 using ECS;
+using Lockstep.Framework;
 using Moq;
 using Shouldly;       
 using Xunit;
@@ -23,7 +24,7 @@ namespace Framework.Test
                                   
             var container = new ServiceContainer();
             container
-                .Register(new Mock<IParseInputService>().Object);
+                .Register(new Mock<IInputService>().Object);
 
             new LockstepSystems(contexts, container).Initialize();
 
@@ -45,7 +46,7 @@ namespace Framework.Test
 
             var container = new ServiceContainer();
             container
-                .Register(new Mock<IParseInputService>().Object);
+                .Register(new Mock<IInputService>().Object);
 
             new LockstepSystems(contexts, container).Initialize();
 

@@ -1,10 +1,8 @@
-﻿using ECS;         
-using LiteNetLib.Utils;
-using Lockstep.Framework;              
-using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.LiteNetLib;
-using Lockstep.Framework.Networking.Serialization;
-using Lockstep.Framework.Services;  
+﻿using ECS;                     
+using Lockstep.Framework;
+using Lockstep.Framework.Commands;
+using Lockstep.Framework.Networking.Messages;
+using Lockstep.Framework.Networking.Serialization;  
 using UnityEngine;           
                               
 public class RTSSimulator : MonoBehaviour
@@ -15,6 +13,8 @@ public class RTSSimulator : MonoBehaviour
     public static RTSSimulator Instance;
 
     public RTSEntityDatabase EntityDatabase;
+
+    private InputParser InputParser;
                                                          
 
     private void Awake()
@@ -24,13 +24,26 @@ public class RTSSimulator : MonoBehaviour
         _simulation = new Simulation(
             Contexts.sharedInstance, 
             new ServiceContainer()                      
-                //.Register<INavigationService>(new RVONavigationService())   
-                .Register<IParseInputService>(new ParseInputService(new LiteNetLibNetworkReader()))
+                //.Register<INavigationService>(new RVONavigationService())                          
                 .Register<IGameService>(new UnityGameService(EntityDatabase))
                 .Register<ILogService>(new UnityLogger())) 
             {
                 FrameDelay = 2,
             };
+
+        InputParser = new InputParser(r =>
+        {
+            var cmdTag = (CommandTag)r.PeekUShort();
+            switch (cmdTag)
+            {
+                case CommandTag.Spawn:
+                    return new SpawnCommand();
+                case CommandTag.Navigate:
+                    return new NavigateCommand();
+                default:
+                    return null;
+            }
+        });
     }     
 
     private void Start()
@@ -38,7 +51,7 @@ public class RTSSimulator : MonoBehaviour
         LockstepNetwork.Instance.MessageReceived += NetworkOnMessageReceived;
     }
 
-    private void NetworkOnMessageReceived(MessageTag messageTag, INetworkReader reader)
+    private void NetworkOnMessageReceived(MessageTag messageTag, IDeserializer reader)
     {
         switch (messageTag)
         {
@@ -54,14 +67,12 @@ public class RTSSimulator : MonoBehaviour
                 break;
             case MessageTag.Frame:
                 //Server sends in ReliableOrdered-mode, so we only care about the latest frame
-                //Also possible could be high-frequency unreliable messages and use the redundant frames to fill up the framebuffer in case a frame was lost during transmission
-                var pkg = new FramePackage(1);
-                pkg.Deserialize(reader);
-
-                _simulation.AddFrame(pkg.Frames[0]);
+                //Also possible could be high-frequency unreliable messages and use redundant frames to fill up a framebuffer in case of frame loss during transmission 
+                _simulation.AddFrame(InputParser.DeserializeInput(reader));
 
                 //TODO: only for debugging, frames should be buffered
                 _simulation.Simulate();
+
                 LockstepNetwork.Instance.SendHashCode(new HashCode
                 {
                     FrameNumber = _simulation.FrameCounter,

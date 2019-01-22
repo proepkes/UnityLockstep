@@ -8,7 +8,9 @@ namespace ECS.Features
         {
             //TODO: Add InputValidationSystem by matching input with playerId
 
-            Add(new EmitInput(contexts, serviceContainer.Get<IParseInputService>())); 
+
+            Add(new ReadInput(contexts, serviceContainer.Get<IInputService>()));
+            Add(new EmitInput(contexts)); 
 
             Add(new OnSpawnInputDoLoadEntityIntoGame(contexts, serviceContainer.Get<IGameService>()));
             Add(new OnNavigableEntityDoAddAgent(contexts, serviceContainer.Get<INavigationService>()));

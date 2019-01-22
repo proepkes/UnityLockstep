@@ -1,12 +1,12 @@
 ﻿using BEPUutilities;
 using ECS.Data;
 using Entitas;
-using Entitas.CodeGeneration.Attributes;       
+using Entitas.CodeGeneration.Attributes;    
 
 [Input, Unique]
 public class FrameComponent : IComponent
 {
-    public SerializedInput[] SerializedInputs;
+    public Frame value;
 }
 
 [Input]
@@ -19,7 +19,9 @@ public class NavigationInputDataComponent : IComponent
 
 [Input]
 public class SpawnInputDataComponent : IComponent
-{
+{                    
+    public int OwnerId;
+
     public int EntityConfigId;
 
     public Vector2 Position;

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using ECS.Data;
-using LiteNetLib;  
-using Lockstep.Framework.Networking;
-using Lockstep.Framework.Networking.LiteNetLib;
+using System.Threading;   
+using LiteNetLib;                       
+using Lockstep.Framework.Networking.Messages;
 using Lockstep.Framework.Networking.Serialization;
-using HashCode = Lockstep.Framework.Networking.Serialization.HashCode;
+using Server.LiteNetLib;
+using HashCode = Lockstep.Framework.Networking.Messages.HashCode;
 
 namespace Server
 {
@@ -19,10 +18,14 @@ namespace Server
         private const string ClientKey = "SomeConnectionKey";
 
 
-        private FramePacker _framePacker;
+        private InputPacker _inputPacker;
 
         private readonly NetManager _server;
         private readonly EventBasedNetListener _listener;
+
+
+        private readonly ISerializer _serializer = new LiteNetLibSerializer();
+        private readonly IDeserializer _deserializer = new LiteNetLibDeserializer();
 
         /// <summary>
         /// Mapping: LiteNetLib peerId -> playerId
@@ -82,11 +85,13 @@ namespace Server
                 switch (messageTag)
                 {
                     case MessageTag.Input:  
-                        _framePacker?.AddInput(new SerializedInput { Data = reader.GetRemainingBytes() });
+                        _inputPacker?.AddInput(reader.GetRemainingBytes());
                         break;
                     case MessageTag.Checksum:
+                        _deserializer.SetSource(reader.GetRemainingBytes());
+
                         var pkt = new HashCode();
-                        pkt.Deserialize(new LiteNetLibNetworkReader(reader));
+                        pkt.Deserialize(_deserializer);
                         if (!_hashCodes.ContainsKey(pkt.FrameNumber))
                         {
                             _hashCodes[pkt.FrameNumber] = pkt.Value;
@@ -128,21 +133,19 @@ namespace Server
         }                 
 
         private void Loop()
-        {
-            var networkWriter = new LiteNetLibNetworkWriter();
-
+        {    
             var timer = new Timer();
             var dt = 1000.0 / TargetFps;
 
             var accumulatedTime = 0.0;
 
+            _hashCodes.Clear();
+            _serializer.Reset();
+            _inputPacker = new InputPacker();
+
             Running = true; 
 
-            StartSimulationOnConnectedPeers(networkWriter);
-
-            _hashCodes.Clear();
-
-            _framePacker = new FramePacker(networkWriter);
+            StartSimulationOnConnectedPeers(_serializer);
 
             timer.Start();
 
@@ -155,8 +158,11 @@ namespace Server
                 accumulatedTime += timer.DeltaTime;
 
                 while (accumulatedTime >= dt)
-                {      
-                    Distribute(_framePacker.Pack());   
+                {       
+                    _serializer.Reset();
+                    _inputPacker.Pack(_serializer);
+
+                    Distribute(_serializer.Data);   
 
                     accumulatedTime -= dt;
                 }
@@ -167,7 +173,7 @@ namespace Server
             Console.WriteLine("Simulation stopped");
         }
 
-        private void StartSimulationOnConnectedPeers(INetworkWriter writer)
+        private void StartSimulationOnConnectedPeers(ISerializer writer)
         {                                     
             byte playerId = 0;
 
