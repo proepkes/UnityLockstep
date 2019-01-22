@@ -19,7 +19,7 @@ public class RTSEntitySpawner : MonoBehaviour
     {                        
         for (int j = 0; j < Count; j++)
         {                                       
-            LockstepNetwork.Instance.SendInput(new SpawnCommand
+            LockstepNetwork.Instance.SendInput(CommandTag.Spawn, new SpawnCommand
             {
                 EntityConfigId = RTSSimulator.Instance.EntityDatabase.Entities.IndexOf(Prefab),
                 Position = position

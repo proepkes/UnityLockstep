@@ -16,7 +16,7 @@ namespace ECS
             _defaults.Add(typeof(IGameService).FullName, new DefaultGameService());
         }
 
-        public ServiceContainer Register<T>(T instance) where T : IService
+        public ServiceContainer Register<T>(T instance) where T : class, IService
         {
             var key = typeof(T).FullName;
             if (key != null)

@@ -31,13 +31,7 @@ public class TeamComponent : IComponent
 public class ControllableComponent : IComponent
 {
 }
-
-[Game, Event(EventTarget.Self), Event(EventTarget.Self, EventType.Removed)]
-public class DestinationComponent : IComponent
-{
-    public Vector2 value;
-} 
-
+    
 [Game, Event(EventTarget.Self)]
 public class PositionComponent : IComponent
 {

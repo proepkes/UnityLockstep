@@ -168,7 +168,7 @@ MonoBehaviour:
   targetingSettingsFoldout: 1
   inputSettingsFoldout: 1
   useFixedUpdate: 0
-  keyboardMovementSpeed: 5
+  keyboardMovementSpeed: 15
   screenEdgeMovementSpeed: 3
   followingSpeed: 5
   rotationSped: 3
@@ -183,7 +183,7 @@ MonoBehaviour:
   heightDampening: 5
   keyboardZoomingSensitivity: 2
   scrollWheelZoomingSensitivity: 25
-  limitMap: 1
+  limitMap: 0
   limitX: 10
   limitY: 10
   targetFollow: {fileID: 0}

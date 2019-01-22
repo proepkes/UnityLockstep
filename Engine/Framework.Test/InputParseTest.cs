@@ -1,9 +1,8 @@
-﻿using System;                      
+﻿using System;
+using BEPUutilities;
 using ECS;
 using ECS.Data;                   
-using Lockstep.Framework;
-using Lockstep.Framework.Commands;
-using Lockstep.Framework.Networking.Serialization;
+using Lockstep.Framework;                            
 using Moq;
 using Shouldly;        
 using Xunit;
@@ -18,19 +17,26 @@ namespace Framework.Test
             Console.SetOut(new Converter(output));
         }
 
+        class SpawnCommand : ICommand
+        {        
+            public void Execute(InputContext context)
+            {
+                context.CreateEntity().AddSpawnInputData(0, 0, Vector2.Zero);
+            }
+        }
+
         [Fact]
         public void TestSpawnInputCreatesEntity()
-        {                     
-            var contexts = new Contexts();          
+        {
+            var contexts = new Contexts();
 
             new Simulation(contexts, new ServiceContainer())
                 .Init(0)
-                .AddFrame(new Frame { Commands = new ICommand[] { new SpawnCommand()  } })
+                .AddFrame(new Frame { Commands = new ICommand[] { new SpawnCommand() } })
                 .Simulate();
 
-            contexts.game.count.ShouldBe(1);  
-        }           
-
+            contexts.game.count.ShouldBe(1);
+        }  
 
         [Fact]
         public void TestInputGetsCalled()
@@ -39,14 +45,11 @@ namespace Framework.Test
 
             var sim = new Simulation(new Contexts(), new ServiceContainer());
             sim.Init(0);
+                                  
+            sim.AddFrame(new Frame { Commands = new[] { command.Object } });
+            sim.Simulate(); 
 
-            for (var i = 0; i < 10; i++)
-            {                                       
-                sim.AddFrame(new Frame { Commands = new[] { command.Object } });
-                sim.Simulate();
-
-                command.Verify(service => service.Execute(It.IsAny<InputContext>()), Times.Exactly(1));
-            }
+            command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Exactly(1));
         }
     }
 }

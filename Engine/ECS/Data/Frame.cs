@@ -1,6 +1,4 @@
-﻿using Lockstep.Framework.Commands;    
-
-namespace ECS.Data
+﻿namespace ECS.Data
 {
     public class Frame
     {                                          

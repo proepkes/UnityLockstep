@@ -1,4 +1,5 @@
-﻿using ECS;                     
+﻿using ECS;
+using ECS.Data;
 using Lockstep.Framework;
 using Lockstep.Framework.Commands;
 using Lockstep.Framework.Networking.Messages;
@@ -14,7 +15,7 @@ public class RTSSimulator : MonoBehaviour
 
     public RTSEntityDatabase EntityDatabase;
 
-    private InputParser InputParser;
+    private InputParser _inputParser;
                                                          
 
     private void Awake()
@@ -31,18 +32,25 @@ public class RTSSimulator : MonoBehaviour
                 FrameDelay = 2,
             };
 
-        InputParser = new InputParser(r =>
+        _inputParser = new InputParser(r =>
         {
-            var cmdTag = (CommandTag)r.PeekUShort();
+            ICommand cmd;
+            var cmdTag = (CommandTag)r.GetUShort();
             switch (cmdTag)
             {
                 case CommandTag.Spawn:
-                    return new SpawnCommand();
+                    cmd = new SpawnCommand();
+                    break;
                 case CommandTag.Navigate:
-                    return new NavigateCommand();
+                    cmd = new NavigateCommand();
+                    break;
                 default:
                     return null;
             }
+                       
+            ((ISerializable) cmd).Deserialize(r);
+
+            return cmd;
         });
     }     
 
@@ -68,7 +76,7 @@ public class RTSSimulator : MonoBehaviour
             case MessageTag.Frame:
                 //Server sends in ReliableOrdered-mode, so we only care about the latest frame
                 //Also possible could be high-frequency unreliable messages and use redundant frames to fill up a framebuffer in case of frame loss during transmission 
-                _simulation.AddFrame(InputParser.DeserializeInput(reader));
+                _simulation.AddFrame(new Frame {Commands = _inputParser.DeserializeInput(reader)});
 
                 //TODO: only for debugging, frames should be buffered
                 _simulation.Simulate();
