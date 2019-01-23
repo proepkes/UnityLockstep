@@ -267,3 +267,7 @@ Unity/Assembly-CSharp-Editor\.csproj
 /Unity/Assets/Integration/RVONavigation.pdb.meta
 /Unity/Assets/Integration/RVONavigation.dll.meta
 /Unity/Assets/Integration/RVONavigation.deps.json.meta
+/Unity/Assets/Integration/Framework.pdb.meta
+/Unity/Assets/Integration/FixMath.NET.pdb.meta
+/Unity/Assets/Integration/ECS.pdb.meta
+/Unity/Assets/Integration/BEPUutilities.pdb.meta
