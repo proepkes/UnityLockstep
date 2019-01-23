@@ -60,23 +60,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Plugins\NavAI\Editor\AgentEditor.cs" />
-    <Compile Include="Assets\Plugins\NavAI\Editor\CircleObstacleEditor.cs" />
-    <Compile Include="Assets\Plugins\NavAI\Editor\NavigationZoneEditor.cs" />
-    <Compile Include="Assets\Plugins\NavAI\Editor\PolygonObstacleEditor.cs" />
-    <Compile Include="Assets\Plugins\NavAI\Editor\RectangleObstacleEditor.cs" />
-    <Compile Include="Assets\Plugins\NavAI\Editor\SettingsEditor.cs" />
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>E:/Repositories/UnityLockstep/Unity/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
+    <Compile Include="Assets\Plugins\GitHub\Editor\ExtensionLoader.cs" />
+    <Compile Include="Assets\Plugins\GitHub\Editor\UnityAPIWrapper.cs" />
+    <None Include="Assets\Plugins\GitHub\Editor\credits.txt" />
+    <None Include="Assets\Plugins\GitHub\Editor\eula.txt" />
     <Reference Include="Unity.PackageManagerUI.Editor">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>E:/Repositories/UnityLockstep/Unity/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
@@ -336,6 +328,9 @@
     <Reference Include="LiteNetLib">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Integration/LiteNetLib.dll</HintPath>
     </Reference>
+    <Reference Include="RVONavigation">
+      <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Integration/RVONavigation.dll</HintPath>
+    </Reference>
     <Reference Include="DesperateDevs.Logging">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Integration/DesperateDevs/DesperateDevs.Logging.dll</HintPath>
     </Reference>
@@ -399,6 +394,18 @@
     <Reference Include="Entitas.VisualDebugging.CodeGeneration.Plugins">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Integration/Entitas/Editor/Plugins/Entitas.VisualDebugging.CodeGeneration.Plugins.dll</HintPath>
     </Reference>
+    <Reference Include="GitHub.Api.45">
+      <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Plugins/GitHub/Editor/GitHub.Api.45.dll</HintPath>
+    </Reference>
+    <Reference Include="GitHub.Logging">
+      <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Plugins/GitHub/Editor/GitHub.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="GitHub.Unity.45">
+      <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Plugins/GitHub/Editor/GitHub.Unity.45.dll</HintPath>
+    </Reference>
+    <Reference Include="sfw.net">
+      <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Plugins/GitHub/Editor/sfw.net.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEditor.Advertisements">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>
     </Reference>
@@ -413,6 +420,9 @@
     </Reference>
     <Reference Include="UnityEditor.Purchasing">
       <HintPath>E:/Repositories/UnityLockstep/Unity/Library/PackageCache/com.unity.purchasing@2.0.3/Editor/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="GitHub.UnityShim">
+      <HintPath>E:/Repositories/UnityLockstep/Unity/Assets/Plugins/GitHub/Editor/GitHub.UnityShim.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.3.1f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -768,12 +778,6 @@
     <Reference Include="Boo.Lang">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2018.3.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{2662B409-6332-1E56-D797-C9025C53BDD6}</Project>
-      <Name>Assembly-CSharp-firstpass</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
