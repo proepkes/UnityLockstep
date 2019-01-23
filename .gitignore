@@ -264,3 +264,4 @@ Unity/Assembly-CSharp-Editor\.csproj
 /Unity/Assets/Integration/RVONavigation.deps.json
 /Unity/Entitas.properties
 /Unity/philb.userproperties
+/Unity/Assets/Integration/*.meta
