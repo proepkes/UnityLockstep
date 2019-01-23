@@ -264,13 +264,6 @@ Unity/Assembly-CSharp-Editor\.csproj
 /Unity/Assets/Integration/RVONavigation.deps.json
 /Unity/Entitas.properties
 /Unity/philb.userproperties
-/Unity/Assets/Integration/*.meta
-/Unity/Assets/Integration/DesperateDevs/*.meta
-/Unity/Assets/Integration/Entitas/Editor/Images/*.meta
-/Unity/Assets/Integration/Entitas/Editor/Plugins/*.meta
-/Unity/Assets/Integration/Entitas/Editor/*.meta
-/Unity/Assets/Integration/Entitas/*.meta
-/Unity/Assets/Integration/DesperateDevs/Editor/*.meta
-/Unity/Assets/Integration/DesperateDevs/Editor/Plugins/*.meta
-/Unity/Assets/Integration/DesperateDevs/Editor/Images/*.meta
-/Unity/Assets/Integration/*.mdb
+/Unity/Assets/Integration/RVONavigation.pdb.meta
+/Unity/Assets/Integration/RVONavigation.dll.meta
+/Unity/Assets/Integration/RVONavigation.deps.json.meta
