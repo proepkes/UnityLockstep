@@ -127,7 +127,7 @@ GameObject:
   - component: {fileID: 50771352}
   - component: {fileID: 50771353}
   m_Layer: 0
-  m_Name: RTS_Camera
+  m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
