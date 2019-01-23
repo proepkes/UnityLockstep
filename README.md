@@ -26,7 +26,8 @@ A WIP implementation of the Serverbeat-Protocol described here: https://www.redd
 
 ## Dependencies
 
-- The server targets .NET Core Framework 2.2
+- The ECS-Project currently targets .NET Framework 4.6.1 ([#806](https://github.com/sschmid/Entitas-CSharp/issues/806#issuecomment-429578569))
+- The server targets .NET Core Framework 2.2.103 [(link to setup)](https://dotnet.microsoft.com/download/thank-you/dotnet-sdk-2.2.103-windows-x64-installer)
 
 ## References
 
