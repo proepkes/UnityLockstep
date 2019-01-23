@@ -78,7 +78,7 @@ public class RTSSimulator : MonoBehaviour
                 //Also possible could be high-frequency unreliable messages and use redundant frames to fill up a framebuffer in case of frame loss during transmission 
                 _simulation.AddFrame(new Frame {Commands = _inputParser.DeserializeInput(reader)});
 
-                //TODO: only for debugging, frames should be buffered
+                //TODO: only for debugging, frames should be buffered & later executed in FixedUpdate
                 _simulation.Simulate();
 
                 LockstepNetwork.Instance.SendHashCode(new HashCode
