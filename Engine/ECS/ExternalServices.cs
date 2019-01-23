@@ -15,7 +15,7 @@ namespace ECS
         Vector2 GetCellSize();        
     }            
 
-    public interface IInputService : IService
+    public interface IDataSource : IService
     {
         Frame GetNextFrame();
     }

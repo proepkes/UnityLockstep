@@ -2,7 +2,7 @@
 
 namespace ECS.DefaultServices
 {                     
-    public class DefaultInputService : IInputService
+    public class DefaultDataSource : IDataSource
     {       
         public Frame GetNextFrame()
         {

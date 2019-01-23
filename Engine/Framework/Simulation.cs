@@ -5,7 +5,7 @@ using FixMath.NET;
 
 namespace Lockstep.Framework
 {
-    public class Simulation : IInputService
+    public class Simulation : IDataSource
     {                                          
         private readonly LockstepSystems _systems;   
 
@@ -35,7 +35,7 @@ namespace Lockstep.Framework
 
         public Simulation(Contexts contexts, ServiceContainer serviceContainer)
         {
-            serviceContainer.Register<IInputService>(this);
+            serviceContainer.Register<IDataSource>(this);
 
             _systems = new LockstepSystems(contexts, serviceContainer);
         }
