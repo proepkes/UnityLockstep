@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b925c2519d9c82f448ad9ec8b27e8c71, type: 3}
+  m_Script: {fileID: 11500000, guid: 6afcacb30d5498246be3c9a7d2aaf254, type: 3}
   m_Name: EntityDatabase
   m_EditorClassIdentifier: 
   Entities:
-  - {fileID: 6983145694885263932, guid: 4e5c995f1cc5a0549b95759cb21ced7e, type: 3}
+  - {fileID: 6983145694885263932, guid: 24e2acaaa3c159748824ae994e0c01a3, type: 3}
