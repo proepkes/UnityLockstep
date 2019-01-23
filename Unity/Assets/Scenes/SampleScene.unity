@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 50771356}
   - component: {fileID: 50771355}
   - component: {fileID: 50771354}
-  - component: {fileID: 50771353}
+  - component: {fileID: 50771358}
   - component: {fileID: 50771352}
   m_Layer: 0
   m_Name: RTS_Camera
@@ -142,67 +142,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 50771351}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cb7926d2e77da0458c1009f9aefdebb, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a30122d628a51941837a3ae058548f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &50771353
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 50771351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28ef8c68bade09b41aca258d42a632f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lastTab: 2
-  movementSettingsFoldout: 1
-  zoomingSettingsFoldout: 0
-  rotationSettingsFoldout: 1
-  heightSettingsFoldout: 1
-  mapLimitSettingsFoldout: 1
-  targetingSettingsFoldout: 1
-  inputSettingsFoldout: 1
-  useFixedUpdate: 0
-  keyboardMovementSpeed: 15
-  screenEdgeMovementSpeed: 3
-  followingSpeed: 5
-  rotationSped: 3
-  panningSpeed: 25
-  mouseRotationSpeed: 100
-  autoHeight: 1
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 55
-  maxHeight: 50
-  minHeight: 10
-  heightDampening: 5
-  keyboardZoomingSensitivity: 2
-  scrollWheelZoomingSensitivity: 25
-  limitMap: 0
-  limitX: 10
-  limitY: 10
-  targetFollow: {fileID: 0}
-  targetOffset: {x: 0, y: 0, z: 0}
-  useScreenEdgeInput: 1
-  screenEdgeBorder: 25
-  useKeyboardInput: 1
-  horizontalAxis: Horizontal
-  verticalAxis: Vertical
-  usePanning: 0
-  panningKey: 325
-  useKeyboardZooming: 1
-  zoomInKey: 101
-  zoomOutKey: 113
-  useScrollwheelZooming: 1
-  zoomingAxis: Mouse ScrollWheel
-  useKeyboardRotation: 1
-  rotateRightKey: 120
-  rotateLeftKey: 122
-  useMouseRotation: 0
-  mouseRotationKey: 324
 --- !u!81 &50771354
 AudioListener:
   m_ObjectHideFlags: 0
@@ -275,6 +217,64 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!114 &50771358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50771351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01cac37cab072064c866fb9998f2ae71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lastTab: 2
+  movementSettingsFoldout: 0
+  zoomingSettingsFoldout: 0
+  rotationSettingsFoldout: 0
+  heightSettingsFoldout: 0
+  mapLimitSettingsFoldout: 0
+  targetingSettingsFoldout: 0
+  inputSettingsFoldout: 0
+  useFixedUpdate: 0
+  keyboardMovementSpeed: 5
+  screenEdgeMovementSpeed: 3
+  followingSpeed: 5
+  rotationSped: 3
+  panningSpeed: 10
+  mouseRotationSpeed: 10
+  autoHeight: 1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  maxHeight: 50
+  minHeight: 15
+  heightDampening: 5
+  keyboardZoomingSensitivity: 2
+  scrollWheelZoomingSensitivity: 25
+  limitMap: 0
+  limitX: 50
+  limitY: 50
+  targetFollow: {fileID: 0}
+  targetOffset: {x: 0, y: 0, z: 0}
+  useScreenEdgeInput: 1
+  screenEdgeBorder: 25
+  useKeyboardInput: 1
+  horizontalAxis: Horizontal
+  verticalAxis: Vertical
+  usePanning: 0
+  panningKey: 325
+  useKeyboardZooming: 1
+  zoomInKey: 101
+  zoomOutKey: 113
+  useScrollwheelZooming: 1
+  zoomingAxis: Mouse ScrollWheel
+  useKeyboardRotation: 1
+  rotateRightKey: 120
+  rotateLeftKey: 122
+  useMouseRotation: 0
+  mouseRotationKey: 324
 --- !u!1 &97464389
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,7 +386,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 97464389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8908b1163e71784995eaf2af7d8220a, type: 3}
+  m_Script: {fileID: 11500000, guid: 740e5da05b9a67448a3eeca7b191d0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ConnectedText: {fileID: 1549690250}
@@ -554,10 +554,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1524441390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40375afc4e892a1469132ea35c8ab9b7, type: 3}
+  m_Script: {fileID: 11500000, guid: aaee9f873b3e2bb4290c08960ce043fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IP: 127.0.0.1
+  EntityDatabase: {fileID: 11400000, guid: c689abd2623dc084591290078765245d, type: 2}
 --- !u!114 &1524441392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -567,11 +567,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1524441390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82bb3ef0134d2f548ba53ebe3e38d0eb, type: 3}
+  m_Script: {fileID: 11500000, guid: a078e5ef41a67c74fb105b3778a087f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Count: 1
-  Prefab: {fileID: 6983145694885263932, guid: 24e2acaaa3c159748824ae994e0c01a3, type: 3}
+  Count: 0
+  Prefab: {fileID: 6983145694885263932, guid: 4e5c995f1cc5a0549b95759cb21ced7e, type: 3}
 --- !u!114 &1524441393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,10 +581,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1524441390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6fcb7be03dda3f642b1a24576215f536, type: 3}
+  m_Script: {fileID: 11500000, guid: b1daf59d89d1a6d4294c9a589eb47a4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EntityDatabase: {fileID: 11400000, guid: a0d4789ca6cc5ab42a1264102206ac3f, type: 2}
+  IP: 127.0.0.1
 --- !u!4 &1524441394
 Transform:
   m_ObjectHideFlags: 0
@@ -869,7 +869,7 @@ TerrainCollider:
   m_GameObject: {fileID: 2042152885}
   m_Material: {fileID: 0}
   m_Enabled: 1
-  m_TerrainData: {fileID: 15600000, guid: 2cba546f425aa2f4f9ecbda897aeb472, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 075f653744f456045ad465de48f0c04d, type: 2}
   m_EnableTreeColliders: 1
 --- !u!218 &2042152887
 Terrain:
@@ -880,7 +880,7 @@ Terrain:
   m_GameObject: {fileID: 2042152885}
   m_Enabled: 1
   serializedVersion: 3
-  m_TerrainData: {fileID: 15600000, guid: 2cba546f425aa2f4f9ecbda897aeb472, type: 2}
+  m_TerrainData: {fileID: 15600000, guid: 075f653744f456045ad465de48f0c04d, type: 2}
   m_TreeDistance: 5000
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
