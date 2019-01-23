@@ -18,7 +18,11 @@ namespace ECS.Systems.Navigation
             var agentPositions = _navigationService.GetAgentPositions();
             foreach (var agentPosition in agentPositions)
             {
-                _gameContext.GetEntityWithId(agentPosition.Key).ReplacePosition(agentPosition.Value);
+                var gameEntity = _gameContext.GetEntityWithId(agentPosition.Key);
+                if (agentPosition.Value != gameEntity.position.value)
+                {
+                    gameEntity.ReplacePosition(agentPosition.Value);
+                }
             }                                   
         }      
     }
