@@ -1,4 +1,5 @@
 ﻿using BEPUutilities;
+using FixMath.NET;
 
 namespace ECS.DefaultServices.Navigation
 {
@@ -15,9 +16,13 @@ namespace ECS.DefaultServices.Navigation
         }
 
         public void Update()
-        {          
-            var goal = Vector2.Normalize(Destination - Position);
-            Position += Position + goal;       
+        {                                       
+            var goal = Destination - Position;
+            if (goal.LengthSquared() > Fix64.One)
+            {
+                goal = Vector2.Normalize(goal);
+            }
+            Position += goal;       
         }
     }
 }
