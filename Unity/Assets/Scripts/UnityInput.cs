@@ -1,32 +1,18 @@
 ﻿using System.Linq;
 using FixMath.NET;
 using Lockstep.Framework.Commands; 
-using UnityEngine;    
-using UnityEngine.Experimental.Input;
+using UnityEngine;                      
 
 public class UnityInput : MonoBehaviour
-{
-    public InputMaster Controls;
+{                                    
 
     void Awake()
-    {                                                                   
-        Controls.Player.MoveUnits.performed += NavigateUnitsOnPerformed;
+    {                                                                      
     }
 
     void OnEnable()
-    {                                                             
-        Controls.Enable();
-    }      
-
-    private void NavigateUnitsOnPerformed(InputAction.CallbackContext obj)
-    {
-        var pos = GetWorldPos(Mouse.current.position.ReadValue());
-        LockstepNetwork.Instance.SendInput(CommandTag.Navigate, new NavigateCommand
-        {
-            Destination = new BEPUutilities.Vector2(pos.X, pos.Y),
-            EntityIds = Contexts.sharedInstance.game.GetEntities().Select(entity => entity.id.value).ToArray()
-        });
-    }
+    {                        
+    }    
 
     public static BEPUutilities.Vector2 GetWorldPos(Vector2 screenPos)
     {
@@ -41,10 +27,20 @@ public class UnityInput : MonoBehaviour
 
     void Update()
     {
-        if (Mouse.current.rightButton.isPressed)
+        if (Input.GetMouseButton(1))
         {   
-            var pos = GetWorldPos(Mouse.current.position.ReadValue());
+            var pos = GetWorldPos(Input.mousePosition);
             FindObjectOfType<RTSEntitySpawner>().Spawn(pos);
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            var pos = GetWorldPos(Input.mousePosition);
+            LockstepNetwork.Instance.SendInput(CommandTag.Navigate, new NavigateCommand
+            {
+                Destination = new BEPUutilities.Vector2(pos.X, pos.Y),
+                EntityIds = Contexts.sharedInstance.game.GetEntities().Select(entity => entity.id.value).ToArray()
+            });
         }
     }
 }
