@@ -6,7 +6,7 @@ A WIP implementation of the Serverbeat-Protocol described here: https://www.redd
 
 ![Overview](/Docs/Overview.svg "Overview")
 
-[![Video](http://img.youtube.com/vi/bNwlnO4BzFw/0.jpg)](https://youtu.be/49FtXbgdvHE "UnityLockstep")
+[![Video](http://img.youtube.com/vi/fDrSTzMjxbQ/0.jpg)](https://youtu.be/fDrSTzMjxbQ "UnityLockstep")
 
 ## Getting started
 
