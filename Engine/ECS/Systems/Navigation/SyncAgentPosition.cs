@@ -4,21 +4,22 @@ namespace ECS.Systems.Navigation
 {
     public class SyncAgentPosition : IExecuteSystem
     {                                                       
-        private readonly INavigationService _navigationService;   
-        private readonly IGroup<GameEntity> _navigableEntities;
+        private readonly INavigationService _navigationService;
+        private readonly GameContext _gameContext;
 
         public SyncAgentPosition(Contexts contexts, INavigationService navigationService)
         {
-            _navigationService = navigationService;   
-            _navigableEntities = contexts.game.GetGroup(GameMatcher.Navigable);
+            _navigationService = navigationService;
+            _gameContext = contexts.game;
         }
 
         public void Execute()
         {
-            foreach (var entity in _navigableEntities.GetEntities())
+            var agentPositions = _navigationService.GetAgentPositions();
+            foreach (var agentPosition in agentPositions)
             {
-                entity.ReplacePosition(_navigationService.GetAgentPosition(entity.id.value));
-            }                                    
+                _gameContext.GetEntityWithId(agentPosition.Key).ReplacePosition(agentPosition.Value);
+            }                                   
         }      
     }
 }     

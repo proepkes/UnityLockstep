@@ -4,16 +4,20 @@ namespace ECS.DefaultServices.Navigation
 {
     class Agent
     {
-        public readonly int Id;
+        public Vector2 Position;
 
-        public Vector2 Position { get; set; }
-        public Vector2 Destination { get; set; }
+        public Vector2 Destination;
 
-        public Agent(int id, Vector2 position)
-        {
-            Id = id;
+        public Agent(Vector2 position)
+        {                    
             Position = position;
             Destination = position;
+        }
+
+        public void Update()
+        {          
+            var goal = Vector2.Normalize(Destination - Position);
+            Position += Position + goal;       
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Lockstep.Framework
             return this;
         }     
 
-        public Frame ReadNextFrame()
+        public Frame GetNextFrame()
         {
             Frame nextFrame;
             lock (_frames)

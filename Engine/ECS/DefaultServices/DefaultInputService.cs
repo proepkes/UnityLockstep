@@ -4,7 +4,7 @@ namespace ECS.DefaultServices
 {                     
     public class DefaultInputService : IInputService
     {       
-        public Frame ReadNextFrame()
+        public Frame GetNextFrame()
         {
             return new Frame();
         }

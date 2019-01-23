@@ -1,30 +1,33 @@
-﻿using Entitas;
+﻿using System.Collections.Generic;
+using Entitas;
 
 namespace ECS.Systems.Input
 {
-    public class EmitInput : IExecuteSystem, ICleanupSystem
+    public class EmitInput : ReactiveSystem<InputEntity>
     {                                              
         private readonly InputContext _inputContext;    
 
-        public EmitInput(Contexts contexts)
+        public EmitInput(Contexts contexts) : base(contexts.input)
         {                                  
             _inputContext = contexts.input;    
-        }     
+        }
 
-        public void Execute()
+        protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            if (_inputContext.frame.value.Commands == null)
-                return;
+            return context.CreateCollector(InputMatcher.Frame.Added());
+        }
 
+        protected override bool Filter(InputEntity entity)
+        {
+            return entity.hasFrame && entity.frame.value.Commands != null;
+        }
+
+        protected override void Execute(List<InputEntity> entities)
+        {
             foreach (var command in _inputContext.frame.value.Commands)
             {
-                command.Execute(_inputContext);       
+                command.Execute(_inputContext);
             }
-        }
-
-        public void Cleanup()
-        {
-            _inputContext.DestroyAllEntities();
-        }
+        }    
     }
 }     

@@ -16,7 +16,7 @@ namespace ECS.Systems.Input
 
         public void Execute()
         {
-            _inputContext.SetFrame(_inputService.ReadNextFrame());
+            _inputContext.SetFrame(_inputService.GetNextFrame());
         }
 
         public void Cleanup()

@@ -8,12 +8,13 @@ namespace ECS.Systems.Navigation
 
         public NavigationTick(Contexts contexts, INavigationService navigationService)
         {
-            _navigationService = navigationService;                                                                                
+            _navigationService = navigationService;                                                                       
         }
 
         public void Execute()
-        {   
-            _navigationService.UpdateAgents();  
+        {
+            //All registered (navigable) entities have to be updated, because avoidance could move other entities aside
+            _navigationService.Tick();  
         }
     }
 }

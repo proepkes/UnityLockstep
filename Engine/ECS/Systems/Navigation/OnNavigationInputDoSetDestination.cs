@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 
-namespace ECS.Systems.Input
+namespace ECS.Systems.Navigation
 {
-    public class OnNavigationInputDoSetAgentDestination : ReactiveSystem<InputEntity>
-    {
+    public class OnNavigationInputDoSetDestination : ReactiveSystem<InputEntity>
+    {                                               
         private readonly INavigationService _navigationService;     
 
-        public OnNavigationInputDoSetAgentDestination(Contexts contexts, INavigationService navigationService) : base(contexts.input)
-        {
+        public OnNavigationInputDoSetDestination(Contexts contexts, INavigationService navigationService) : base(contexts.input)
+        {                                 
             _navigationService = navigationService;  
         }
 
@@ -22,13 +22,14 @@ namespace ECS.Systems.Input
             return entity.hasNavigationInputData;
         }
 
-        protected override void Execute(List<InputEntity> entities)
+        protected override void Execute(List<InputEntity> inputs)
         {     
-            foreach (var input in entities)
+            foreach (var input in inputs)
             {
+                var destination = input.navigationInputData.Destination;
                 foreach (var entityId in input.navigationInputData.EntityIds)
                 {
-                    _navigationService.SetAgentDestination(entityId, input.navigationInputData.Destination);
+                    _navigationService.SetAgentDestination(entityId, destination);            
                 }  
             }
         }
