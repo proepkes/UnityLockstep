@@ -1,39 +1,32 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BEPUutilities;
-using FixMath.NET;
+using System.Threading.Tasks;
+using BEPUutilities;   
 
 namespace ECS.DefaultServices.Navigation
 {                                   
     public class DefaultNavigationService: INavigationService
-    {
-        private static readonly Fix64 AgentSpeed = Fix64.One;
-
-        private readonly IList<Agent> _agents = new List<Agent>();
+    {                                  
+        private readonly Dictionary<int, Agent> _agents = new Dictionary<int, Agent>();      
 
         public void AddAgent(int id, Vector2 position)
-        {                
-            _agents.Add(new Agent(id, position));
+        {
+            _agents.Add(id, new Agent(position));
         }
 
         public void SetAgentDestination(int agentId, Vector2 newDestination)
         {
-            _agents.First(agent => agent.Id == agentId).Destination = newDestination;  
+            _agents[agentId].Destination = newDestination;
         }
 
-        public void UpdateAgents()
+        public void Tick()
         {
-            foreach (var agent in _agents)
-            {
-                var goal = Vector2.Normalize(agent.Destination - agent.Position);
-
-                agent.Position += goal * AgentSpeed;
-            }
+            Parallel.ForEach(_agents.Values, agent => agent.Update());  
         }
 
-        public Vector2 GetAgentPosition(int agentId)
+        public Dictionary<int, Vector2> GetAgentPositions()
         {
-            return _agents.First(agent => agent.Id == agentId).Position;
-        }     
+            return _agents.ToDictionary(pair => pair.Key, pair => pair.Value.Position);
+        }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 
-namespace ECS.Systems.Input
+namespace ECS.Systems.Navigation
 {
-    public class OnNavigableEntityDoAddAgent : ReactiveSystem<GameEntity>
+    public class OnNavigableDoRegisterAgent : ReactiveSystem<GameEntity>
     {
         private readonly INavigationService _navigationService;
 
-        public OnNavigableEntityDoAddAgent(Contexts contexts, INavigationService navigationService) : base(contexts.game)
+        public OnNavigableDoRegisterAgent(Contexts contexts, INavigationService navigationService) : base(contexts.game)
         {
             _navigationService = navigationService;
         }

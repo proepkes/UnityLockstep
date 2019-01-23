@@ -1,7 +1,8 @@
 ﻿using BEPUutilities;
 using Entitas;
-using Entitas.CodeGeneration.Attributes;   
- 
+using Entitas.CodeGeneration.Attributes;
+using FixMath.NET;
+
 [Game] 
 public class IdComponent : IComponent
 {
@@ -36,7 +37,12 @@ public class ControllableComponent : IComponent
 public class PositionComponent : IComponent
 {
     public Vector2 value;
-}     
+}          
+
+public class MaxSpeedComponent : IComponent
+{
+    public Fix64 value;
+}
 
 [Game]
 public sealed class HealthComponent : IComponent

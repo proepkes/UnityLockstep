@@ -1,5 +1,4 @@
-﻿using ECS.Systems.Input;
-using ECS.Systems.Navigation;
+﻿using ECS.Systems.Navigation;
 
 namespace ECS.Features
 {
@@ -7,8 +6,12 @@ namespace ECS.Features
     {
         public NavigationFeature(Contexts contexts, ServiceContainer serviceContainer)
         {
-            Add(new NavigationTick(contexts, serviceContainer.Get<INavigationService>()));
-            Add(new SyncAgentPosition(contexts, serviceContainer.Get<INavigationService>()));   
+            var navigationService = serviceContainer.Get<INavigationService>();
+
+            Add(new OnNavigableDoRegisterAgent(contexts, navigationService));
+            Add(new OnNavigationInputDoSetDestination(contexts, navigationService));     
+            Add(new NavigationTick(contexts, navigationService));
+            Add(new SyncAgentPosition(contexts, navigationService));
         }
     }
 }

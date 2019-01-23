@@ -6,17 +6,17 @@ namespace ECS.Systems.Input
     {                                              
         private readonly InputContext _inputContext;
 
-        private readonly IInputService _inputService;
+        private readonly IDataSource _dataSource;
 
-        public ReadInput(Contexts contexts, IInputService inputService)
+        public ReadInput(Contexts contexts, IDataSource dataSource)
         {                                  
             _inputContext = contexts.input;
-            _inputService = inputService;
+            _dataSource = dataSource;
         }     
 
         public void Execute()
         {
-            _inputContext.SetFrame(_inputService.ReadNextFrame());
+            _inputContext.SetFrame(_dataSource.GetNextFrame());
         }
 
         public void Cleanup()

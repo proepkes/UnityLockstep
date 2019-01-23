@@ -1,4 +1,5 @@
-﻿using BEPUutilities;
+﻿using System.Collections.Generic;
+using BEPUutilities;
 using ECS.Data;                   
 
 namespace ECS
@@ -14,9 +15,9 @@ namespace ECS
         Vector2 GetCellSize();        
     }            
 
-    public interface IInputService : IService
+    public interface IDataSource : IService
     {
-        Frame ReadNextFrame();
+        Frame GetNextFrame();
     }
 
     public interface IGameService : IService
@@ -29,10 +30,10 @@ namespace ECS
         void AddAgent(int id, Vector2 position);
 
         void SetAgentDestination(int agentId, Vector2 newDestination);
-                                                                 
-        void UpdateAgents();
 
-        Vector2 GetAgentPosition(int agentId);
+        void Tick();
+
+        Dictionary<int, Vector2> GetAgentPositions();
     }
 
     public interface IHashService : IService
