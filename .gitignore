@@ -265,3 +265,12 @@ Unity/Assembly-CSharp-Editor\.csproj
 /Unity/Entitas.properties
 /Unity/philb.userproperties
 /Unity/Assets/Integration/*.meta
+/Unity/Assets/Integration/DesperateDevs/*.meta
+/Unity/Assets/Integration/Entitas/Editor/Images/*.meta
+/Unity/Assets/Integration/Entitas/Editor/Plugins/*.meta
+/Unity/Assets/Integration/Entitas/Editor/*.meta
+/Unity/Assets/Integration/Entitas/*.meta
+/Unity/Assets/Integration/DesperateDevs/Editor/*.meta
+/Unity/Assets/Integration/DesperateDevs/Editor/Plugins/*.meta
+/Unity/Assets/Integration/DesperateDevs/Editor/Images/*.meta
+/Unity/Assets/Integration/*.mdb
