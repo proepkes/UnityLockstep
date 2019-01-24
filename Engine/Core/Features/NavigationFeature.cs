@@ -1,5 +1,4 @@
-﻿using ECS;
-using Lockstep.Core.Interfaces;
+﻿using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems.Navigation;
 
 namespace Lockstep.Core.Features

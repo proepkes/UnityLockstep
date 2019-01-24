@@ -1,5 +1,4 @@
-﻿using ECS;
-using Lockstep.Core.Features;
+﻿using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core

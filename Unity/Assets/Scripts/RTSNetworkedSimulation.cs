@@ -27,7 +27,9 @@ public class RTSNetworkedSimulation : MonoBehaviour
         _simulation =
             new NetworkedSimulation(
                 new LockstepSystems(Contexts.sharedInstance, 
-                    new FrameDataSource(), new UnityGameService(EntityDatabase), new UnityLogger()),
+                    new FrameDataSource(), 
+                    new UnityGameService(EntityDatabase), 
+                    new UnityLogger()),
                 _client);
                     
         _simulation

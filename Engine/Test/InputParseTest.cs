@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
-using BEPUutilities;
-using ECS;
+using BEPUutilities;   
 using Lockstep.Client;
 using Lockstep.Core;
 using Lockstep.Core.Data;
@@ -20,15 +19,7 @@ namespace Test
         public InputParseTest(ITestOutputHelper output)
         {
             Console.SetOut(new Converter(output));
-        }
-
-        class SpawnCommand : ICommand
-        {        
-            public void Execute(InputContext context)
-            {
-                context.CreateEntity().AddSpawnInputData(0, 0, Vector2.Zero);
-            }
-        }
+        }        
 
         [Fact]
         public void TestIdGenerator()
@@ -53,7 +44,7 @@ namespace Test
         {
             var command = new Mock<ICommand>();
 
-            new LocalSimulation(new LockstepSystems(new Contexts(), new FrameDataSource(), new DefaultGameService())).Execute(command.Object);           
+            new LocalSimulation(new LockstepSystems(new Contexts(), new FrameDataSource())).Execute(command.Object);           
 
             command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Exactly(1));
         }
