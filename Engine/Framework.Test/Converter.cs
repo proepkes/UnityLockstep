@@ -1,5 +1,6 @@
 using System.IO;
-using System.Text; 
+using System.Text;
+using Lockstep.Core.Interfaces;
 using Xunit.Abstractions;
 
 namespace Framework.Test
