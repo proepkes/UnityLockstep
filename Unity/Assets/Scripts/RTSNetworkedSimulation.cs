@@ -24,13 +24,14 @@ public class RTSNetworkedSimulation : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        _simulation = 
+        _simulation =
             new NetworkedSimulation(
                 new LockstepSystems(Contexts.sharedInstance, 
-                    new ServiceContainer()
-                        //.Register<INavigationService>(new RVONavigationService())                          
-                        .Register<IGameService>(new UnityGameService(EntityDatabase))
-                        .Register<ILogService>(new UnityLogger()), new FrameDataSource()), _client);
+                    new FrameDataSource(), 
+                    new UnityGameService(EntityDatabase), 
+                    new UnityLogger()),
+                _client);
+                    
         _simulation
             .RegisterCommand(() => new SpawnCommand())
             .RegisterCommand(() => new NavigateCommand());
@@ -49,6 +50,12 @@ public class RTSNetworkedSimulation : MonoBehaviour
         _client.Start();
         StartCoroutine(AutoConnect());
     }
+
+    private void OnDestroy()
+    {
+        _client.Stop();   
+    }
+
 
     void Update()
     {

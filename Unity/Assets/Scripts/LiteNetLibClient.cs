@@ -36,5 +36,10 @@ public class LiteNetLibClient : IClient
     public void Update()
     {    
         _client.PollEvents();
-    } 
+    }    
+
+    public void Stop()
+    {
+        _client.Stop();
+    }
 }

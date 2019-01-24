@@ -1,5 +1,4 @@
-﻿using ECS;
-using Lockstep.Core.Features;
+﻿using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core
@@ -12,11 +11,18 @@ namespace Lockstep.Core
 
         public long HashCode => _contexts.gameState.hashCode.value;
 
-        public LockstepSystems(Contexts contexts, ServiceContainer serviceContainer, IFrameDataSource dataSource)
+        public LockstepSystems(Contexts contexts,IFrameDataSource dataSource, params IService[] additionalServices)
         {
             DataSource = dataSource;
+
             _contexts = contexts;
-            contexts.game.OnEntityCreated += (context, entity) => ((GameEntity) entity).AddId(entity.creationIndex);
+            _contexts.SubscribeId();
+
+            var serviceContainer = new ServiceContainer();
+            foreach (var service in additionalServices)
+            {
+                serviceContainer.Register(service);
+            }
 
             Add(new InputFeature(contexts, serviceContainer, DataSource));
 

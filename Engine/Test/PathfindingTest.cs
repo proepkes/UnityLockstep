@@ -1,16 +1,15 @@
-﻿using System;                          
-using System.Linq;    
-using BEPUutilities;
-using ECS;
+﻿using System;
+using System.Linq;
+using BEPUutilities;     
 using Lockstep.Client;
 using Lockstep.Core;
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
-using Shouldly;       
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Framework.Test
+namespace Test
 {                                                                                 
     public class PathfindingTest
     {                  
@@ -51,7 +50,7 @@ namespace Framework.Test
         private readonly ITestOutputHelper _output;
 
         public PathfindingTest(ITestOutputHelper output)
-        {
+        {                                    
             _output = output;
             Console.SetOut(new Converter(output));
         }  
@@ -61,15 +60,10 @@ namespace Framework.Test
         public void TestSimpleNavigationService()
         {
             var contexts = new Contexts();
-            var destination = new Vector2(111, 22);
-
-            var container = new ServiceContainer()
-                .Register<IGameService>(new MakeEveryEntityNavigable())
-                .Register<ILogService>(new TestLogger(_output));
-
+            var destination = new Vector2(111, 22);          
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input 
-            var sim = new LocalSimulation(new LockstepSystems(contexts, container, new FrameDataSource()));
+            var sim = new LocalSimulation(new LockstepSystems(contexts, new FrameDataSource(), new MakeEveryEntityNavigable()));
             sim.Execute(new SpawnCommand());
 
             var e = contexts.game.GetEntities().First();
@@ -84,7 +78,7 @@ namespace Framework.Test
             }
 
             e.position.value.X.ShouldNotBe(before.X);
-            e.position.value.Y.ShouldNotBe(before.Y);
+            e.position.value.Y.ShouldNotBe(before.Y);   
         }  
     }
 }

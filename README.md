@@ -31,20 +31,20 @@ A WIP implementation of the Serverbeat-Protocol described here: https://www.redd
 
 ## References
 
-Inspired by LockstepFramework:
+Inspired by LockstepFramework, in memory of SnpM:
 <https://github.com/SnpM/LockstepFramework>
 
 Uses a fork of BEPUPhysics for deterministic physics:
-<https://github.com/sam-vdp/bepuphysics1int> 
-
-Uses LiteNetLib as Network-layer:
-<https://github.com/RevenantX/LiteNetLib>
+<https://github.com/sam-vdp/bepuphysics1int>
 
 Uses FixedMath.Net for deterministic fp-calculations:
 <https://github.com/asik/FixedMath.Net>
 
 Uses Entitas as ECS Framework:
 <https://github.com/sschmid/Entitas-CSharp>
+
+The project includes an implementation example using LiteNetLib:
+<https://github.com/RevenantX/LiteNetLib>
 
 ## Limitations
 

@@ -1,45 +1,37 @@
 ﻿using System;
 using System.Linq;
-using BEPUutilities;
-using ECS;
+using BEPUutilities;   
 using Lockstep.Client;
 using Lockstep.Core;
 using Lockstep.Core.Data;
+using Lockstep.Core.DefaultServices;
 using Lockstep.Core.Interfaces;
+using Lockstep.Core.Systems.Input;
 using Moq;
-using Shouldly;        
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Framework.Test
+namespace Test
 {    
     public class InputParseTest
     {               
         public InputParseTest(ITestOutputHelper output)
         {
             Console.SetOut(new Converter(output));
-        }
-
-        class SpawnCommand : ICommand
-        {        
-            public void Execute(InputContext context)
-            {
-                context.CreateEntity().AddSpawnInputData(0, 0, Vector2.Zero);
-            }
-        }
+        }        
 
         [Fact]
-        public void TestSpawnInputCreatesEntity()
+        public void TestIdGenerator()
         {
             var contexts = new Contexts();
-
-            var sim = new LocalSimulation(new LockstepSystems(contexts, new ServiceContainer(), new FrameDataSource()));
+            contexts.SubscribeId();
 
             var numEntities = 10;
 
             for (uint i = 0; i < numEntities; i++)
             {
-                sim.Execute(new SpawnCommand());    
+                contexts.game.CreateEntity();
             }
 
             contexts.game.count.ShouldBe(numEntities);
@@ -52,10 +44,22 @@ namespace Framework.Test
         {
             var command = new Mock<ICommand>();
 
-            new LocalSimulation(new LockstepSystems(new Contexts(), new ServiceContainer(), new FrameDataSource())).Execute(command.Object);           
+            new LocalSimulation(new LockstepSystems(new Contexts(), new FrameDataSource())).Execute(command.Object);           
 
             command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Exactly(1));
         }
 
+
+        [Fact]
+        public void TestReadInputReadsFromDataSource()
+        {
+            var source = new Mock<IFrameDataSource>();
+
+            var readInput = new ReadInput(new Contexts(), source.Object);
+
+            readInput.Execute();
+
+            source.Verify(s => s.GetNext(), Times.Exactly(1));
+        }
     }
 }
