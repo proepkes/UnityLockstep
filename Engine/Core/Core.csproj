@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContextsIdExtensions.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
@@ -108,7 +109,7 @@
     <Compile Include="Data\AgentConfig.cs" />
     <Compile Include="Data\Frame.cs" />
     <Compile Include="Data\ICommand.cs" />
-    <Compile Include="DefaultServices\DefaultEntityConfigService.cs" />
+    <Compile Include="DefaultServices\DefaultGameService.cs" />
     <Compile Include="DefaultServices\DefaultHashService.cs" />
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />

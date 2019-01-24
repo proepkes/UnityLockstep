@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq.Expressions;
+using System.Linq;
 using Lockstep.Core.DefaultServices;
 using Lockstep.Core.DefaultServices.Navigation;
 using Lockstep.Core.Interfaces;
-using Lockstep.Framework;
 
-namespace ECS
+namespace Lockstep.Core
 {
     public class ServiceContainer
     {
@@ -14,20 +13,17 @@ namespace ECS
 
         public ServiceContainer()
         {
-            _defaults.Add(typeof(IHashService).FullName, new DefaultHashService());
-            _defaults.Add(typeof(INavigationService).FullName, new DefaultNavigationService());
-            _defaults.Add(typeof(IGameService).FullName, new DefaultGameService());     
+            RegisterDefault(new DefaultHashService());
+            RegisterDefault(new DefaultGameService());
+            RegisterDefault(new DefaultNavigationService());     
         }
 
-        public ServiceContainer Register<T>(T instance) where T : class, IService
+        public void Register(IService instance)
         {
-            var key = typeof(T).FullName;
-            if (key != null)
+            foreach (var name in GetInterfaceNames(instance))
             {
-                _instances.Add(key, instance);
+                _instances.Add(name, instance);
             }
-
-            return this;
         }
 
         public T Get<T>() where T : IService
@@ -49,6 +45,22 @@ namespace ECS
             }
 
             return (T) _instances[key];
+        }     
+
+        private void RegisterDefault(IService instance)
+        {
+            foreach (var name in GetInterfaceNames(instance))
+            {
+                _defaults.Add(name, instance);
+            }
+        }
+
+        private string[] GetInterfaceNames(object instance)
+        {
+             return instance.GetType().FindInterfaces((type, criteria) =>
+                type.GetInterfaces()
+                    .Any(t => t.FullName == typeof(IService).FullName), instance)
+                    .Select(type => type.FullName).ToArray();
         }
     }
 }
