@@ -50,6 +50,12 @@ public class RTSNetworkedSimulation : MonoBehaviour
         StartCoroutine(AutoConnect());
     }
 
+    private void OnDestroy()
+    {
+        _client.Stop();   
+    }
+
+
     void Update()
     {
         _client.Update();
