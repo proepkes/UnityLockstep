@@ -1,24 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-    <Configurations>Debug;Release;DebugTwoPlayers</Configurations>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugTwoPlayers|AnyCPU'">
-    <DefineConstants>TRACE;TWO_PLAYER</DefineConstants>
-    <Optimize>false</Optimize>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="LiteNetLib">
-      <HintPath>..\Dependencies\LiteNetLib.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Network\Network.csproj" />
   </ItemGroup>
 
 </Project>

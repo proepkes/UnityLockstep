@@ -1,7 +1,8 @@
 ﻿using ECS;
 using UnityEngine;
 using Entitas;
-using Entitas.Unity;           
+using Entitas.Unity;
+using Lockstep.Core.Interfaces;
 
 public interface IViewController
 {
