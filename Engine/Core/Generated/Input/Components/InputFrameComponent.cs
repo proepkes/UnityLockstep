@@ -6,16 +6,13 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-
-using Lockstep.Core.Data;
-
 public partial class InputContext {
 
     public InputEntity frameEntity { get { return GetGroup(InputMatcher.Frame).GetSingleEntity(); } }
     public FrameComponent frame { get { return frameEntity.frame; } }
     public bool hasFrame { get { return frameEntity != null; } }
 
-    public InputEntity SetFrame(Frame newValue) {
+    public InputEntity SetFrame(Lockstep.Core.Data.Frame newValue) {
         if (hasFrame) {
             throw new Entitas.EntitasException("Could not set Frame!\n" + this + " already has an entity with FrameComponent!",
                 "You should check if the context already has a frameEntity before setting it or use context.ReplaceFrame().");
@@ -25,7 +22,7 @@ public partial class InputContext {
         return entity;
     }
 
-    public void ReplaceFrame(Frame newValue) {
+    public void ReplaceFrame(Lockstep.Core.Data.Frame newValue) {
         var entity = frameEntity;
         if (entity == null) {
             entity = SetFrame(newValue);
@@ -52,14 +49,14 @@ public partial class InputEntity {
     public FrameComponent frame { get { return (FrameComponent)GetComponent(InputComponentsLookup.Frame); } }
     public bool hasFrame { get { return HasComponent(InputComponentsLookup.Frame); } }
 
-    public void AddFrame(Frame newValue) {
+    public void AddFrame(Lockstep.Core.Data.Frame newValue) {
         var index = InputComponentsLookup.Frame;
         var component = (FrameComponent)CreateComponent(index, typeof(FrameComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceFrame(Frame newValue) {
+    public void ReplaceFrame(Lockstep.Core.Data.Frame newValue) {
         var index = InputComponentsLookup.Frame;
         var component = (FrameComponent)CreateComponent(index, typeof(FrameComponent));
         component.value = newValue;
