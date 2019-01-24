@@ -1,20 +1,18 @@
 ﻿using System;
 
-namespace Client
+namespace Lockstep.Client
 {
     public interface IClient
     {
-        event Action<byte[]> DataReceived; 
+        bool Connected { get; }
+
+        event Action<byte[]> DataReceived;  
 
         /// <summary>
-        /// Connect to the server. Connectiondetails like server-ip and port have to be handled by the implementation
-        /// </summary>
-        void Connect();
-
-        /// <summary>
-        /// Send data reliable ordered
+        /// Sends data reliable ordered
         /// </summary>
         /// <param name="data"></param>
-        void Send(byte[] data, int length);
+        /// <param name="length"></param>
+        void Send(byte[] data, int length);   
     }
 }

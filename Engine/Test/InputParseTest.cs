@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using BEPUutilities;
-using Client;
 using ECS;
 using Lockstep.Client;
 using Lockstep.Core;

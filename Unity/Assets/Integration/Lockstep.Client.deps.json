@@ -26,9 +26,9 @@
       "Core/1.0.0": {
         "dependencies": {
           "Entitas": "0.0.0.0",
-          "Entitas.CodeGeneration.Attributes": "0.0.0.0",
           "BEPUutilities": "1.5.0.0",
           "FixMath.NET": "1.0.0.0",
+          "Entitas.CodeGeneration.Attributes": "0.0.0.0",
           "DesperateDevs.Utils": "0.0.0.0"
         },
         "runtime": {
@@ -48,14 +48,6 @@
           }
         }
       },
-      "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
-        "runtime": {
-          "Entitas.CodeGeneration.Attributes.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
       "BEPUutilities.Reference/1.5.0.0": {
         "runtime": {
           "BEPUutilities.dll": {
@@ -69,6 +61,14 @@
           "FixMath.NET.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
+        "runtime": {
+          "Entitas.CodeGeneration.Attributes.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -117,17 +117,17 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
     "BEPUutilities.Reference/1.5.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
     "FixMath.NET.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

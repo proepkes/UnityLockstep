@@ -2,6 +2,8 @@
 {
     public interface ISystems
     {
+        long HashCode { get; }
+
         IFrameDataSource DataSource { get; }
 
         void Initialize();

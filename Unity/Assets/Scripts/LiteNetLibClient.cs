@@ -1,41 +1,40 @@
-﻿using System;
-using Client;
-using LiteNetLib;   
+﻿using System;    
+using LiteNetLib;
+using Lockstep.Client;
 
 public class LiteNetLibClient : IClient
 {
-
-    EventBasedNetListener listener = new EventBasedNetListener();
-    NetManager client;
-
-    public bool Connected => client.FirstPeer?.ConnectionState == ConnectionState.Connected;
-
-    public void Send(byte[] data, int length)
-    {
-        client.FirstPeer.Send(data, 0, length, DeliveryMethod.ReliableOrdered);
-    }
+    private readonly EventBasedNetListener _listener = new EventBasedNetListener();
+                                          
+    private NetManager _client;
 
     public event Action<byte[]> DataReceived;
-                                                       
+
+    public bool Connected => _client.FirstPeer?.ConnectionState == ConnectionState.Connected;       
+
     public void Start()
     {
-        listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
+        _listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
         {
             DataReceived?.Invoke(dataReader.GetRemainingBytes());
             dataReader.Recycle();
         };
 
-        client = new NetManager(listener);
-        client.Start();   
+        _client = new NetManager(_listener);
+        _client.Start();
+    }
+    public void Connect(string serverIp, int port)
+    {
+        _client.Connect(serverIp, port, "SomeConnectionKey");
+    }
+
+    public void Send(byte[] data, int length)
+    {
+        _client.FirstPeer.Send(data, 0, length, DeliveryMethod.ReliableOrdered);
     }
 
     public void Update()
     {    
-        client.PollEvents();
-    }
-
-    public void Connect(string ipAddress, int port)
-    {
-        client.Connect("localhost" /* host ip or name */, 9050 /* port */, "SomeConnectionKey" /* text key or NetDataWriter */);
-    }   
+        _client.PollEvents();
+    } 
 }

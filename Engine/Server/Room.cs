@@ -128,8 +128,7 @@ namespace Server
                 {       
                     serializer.Reset();
 
-                    _inputPacker.Pack(serializer);
-                    Console.WriteLine(serializer.Length);
+                    _inputPacker.Pack(serializer);           
                     _server.Distribute(serializer.Data, serializer.Length);   
 
                     accumulatedTime -= dt;

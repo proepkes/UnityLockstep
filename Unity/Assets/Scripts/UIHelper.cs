@@ -9,7 +9,7 @@ public class UIHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //ConnectedText.text = "Connected: " + RTSSimulator.Instance.Connected;
+        ConnectedText.text = "Connected: " + RTSNetworkedSimulation.Instance.Connected;
         AgentCountText.text = "Agents: " + Contexts.sharedInstance.game.GetEntities().Length;
     }
 }
