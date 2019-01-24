@@ -1,16 +1,16 @@
-﻿using System;                          
-using System.Linq;    
+﻿using System;
+using System.Linq;
 using BEPUutilities;
 using ECS;
 using Lockstep.Client;
 using Lockstep.Core;
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
-using Shouldly;       
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Framework.Test
+namespace Test
 {                                                                                 
     public class PathfindingTest
     {                  

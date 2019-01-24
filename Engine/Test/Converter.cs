@@ -3,7 +3,7 @@ using System.Text;
 using Lockstep.Core.Interfaces;
 using Xunit.Abstractions;
 
-namespace Framework.Test
+namespace Test
 {
     class Converter : TextWriter
     {

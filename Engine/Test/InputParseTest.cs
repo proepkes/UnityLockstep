@@ -5,13 +5,12 @@ using ECS;
 using Lockstep.Client;
 using Lockstep.Core;
 using Lockstep.Core.Data;
-using Lockstep.Core.Interfaces;
 using Moq;
-using Shouldly;        
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Framework.Test
+namespace Test
 {    
     public class InputParseTest
     {               
