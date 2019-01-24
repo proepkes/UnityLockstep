@@ -6,7 +6,10 @@ namespace Client
     {
         event Action<byte[]> DataReceived; 
 
-        void Connect(string ipAddress, int port);
+        /// <summary>
+        /// Connect to the server. Connectiondetails like server-ip and port have to be handled by the implementation
+        /// </summary>
+        void Connect();
 
         /// <summary>
         /// Send data reliable ordered

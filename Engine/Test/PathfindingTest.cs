@@ -1,7 +1,9 @@
 ﻿using System;                          
 using System.Linq;    
 using BEPUutilities;
-using ECS;            
+using ECS;
+using Lockstep.Client;
+using Lockstep.Core;
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 using Shouldly;       
@@ -58,41 +60,31 @@ namespace Framework.Test
         [Fact]
         public void TestSimpleNavigationService()
         {
-            //var contexts = new Contexts();
-            //var destination = new Vector2(111, 22);
+            var contexts = new Contexts();
+            var destination = new Vector2(111, 22);
 
-            //var container = new ServiceContainer()
-            //    .Register<IGameService>(new MakeEveryEntityNavigable())
-            //    .Register<ILogService>(new TestLogger(_output));
+            var container = new ServiceContainer()
+                .Register<IGameService>(new MakeEveryEntityNavigable())
+                .Register<ILogService>(new TestLogger(_output));
 
 
-            ////Initialize a new simulation and add a gameentity by adding a spawncommand to the input
-            //var sim = new Simulation(contexts, container)
-            //    .Init()
-            //    .AddFrame(new Frame
-            //    {
-            //        Commands = new ICommand[]
-            //        {
-            //            new SpawnCommand()
-            //        }
-            //    })
-            //    .Simulate();
+            //Initialize a new simulation and add a gameentity by adding a spawncommand to the input 
+            var sim = new LocalSimulation(new LockstepSystems(contexts, container, new FrameDataSource()));
+            sim.Execute(new SpawnCommand());
 
-            //var e = contexts.game.GetEntities().First();  
-            //var before = e.position.value;
+            var e = contexts.game.GetEntities().First();
+            var before = e.position.value;
 
-            //sim.AddFrame(new Frame
-            //{
-            //    Commands = new ICommand[] { new NavigateCommand(e.id.value, destination) } 
-            //}).Simulate();
+            sim.Execute(new NavigateCommand(e.id.value, destination));
 
-            //for (int i = 0; i < 500; i++)
-            //{
-            //    sim.AddFrame(new Frame()).Simulate();
-            //}
+            for (int i = 0; i < 500; i++)
+            {
+                sim.Systems.DataSource.Insert(new Frame());
+                sim.Systems.Tick();
+            }
 
-            //e.position.value.X.ShouldNotBe(before.X);
-            //e.position.value.Y.ShouldNotBe(before.Y);
+            e.position.value.X.ShouldNotBe(before.X);
+            e.position.value.Y.ShouldNotBe(before.Y);
         }  
     }
 }

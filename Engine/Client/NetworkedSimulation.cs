@@ -10,17 +10,19 @@ using Lockstep.Network.Utils;
 namespace Lockstep.Client
 {
     public class NetworkedSimulation
-    {                                                        
-        private readonly IClient _client;    
+    {
+        private readonly int _port;
+        private readonly string _serverIp;
+        private readonly IClient _client;
         private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
 
         public ISystems Systems { get; }   
                                                        
 
-        public NetworkedSimulation(IClient client, ISystems systems)
+        public NetworkedSimulation(ISystems systems, IClient client)
         {
-            _client = client;         
-            Systems = systems;                         
+            _client = client;
+            Systems = systems;             
         }
 
         public NetworkedSimulation RegisterCommand(Func<ISerializableCommand> commandFactory)
@@ -30,10 +32,10 @@ namespace Lockstep.Client
         }
 
 
-        public void Start(string serverIp, int port)
+        public void Start()
         {
             _client.DataReceived += ClientOnDataReceived;
-            _client.Connect(serverIp, port);  
+            _client.Connect();  
         }
 
         public void Execute(ISerializableCommand command)

@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Client\Client.csproj" />
     <ProjectReference Include="..\Core\Core.csproj" />
   </ItemGroup>
 
@@ -27,6 +28,9 @@
     </Reference>
     <Reference Include="Entitas">
       <HintPath>..\Dependencies\Entitas.dll</HintPath>
+    </Reference>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
     </Reference>
   </ItemGroup>
 
