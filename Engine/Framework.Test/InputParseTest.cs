@@ -31,7 +31,7 @@ namespace Framework.Test
             var contexts = new Contexts();
 
             new Simulation(contexts, new ServiceContainer())
-                .Init(0)
+                .Init()
                 .AddFrame(new Frame { Commands = new ICommand[] { new SpawnCommand() } })
                 .Simulate();
 
@@ -44,7 +44,7 @@ namespace Framework.Test
             var command = new Mock<ICommand>();     
 
             var sim = new Simulation(new Contexts(), new ServiceContainer());
-            sim.Init(0);
+            sim.Init();
                                   
             sim.AddFrame(new Frame { Commands = new[] { command.Object } });
             sim.Simulate(); 

@@ -13,8 +13,7 @@ namespace ECS
         {
             _defaults.Add(typeof(IHashService).FullName, new DefaultHashService());
             _defaults.Add(typeof(INavigationService).FullName, new DefaultNavigationService());
-            _defaults.Add(typeof(IGameService).FullName, new DefaultGameService());
-            _defaults.Add(typeof(IDataSource).FullName, new DefaultDataSource());
+            _defaults.Add(typeof(IGameService).FullName, new DefaultGameService());        
         }
 
         public ServiceContainer Register<T>(T instance) where T : class, IService

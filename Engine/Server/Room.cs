@@ -87,7 +87,7 @@ namespace Server
                     case MessageTag.Input:
                         _inputPacker?.AddInput(reader.GetRemainingBytes());
                         break;
-                    case MessageTag.Checksum:
+                    case MessageTag.HashCode:
                         _deserializer.SetSource(reader.GetRemainingBytes());
 
                         var pkt = new HashCode();

@@ -6,9 +6,9 @@ namespace ECS.Systems.Input
     {                                              
         private readonly InputContext _inputContext;
 
-        private readonly IDataSource _dataSource;
+        private readonly IFrameDataSource _dataSource;
 
-        public ReadInput(Contexts contexts, IDataSource dataSource)
+        public ReadInput(Contexts contexts, IFrameDataSource dataSource)
         {                                  
             _inputContext = contexts.input;
             _dataSource = dataSource;
@@ -16,7 +16,7 @@ namespace ECS.Systems.Input
 
         public void Execute()
         {
-            _inputContext.SetFrame(_dataSource.GetNextFrame());
+            _inputContext.SetFrame(_dataSource.GetNext());
         }
 
         public void Cleanup()

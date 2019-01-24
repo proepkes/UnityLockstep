@@ -110,9 +110,6 @@
     <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultServices\DefaultInputService.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="DefaultServices\DefaultEntityConfigService.cs" />
     <Compile Include="Features\InputFeature.cs" />
   </ItemGroup>

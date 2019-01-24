@@ -68,7 +68,7 @@ namespace Framework.Test
 
             //Initialize a new simulation and add a gameentity by adding a spawncommand to the input
             var sim = new Simulation(contexts, container)
-                .Init(0)
+                .Init()
                 .AddFrame(new Frame
                 {
                     Commands = new ICommand[]

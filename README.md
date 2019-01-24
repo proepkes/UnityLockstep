@@ -43,6 +43,9 @@ Uses LiteNetLib as Network-layer:
 Uses FixedMath.Net for deterministic fp-calculations:
 <https://github.com/asik/FixedMath.Net>
 
+Uses Entitas as ECS Framework:
+<https://github.com/sschmid/Entitas-CSharp>
+
 ## Limitations
 
 - Physics values are limited to 1000 so keep your world in these limitations or shift the world when your values become too large

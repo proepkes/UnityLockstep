@@ -1,84 +1,45 @@
-﻿using System.Collections.Generic; 
-using ECS;
-using ECS.Data;
-using FixMath.NET;     
+﻿using ECS;
+using ECS.Data;                                      
 
 namespace Lockstep.Framework
 {
-    public class Simulation : IDataSource
-    {                                          
-        private readonly LockstepSystems _systems;   
+    public class Simulation
+    {
+        private readonly LockstepSystems _systems;
+                                                  
+        private readonly IFrameDataSource _dataSource;                   
 
-        public int FrameDelay { get; set; }
-
-        public uint FrameCounter { get; private set; }
-
-        public long HashCode => _systems.HashCode;
-
-
-        private uint _lastFramePointer;
-
-        private Fix64Random _random;                  
-
-        private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>();
-             
-        public bool CanSimulate
-        {
-            get
-            {
-                lock (_frames)
-                {
-                    return _lastFramePointer - FrameCounter - FrameDelay > 0;
-                }
-            }
-        }
+        public long HashCode => _systems.HashCode;     
 
         public Simulation(Contexts contexts, ServiceContainer serviceContainer)
         {
-            serviceContainer.Register<IDataSource>(this);
+            _dataSource = serviceContainer.Get<IFrameDataSource>();
+            if (_dataSource == null)
+            {
+                _dataSource = new FrameDataSource();
+                serviceContainer.Register(_dataSource);
+            }             
 
             _systems = new LockstepSystems(contexts, serviceContainer);
         }
-          
+              
 
-        public Simulation Init(int seed)
-        {  
-            _random = new Fix64Random(seed);    
-            
-            _systems.Initialize();                      
+        public Simulation Init()
+        {                                   
+            _systems.Initialize();
             return this;
         }
-
 
         public Simulation AddFrame(Frame frame)
         {
-            lock (_frames)
-            {      
-                _frames[_lastFramePointer++] = frame;
-            }
+            _dataSource.Insert(frame);
 
             return this;
-        }       
-
-        public Fix64 NextRandom()
-        {
-            return _random.Next();
-        }   
-
-        public Simulation Simulate()
-        {         
-            _systems.Simulate(); 
-            return this;
-        }     
-
-        public Frame GetNextFrame()
-        {
-            Frame nextFrame;
-            lock (_frames)
-            {
-                nextFrame = _frames[FrameCounter++];
-            }
-            return nextFrame;
         }
+        public Simulation Simulate()
+        {
+            _systems.Simulate();
+            return this;
+        }        
     }
 }

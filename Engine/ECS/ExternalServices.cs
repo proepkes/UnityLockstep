@@ -8,16 +8,25 @@ namespace ECS
     {
 
     }
-                    
+    public interface IDataSource<T> : IService
+    {      
+        uint Count { get; }
+
+        uint ItemIndex { get; }
+
+        void Insert(T item);
+
+        T GetNext();
+    }
+
     public interface IGridService : IService
     {
         Vector2 GetWorldSize();
         Vector2 GetCellSize();        
     }            
 
-    public interface IDataSource : IService
-    {
-        Frame GetNextFrame();
+    public interface IFrameDataSource : IDataSource<Frame>
+    {                           
     }
 
     public interface IGameService : IService

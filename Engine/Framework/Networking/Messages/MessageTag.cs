@@ -5,6 +5,6 @@
         StartSimulation,
         Frame,
         Input,
-        Checksum,
+        HashCode,
     }
 }
