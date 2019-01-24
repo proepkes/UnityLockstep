@@ -1,17 +1,7 @@
-﻿using ECS;
-using UnityEngine;
+﻿using UnityEngine;
 using Entitas;
 using Entitas.Unity;
-using Lockstep.Core.Interfaces;
-
-public interface IViewController
-{
-    Vector2 Position { get; set; }
-    Vector2 Scale { get; set; }
-    bool Active { get; set; }
-    void InitializeView(Contexts contexts, IEntity Entity);
-    void DestroyView();
-}
+using Lockstep.Core.Interfaces;          
 
 public interface IEventListener
 {
