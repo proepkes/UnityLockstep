@@ -1,6 +1,7 @@
 ﻿using Entitas;
+using Lockstep.Core.Interfaces;
 
-namespace ECS.Systems.Navigation
+namespace Lockstep.Core.Systems.Navigation
 {
     public class SyncAgentPosition : IExecuteSystem
     {                                                       

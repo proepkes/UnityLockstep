@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Entitas;
 
-namespace ECS.Systems.Input
+namespace Lockstep.Core.Systems.Input
 {
     public class EmitInput : ReactiveSystem<InputEntity>
     {                                              

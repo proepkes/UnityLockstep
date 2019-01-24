@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Entitas;
+using Lockstep.Core.Interfaces;
 
-namespace ECS.Systems.Input
+namespace Lockstep.Core.Systems.Input
 {
     public class OnSpawnInputDoLoadEntityIntoGame : ReactiveSystem<InputEntity>
     {

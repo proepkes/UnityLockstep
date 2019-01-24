@@ -1,6 +1,8 @@
-﻿using ECS.Systems.Navigation;
+﻿using ECS;
+using Lockstep.Core.Interfaces;
+using Lockstep.Core.Systems.Navigation;
 
-namespace ECS.Features
+namespace Lockstep.Core.Features
 {
     public sealed class NavigationFeature : Feature
     {

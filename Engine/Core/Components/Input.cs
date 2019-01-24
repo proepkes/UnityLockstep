@@ -1,7 +1,7 @@
 ﻿using BEPUutilities;
-using ECS.Data;
 using Entitas;
-using Entitas.CodeGeneration.Attributes;    
+using Entitas.CodeGeneration.Attributes;
+using Lockstep.Core.Data;
 
 [Input, Unique]
 public class FrameComponent : IComponent

@@ -1,7 +1,7 @@
 ﻿using BEPUutilities;
 using FixMath.NET;
 
-namespace ECS.DefaultServices.Navigation
+namespace Lockstep.Core.DefaultServices.Navigation
 {
     class Agent
     {

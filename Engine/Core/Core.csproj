@@ -66,7 +66,7 @@
     <Compile Include="DefaultServices\DefaultHashService.cs" />
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
-    <Compile Include="ExternalServices.cs" />
+    <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />
     <Compile Include="Features\NavigationFeature.cs" />
@@ -113,6 +113,15 @@
     <Compile Include="Generated\Input\InputContext.cs" />
     <Compile Include="Generated\Input\InputEntity.cs" />
     <Compile Include="Generated\Input\InputMatcher.cs" />
+    <Compile Include="Interfaces\IDataSource.cs" />
+    <Compile Include="Interfaces\IFrameDataSource.cs" />
+    <Compile Include="Interfaces\IGameService.cs" />
+    <Compile Include="Interfaces\IGridService.cs" />
+    <Compile Include="Interfaces\IHashService.cs" />
+    <Compile Include="Interfaces\ILogService.cs" />
+    <Compile Include="Interfaces\INavigationService.cs" />
+    <Compile Include="Interfaces\ISystems.cs" />
+    <Compile Include="LockstepSystems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
@@ -123,6 +132,7 @@
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
     <Compile Include="Systems\Navigation\OnNavigationInputDoSetDestination.cs" />
     <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

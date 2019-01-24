@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
-using ECS.DefaultServices;
-using ECS.DefaultServices.Navigation;         
+using System.Linq.Expressions;
+using Lockstep.Core.DefaultServices;
+using Lockstep.Core.DefaultServices.Navigation;
+using Lockstep.Core.Interfaces;
+using Lockstep.Framework;
 
 namespace ECS
 {
@@ -13,7 +16,7 @@ namespace ECS
         {
             _defaults.Add(typeof(IHashService).FullName, new DefaultHashService());
             _defaults.Add(typeof(INavigationService).FullName, new DefaultNavigationService());
-            _defaults.Add(typeof(IGameService).FullName, new DefaultGameService());        
+            _defaults.Add(typeof(IGameService).FullName, new DefaultGameService());     
         }
 
         public ServiceContainer Register<T>(T instance) where T : class, IService

@@ -1,4 +1,4 @@
-﻿using Lockstep.Framework.Commands;
+﻿using Lockstep.Commands;             
 using UnityEngine;
 using Vector2 = BEPUutilities.Vector2;
 
@@ -18,8 +18,8 @@ public class RTSEntitySpawner : MonoBehaviour
     public void Spawn(Vector2 position)
     {                        
         for (int j = 0; j < Count; j++)
-        {                                       
-            LockstepNetwork.Instance.SendInput(CommandTag.Spawn, new SpawnCommand
+        {
+            RTSSimulator.Instance.Simulation.Execute(new SpawnCommand
             {
                 EntityConfigId = RTSSimulator.Instance.EntityDatabase.Entities.IndexOf(Prefab),
                 Position = position

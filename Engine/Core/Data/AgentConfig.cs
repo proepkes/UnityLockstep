@@ -1,6 +1,6 @@
 ﻿using FixMath.NET;
 
-namespace ECS.Data
+namespace Lockstep.Core.Data
 {
     public class AgentConfig
     {

@@ -20,10 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Framework\Framework.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Reference Include="BEPUutilities">
       <HintPath>..\Dependencies\BEPUutilities.dll</HintPath>
     </Reference>

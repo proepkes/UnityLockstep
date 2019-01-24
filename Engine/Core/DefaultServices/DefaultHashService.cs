@@ -1,4 +1,6 @@
-﻿namespace ECS.DefaultServices
+﻿using Lockstep.Core.Interfaces;
+
+namespace Lockstep.Core.DefaultServices
 {
     class DefaultHashService : IHashService
     {

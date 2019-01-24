@@ -1,11 +1,14 @@
-﻿using BEPUutilities;
-using ECS.Data;
-using Lockstep.Framework.Networking.Serialization;
+﻿using BEPUutilities;    
+using LiteNetLib.Utils;
+using Lockstep.Client;
+using Lockstep.Network.Utils;
 
-namespace Lockstep.Framework.Commands
+namespace Lockstep.Commands
 {
-    public class SpawnCommand  : ICommand, ISerializable
-    {                                                          
+    public class SpawnCommand  : ISerializableCommand
+    {
+        public ushort Tag => 2;
+
         public int EntityConfigId;
 
         public Vector2 Position;        
@@ -14,20 +17,21 @@ namespace Lockstep.Framework.Commands
         {        
             var e = context.CreateEntity();    
             e.AddSpawnInputData(0, EntityConfigId, Position);   
-        }
+        }  
 
-        public void Serialize(ISerializer writer)
+        public void Serialize(Serializer writer)
         {
-            writer.Put(EntityConfigId);   
+            writer.Put(EntityConfigId);
             writer.Put((long)Position.X);
             writer.Put((long)Position.Y);
         }
 
-        public void Deserialize(IDeserializer reader)
+        public void Deserialize(Deserializer reader)
         {
-            EntityConfigId = reader.GetInt();         
+            EntityConfigId = reader.GetInt();
             Position.X = reader.GetLong();
             Position.Y = reader.GetLong();
-        }     
+        }
+
     }
 }

@@ -1,6 +1,8 @@
-﻿using ECS.Systems;
+﻿using ECS;
+using Lockstep.Core.Interfaces;
+using Lockstep.Core.Systems;
 
-namespace ECS.Features
+namespace Lockstep.Core.Features
 {
     public sealed class HashCodeFeature : Feature
     {

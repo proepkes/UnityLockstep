@@ -1,6 +1,7 @@
 ﻿using Entitas;
+using Lockstep.Core.Interfaces;
 
-namespace ECS.Systems
+namespace Lockstep.Core.Systems
 {
     public class CalculateHashCode : IInitializeSystem, IExecuteSystem
     {

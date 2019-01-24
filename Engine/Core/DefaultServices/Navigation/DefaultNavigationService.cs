@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BEPUutilities;   
+using BEPUutilities;
+using Lockstep.Core.Interfaces;
 
-namespace ECS.DefaultServices.Navigation
+namespace Lockstep.Core.DefaultServices.Navigation
 {                                   
     public class DefaultNavigationService: INavigationService
     {                                  

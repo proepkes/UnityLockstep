@@ -1,4 +1,4 @@
-﻿namespace Lockstep.Framework.Networking.Messages
+﻿namespace Lockstep.Network
 {
     public enum MessageTag : byte
     {

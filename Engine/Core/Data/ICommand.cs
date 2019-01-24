@@ -1,4 +1,4 @@
-﻿namespace ECS.Data
+﻿namespace Lockstep.Core.Data
 {
     public interface ICommand
     {             
