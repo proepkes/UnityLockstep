@@ -1,19 +1,10 @@
 ﻿using System.Linq;
 using FixMath.NET;
-using Lockstep.Framework.Commands; 
+using Lockstep.Commands;
 using UnityEngine;                      
 
 public class UnityInput : MonoBehaviour
-{                                    
-
-    void Awake()
-    {                                                                      
-    }
-
-    void OnEnable()
-    {                        
-    }    
-
+{                              
     public static BEPUutilities.Vector2 GetWorldPos(Vector2 screenPos)
     {
         var ray = Camera.main.ScreenPointToRay(screenPos);
@@ -36,7 +27,7 @@ public class UnityInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             var pos = GetWorldPos(Input.mousePosition);
-            LockstepNetwork.Instance.SendInput(CommandTag.Navigate, new NavigateCommand
+            RTSNetworkedSimulation.Instance.Execute(new NavigateCommand
             {
                 Destination = new BEPUutilities.Vector2(pos.X, pos.Y),
                 EntityIds = Contexts.sharedInstance.game.GetEntities().Select(entity => entity.id.value).ToArray()

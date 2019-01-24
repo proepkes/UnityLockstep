@@ -1,33 +1,37 @@
-﻿using BEPUutilities;
-using ECS.Data;
-using Lockstep.Framework.Networking.Serialization;
+﻿using BEPUutilities;   
+using LiteNetLib.Utils;
+using Lockstep.Client;
+using Lockstep.Network.Utils;
 
-namespace Lockstep.Framework.Commands
+namespace Lockstep.Commands
 {
-    public class NavigateCommand : ICommand, ISerializable
+    public class NavigateCommand : ISerializableCommand
     {
+        public ushort Tag => 1;
+
         public int[] EntityIds;
 
-        public Vector2 Destination;
-
-        public void Serialize(ISerializer writer)
-        {
-            writer.PutArray(EntityIds);
-            writer.Put((long)Destination.X);
-            writer.Put((long)Destination.Y);
-        }
-
-        public void Deserialize(IDeserializer reader)
-        {
-            EntityIds = reader.GetIntArray();
-            Destination.X = reader.GetLong();
-            Destination.Y = reader.GetLong();
-        }
+        public Vector2 Destination;    
 
         public void Execute(InputContext context)
         {
             var e = context.CreateEntity();
             e.AddNavigationInputData(EntityIds, Destination);                              
         }
+
+        public void Serialize(Serializer writer)
+        {
+            writer.PutArray(EntityIds);
+            writer.Put((long)Destination.X);
+            writer.Put((long)Destination.Y);
+        }
+
+        public void Deserialize(Deserializer reader)
+        {
+            EntityIds = reader.GetIntArray();
+            Destination.X = reader.GetLong();
+            Destination.Y = reader.GetLong();
+        }
+
     }
 }

@@ -1,34 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;   
-using LiteNetLib;                       
-using Lockstep.Framework.Networking.Messages;
-using Lockstep.Framework.Networking.Serialization;
-using Server.LiteNetLib;
-using HashCode = Lockstep.Framework.Networking.Messages.HashCode;
+using System.Threading;
+using LiteNetLib.Utils;
+using Lockstep.Network;
+using Lockstep.Network.Messages;
+using Lockstep.Network.Utils;
 
 namespace Server
 {
     public class Room
     {
-        public bool Running { get; private set; }    
-
         private const int TargetFps = 20;
-        private const int ServerPort = 9050;       
-        private const string ClientKey = "SomeConnectionKey";
 
+        private byte _nextPlayerId;
+        private readonly int _size;
 
-        private InputPacker _inputPacker;
+        private InputPacker _inputPacker; 
+        private readonly IServer _server;
 
-        private readonly NetManager _server;
-        private readonly EventBasedNetListener _listener;
-
-
-        private readonly ISerializer _serializer = new LiteNetLibSerializer();
-        private readonly IDeserializer _deserializer = new LiteNetLibDeserializer();
+        public bool Running { get; private set; } 
 
         /// <summary>
-        /// Mapping: LiteNetLib peerId -> playerId
+        /// Mapping: clientId -> playerId
         /// </summary>
         private readonly Dictionary<int, byte> _playerIds = new Dictionary<int, byte>();
 
@@ -37,100 +30,74 @@ namespace Server
         /// </summary>
         private readonly Dictionary<ulong, long> _hashCodes = new Dictionary<ulong, long>();
 
-        public Room()
+        public Room(IServer server, int size)
         {
-            _listener = new EventBasedNetListener();
-            _server = new NetManager(_listener);
+            _server = server;
+            _size = size;
+        }    
+        public void Open(int port)
+        {
+            _server.ClientConnected += OnClientConnected;
+            _server.ClientDisconnected += OnClientDisconnected;
+            _server.DataReceived += OnDataReceived;
 
-        }            
+            _server.Run(port);
 
-        public void Distribute(byte[] data)
-        {                                        
-            foreach (var peer in _server.ConnectedPeerList)
-            {                
-                peer.Send(data, 0, data.Length, DeliveryMethod.ReliableOrdered);
+            Console.WriteLine("Server started. Waiting for " + _size + " players...");
+        }
+
+        private void OnClientConnected(int clientId)
+        {
+            _playerIds.Add(clientId, _nextPlayerId++);
+
+            if (_playerIds.Count == _size)
+            {
+                Console.WriteLine("Room is full, starting new simulation...");
+                new Thread(Loop) { IsBackground = true }.Start();
             }
-        }
-
-        public void Open(int roomSize)
-        {                 
-            _listener.ConnectionRequestEvent += request =>
+            else
             {
-                if (_server.PeersCount < roomSize)
-                {
-                    request.AcceptIfKey(ClientKey);
-                }
-                else
-                {
-                    request.Reject();
-                }
-            };
+                Console.WriteLine(_playerIds.Count + " / " + _size + " players have connected.");
+            }
+        }   
 
-            _listener.PeerConnectedEvent += peer =>
-            {         
-                if (_server.PeersCount == roomSize)
-                {
-                    Console.WriteLine("Room is full, starting new simulation...");
-                    new Thread(Loop) { IsBackground = true }.Start(); 
-                }
-                else
-                {
-                    Console.WriteLine(_server.PeersCount + " / " + roomSize +" players have connected.");
-                }
-            };
-
-            _listener.NetworkReceiveEvent += (peer, reader, method) =>
-            {
-                var messageTag = (MessageTag)reader.GetByte();
-                switch (messageTag)
-                {
-                    case MessageTag.Input:
-                        _inputPacker?.AddInput(reader.GetRemainingBytes());
-                        break;
-                    case MessageTag.Checksum:
-                        _deserializer.SetSource(reader.GetRemainingBytes());
-
-                        var pkt = new HashCode();
-                        pkt.Deserialize(_deserializer);
-                        if (!_hashCodes.ContainsKey(pkt.FrameNumber))
-                        {
-                            _hashCodes[pkt.FrameNumber] = pkt.Value;
-                        }
-                        else
-                        {
-                            Console.WriteLine((_hashCodes[pkt.FrameNumber] == pkt.Value ? "HashCode valid" : "Desync") +": " + pkt.Value); 
-                        }
-                        break;
-                }
-            };
-
-            _listener.PeerDisconnectedEvent += (peer, info) =>
-            {
-                if (_server.ConnectedPeerList.Count == 0)
-                {
-                    Console.WriteLine("All players left, stopping current simulation...");
-                    Running = false;
-                }
-                else
-                { 
-                    Console.WriteLine(_server.PeersCount + " players remaining.");
-                }
-            };
-
-            _server.Start(ServerPort);
-
-            Console.WriteLine("Server started. Waiting for " + roomSize + " players...");
-        }
-
-        public void Update()
-        {      
-            _server.PollEvents();
-        }
-
-        public void Close()
+        private void OnDataReceived(int clientId, byte[] data)
         {
-            _server.Stop();
-        }                 
+            var reader = new Deserializer(data);
+            var messageTag = (MessageTag)reader.GetByte();
+            switch (messageTag)
+            {
+                case MessageTag.Input:
+                    _inputPacker?.AddInput(reader.GetRemainingBytes());
+                    break;
+                case MessageTag.HashCode:                                 
+                    var pkt = new HashCode();
+                    pkt.Deserialize(reader);
+                    if (!_hashCodes.ContainsKey(pkt.FrameNumber))
+                    {
+                        _hashCodes[pkt.FrameNumber] = pkt.Value;
+                    }
+                    else
+                    {
+                        Console.WriteLine((_hashCodes[pkt.FrameNumber] == pkt.Value ? "HashCode valid" : "Desync") + ": " + pkt.Value);
+                    }
+                    break;
+            }      
+        }
+
+        private void OnClientDisconnected(int clientId)
+        {
+            _playerIds.Remove(clientId);
+            if (_playerIds.Count == 0)
+            {
+                Console.WriteLine("All players left, stopping current simulation...");
+                Running = false;
+            }
+            else
+            {
+                Console.WriteLine(_playerIds.Count + " players remaining.");
+            }
+        }              
 
         private void Loop()
         {    
@@ -140,12 +107,12 @@ namespace Server
             var accumulatedTime = 0.0;
 
             _hashCodes.Clear();
-            _serializer.Reset();
+            var serializer = new Serializer();
             _inputPacker = new InputPacker();
 
             Running = true; 
 
-            StartSimulationOnConnectedPeers(_serializer);
+            StartSimulationOnConnectedPeers(serializer);
 
             timer.Start();
 
@@ -159,11 +126,10 @@ namespace Server
 
                 while (accumulatedTime >= dt)
                 {       
-                    _serializer.Reset();
+                    serializer.Reset();
 
-                    _inputPacker.Pack(_serializer);
-
-                    Distribute(_serializer.Data);   
+                    _inputPacker.Pack(serializer);           
+                    _server.Distribute(serializer.Data, serializer.Length);   
 
                     accumulatedTime -= dt;
                 }
@@ -174,27 +140,25 @@ namespace Server
             Console.WriteLine("Simulation stopped");
         }
 
-        private void StartSimulationOnConnectedPeers(ISerializer writer)
-        {                                     
-            byte playerId = 0;
-
+        private void StartSimulationOnConnectedPeers(Serializer writer)
+        {                        
             //Create a new seed and send it with a start-message to all clients
             //The message also contains the respective player-id and the servers' frame rate 
             var seed = new Random().Next(int.MinValue, int.MaxValue);
-            foreach (var peer in _server.ConnectedPeerList)
+
+            foreach (var player in _playerIds)
             {
-                _playerIds[peer.Id] = playerId++;
-                                    
-                writer.Put((byte) MessageTag.StartSimulation);
+                writer.Reset();
+                writer.Put((byte)MessageTag.StartSimulation);
                 new Init
                 {
                     Seed = seed,
                     TargetFPS = TargetFps,
-                    PlayerID = _playerIds[peer.Id]
+                    PlayerID = player.Value
                 }.Serialize(writer);
 
-                peer.Send(writer.Data, 0, writer.Length, DeliveryMethod.ReliableOrdered);
-            }
+                _server.Send(player.Key, writer.Data, writer.Length);
+            }   
         }
     }
 }
