@@ -1,42 +1,50 @@
-﻿using System.Collections;
-using ECS;
+﻿using System.Collections;   
 using Lockstep.Client;
+using Lockstep.Client.Implementations;
+using Lockstep.Client.Interfaces;
 using Lockstep.Commands;
-using Lockstep.Core;        
-using Lockstep.Core.Interfaces;       
+using Lockstep.Core;
+using Lockstep.Network;
+using Lockstep.Network.Messages;
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
 {
     public static RTSNetworkedSimulation Instance;
                                         
-    private NetworkedSimulation _simulation;
+    private Simulation _simulation;
     private readonly LiteNetLibClient _client = new LiteNetLibClient(); 
                                            
     public RTSEntityDatabase EntityDatabase;
-    private bool _simulationStarted;
 
     public bool Connected => _client.Connected;
 
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
 
+    private bool _simulationStarted;
+    private LockstepSystems _systems;
+    private NetworkedDataSource _dataSource;
+
     private void Awake()
     {
         Instance = this;
-        _simulation =
-            new NetworkedSimulation(
-                new LockstepSystems(Contexts.sharedInstance, 
-                    new FrameDataSource(), 
-                    new UnityGameService(EntityDatabase), 
-                    new UnityLogger()),
-                _client);
-                    
-        _simulation
+        _dataSource = new NetworkedDataSource(_client)
             .RegisterCommand(() => new SpawnCommand())
             .RegisterCommand(() => new NavigateCommand());
 
+        _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase),
+            new UnityLogger());
+
+        _simulation =
+            new Simulation(_systems, _dataSource);      
+            
+
         _simulation.Started += (sender, args) => _simulationStarted = true;
+        _simulation.Ticked += (id, frame) =>
+        {
+            _dataSource.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = Contexts.sharedInstance.gameState.hashCode.value});
+        };
     }
 
 

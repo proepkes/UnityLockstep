@@ -1,20 +1,21 @@
-﻿using Lockstep.Core.Features;
+﻿using Lockstep.Core.Data;
+using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core
 {
     public sealed class LockstepSystems : Entitas.Systems, ISystems
     {
-        private readonly Contexts _contexts; 
-        
-        public IFrameDataSource DataSource { get; }
+        private readonly Contexts _contexts;      
 
         public long HashCode => _contexts.gameState.hashCode.value;
-
-        public LockstepSystems(Contexts contexts,IFrameDataSource dataSource, params IService[] additionalServices)
+        public void SetFrame(Frame frame)
         {
-            DataSource = dataSource;
+            _contexts.input.ReplaceFrame(frame);
+        }
 
+        public LockstepSystems(Contexts contexts, params IService[] additionalServices)
+        {                         
             _contexts = contexts;
             _contexts.SubscribeId();
 
@@ -24,7 +25,7 @@ namespace Lockstep.Core
                 serviceContainer.Register(service);
             }
 
-            Add(new InputFeature(contexts, serviceContainer, DataSource));
+            Add(new InputFeature(contexts, serviceContainer));
 
             Add(new NavigationFeature(contexts, serviceContainer));
 

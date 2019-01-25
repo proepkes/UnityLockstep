@@ -1,6 +1,5 @@
-﻿using BEPUutilities;   
-using LiteNetLib.Utils;
-using Lockstep.Client;
+﻿using BEPUutilities;     
+using Lockstep.Client.Interfaces;
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Commands

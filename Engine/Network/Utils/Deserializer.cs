@@ -1,9 +1,7 @@
 using System;
-using System.Net;
 using System.Text;
-using Lockstep.Network.Utils;
 
-namespace LiteNetLib.Utils
+namespace Lockstep.Network.Utils
 {
     public class Deserializer
     {

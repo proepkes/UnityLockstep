@@ -117,8 +117,6 @@
     <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />
     <Compile Include="Features\NavigationFeature.cs" />
-    <Compile Include="Interfaces\IDataSource.cs" />
-    <Compile Include="Interfaces\IFrameDataSource.cs" />
     <Compile Include="Interfaces\IGameService.cs" />
     <Compile Include="Interfaces\IGridService.cs" />
     <Compile Include="Interfaces\IHashService.cs" />
@@ -131,7 +129,6 @@
     <Compile Include="Systems\CalculateHashCode.cs" />
     <Compile Include="Systems\Input\EmitInput.cs" />
     <Compile Include="Systems\Input\OnSpawnInputDoLoadEntityIntoGame.cs" />
-    <Compile Include="Systems\Input\ReadInput.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
     <Compile Include="Systems\Navigation\OnNavigationInputDoSetDestination.cs" />

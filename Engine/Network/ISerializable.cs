@@ -1,5 +1,4 @@
-﻿using LiteNetLib.Utils;
-using Lockstep.Network.Utils;
+﻿using Lockstep.Network.Utils;
 
 namespace Lockstep.Network
 {

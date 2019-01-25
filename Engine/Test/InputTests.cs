@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
-using BEPUutilities;   
+using System.Linq; 
 using Lockstep.Client;
+using Lockstep.Client.Implementations;
 using Lockstep.Core;
-using Lockstep.Core.Data;
-using Lockstep.Core.DefaultServices;
-using Lockstep.Core.Interfaces;
-using Lockstep.Core.Systems.Input;
+using Lockstep.Core.Data;             
 using Moq;
 using Shouldly;
 using Xunit;
@@ -22,7 +19,7 @@ namespace Test
         }        
 
         [Fact]
-        public void TestIdGenerator()
+        public void TestGameEntityHasUniqueId()
         {
             var contexts = new Contexts();
             contexts.SubscribeId();
@@ -44,22 +41,10 @@ namespace Test
         {
             var command = new Mock<ICommand>();
 
-            new LocalSimulation(new LockstepSystems(new Contexts(), new FrameDataSource())).Execute(command.Object);           
+            new Simulation(new LockstepSystems(new Contexts()), new LocalDataSource()).Execute(command.Object);           
 
-            command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Exactly(1));
+            command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Once);
         }
-
-
-        [Fact]
-        public void TestReadInputReadsFromDataSource()
-        {
-            var source = new Mock<IFrameDataSource>();
-
-            var readInput = new ReadInput(new Contexts(), source.Object);
-
-            readInput.Execute();
-
-            source.Verify(s => s.GetNext(), Times.Exactly(1));
-        }
+               
     }
 }
