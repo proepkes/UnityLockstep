@@ -11,7 +11,9 @@ namespace Lockstep.Core.Features
             //TODO: Add InputValidationSystem by matching input with playerId  
             Add(new EmitInput(contexts)); 
 
-            Add(new OnSpawnInputDoLoadEntityIntoGame(contexts, serviceContainer.Get<IGameService>()));      
+            Add(new OnSpawnInputDoLoadEntityIntoGame(contexts, serviceContainer.Get<IGameService>()));
+
+            Add(new CleanupInput(contexts));
         }
     }
 }

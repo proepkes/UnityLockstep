@@ -7,7 +7,7 @@ using Lockstep.Network;
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Client.Implementations
-{
+{                       
     public class NetworkedDataReceiver : IDataReceiver
     {
         private readonly INetwork _network;

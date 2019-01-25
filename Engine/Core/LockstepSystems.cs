@@ -5,16 +5,11 @@ using Lockstep.Core.Interfaces;
 namespace Lockstep.Core
 {
     public sealed class LockstepSystems : Entitas.Systems, ISystems
-    {
-        private IFrameBuffer _frameBuffer;
-        private readonly Contexts _contexts;
-
+    {                   
         public long HashCode => _contexts.gameState.hashCode.value;
 
-        public void SetFrameBuffer(IFrameBuffer frameBuffer)
-        {
-            _frameBuffer = frameBuffer;
-        }    
+        private IFrameBuffer _frameBuffer;
+        private readonly Contexts _contexts;
 
         public LockstepSystems(Contexts contexts, params IService[] additionalServices)
         {                         
@@ -36,6 +31,10 @@ namespace Lockstep.Core
             Add(new HashCodeFeature(contexts, serviceContainer));
         }
 
+        public void SetFrameBuffer(IFrameBuffer frameBuffer)
+        {
+            _frameBuffer = frameBuffer;
+        }
 
         public void Tick()
         {
