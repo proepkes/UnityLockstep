@@ -1,16 +1,14 @@
 ﻿using System;
 
-namespace Lockstep.Client
+namespace Lockstep.Client.Interfaces
 {
     public interface INetwork
     {                           
         event Action<byte[]> DataReceived;  
 
         /// <summary>
-        /// Sends data reliable ordered
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="length"></param>
+        /// Send data reliable ordered
+        /// </summary>                    
         void Send(byte[] data, int length);   
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Lockstep.Client.Interfaces;
 using Lockstep.Core.Data;
-using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client.Implementations
 {

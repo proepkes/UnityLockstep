@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Lockstep.Client.Interfaces;
 using Lockstep.Core.Data;
-using Lockstep.Core.Interfaces;
-using Lockstep.Network;            
+using Lockstep.Network;
 using Lockstep.Network.Utils;
 
-namespace Lockstep.Client
+namespace Lockstep.Client.Implementations
 {
     public class NetworkedDataSource : IDataSource
     {
@@ -16,6 +16,16 @@ namespace Lockstep.Client
         public event EventHandler InitReceived;
         public event EventHandler<Frame> FrameReceived;
 
+        public NetworkedDataSource(INetwork network)
+        {
+            _network = network;
+            _network.DataReceived += OnDataReceived;
+        }
+
+        /// <summary>
+        /// Receives a command by sending it to the server. The server should respond with a frame-package which contains the command. 
+        /// </summary>
+        /// <param name="command"></param>
         public void Receive(ICommand command)
         {
             if (command is ISerializableCommand serializableCommand)
@@ -30,11 +40,15 @@ namespace Lockstep.Client
             }
         }
 
-        public NetworkedDataSource(INetwork network)
-        {
-            _network = network;
-            _network.DataReceived += OnDataReceived;
-        }              
+        public void Receive(MessageTag tag, ISerializable serializable)
+        {        
+            var writer = new Serializer();
+
+            writer.Put((byte)tag); 
+            serializable.Serialize(writer);
+
+            _network.Send(writer.Data, writer.Length);
+        }
 
         public NetworkedDataSource RegisterCommand(Func<ISerializableCommand> commandFactory)
         {

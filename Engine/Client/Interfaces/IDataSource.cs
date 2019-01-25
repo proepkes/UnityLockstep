@@ -1,7 +1,7 @@
 ﻿using System;
 using Lockstep.Core.Data;
 
-namespace Lockstep.Core.Interfaces
+namespace Lockstep.Client.Interfaces
 {
     public interface IDataSource
     {

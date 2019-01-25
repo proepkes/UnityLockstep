@@ -1,9 +1,7 @@
-﻿using System;         
+﻿using System;
+using Lockstep.Client.Interfaces;
 using Lockstep.Core.Data;
-using Lockstep.Core.Interfaces;
-using Lockstep.Network;
-using Lockstep.Network.Messages;
-using Lockstep.Network.Utils;
+using Lockstep.Core.Interfaces;    
 
 namespace Lockstep.Client
 {
@@ -49,9 +47,7 @@ namespace Lockstep.Client
 
             _systems.SetFrame(frame);
             _systems.Tick();
-            Ticked?.Invoke(_frameBuffer.ItemIndex, frame);
-
-            //Send(MessageTag.HashCode, new HashCode { FrameNumber = _frameBuffer.ItemIndex, Value = _systems.HashCode });
+            Ticked?.Invoke(_frameBuffer.ItemIndex, frame);                                                                
         }  
 
         public void Execute(ICommand command)

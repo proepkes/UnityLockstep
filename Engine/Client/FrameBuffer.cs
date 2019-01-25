@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Lockstep.Core.Data;
-using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client
 {
