@@ -78,15 +78,18 @@ namespace Lockstep.Client.Implementations
                     var commands = new ICommand[commandsLength];
                     for (var i = 0; i < commandsLength; i++)
                     {
-                        var newCommand = _commandFactories[reader.GetUShort()].Invoke();
-                        newCommand.Deserialize(reader);
-                        commands[i] = newCommand;
+                        var tag = reader.GetUShort();
+                        if (_commandFactories.ContainsKey(tag))
+                        {     
+                            var newCommand = _commandFactories[tag].Invoke();
+                            newCommand.Deserialize(reader);
+                            commands[i] = newCommand;
+                        }                
                     }
 
                     FrameReceived?.Invoke(this, new Frame { Commands = commands });
                     break;
-            }
-
+            } 
         }
     }
 }
