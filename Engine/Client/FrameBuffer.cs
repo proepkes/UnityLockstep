@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Lockstep.Core.Data;
+using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client
-{
-    public class FrameBuffer
+{                
+    public class FrameBuffer : IFrameBuffer
     {                                   
         private readonly Dictionary<uint, Frame> _frames = new Dictionary<uint, Frame>(); 
 

@@ -12,20 +12,22 @@ namespace Lockstep.Client
     public class Simulation
     {
         public event EventHandler Started;
-        public event Action<uint, Frame> Ticked;
+        public event Action<uint> Ticked;
 
         private readonly ISystems _systems;
 
-        private readonly IDataSource _dataSource;
+        private readonly IDataReceiver _dataReceiver;
         private readonly FrameBuffer _frameBuffer = new FrameBuffer();
 
-        public Simulation(ISystems systems, IDataSource dataSource)
+        public Simulation(ISystems systems, IDataReceiver dataReceiver)
         {
             _systems = systems;
-            _dataSource = dataSource;
+            _systems.SetFrameBuffer(_frameBuffer);
 
-            _dataSource.InitReceived += OnInitReceived;
-            _dataSource.FrameReceived += OnFrameReceived;
+            _dataReceiver = dataReceiver;
+
+            _dataReceiver.InitReceived += OnInitReceived;
+            _dataReceiver.FrameReceived += OnFrameReceived;
         }
         private void OnInitReceived(object sender, EventArgs e)
         {
@@ -42,17 +44,14 @@ namespace Lockstep.Client
         }
 
         private void Tick()
-        {
-            var frame = _frameBuffer.GetNext();
-
-            _systems.SetFrame(frame);
+        {                                       
             _systems.Tick();
-            Ticked?.Invoke(_frameBuffer.ItemIndex, frame);                                                                
+            Ticked?.Invoke(_frameBuffer.ItemIndex);                                                                
         }  
 
         public void Execute(ICommand command)
         {
-            _dataSource.Receive(command);
+            _dataReceiver.Receive(command);
         }         
     }
 }

@@ -3,7 +3,7 @@ using Lockstep.Core.Data;
 
 namespace Lockstep.Client.Interfaces
 {
-    public interface IDataSource
+    public interface IDataReceiver
     {
         event EventHandler InitReceived;
         event EventHandler<Frame> FrameReceived;
