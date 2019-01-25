@@ -24,12 +24,12 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     private bool _simulationStarted;
     private LockstepSystems _systems;
-    private NetworkedDataSource _dataSource;
+    private NetworkedDataReceiver _dataReceiver;
 
     private void Awake()
     {
         Instance = this;
-        _dataSource = new NetworkedDataSource(_client)
+        _dataReceiver = new NetworkedDataReceiver(_client)
             .RegisterCommand(() => new SpawnCommand())
             .RegisterCommand(() => new NavigateCommand());
 
@@ -37,13 +37,13 @@ public class RTSNetworkedSimulation : MonoBehaviour
             new UnityLogger());
 
         _simulation =
-            new Simulation(_systems, _dataSource);      
+            new Simulation(_systems, _dataReceiver);      
             
 
         _simulation.Started += (sender, args) => _simulationStarted = true;
-        _simulation.Ticked += (id, frame) =>
+        _simulation.Ticked += id =>
         {
-            _dataSource.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = Contexts.sharedInstance.gameState.hashCode.value});
+            _dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
         };
     }
 
