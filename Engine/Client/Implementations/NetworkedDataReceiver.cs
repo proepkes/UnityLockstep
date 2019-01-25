@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO;              
 using Lockstep.Client.Interfaces;
 using Lockstep.Core.Data;
 using Lockstep.Network;
@@ -36,7 +36,7 @@ namespace Lockstep.Client.Implementations
                 writer.Put(serializableCommand.Tag);
                 serializableCommand.Serialize(writer);
 
-                _network.Send(writer.Data, writer.Length); 
+                _network.Send(Compressor.Compress(writer)); 
             }
         }
 
@@ -45,9 +45,9 @@ namespace Lockstep.Client.Implementations
             var writer = new Serializer();
 
             writer.Put((byte)tag); 
-            serializable.Serialize(writer);
+            serializable.Serialize(writer);     
 
-            _network.Send(writer.Data, writer.Length);
+            _network.Send(Compressor.Compress(writer));
         }
 
         public NetworkedDataReceiver RegisterCommand(Func<ISerializableCommand> commandFactory)
@@ -63,6 +63,8 @@ namespace Lockstep.Client.Implementations
 
         private void OnDataReceived(byte[] data)
         {
+            data = Compressor.Decompress(data);
+
             var reader = new Deserializer(data);
             var messageTag = (MessageTag)reader.GetByte();
             switch (messageTag)
@@ -85,6 +87,6 @@ namespace Lockstep.Client.Implementations
                     break;
             }
 
-        }    
+        }
     }
 }

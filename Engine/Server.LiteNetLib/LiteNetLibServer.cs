@@ -21,14 +21,14 @@ namespace Server.LiteNetLib
             _server = new NetManager(_listener);
         }
                         
-        public void Distribute(byte[] data, int length)
+        public void Distribute(byte[] data)
         {
-            _server.SendToAll(data, 0, length, DeliveryMethod.ReliableOrdered);
+            _server.SendToAll(data, DeliveryMethod.ReliableOrdered);
         }
 
-        public void Send(int clientId, byte[] data, int length)
+        public void Send(int clientId, byte[] data)
         {
-            _server.ConnectedPeerList.First(peer => peer.Id == clientId).Send(data, 0, length, DeliveryMethod.ReliableOrdered);
+            _server.ConnectedPeerList.First(peer => peer.Id == clientId).Send(data, DeliveryMethod.ReliableOrdered);
         }
 
         public void Run(int port)

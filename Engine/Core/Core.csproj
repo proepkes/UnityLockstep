@@ -73,7 +73,6 @@
     <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputNavigateComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
@@ -125,7 +124,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Input\FrameComponent.cs" />
-    <Compile Include="Components\Input\NavigateComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextsIdExtensions.cs" />

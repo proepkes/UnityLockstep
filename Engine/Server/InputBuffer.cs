@@ -4,7 +4,7 @@ using Lockstep.Network.Utils;
 
 namespace Server
 {
-    public class InputPacker
+    public class InputBuffer
     {
         private readonly List<byte[]> _inputs = new List<byte[]>();
 

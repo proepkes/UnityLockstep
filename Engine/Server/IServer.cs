@@ -9,9 +9,9 @@ namespace Server
 
         event Action<int, byte[]> DataReceived;
 
-        void Distribute(byte[] data, int length);
+        void Distribute(byte[] data);
 
-        void Send(int clientId, byte[] data, int length);
+        void Send(int clientId, byte[] data);
 
         void Run(int port);
     }

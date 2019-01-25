@@ -33,8 +33,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
             .RegisterCommand(() => new SpawnCommand())
             .RegisterCommand(() => new NavigateCommand());
 
-        _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase),
-            new UnityLogger());
+        _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger());
 
         _simulation =
             new Simulation(_systems, _dataReceiver);      

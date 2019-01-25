@@ -15,12 +15,12 @@ namespace Lockstep.Core.Systems.Navigation
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.Navigate, InputMatcher.Coordinate, InputMatcher.EntityIds));
+            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.Coordinate, InputMatcher.EntityIds));
         }
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.isNavigate && entity.hasCoordinate && entity.hasEntityIds;
+            return entity.hasCoordinate && entity.hasEntityIds;
         }
 
         protected override void Execute(List<InputEntity> inputs)

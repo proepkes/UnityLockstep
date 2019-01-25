@@ -28,9 +28,9 @@ public class LiteNetLibClient : INetwork
         _client.Connect(serverIp, port, "SomeConnectionKey");
     }
 
-    public void Send(byte[] data, int length)
+    public void Send(byte[] data)
     {
-        _client.FirstPeer.Send(data, 0, length, DeliveryMethod.ReliableOrdered);
+        _client.FirstPeer.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
     public void Update()

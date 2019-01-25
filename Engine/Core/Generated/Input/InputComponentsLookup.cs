@@ -12,17 +12,15 @@ public static class InputComponentsLookup {
     public const int EntityConfigId = 1;
     public const int EntityIds = 2;
     public const int Frame = 3;
-    public const int Navigate = 4;
-    public const int PlayerId = 5;
+    public const int PlayerId = 4;
 
-    public const int TotalComponents = 6;
+    public const int TotalComponents = 5;
 
     public static readonly string[] componentNames = {
         "Coordinate",
         "EntityConfigId",
         "EntityIds",
         "Frame",
-        "Navigate",
         "PlayerId"
     };
 
@@ -31,7 +29,6 @@ public static class InputComponentsLookup {
         typeof(Lockstep.Core.Components.Input.EntityConfigIdComponent),
         typeof(Lockstep.Core.Components.Input.EntityIdsComponent),
         typeof(Lockstep.Core.Components.Input.FrameComponent),
-        typeof(Lockstep.Core.Components.Input.NavigateComponent),
         typeof(Lockstep.Core.Components.Input.PlayerIdComponent)
     };
 }

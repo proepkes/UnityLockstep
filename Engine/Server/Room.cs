@@ -14,7 +14,7 @@ namespace Server
         private byte _nextPlayerId;
         private readonly int _size;
 
-        private InputPacker _inputPacker; 
+        private InputBuffer _inputBuffer; 
         private readonly IServer _server;
 
         public bool Running { get; private set; } 
@@ -62,12 +62,12 @@ namespace Server
 
         private void OnDataReceived(int clientId, byte[] data)
         {
-            var reader = new Deserializer(data);
+            var reader = new Deserializer(Compressor.Decompress(data));
             var messageTag = (MessageTag)reader.GetByte();
             switch (messageTag)
             {
                 case MessageTag.Input:
-                    _inputPacker?.AddInput(reader.GetRemainingBytes());
+                    _inputBuffer?.AddInput(reader.GetRemainingBytes());
                     break;
                 case MessageTag.HashCode:                                 
                     var pkt = new HashCode();
@@ -107,7 +107,7 @@ namespace Server
 
             _hashCodes.Clear();
             var serializer = new Serializer();
-            _inputPacker = new InputPacker();
+            _inputBuffer = new InputBuffer();
 
             Running = true; 
 
@@ -127,8 +127,8 @@ namespace Server
                 {       
                     serializer.Reset();
 
-                    _inputPacker.Pack(serializer);           
-                    _server.Distribute(serializer.Data, serializer.Length);   
+                    _inputBuffer.Pack(serializer);           
+                    _server.Distribute(Compressor.Compress(serializer));   
 
                     accumulatedTime -= dt;
                 }
@@ -156,7 +156,7 @@ namespace Server
                     PlayerID = player.Value
                 }.Serialize(writer);
 
-                _server.Send(player.Key, writer.Data, writer.Length);
+                _server.Send(player.Key, Compressor.Compress(writer));
             }   
         }
     }
