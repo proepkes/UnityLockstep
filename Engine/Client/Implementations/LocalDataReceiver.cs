@@ -14,7 +14,7 @@ namespace Lockstep.Client.Implementations
             InitReceived?.Invoke(this, EventArgs.Empty);
         }
 
-        public void AddFrame(Frame frame)
+        public void Receive(Frame frame)
         {             
             FrameReceived?.Invoke(this, frame);
         }
