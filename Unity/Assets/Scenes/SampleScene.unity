@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28ef8c68bade09b41aca258d42a632f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastTab: 2
+  lastTab: 0
   movementSettingsFoldout: 0
   zoomingSettingsFoldout: 0
   rotationSettingsFoldout: 0
@@ -155,7 +155,7 @@ MonoBehaviour:
   inputSettingsFoldout: 0
   useFixedUpdate: 0
   keyboardMovementSpeed: 30
-  screenEdgeMovementSpeed: 3
+  screenEdgeMovementSpeed: 9
   followingSpeed: 5
   rotationSped: 3
   panningSpeed: 10
@@ -186,7 +186,7 @@ MonoBehaviour:
   zoomOutKey: 113
   useScrollwheelZooming: 1
   zoomingAxis: Mouse ScrollWheel
-  useKeyboardRotation: 1
+  useKeyboardRotation: 0
   rotateRightKey: 120
   rotateLeftKey: 122
   useMouseRotation: 0
@@ -557,7 +557,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EntityDatabase: {fileID: 11400000, guid: a0d4789ca6cc5ab42a1264102206ac3f, type: 2}
-  IP: 127.0.0.1
+  ServerIp: 127.0.0.1
+  ServerPort: 9050
 --- !u!114 &1524441392
 MonoBehaviour:
   m_ObjectHideFlags: 0

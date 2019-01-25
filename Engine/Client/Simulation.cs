@@ -5,10 +5,6 @@ using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client
 {
-    /// <summary>
-    /// This simulation listens for received data from the client and reacts accordingly. 'Executed' commands are first sent to the server.
-    /// The final execution is done when the corresponding frame-packet arrives - this adds minimum 1 RTT delay to commands.
-    /// </summary>
     public class Simulation
     {
         public event EventHandler Started;

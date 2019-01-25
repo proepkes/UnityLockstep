@@ -39,7 +39,7 @@ namespace Test
         [Fact]
         public void TestCommandIsExecuted()
         {
-            var command = new Mock<ICommand>();
+            var command = new Mock<ICommand>(); 
 
             new Simulation(new LockstepSystems(new Contexts()), new LocalDataReceiver()).Execute(command.Object);           
 
