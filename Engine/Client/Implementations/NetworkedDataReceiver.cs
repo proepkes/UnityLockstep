@@ -8,7 +8,7 @@ using Lockstep.Network.Utils;
 
 namespace Lockstep.Client.Implementations
 {
-    public class NetworkedDataSource : IDataSource
+    public class NetworkedDataReceiver : IDataReceiver
     {
         private readonly INetwork _network;
         private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
@@ -16,7 +16,7 @@ namespace Lockstep.Client.Implementations
         public event EventHandler InitReceived;
         public event EventHandler<Frame> FrameReceived;
 
-        public NetworkedDataSource(INetwork network)
+        public NetworkedDataReceiver(INetwork network)
         {
             _network = network;
             _network.DataReceived += OnDataReceived;
@@ -50,7 +50,7 @@ namespace Lockstep.Client.Implementations
             _network.Send(writer.Data, writer.Length);
         }
 
-        public NetworkedDataSource RegisterCommand(Func<ISerializableCommand> commandFactory)
+        public NetworkedDataReceiver RegisterCommand(Func<ISerializableCommand> commandFactory)
         {
             var tag = commandFactory.Invoke().Tag;
             if (_commandFactories.ContainsKey(tag))

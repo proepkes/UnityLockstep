@@ -113,6 +113,7 @@
     <Compile Include="DefaultServices\DefaultHashService.cs" />
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
+    <Compile Include="Interfaces\IFrameBuffer.cs" />
     <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />

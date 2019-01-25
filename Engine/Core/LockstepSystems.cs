@@ -6,13 +6,15 @@ namespace Lockstep.Core
 {
     public sealed class LockstepSystems : Entitas.Systems, ISystems
     {
-        private readonly Contexts _contexts;      
+        private IFrameBuffer _frameBuffer;
+        private readonly Contexts _contexts;
 
         public long HashCode => _contexts.gameState.hashCode.value;
-        public void SetFrame(Frame frame)
+
+        public void SetFrameBuffer(IFrameBuffer frameBuffer)
         {
-            _contexts.input.ReplaceFrame(frame);
-        }
+            _frameBuffer = frameBuffer;
+        }    
 
         public LockstepSystems(Contexts contexts, params IService[] additionalServices)
         {                         
@@ -37,6 +39,8 @@ namespace Lockstep.Core
 
         public void Tick()
         {
+            _contexts.input.SetFrame(_frameBuffer.GetNext());
+
             Execute();
             Cleanup();
         }

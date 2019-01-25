@@ -41,7 +41,7 @@ namespace Test
         {
             var command = new Mock<ICommand>();
 
-            new Simulation(new LockstepSystems(new Contexts()), new LocalDataSource()).Execute(command.Object);           
+            new Simulation(new LockstepSystems(new Contexts()), new LocalDataReceiver()).Execute(command.Object);           
 
             command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Once);
         }

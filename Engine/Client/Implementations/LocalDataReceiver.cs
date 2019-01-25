@@ -4,7 +4,7 @@ using Lockstep.Core.Data;
 
 namespace Lockstep.Client.Implementations
 {
-    public class LocalDataSource : IDataSource
+    public class LocalDataReceiver : IDataReceiver
     {
         public event EventHandler InitReceived;
         public event EventHandler<Frame> FrameReceived;
