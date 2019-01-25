@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using ECS;
+﻿using System.Collections;   
 using Lockstep.Client;
 using Lockstep.Commands;
 using Lockstep.Core;        
@@ -10,7 +9,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 {
     public static RTSNetworkedSimulation Instance;
                                         
-    private NetworkedSimulation _simulation;
+    private Simulation _simulation;
     private readonly LiteNetLibClient _client = new LiteNetLibClient(); 
                                            
     public RTSEntityDatabase EntityDatabase;
@@ -24,17 +23,13 @@ public class RTSNetworkedSimulation : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        _simulation =
-            new NetworkedSimulation(
-                new LockstepSystems(Contexts.sharedInstance, 
-                    new FrameDataSource(), 
-                    new UnityGameService(EntityDatabase), 
-                    new UnityLogger()),
-                _client);
-                    
-        _simulation
+        var dataSource = new NetworkedDataSource(_client)
             .RegisterCommand(() => new SpawnCommand())
             .RegisterCommand(() => new NavigateCommand());
+
+        _simulation =
+            new Simulation(new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger()), dataSource);      
+            
 
         _simulation.Started += (sender, args) => _simulationStarted = true;
     }

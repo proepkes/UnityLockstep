@@ -2,10 +2,8 @@
 
 namespace Lockstep.Client
 {
-    public interface IClient
-    {
-        bool Connected { get; }
-
+    public interface INetwork
+    {                           
         event Action<byte[]> DataReceived;  
 
         /// <summary>

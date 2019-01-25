@@ -2,7 +2,7 @@
 using LiteNetLib;
 using Lockstep.Client;
 
-public class LiteNetLibClient : IClient
+public class LiteNetLibClient : INetwork
 {
     private readonly EventBasedNetListener _listener = new EventBasedNetListener();
                                           
