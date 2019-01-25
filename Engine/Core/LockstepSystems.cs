@@ -1,5 +1,4 @@
-﻿using Lockstep.Core.Data;
-using Lockstep.Core.Features;
+﻿using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core

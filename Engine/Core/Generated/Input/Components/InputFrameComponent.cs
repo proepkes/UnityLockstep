@@ -9,12 +9,12 @@
 public partial class InputContext {
 
     public InputEntity frameEntity { get { return GetGroup(InputMatcher.Frame).GetSingleEntity(); } }
-    public FrameComponent frame { get { return frameEntity.frame; } }
+    public Lockstep.Core.Components.Input.FrameComponent frame { get { return frameEntity.frame; } }
     public bool hasFrame { get { return frameEntity != null; } }
 
     public InputEntity SetFrame(Lockstep.Core.Data.Frame newValue) {
         if (hasFrame) {
-            throw new Entitas.EntitasException("Could not set Frame!\n" + this + " already has an entity with FrameComponent!",
+            throw new Entitas.EntitasException("Could not set Frame!\n" + this + " already has an entity with Lockstep.Core.Components.Input.FrameComponent!",
                 "You should check if the context already has a frameEntity before setting it or use context.ReplaceFrame().");
         }
         var entity = CreateEntity();
@@ -46,19 +46,19 @@ public partial class InputContext {
 //------------------------------------------------------------------------------
 public partial class InputEntity {
 
-    public FrameComponent frame { get { return (FrameComponent)GetComponent(InputComponentsLookup.Frame); } }
+    public Lockstep.Core.Components.Input.FrameComponent frame { get { return (Lockstep.Core.Components.Input.FrameComponent)GetComponent(InputComponentsLookup.Frame); } }
     public bool hasFrame { get { return HasComponent(InputComponentsLookup.Frame); } }
 
     public void AddFrame(Lockstep.Core.Data.Frame newValue) {
         var index = InputComponentsLookup.Frame;
-        var component = (FrameComponent)CreateComponent(index, typeof(FrameComponent));
+        var component = (Lockstep.Core.Components.Input.FrameComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Input.FrameComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
     public void ReplaceFrame(Lockstep.Core.Data.Frame newValue) {
         var index = InputComponentsLookup.Frame;
-        var component = (FrameComponent)CreateComponent(index, typeof(FrameComponent));
+        var component = (Lockstep.Core.Components.Input.FrameComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Input.FrameComponent));
         component.value = newValue;
         ReplaceComponent(index, component);
     }

@@ -8,21 +8,30 @@
 //------------------------------------------------------------------------------
 public static class InputComponentsLookup {
 
-    public const int Frame = 0;
-    public const int NavigationInputData = 1;
-    public const int SpawnInputData = 2;
+    public const int Coordinate = 0;
+    public const int EntityConfigId = 1;
+    public const int EntityIds = 2;
+    public const int Frame = 3;
+    public const int Navigate = 4;
+    public const int PlayerId = 5;
 
-    public const int TotalComponents = 3;
+    public const int TotalComponents = 6;
 
     public static readonly string[] componentNames = {
+        "Coordinate",
+        "EntityConfigId",
+        "EntityIds",
         "Frame",
-        "NavigationInputData",
-        "SpawnInputData"
+        "Navigate",
+        "PlayerId"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(FrameComponent),
-        typeof(NavigationInputDataComponent),
-        typeof(SpawnInputDataComponent)
+        typeof(Lockstep.Core.Components.Input.CoordinateComponent),
+        typeof(Lockstep.Core.Components.Input.EntityConfigIdComponent),
+        typeof(Lockstep.Core.Components.Input.EntityIdsComponent),
+        typeof(Lockstep.Core.Components.Input.FrameComponent),
+        typeof(Lockstep.Core.Components.Input.NavigateComponent),
+        typeof(Lockstep.Core.Components.Input.PlayerIdComponent)
     };
 }

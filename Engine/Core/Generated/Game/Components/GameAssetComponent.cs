@@ -8,19 +8,19 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public AssetComponent asset { get { return (AssetComponent)GetComponent(GameComponentsLookup.Asset); } }
+    public Lockstep.Core.Components.Game.AssetComponent asset { get { return (Lockstep.Core.Components.Game.AssetComponent)GetComponent(GameComponentsLookup.Asset); } }
     public bool hasAsset { get { return HasComponent(GameComponentsLookup.Asset); } }
 
     public void AddAsset(string newName) {
         var index = GameComponentsLookup.Asset;
-        var component = (AssetComponent)CreateComponent(index, typeof(AssetComponent));
+        var component = (Lockstep.Core.Components.Game.AssetComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.AssetComponent));
         component.name = newName;
         AddComponent(index, component);
     }
 
     public void ReplaceAsset(string newName) {
         var index = GameComponentsLookup.Asset;
-        var component = (AssetComponent)CreateComponent(index, typeof(AssetComponent));
+        var component = (Lockstep.Core.Components.Game.AssetComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.AssetComponent));
         component.name = newName;
         ReplaceComponent(index, component);
     }

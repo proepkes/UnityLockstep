@@ -17,8 +17,8 @@ public static class GameComponentsLookup {
     public const int Navigable = 6;
     public const int OwnerId = 7;
     public const int Position = 8;
-    public const int PositionListener = 9;
-    public const int Team = 10;
+    public const int Team = 9;
+    public const int PositionListener = 10;
 
     public const int TotalComponents = 11;
 
@@ -32,21 +32,21 @@ public static class GameComponentsLookup {
         "Navigable",
         "OwnerId",
         "Position",
-        "PositionListener",
-        "Team"
+        "Team",
+        "PositionListener"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(AssetComponent),
-        typeof(ControllableComponent),
-        typeof(HashableComponent),
-        typeof(HealthComponent),
-        typeof(IdComponent),
-        typeof(MaxSpeedComponent),
-        typeof(NavigableComponent),
-        typeof(OwnerIdComponent),
-        typeof(PositionComponent),
-        typeof(PositionListenerComponent),
-        typeof(TeamComponent)
+        typeof(Lockstep.Core.Components.Game.AssetComponent),
+        typeof(Lockstep.Core.Components.Game.ControllableComponent),
+        typeof(Lockstep.Core.Components.Game.HashableComponent),
+        typeof(Lockstep.Core.Components.Game.HealthComponent),
+        typeof(Lockstep.Core.Components.Game.IdComponent),
+        typeof(Lockstep.Core.Components.Game.MaxSpeedComponent),
+        typeof(Lockstep.Core.Components.Game.NavigableComponent),
+        typeof(Lockstep.Core.Components.Game.OwnerIdComponent),
+        typeof(Lockstep.Core.Components.Game.PositionComponent),
+        typeof(Lockstep.Core.Components.Game.TeamComponent),
+        typeof(PositionListenerComponent)
     };
 }

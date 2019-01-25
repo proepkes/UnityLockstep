@@ -9,12 +9,12 @@
 public partial class GameStateContext {
 
     public GameStateEntity playerIdEntity { get { return GetGroup(GameStateMatcher.PlayerId).GetSingleEntity(); } }
-    public PlayerIdComponent playerId { get { return playerIdEntity.playerId; } }
+    public Lockstep.Core.Components.GameState.PlayerIdComponent playerId { get { return playerIdEntity.playerId; } }
     public bool hasPlayerId { get { return playerIdEntity != null; } }
 
     public GameStateEntity SetPlayerId(byte newValue) {
         if (hasPlayerId) {
-            throw new Entitas.EntitasException("Could not set PlayerId!\n" + this + " already has an entity with PlayerIdComponent!",
+            throw new Entitas.EntitasException("Could not set PlayerId!\n" + this + " already has an entity with Lockstep.Core.Components.GameState.PlayerIdComponent!",
                 "You should check if the context already has a playerIdEntity before setting it or use context.ReplacePlayerId().");
         }
         var entity = CreateEntity();
@@ -46,19 +46,19 @@ public partial class GameStateContext {
 //------------------------------------------------------------------------------
 public partial class GameStateEntity {
 
-    public PlayerIdComponent playerId { get { return (PlayerIdComponent)GetComponent(GameStateComponentsLookup.PlayerId); } }
+    public Lockstep.Core.Components.GameState.PlayerIdComponent playerId { get { return (Lockstep.Core.Components.GameState.PlayerIdComponent)GetComponent(GameStateComponentsLookup.PlayerId); } }
     public bool hasPlayerId { get { return HasComponent(GameStateComponentsLookup.PlayerId); } }
 
     public void AddPlayerId(byte newValue) {
         var index = GameStateComponentsLookup.PlayerId;
-        var component = (PlayerIdComponent)CreateComponent(index, typeof(PlayerIdComponent));
+        var component = (Lockstep.Core.Components.GameState.PlayerIdComponent)CreateComponent(index, typeof(Lockstep.Core.Components.GameState.PlayerIdComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
     public void ReplacePlayerId(byte newValue) {
         var index = GameStateComponentsLookup.PlayerId;
-        var component = (PlayerIdComponent)CreateComponent(index, typeof(PlayerIdComponent));
+        var component = (Lockstep.Core.Components.GameState.PlayerIdComponent)CreateComponent(index, typeof(Lockstep.Core.Components.GameState.PlayerIdComponent));
         component.value = newValue;
         ReplaceComponent(index, component);
     }

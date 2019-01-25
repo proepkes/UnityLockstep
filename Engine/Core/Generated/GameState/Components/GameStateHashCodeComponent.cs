@@ -9,12 +9,12 @@
 public partial class GameStateContext {
 
     public GameStateEntity hashCodeEntity { get { return GetGroup(GameStateMatcher.HashCode).GetSingleEntity(); } }
-    public HashCodeComponent hashCode { get { return hashCodeEntity.hashCode; } }
+    public Lockstep.Core.Components.GameState.HashCodeComponent hashCode { get { return hashCodeEntity.hashCode; } }
     public bool hasHashCode { get { return hashCodeEntity != null; } }
 
     public GameStateEntity SetHashCode(long newValue) {
         if (hasHashCode) {
-            throw new Entitas.EntitasException("Could not set HashCode!\n" + this + " already has an entity with HashCodeComponent!",
+            throw new Entitas.EntitasException("Could not set HashCode!\n" + this + " already has an entity with Lockstep.Core.Components.GameState.HashCodeComponent!",
                 "You should check if the context already has a hashCodeEntity before setting it or use context.ReplaceHashCode().");
         }
         var entity = CreateEntity();
@@ -46,19 +46,19 @@ public partial class GameStateContext {
 //------------------------------------------------------------------------------
 public partial class GameStateEntity {
 
-    public HashCodeComponent hashCode { get { return (HashCodeComponent)GetComponent(GameStateComponentsLookup.HashCode); } }
+    public Lockstep.Core.Components.GameState.HashCodeComponent hashCode { get { return (Lockstep.Core.Components.GameState.HashCodeComponent)GetComponent(GameStateComponentsLookup.HashCode); } }
     public bool hasHashCode { get { return HasComponent(GameStateComponentsLookup.HashCode); } }
 
     public void AddHashCode(long newValue) {
         var index = GameStateComponentsLookup.HashCode;
-        var component = (HashCodeComponent)CreateComponent(index, typeof(HashCodeComponent));
+        var component = (Lockstep.Core.Components.GameState.HashCodeComponent)CreateComponent(index, typeof(Lockstep.Core.Components.GameState.HashCodeComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
     public void ReplaceHashCode(long newValue) {
         var index = GameStateComponentsLookup.HashCode;
-        var component = (HashCodeComponent)CreateComponent(index, typeof(HashCodeComponent));
+        var component = (Lockstep.Core.Components.GameState.HashCodeComponent)CreateComponent(index, typeof(Lockstep.Core.Components.GameState.HashCodeComponent));
         component.value = newValue;
         ReplaceComponent(index, component);
     }

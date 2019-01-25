@@ -8,19 +8,19 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public PositionComponent position { get { return (PositionComponent)GetComponent(GameComponentsLookup.Position); } }
+    public Lockstep.Core.Components.Game.PositionComponent position { get { return (Lockstep.Core.Components.Game.PositionComponent)GetComponent(GameComponentsLookup.Position); } }
     public bool hasPosition { get { return HasComponent(GameComponentsLookup.Position); } }
 
     public void AddPosition(BEPUutilities.Vector2 newValue) {
         var index = GameComponentsLookup.Position;
-        var component = (PositionComponent)CreateComponent(index, typeof(PositionComponent));
+        var component = (Lockstep.Core.Components.Game.PositionComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.PositionComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
     public void ReplacePosition(BEPUutilities.Vector2 newValue) {
         var index = GameComponentsLookup.Position;
-        var component = (PositionComponent)CreateComponent(index, typeof(PositionComponent));
+        var component = (Lockstep.Core.Components.Game.PositionComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.PositionComponent));
         component.value = newValue;
         ReplaceComponent(index, component);
     }

@@ -6,20 +6,20 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-public partial class GameEntity {
+public partial class InputEntity {
 
-    static readonly Lockstep.Core.Components.Game.HashableComponent hashableComponent = new Lockstep.Core.Components.Game.HashableComponent();
+    static readonly Lockstep.Core.Components.Input.NavigateComponent navigateComponent = new Lockstep.Core.Components.Input.NavigateComponent();
 
-    public bool isHashable {
-        get { return HasComponent(GameComponentsLookup.Hashable); }
+    public bool isNavigate {
+        get { return HasComponent(InputComponentsLookup.Navigate); }
         set {
-            if (value != isHashable) {
-                var index = GameComponentsLookup.Hashable;
+            if (value != isNavigate) {
+                var index = InputComponentsLookup.Navigate;
                 if (value) {
                     var componentPool = GetComponentPool(index);
                     var component = componentPool.Count > 0
                             ? componentPool.Pop()
-                            : hashableComponent;
+                            : navigateComponent;
 
                     AddComponent(index, component);
                 } else {
@@ -38,19 +38,19 @@ public partial class GameEntity {
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-public sealed partial class GameMatcher {
+public sealed partial class InputMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherHashable;
+    static Entitas.IMatcher<InputEntity> _matcherNavigate;
 
-    public static Entitas.IMatcher<GameEntity> Hashable {
+    public static Entitas.IMatcher<InputEntity> Navigate {
         get {
-            if (_matcherHashable == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Hashable);
-                matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherHashable = matcher;
+            if (_matcherNavigate == null) {
+                var matcher = (Entitas.Matcher<InputEntity>)Entitas.Matcher<InputEntity>.AllOf(InputComponentsLookup.Navigate);
+                matcher.componentNames = InputComponentsLookup.componentNames;
+                _matcherNavigate = matcher;
             }
 
-            return _matcherHashable;
+            return _matcherNavigate;
         }
     }
 }

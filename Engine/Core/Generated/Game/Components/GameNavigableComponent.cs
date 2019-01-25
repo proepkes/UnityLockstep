@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly NavigableComponent navigableComponent = new NavigableComponent();
+    static readonly Lockstep.Core.Components.Game.NavigableComponent navigableComponent = new Lockstep.Core.Components.Game.NavigableComponent();
 
     public bool isNavigable {
         get { return HasComponent(GameComponentsLookup.Navigable); }

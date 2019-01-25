@@ -8,19 +8,19 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public HealthComponent health { get { return (HealthComponent)GetComponent(GameComponentsLookup.Health); } }
+    public Lockstep.Core.Components.Game.HealthComponent health { get { return (Lockstep.Core.Components.Game.HealthComponent)GetComponent(GameComponentsLookup.Health); } }
     public bool hasHealth { get { return HasComponent(GameComponentsLookup.Health); } }
 
     public void AddHealth(int newValue) {
         var index = GameComponentsLookup.Health;
-        var component = (HealthComponent)CreateComponent(index, typeof(HealthComponent));
+        var component = (Lockstep.Core.Components.Game.HealthComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.HealthComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
     public void ReplaceHealth(int newValue) {
         var index = GameComponentsLookup.Health;
-        var component = (HealthComponent)CreateComponent(index, typeof(HealthComponent));
+        var component = (Lockstep.Core.Components.Game.HealthComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.HealthComponent));
         component.value = newValue;
         ReplaceComponent(index, component);
     }

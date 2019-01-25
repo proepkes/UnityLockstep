@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -56,27 +56,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContextsIdExtensions.cs" />
-    <Compile Include="Generated\GameState\Components\GameStateGameStatePausedComponent.cs" />
-    <Compile Include="Generated\GameState\Components\GameStateGameStateInGameComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameOwnerIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
-    <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameMaxSpeedComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameMaxSpeedComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNavigableComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameOwnerIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHashableComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputNavigationInputDataComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputSpawnInputDataComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputNavigateComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
-    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
+    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
@@ -103,9 +104,36 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Game.cs" />
-    <Compile Include="Components\GameState.cs" />
-    <Compile Include="Components\Input.cs" />
+    <Compile Include="Components\GameState\HashCodeComponent.cs" />
+    <Compile Include="Components\GameState\PlayerIdComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\AssetComponent.cs" />
+    <Compile Include="Components\Game\ControllableComponent.cs" />
+    <Compile Include="Components\Game\HealthComponent.cs" />
+    <Compile Include="Components\Game\IdComponent.cs" />
+    <Compile Include="Components\Game\MaxSpeedComponent.cs" />
+    <Compile Include="Components\Game\NavigableComponent.cs" />
+    <Compile Include="Components\Game\OwnerIdComponent.cs" />
+    <Compile Include="Components\Game\PositionComponent.cs" />
+    <Compile Include="Components\Game\TeamComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Input\CoordinateComponent.cs" />
+    <Compile Include="Components\Input\EntityConfigIdComponent.cs" />
+    <Compile Include="Components\Input\PlayerIdComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Input\FrameComponent.cs" />
+    <Compile Include="Components\Input\NavigateComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ContextsIdExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\HashableComponent.cs" />
+    <Compile Include="Components\GameState\PausedComponent.cs" />
+    <Compile Include="Components\Input\EntityIdsComponent.cs" />
     <Compile Include="Data\AgentConfig.cs" />
     <Compile Include="Data\Frame.cs" />
     <Compile Include="Data\ICommand.cs" />

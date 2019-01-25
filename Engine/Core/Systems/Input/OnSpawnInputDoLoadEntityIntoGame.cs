@@ -17,12 +17,12 @@ namespace Lockstep.Core.Systems.Input
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            return context.CreateCollector(InputMatcher.SpawnInputData);
+            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.EntityConfigId, InputMatcher.Coordinate));
         }
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasSpawnInputData;
+            return entity.hasEntityConfigId && entity.hasCoordinate;
         }
 
         protected override void Execute(List<InputEntity> entities)
@@ -30,9 +30,9 @@ namespace Lockstep.Core.Systems.Input
             foreach (var entity in entities)
             {
                 var e = _gameContext.CreateEntity();
-                e.AddPosition(entity.spawnInputData.Position);
+                e.AddPosition(entity.coordinate.value);
 
-                _gameService.LoadEntity(e, entity.spawnInputData.EntityConfigId);
+                _gameService.LoadEntity(e, entity.entityConfigId.value);
             }
         }   
     }
