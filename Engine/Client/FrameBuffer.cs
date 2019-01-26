@@ -27,7 +27,11 @@ namespace Lockstep.Client
             Frame nextFrame;
             lock (_frames)
             {
-                nextFrame = _frames[ItemIndex++];
+                nextFrame = _frames[ItemIndex];
+                _frames.Remove(ItemIndex);
+
+                ItemIndex++;
+
             }
             return nextFrame;
         }

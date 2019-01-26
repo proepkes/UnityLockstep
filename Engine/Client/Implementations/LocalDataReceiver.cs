@@ -21,7 +21,7 @@ namespace Lockstep.Client.Implementations
         }
 
         public void Receive(ICommand command)
-        {                                       
+        {                  
             FrameReceived?.Invoke(this, new Frame{Commands = new []{command}});
         }
     }

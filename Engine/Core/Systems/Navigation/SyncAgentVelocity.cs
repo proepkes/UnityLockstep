@@ -1,14 +1,15 @@
-﻿using Entitas;
+﻿using BEPUutilities;
+using Entitas;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Systems.Navigation
 {
-    public class SyncAgentPosition : IExecuteSystem
+    public class SyncAgentVelocity : IExecuteSystem
     {                                                       
         private readonly INavigationService _navigationService;
         private readonly GameContext _gameContext;
 
-        public SyncAgentPosition(Contexts contexts, INavigationService navigationService)
+        public SyncAgentVelocity(Contexts contexts, INavigationService navigationService)
         {
             _navigationService = navigationService;
             _gameContext = contexts.game;
@@ -16,13 +17,13 @@ namespace Lockstep.Core.Systems.Navigation
 
         public void Execute()
         {
-            var agentPositions = _navigationService.GetAgentPositions();
-            foreach (var agentPosition in agentPositions)
+            var agentVelocities = _navigationService.GetAgentVelocities();
+            foreach (var velocity in agentVelocities)
             {
-                var gameEntity = _gameContext.GetEntityWithId(agentPosition.Key);
-                if (agentPosition.Value != gameEntity.position.value)
+                var gameEntity = _gameContext.GetEntityWithId(velocity.Key);
+                //if (velocity.Value != Vector2.Zero)
                 {
-                    gameEntity.ReplacePosition(agentPosition.Value);
+                    gameEntity.ReplaceVelocity(velocity.Value);
                 }
             }                                   
         }      

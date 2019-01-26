@@ -18,9 +18,10 @@ public static class GameComponentsLookup {
     public const int OwnerId = 7;
     public const int Position = 8;
     public const int Team = 9;
-    public const int PositionListener = 10;
+    public const int Velocity = 10;
+    public const int PositionListener = 11;
 
-    public const int TotalComponents = 11;
+    public const int TotalComponents = 12;
 
     public static readonly string[] componentNames = {
         "Asset",
@@ -33,6 +34,7 @@ public static class GameComponentsLookup {
         "OwnerId",
         "Position",
         "Team",
+        "Velocity",
         "PositionListener"
     };
 
@@ -47,6 +49,7 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.Components.Game.OwnerIdComponent),
         typeof(Lockstep.Core.Components.Game.PositionComponent),
         typeof(Lockstep.Core.Components.Game.TeamComponent),
+        typeof(Lockstep.Core.Components.Game.VelocityComponent),
         typeof(PositionListenerComponent)
     };
 }

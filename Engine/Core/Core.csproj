@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -60,6 +60,7 @@
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\Input\Components\InputFrameComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
@@ -75,8 +76,8 @@
     <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
-    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
@@ -101,6 +102,9 @@
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\VelocityComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameState\HashCodeComponent.cs" />
@@ -160,7 +164,8 @@
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
     <Compile Include="Systems\Navigation\OnNavigationInputDoSetDestination.cs" />
-    <Compile Include="Systems\Navigation\SyncAgentPosition.cs" />
+    <Compile Include="Systems\Navigation\SyncAgentVelocity.cs" />
+    <Compile Include="Systems\Navigation\UpdateAgentPosition.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

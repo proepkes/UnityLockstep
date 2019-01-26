@@ -49,7 +49,7 @@ namespace Lockstep.Client
             //TODO: adjust _tickDt depending on buffersize
             while (_accumulatedTime >= _tickDt)
             {            
-                 Tick();          
+                 //Tick();          
 
                 _accumulatedTime -= _tickDt;
             }                 
@@ -66,7 +66,9 @@ namespace Lockstep.Client
 
         private void OnFrameReceived(object sender, Frame e)
         {
-            FrameBuffer.Insert(e); 
+            FrameBuffer.Insert(e);
+
+            Tick();
         }
 
         private void Tick()

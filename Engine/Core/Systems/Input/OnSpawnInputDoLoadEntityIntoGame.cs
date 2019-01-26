@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BEPUutilities;
 using Entitas;
 using Lockstep.Core.Interfaces;
 
@@ -30,6 +31,8 @@ namespace Lockstep.Core.Systems.Input
             foreach (var entity in entities)
             {
                 var e = _gameContext.CreateEntity();
+
+                e.AddVelocity(Vector2.Zero);
                 e.AddPosition(entity.coordinate.value);
 
                 _gameService.LoadEntity(e, entity.entityConfigId.value);
