@@ -4,6 +4,7 @@ using System.IO;
 using Lockstep.Client.Interfaces;
 using Lockstep.Core.Data;
 using Lockstep.Network;
+using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Client.Implementations
@@ -13,8 +14,8 @@ namespace Lockstep.Client.Implementations
         private readonly INetwork _network;
         private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
 
-        public event EventHandler InitReceived;
-        public event EventHandler<Frame> FrameReceived;
+        public event EventHandler<Init> InitReceived;
+        public event EventHandler<Frame> FrameReceived;     
 
         public NetworkedDataReceiver(INetwork network)
         {
@@ -70,7 +71,9 @@ namespace Lockstep.Client.Implementations
             switch (messageTag)
             {
                 case MessageTag.StartSimulation:
-                    InitReceived?.Invoke(this, EventArgs.Empty);
+                    var init = new Init();
+                    init.Deserialize(reader);
+                    InitReceived?.Invoke(this, init);
                     break;
                 case MessageTag.Frame:
                     var commandsLength = reader.GetInt();

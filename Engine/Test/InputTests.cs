@@ -24,7 +24,7 @@ namespace Test
             var contexts = new Contexts();
             contexts.SubscribeId();
 
-            var numEntities = 10;
+            const int numEntities = 10;
 
             for (uint i = 0; i < numEntities; i++)
             {

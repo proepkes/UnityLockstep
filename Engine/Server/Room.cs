@@ -9,7 +9,7 @@ namespace Server
 {
     public class Room
     {
-        private const int TargetFps = 50;
+        private const int TargetFps = 20;
 
         private byte _nextPlayerId;
         private readonly int _size;
@@ -38,8 +38,8 @@ namespace Server
         {
             _server.ClientConnected += OnClientConnected;
             _server.ClientDisconnected += OnClientDisconnected;
-            _server.DataReceived += OnDataReceived;
-
+            _server.DataReceived += OnDataReceived;  
+            
             _server.Run(port);
 
             Console.WriteLine("Server started. Waiting for " + _size + " players...");
@@ -118,10 +118,8 @@ namespace Server
             Console.WriteLine("Simulation started");
                                                
             while (Running)
-            {       
-                timer.Tick();
-
-                accumulatedTime += timer.DeltaTime;
+            {         
+                accumulatedTime += timer.Tick();
 
                 while (accumulatedTime >= dt)
                 {       

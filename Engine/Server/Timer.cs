@@ -5,8 +5,7 @@ namespace Server
     public class Timer
     {
         private long _lastTick;
-
-        public long DeltaTime { get; private set; }
+                                                      
         public uint TickCount { get; private set; }
 
         private readonly Stopwatch _sw = new Stopwatch();
@@ -15,11 +14,14 @@ namespace Server
             _sw.Start();
         }
 
-        public void Tick()
+        public long Tick()
         {
-            DeltaTime = _sw.ElapsedMilliseconds - _lastTick;
-            _lastTick = _sw.ElapsedMilliseconds;
-            TickCount++;                   
+            var elapsed = _sw.ElapsedMilliseconds;
+            var dt = elapsed - _lastTick;
+            _lastTick = elapsed;
+            TickCount++;
+
+            return dt;
         }
     }
 }

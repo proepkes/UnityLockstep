@@ -4,6 +4,7 @@ using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Commands;
 using Lockstep.Core;
+using Lockstep.Core.Interfaces;
 using Lockstep.Network;
 using Lockstep.Network.Messages;
 using UnityEngine;           
@@ -21,25 +22,26 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
-
-    private bool _simulationStarted;
+                                       
     private LockstepSystems _systems;
     private NetworkedDataReceiver _dataReceiver;
 
+    private ILogService logger;
+
     private void Awake()
     {
+        logger = new UnityLogger();
         Instance = this;
+
         _dataReceiver = new NetworkedDataReceiver(_client)
             .RegisterCommand(() => new SpawnCommand())
             .RegisterCommand(() => new NavigateCommand());
 
-        _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger());
+        _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
 
         _simulation =
             new Simulation(_systems, _dataReceiver);      
-            
-
-        _simulation.Started += (sender, args) => _simulationStarted = true;
+                                                                             
         _simulation.Ticked += id =>
         {
             _dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
@@ -67,26 +69,13 @@ public class RTSNetworkedSimulation : MonoBehaviour
     void Update()
     {
         _client.Update();
-    }
 
-    void FixedUpdate()
-    {
-        //if (!_simulationStarted)
-        //{
-        //    return;
-        //}   
-
-        //simulation.Simulate(); 
-
-        //if (simulation.FrameCounter % 10 == 0)
-        //{
-        //    LockstepNetwork.Instance.SendHashCode(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
-        //}                               
-    }
+        _simulation.Update(Time.deltaTime * 1000, logger);
+    }   
 
     void OnGUI()
     {
-        if (_simulationStarted)
+        if (_simulation.Running)
         {
             GUILayout.BeginVertical(GUILayout.Width(100f));
             GUI.color = Color.white;

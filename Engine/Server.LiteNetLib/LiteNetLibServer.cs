@@ -18,7 +18,10 @@ namespace Server.LiteNetLib
         public LiteNetLibServer()
         {
             _listener = new EventBasedNetListener();
-            _server = new NetManager(_listener);
+            _server = new NetManager(_listener)
+            {
+                DisconnectTimeout = 30000
+            };
         }
                         
         public void Distribute(byte[] data)
