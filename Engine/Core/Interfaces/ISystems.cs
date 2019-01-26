@@ -2,9 +2,9 @@
 {
     public interface ISystems
     {
-        long HashCode { get; }
+        Contexts Contexts { get; }
 
-        void SetFrameBuffer(IFrameBuffer frameBuffer);
+        ICommandBuffer CommandBuffer { get; set; }          
 
         void Initialize();
 

@@ -7,10 +7,8 @@ using Lockstep.Network.Utils;
 
 namespace Server
 {
-    /// <summary>
-    /// Relays input
-    /// </summary>
-    public class Room
+    //Buffers input and distributes it in fixed timesteps
+    class BufferedRoom
     {
         private const int TargetFps = 20;
 
@@ -32,7 +30,7 @@ namespace Server
         /// </summary>
         private readonly Dictionary<ulong, long> _hashCodes = new Dictionary<ulong, long>();
 
-        public Room(IServer server, int size)
+        public BufferedRoom(IServer server, int size)
         {
             _server = server;
             _size = size;
@@ -55,7 +53,7 @@ namespace Server
             if (_playerIds.Count == _size)
             {
                 Console.WriteLine("Room is full, starting new simulation...");
-                StartSimulationOnConnectedPeers();
+                new Thread(Loop) { IsBackground = true }.Start();
             }
             else
             {
@@ -66,11 +64,11 @@ namespace Server
         private void OnDataReceived(int clientId, byte[] data)
         {
             var reader = new Deserializer(Compressor.Decompress(data));
-            var messageTag = (MessageTag)reader.PeekByte();
+            var messageTag = (MessageTag)reader.GetByte();
             switch (messageTag)
             {
                 case MessageTag.Input:
-                    _server.Distribute(data);    
+                    _inputBuffer?.AddInput(reader.GetRemainingBytes());
                     break;
                 case MessageTag.HashCode:                                 
                     var pkt = new HashCode();
@@ -99,17 +97,56 @@ namespace Server
             {
                 Console.WriteLine(_playerIds.Count + " players remaining.");
             }
-        }           
+        }              
 
-        private void StartSimulationOnConnectedPeers()
-        {
-            Serializer writer = new Serializer();
+        private void Loop()
+        {    
+            var timer = new Timer();
+            var dt = 1000.0 / TargetFps;
+
+            var accumulatedTime = 0.0;
+
+            _hashCodes.Clear();
+            var serializer = new Serializer();
+            _inputBuffer = new InputBuffer();
+
+            Running = true; 
+
+            StartSimulationOnConnectedPeers(serializer);
+
+            timer.Start();
+
+            Console.WriteLine("Simulation started");
+                                               
+            while (Running)
+            {         
+                accumulatedTime += timer.Tick();
+
+                while (accumulatedTime >= dt)
+                {       
+                    serializer.Reset();
+
+                    _inputBuffer.Pack(serializer);           
+                    _server.Distribute(Compressor.Compress(serializer));   
+
+                    accumulatedTime -= dt;
+                }
+
+                Thread.Sleep(1);
+            }
+
+            Console.WriteLine("Simulation stopped");
+        }
+
+        private void StartSimulationOnConnectedPeers(Serializer writer)
+        {                        
             //Create a new seed and send it with a start-message to all clients
             //The message also contains the respective player-id and the servers' frame rate 
             var seed = new Random().Next(int.MinValue, int.MaxValue);
 
             foreach (var player in _playerIds)
-            {                    
+            {
+                writer.Reset();
                 writer.Put((byte)MessageTag.StartSimulation);
                 new Init
                 {

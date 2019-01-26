@@ -1,40 +1,68 @@
 ﻿using System;
-using Lockstep.Client.Interfaces;
-using Lockstep.Core.Data;
+using System.Collections.Generic;
+using System.IO;
+using Lockstep.Client.Implementations;
+using Lockstep.Client.Interfaces;       
 using Lockstep.Core.Interfaces;
+using Lockstep.Network;
 using Lockstep.Network.Messages;
+using Lockstep.Network.Utils;
 
 namespace Lockstep.Client
 {
     public class Simulation
     {                                       
-        public event Action<uint> Ticked;
+        public event Action<ulong> Ticked;
 
         public bool Running { get; set; }
-
-        public IFrameBuffer FrameBuffer { get; } = new FrameBuffer();
-
+                                                                      
         private readonly ISystems _systems;
-
-        private readonly IDataReceiver _dataReceiver;                   
+        private readonly INetwork _network;
 
         public float _tickDt;
-        public float _accumulatedTime;    
+        public float _accumulatedTime;
 
-        public Simulation(ISystems systems, IDataReceiver dataReceiver)
+        public ulong CurrentTick { get; private set; }
+
+        private readonly CommandBuffer _networkCommandBuffer;
+        private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
+
+
+        public Simulation(ISystems systems, INetwork network)
         {
             _systems = systems;
-            _systems.SetFrameBuffer(FrameBuffer);
+            _systems.CommandBuffer = new CommandBuffer();
 
-            _dataReceiver = dataReceiver;
+            _networkCommandBuffer = new CommandBuffer();
 
-            _dataReceiver.InitReceived += OnInitReceived;
-            _dataReceiver.FrameReceived += OnFrameReceived;
+            _network = network;
+            _network.DataReceived += OnDataReceived;         
         }
 
-        public void Execute(ICommand command)
+
+        public void RegisterCommand(Func<ISerializableCommand> commandFactory)
         {
-            _dataReceiver.Receive(command);
+            var tag = commandFactory.Invoke().Tag;
+            if (_commandFactories.ContainsKey(tag))
+            {
+                throw new InvalidDataException("The command tag " + tag + " is already registered. Every command tag must be unique.");
+            }
+            _commandFactories.Add(tag, commandFactory);   
+        }
+
+        public void Execute(ISerializableCommand command)
+        {         
+            //Execute the command locally in the next tick
+            _systems.CommandBuffer.Insert(CurrentTick + 1, command);
+            
+            //Tell the server
+            var writer = new Serializer();
+            writer.Put((byte)MessageTag.Input);
+            writer.Put(CurrentTick + 1);
+            writer.Put(command.Tag);
+            command.Serialize(writer);
+
+            _network.Send(Compressor.Compress(writer));  
         }
 
         public void Update(float deltaTime)
@@ -45,36 +73,59 @@ namespace Lockstep.Client
             }        
 
             _accumulatedTime += deltaTime;
-
-            //TODO: adjust _tickDt depending on buffersize
+                                                            
             while (_accumulatedTime >= _tickDt)
             {            
-                 //Tick();          
+                Tick();          
 
                 _accumulatedTime -= _tickDt;
             }                 
         }
 
-        private void OnInitReceived(object sender, Init init)
+        private void StartSimulation(int targetFps)
         {
-            _tickDt = 1000f / init.TargetFPS;
+            _tickDt = 1000f / targetFps;
 
             _systems.Initialize();
 
             Running = true;                         
-        }
-
-        private void OnFrameReceived(object sender, Frame e)
-        {
-            FrameBuffer.Insert(e);
-
-            Tick();
-        }
+        }         
 
         private void Tick()
-        {                                       
+        {                             
             _systems.Tick();
-            Ticked?.Invoke(FrameBuffer.ItemIndex);                                                                
-        }        
+            Ticked?.Invoke(CurrentTick);
+
+            CurrentTick++;
+        }
+
+        private void OnDataReceived(byte[] data)
+        {
+            data = Compressor.Decompress(data);
+
+            var reader = new Deserializer(data);
+            var messageTag = (MessageTag)reader.GetByte();
+            switch (messageTag)
+            {
+                case MessageTag.StartSimulation:
+                    var init = new Init();
+                    init.Deserialize(reader);
+                    StartSimulation(init.TargetFPS);
+                    break;
+                case MessageTag.Input:
+                    var frameNumber = reader.GetULong();   
+                    var tag = reader.GetUShort();
+
+                    if (_commandFactories.ContainsKey(tag))
+                    {
+                        var newCommand = _commandFactories[tag].Invoke();
+                        newCommand.Deserialize(reader);
+
+                        _networkCommandBuffer.Insert(frameNumber, newCommand);
+                    }  
+                                                                                    
+                    break;
+            }
+        }
     }
 }
