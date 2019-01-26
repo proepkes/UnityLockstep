@@ -6,6 +6,18 @@ namespace Lockstep.Network.Utils
     public static class Compressor
     {
 
+        public static byte[] Compress(byte[] data)
+        {
+            using (var output = new MemoryStream())
+            {
+                using (var dstream = new DeflateStream(output, CompressionLevel.Optimal))
+                {
+                    dstream.Write(data, 0, data.Length);
+                }
+                return output.ToArray();
+            }
+        }
+
         public static byte[] Compress(Serializer serializer)
         {
             using (var output = new MemoryStream())

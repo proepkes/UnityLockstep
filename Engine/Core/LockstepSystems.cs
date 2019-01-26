@@ -4,16 +4,14 @@ using Lockstep.Core.Interfaces;
 namespace Lockstep.Core
 {
     public sealed class LockstepSystems : Entitas.Systems, ISystems
-    {                   
-        public long HashCode => _contexts.gameState.hashCode.value;
-
-        private IFrameBuffer _frameBuffer;
-        private readonly Contexts _contexts;
+    {                      
+        public Contexts Contexts { get; }
+        public ICommandBuffer CommandBuffer { get; set; }   
 
         public LockstepSystems(Contexts contexts, params IService[] additionalServices)
-        {                         
-            _contexts = contexts;
-            _contexts.SubscribeId();
+        {
+            Contexts = contexts;
+            Contexts.SubscribeId();
 
             var serviceContainer = new ServiceContainer();
             foreach (var service in additionalServices)
@@ -21,23 +19,24 @@ namespace Lockstep.Core
                 serviceContainer.Register(service);
             }
 
-            Add(new InputFeature(contexts, serviceContainer));
+            Add(new InputFeature(Contexts, serviceContainer));
 
-            Add(new NavigationFeature(contexts, serviceContainer));
+            Add(new NavigationFeature(Contexts, serviceContainer));
 
-            Add(new GameEventSystems(contexts));
+            Add(new GameEventSystems(Contexts));
 
-            Add(new HashCodeFeature(contexts, serviceContainer));
-        }
+            Add(new HashCodeFeature(Contexts, serviceContainer));
+        } 
 
-        public void SetFrameBuffer(IFrameBuffer frameBuffer)
-        {
-            _frameBuffer = frameBuffer;
-        }
 
         public void Tick()
         {
-            _contexts.input.SetFrame(_frameBuffer.GetNext());
+            if (CommandBuffer == null)
+            {
+                return;;
+            }
+
+            Contexts.input.SetCommands(CommandBuffer.GetNext());
 
             Execute();
             Cleanup();

@@ -24,7 +24,7 @@ namespace Lockstep.Core.Systems.Navigation
             {
                 if (entity.velocity.value != Vector2.Zero)
                 {
-                    entity.ReplacePosition(entity.position.value += entity.velocity.value);
+                    entity.ReplacePosition(entity.position.value + entity.velocity.value);
 
                     updatedPositions.Add(entity.id.value, entity.position.value);
                 }

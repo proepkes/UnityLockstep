@@ -10,7 +10,7 @@ namespace Server
         static void Main(string[] args)
         {
             int roomSize = 1;
-            int waitInSeconds = 3;
+            int waitInSeconds = 1;
 
             var sw = new Stopwatch();
             sw.Start();

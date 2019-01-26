@@ -6,5 +6,5 @@ namespace Lockstep.Core.Components.GameState
     [GameState, Unique]
     public class PausedComponent : IComponent
     {
-    }
+    }   
 }

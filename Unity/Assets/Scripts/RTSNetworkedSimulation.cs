@@ -24,22 +24,17 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public int ServerPort = 9050;
                                        
     private LockstepSystems _systems;
-    private IDataReceiver _dataReceiver;   
+
     private void Awake()
     {                                
         Instance = this;
 
-        //_dataReceiver = new NetworkedDataReceiver(_client)
-        //    .RegisterCommand(() => new SpawnCommand())
-        //    .RegisterCommand(() => new NavigateCommand());
-
-        _dataReceiver = new LocalDataReceiver();
-
         _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
 
-        _simulation =
-            new Simulation(_systems, _dataReceiver);      
-                                                                             
+        _simulation = new Simulation(_systems, _client); 
+        _simulation.RegisterCommand(() => new SpawnCommand());
+        _simulation.RegisterCommand(() => new NavigateCommand());
+
         _simulation.Ticked += id =>
         {
             //_dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});

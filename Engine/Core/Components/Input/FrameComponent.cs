@@ -5,8 +5,8 @@ using Lockstep.Core.Data;
 namespace Lockstep.Core.Components.Input
 {
     [Input, Unique]
-    public class FrameComponent : IComponent
+    public class CommandsComponent : IComponent
     {
-        public Frame value;
+        public ICommand[] input;
     }
 }
