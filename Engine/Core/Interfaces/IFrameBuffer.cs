@@ -6,6 +6,8 @@ namespace Lockstep.Core.Interfaces
     {
         uint Count { get; }
         uint ItemIndex { get; }
+        uint Remaining { get; }
+
         void Insert(Frame item);
         Frame GetNext();
     }

@@ -24,13 +24,9 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public int ServerPort = 9050;
                                        
     private LockstepSystems _systems;
-    private NetworkedDataReceiver _dataReceiver;
-
-    private ILogService logger;
-
+    private NetworkedDataReceiver _dataReceiver;   
     private void Awake()
-    {
-        logger = new UnityLogger();
+    {                                
         Instance = this;
 
         _dataReceiver = new NetworkedDataReceiver(_client)
@@ -70,7 +66,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     {
         _client.Update();
 
-        _simulation.Update(Time.deltaTime * 1000, logger);
+        _simulation.Update(Time.deltaTime * 1000);
     }   
 
     void OnGUI()

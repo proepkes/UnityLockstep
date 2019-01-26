@@ -12,6 +12,8 @@ namespace Lockstep.Client
 
         public uint ItemIndex { get; private set; }
 
+        public uint Remaining => Count - ItemIndex;
+
         public void Insert(Frame item)
         {
             lock (_frames)

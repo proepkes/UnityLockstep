@@ -12,18 +12,19 @@ namespace Lockstep.Client
 
         public bool Running { get; set; }
 
+        public IFrameBuffer FrameBuffer { get; } = new FrameBuffer();
+
         private readonly ISystems _systems;
 
-        private readonly IDataReceiver _dataReceiver;
-        private readonly FrameBuffer _frameBuffer = new FrameBuffer();
+        private readonly IDataReceiver _dataReceiver;                   
 
-        private float _tickDt;
-        private float _accumulatedTime;
+        public float _tickDt;
+        public float _accumulatedTime;    
 
         public Simulation(ISystems systems, IDataReceiver dataReceiver)
         {
             _systems = systems;
-            _systems.SetFrameBuffer(_frameBuffer);
+            _systems.SetFrameBuffer(FrameBuffer);
 
             _dataReceiver = dataReceiver;
 
@@ -36,8 +37,8 @@ namespace Lockstep.Client
             _dataReceiver.Receive(command);
         }
 
-        public void Update(float deltaTime, ILogService logger)
-        {
+        public void Update(float deltaTime)
+        {                             
             if (!Running)                        
             {
                 return;
@@ -46,11 +47,10 @@ namespace Lockstep.Client
             _accumulatedTime += deltaTime;
 
             //TODO: adjust _tickDt depending on buffersize
-            while (_accumulatedTime >= _tickDt && _frameBuffer.Count - _frameBuffer.ItemIndex > 2)
-            {
-                logger.Warn("tick " + (_frameBuffer.Count - _frameBuffer.ItemIndex));
-                Tick();
-                                             
+            while (_accumulatedTime >= _tickDt)
+            {            
+                 Tick();          
+
                 _accumulatedTime -= _tickDt;
             }                 
         }
@@ -66,13 +66,13 @@ namespace Lockstep.Client
 
         private void OnFrameReceived(object sender, Frame e)
         {
-            _frameBuffer.Insert(e); 
+            FrameBuffer.Insert(e); 
         }
 
         private void Tick()
         {                                       
             _systems.Tick();
-            Ticked?.Invoke(_frameBuffer.ItemIndex);                                                                
+            Ticked?.Invoke(FrameBuffer.ItemIndex);                                                                
         }        
     }
 }
