@@ -4,11 +4,11 @@ namespace Lockstep.Core.Interfaces
 {
     public interface ICommandBuffer
     {
-        ulong Count { get; }
-        ulong ItemIndex { get; }
-        ulong Remaining { get; }
+        long Count { get; }
+        long ItemIndex { get; }
+        long Remaining { get; }
 
-        void Insert(ulong frameNumber, ICommand command);
+        void Insert(long frameNumber, ICommand command);
 
         ICommand[] GetNext();
     }

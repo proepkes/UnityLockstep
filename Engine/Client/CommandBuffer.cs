@@ -7,24 +7,24 @@ namespace Lockstep.Client.Implementations
 {                
     public class CommandBuffer : ICommandBuffer
     {                                   
-        private readonly Dictionary<ulong, List<ICommand>> _commands = new Dictionary<ulong, List<ICommand>>();
+        private readonly Dictionary<long, List<ICommand>> _commands = new Dictionary<long, List<ICommand>>();
 
-        public ulong Count
+        public long Count
         {
             get
             {
                 lock (_commands)
                 {
-                    return _commands.Keys.Max();
+                    return _commands.LongCount();
                 }
             }
         }
 
-        public ulong ItemIndex { get; private set; }
+        public long ItemIndex { get; private set; }
 
-        public ulong Remaining => Count - ItemIndex;
+        public long Remaining => Count - ItemIndex;
 
-        public void Insert(ulong frameNumber, ICommand command)
+        public void Insert(long frameNumber, ICommand command)
         {
             lock (_commands)
             {

@@ -1,41 +1,36 @@
-﻿using System.Collections;   
-using Lockstep.Client;
-using Lockstep.Client.Implementations;
+﻿using System.Collections;           
+using Lockstep.Client;                  
 using Lockstep.Client.Interfaces;
 using Lockstep.Commands;
-using Lockstep.Core;
-using Lockstep.Core.Interfaces;
-using Lockstep.Network;
-using Lockstep.Network.Messages;
+using Lockstep.Core;             
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
-{
+{      
     public static RTSNetworkedSimulation Instance;
-                                        
-    private Simulation _simulation;
-    private readonly LiteNetLibClient _client = new LiteNetLibClient(); 
-                                           
-    public RTSEntityDatabase EntityDatabase;
-
-    public bool Connected => _client.Connected;
 
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
-                                       
-    private LockstepSystems _systems;
+
+    public Simulation Simulation;
+    public LockstepSystems Systems;
+    public RTSEntityDatabase EntityDatabase;
+
+    public bool Connected => _client.Connected; 
+
+    private readonly LiteNetLibClient _client = new LiteNetLibClient();  
 
     private void Awake()
     {                                
         Instance = this;
 
-        _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
+        Systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
 
-        _simulation = new Simulation(_systems, _client); 
-        _simulation.RegisterCommand(() => new SpawnCommand());
-        _simulation.RegisterCommand(() => new NavigateCommand());
+        Simulation = new Simulation(Systems, _client); 
+        Simulation.RegisterCommand(() => new SpawnCommand());
+        Simulation.RegisterCommand(() => new NavigateCommand());
 
-        _simulation.Ticked += id =>
+        Simulation.Ticked += id =>
         {
             //_dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
         };
@@ -44,7 +39,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public void Execute(ISerializableCommand command)
     {
-        _simulation.Execute(command);
+        Simulation.Execute(command);
     }
 
     private void Start()
@@ -63,12 +58,12 @@ public class RTSNetworkedSimulation : MonoBehaviour
     {
         _client.Update();
 
-        _simulation.Update(Time.deltaTime * 1000);
+        Simulation.Update(Time.deltaTime * 1000);
     }   
 
     void OnGUI()
     {
-        if (_simulation.Running)
+        if (Simulation.Running)
         {
             GUILayout.BeginVertical(GUILayout.Width(100f));
             GUI.color = Color.white;

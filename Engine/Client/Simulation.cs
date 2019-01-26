@@ -12,7 +12,7 @@ namespace Lockstep.Client
 {
     public class Simulation
     {                                       
-        public event Action<ulong> Ticked;
+        public event Action<long> Ticked;
 
         public bool Running { get; set; }
                                                                       
@@ -22,18 +22,19 @@ namespace Lockstep.Client
         public float _tickDt;
         public float _accumulatedTime;
 
-        public ulong CurrentTick { get; private set; }
+        public long CurrentTick { get; private set; }
 
-        private readonly CommandBuffer _networkCommandBuffer;
-        private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
+        public ICommandBuffer LocalCommandBuffer => _systems.CommandBuffer;
+        public readonly CommandBuffer NetworkCommandBuffer;
 
+        private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();   
 
         public Simulation(ISystems systems, INetwork network)
         {
             _systems = systems;
             _systems.CommandBuffer = new CommandBuffer();
 
-            _networkCommandBuffer = new CommandBuffer();
+            NetworkCommandBuffer = new CommandBuffer();
 
             _network = network;
             _network.DataReceived += OnDataReceived;         
@@ -52,7 +53,7 @@ namespace Lockstep.Client
 
         public void Execute(ISerializableCommand command)
         {         
-            //Execute the command locally in the next tick
+            //Execute the command locally on the next tick
             _systems.CommandBuffer.Insert(CurrentTick + 1, command);
             
             //Tell the server
@@ -113,7 +114,7 @@ namespace Lockstep.Client
                     StartSimulation(init.TargetFPS);
                     break;
                 case MessageTag.Input:
-                    var frameNumber = reader.GetULong();   
+                    var frameNumber = reader.GetLong();   
                     var tag = reader.GetUShort();
 
                     if (_commandFactories.ContainsKey(tag))
@@ -121,7 +122,7 @@ namespace Lockstep.Client
                         var newCommand = _commandFactories[tag].Invoke();
                         newCommand.Deserialize(reader);
 
-                        _networkCommandBuffer.Insert(frameNumber, newCommand);
+                        NetworkCommandBuffer.Insert(frameNumber, newCommand);
                     }  
                                                                                     
                     break;
