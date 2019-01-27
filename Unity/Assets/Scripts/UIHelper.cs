@@ -3,13 +3,23 @@ using UnityEngine.UI;
 
 public class UIHelper : MonoBehaviour
 {
+    public Text HashCodeText;
+    public Text AgentCountText;
+
     public Text ConnectedText;
-    public Text AgentCountText;    
+    public Text CurrentTickText;
 
     // Update is called once per frame
     void Update()
     {
-        ConnectedText.text = "Connected: " + RTSNetworkedSimulation.Instance.Connected;
+        if (RTSNetworkedSimulation.Instance.Simulation.Running)
+        {
+            HashCodeText.text = "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
+        }
+
         AgentCountText.text = "Agents: " + Contexts.sharedInstance.game.GetEntities().Length;
+
+        ConnectedText.text = "Connected: " + RTSNetworkedSimulation.Instance.Connected;
+        CurrentTickText.text = "CurrentTick: " + RTSNetworkedSimulation.Instance.Simulation.CurrentTick;
     }
 }

@@ -73,18 +73,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         _client.Update();
 
         Simulation.Update(Time.deltaTime * 1000);
-    }   
-
-    void OnGUI()
-    {
-        if (Simulation.Running)
-        {
-            GUILayout.BeginVertical(GUILayout.Width(100f));
-            GUI.color = Color.white;
-            GUILayout.Label("HashCode: " + Contexts.sharedInstance.gameState.hashCode.value);
-            GUILayout.EndVertical();
-        }
-    }
+    }            
 
     public IEnumerator AutoConnect()
     {

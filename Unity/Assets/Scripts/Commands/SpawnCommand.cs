@@ -23,15 +23,15 @@ namespace Lockstep.Commands
         public void Serialize(Serializer writer)
         {
             writer.Put(EntityConfigId);
-            writer.Put((long)Position.X);
-            writer.Put((long)Position.Y);
+            writer.Put(Position.X.RawValue);
+            writer.Put(Position.Y.RawValue);
         }
 
         public void Deserialize(Deserializer reader)
         {
             EntityConfigId = reader.GetInt();
-            Position.X = reader.GetLong();
-            Position.Y = reader.GetLong();
+            Position.X.RawValue = reader.GetLong();
+            Position.Y.RawValue = reader.GetLong();
         }
 
     }
