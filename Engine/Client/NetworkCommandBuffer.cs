@@ -12,6 +12,7 @@ namespace Lockstep.Client
 {
     public class NetworkCommandBuffer : CommandBuffer
     {
+        //TODO: refactor: dont receive meta information through commandbuffer
         public event Action<Init> InitReceived;
 
         private readonly INetwork _network;
@@ -33,13 +34,14 @@ namespace Lockstep.Client
             _commandFactories.Add(tag, commandFactory);
         }         
 
-        public override void Insert(long frameNumber, ICommand command)
+        public override void Insert(byte commanderId, long frameNumber, ICommand command)
         {
             if (command is ISerializableCommand serializable)
             {
                 //Tell the server
                 var writer = new Serializer();
                 writer.Put((byte)MessageTag.Input);
+                writer.Put(commanderId);
                 writer.Put(frameNumber);
                 writer.Put(serializable.Tag);
                 serializable.Serialize(writer);
@@ -62,6 +64,7 @@ namespace Lockstep.Client
                     InitReceived?.Invoke(init);
                     break;
                 case MessageTag.Input:
+                    var commanderId = reader.GetByte();
                     var frameNumber = reader.GetLong();
                     var tag = reader.GetUShort();
 
@@ -71,7 +74,7 @@ namespace Lockstep.Client
                         newCommand.Deserialize(reader);
 
 
-                        base.Insert(frameNumber, newCommand);                               
+                        base.Insert(commanderId, frameNumber, newCommand);                               
                     }   
 
                     break;

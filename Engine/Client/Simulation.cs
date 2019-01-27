@@ -1,6 +1,4 @@
-﻿using System;                 
-using Lockstep.Client.Implementations;
-using Lockstep.Client.Interfaces;
+﻿using System;                     
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
@@ -10,6 +8,8 @@ namespace Lockstep.Client
     public class Simulation
     {                                       
         public event Action<long> Ticked;
+
+        public byte LocalPlayerId { get; private set; }
 
         public bool Running { get; set; }
                                                                       
@@ -24,28 +24,36 @@ namespace Lockstep.Client
         /// Amount of ticks until a command gets executed
         /// </summary>
         public int LagCompensation { get; set; } = 10;
-
-        public readonly ICommandBuffer LocalCommandBuffer = new CommandBuffer();
-        public readonly ICommandBuffer RemoteCommandBuffer;
+                                                                                 
+        public readonly ICommandBuffer CommandBuffer;
+        private readonly ILogService _logger;
 
         private readonly object _currentTickLock = new object();
 
 
-        public Simulation(ISystems systems, ICommandBuffer remoteCommandBuffer)
+        public Simulation(ISystems systems, ICommandBuffer commandBuffer, ILogService logger)
         {
             _systems = systems;
-            _systems.CommandBuffer = LocalCommandBuffer;
+            _systems.CommandBuffer = commandBuffer;
 
-            RemoteCommandBuffer = remoteCommandBuffer;
-            RemoteCommandBuffer.Inserted += (l, command) =>
+            CommandBuffer = commandBuffer;
+            _logger = logger;
+            CommandBuffer.Inserted += (playerId, frameNumber, command) =>
             {
-                LocalCommandBuffer.Insert(l, command);
+                lock (_currentTickLock)
+                {
+                    if (playerId != LocalPlayerId && frameNumber < CurrentTick)
+                    {
+                        logger.Warn($"Rollback required, because we are at frame {CurrentTick} but player {playerId} sent us input for frame {frameNumber}");
+                    }
+                }
             };
         }
 
         public void Start(Init init)
         {             
             _tickDt = 1000f / init.TargetFPS;
+            LocalPlayerId = init.PlayerID;
 
             _systems.Initialize();
 
@@ -56,10 +64,9 @@ namespace Lockstep.Client
         {                                             
             lock (_currentTickLock)
             {
-                var executionTick = CurrentTick + LagCompensation;
+                var executionTick = CurrentTick + LagCompensation;    
 
-                //LocalCommandBuffer.Insert(nextTick, command);
-                RemoteCommandBuffer.Insert(executionTick, command);
+                CommandBuffer.Insert(LocalPlayerId, executionTick, command);
             } 
         }
 

@@ -10,7 +10,7 @@ namespace Lockstep.Client.Implementations
     {                                   
         private readonly Dictionary<long, List<ICommand>> _commands = new Dictionary<long, List<ICommand>>();
 
-        public event Action<long, ICommand> Inserted;
+        public event Action<byte, long, ICommand> Inserted;
 
         public long Count
         {
@@ -27,7 +27,7 @@ namespace Lockstep.Client.Implementations
 
         public long Remaining => Count - ItemIndex;
 
-        public virtual void Insert(long frameNumber, ICommand command)
+        public virtual void Insert(byte commanderId, long frameNumber, ICommand command)
         {
             lock (_commands)
             {
@@ -38,7 +38,7 @@ namespace Lockstep.Client.Implementations
 
                 _commands[frameNumber].Add(command);
 
-                Inserted?.Invoke(frameNumber, command);
+                Inserted?.Invoke(commanderId, frameNumber, command);
             }              
         }
 

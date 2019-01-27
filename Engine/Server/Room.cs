@@ -109,7 +109,8 @@ namespace Server
             var seed = new Random().Next(int.MinValue, int.MaxValue);
 
             foreach (var player in _playerIds)
-            {                    
+            {
+                writer.Reset();
                 writer.Put((byte)MessageTag.StartSimulation);
                 new Init
                 {

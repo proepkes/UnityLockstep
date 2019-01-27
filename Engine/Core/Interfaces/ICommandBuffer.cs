@@ -5,13 +5,13 @@ namespace Lockstep.Core.Interfaces
 {
     public interface ICommandBuffer
     {
-        event Action<long, ICommand> Inserted;
+        event Action<byte, long, ICommand> Inserted;
 
         long Count { get; }
         long ItemIndex { get; }
         long Remaining { get; }
 
-        void Insert(long frameNumber, ICommand command);
+        void Insert(byte commanderId, long frameNumber, ICommand command);
 
         ICommand[] GetNext();
     }

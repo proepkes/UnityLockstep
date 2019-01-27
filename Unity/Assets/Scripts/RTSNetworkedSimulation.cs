@@ -32,7 +32,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 
-        Simulation = new Simulation(Systems, _remoteCommandBuffer);
+        Simulation = new Simulation(Systems, _remoteCommandBuffer, new UnityLogger());
 
         _remoteCommandBuffer.InitReceived += StartSimulation;   
 
@@ -44,6 +44,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     private void StartSimulation(Init data)
     {
+        Debug.Log("Starting as player:" + data.PlayerID);
         Simulation.Start(data);
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
