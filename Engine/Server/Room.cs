@@ -70,7 +70,7 @@ namespace Server
             switch (messageTag)
             {
                 case MessageTag.Input:
-                    _server.Distribute(data);    
+                    _server.Distribute(clientId, data);    
                     break;
                 case MessageTag.HashCode:                                 
                     var pkt = new HashCode();

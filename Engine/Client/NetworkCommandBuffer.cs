@@ -12,7 +12,7 @@ namespace Lockstep.Client
 {
     public class NetworkCommandBuffer : CommandBuffer
     {
-        //TODO: refactor: dont receive meta information through commandbuffer
+        //TODO: refactor: don't receive meta information through commandbuffer
         public event Action<Init> InitReceived;
 
         private readonly INetwork _network;
@@ -34,20 +34,26 @@ namespace Lockstep.Client
             _commandFactories.Add(tag, commandFactory);
         }         
 
-        public override void Insert(byte commanderId, long frameNumber, ICommand command)
-        {
-            if (command is ISerializableCommand serializable)
-            {
-                //Tell the server
-                var writer = new Serializer();
-                writer.Put((byte)MessageTag.Input);
-                writer.Put(commanderId);
-                writer.Put(frameNumber);
-                writer.Put(serializable.Tag);
-                serializable.Serialize(writer);
+        public override void Insert(byte commanderId, long frameNumber, ICommand[] commands)
+        {   
+            base.Insert(commanderId, frameNumber, commands);
 
-                _network.Send(Compressor.Compress(writer));
+            //Tell the server
+            var writer = new Serializer();
+            writer.Put((byte)MessageTag.Input);
+            writer.Put(commanderId);
+            writer.Put(frameNumber);
+            writer.Put(commands.Length);
+            foreach (var command in commands)
+            {
+                if (command is ISerializableCommand serializable)
+                {    
+                    writer.Put(serializable.Tag);
+                    serializable.Serialize(writer);
+                }
             }
+
+            _network.Send(Compressor.Compress(writer));
         } 
 
         private void OnDataReceived(byte[] data)
@@ -66,17 +72,21 @@ namespace Lockstep.Client
                 case MessageTag.Input:
                     var commanderId = reader.GetByte();
                     var frameNumber = reader.GetLong();
-                    var tag = reader.GetUShort();
-
-                    if (_commandFactories.ContainsKey(tag))
+                    var countCommands = reader.GetInt();
+                    var commands = new ICommand[countCommands];
+                    for (var i = 0; i < countCommands; i++)
                     {
-                        var newCommand = _commandFactories[tag].Invoke();
-                        newCommand.Deserialize(reader);
+                        var tag = reader.GetUShort();
 
+                        if (_commandFactories.ContainsKey(tag))
+                        {
+                            var newCommand = _commandFactories[tag].Invoke();
+                            newCommand.Deserialize(reader);
+                            commands[i] = newCommand;
+                        }
+                    }
 
-                        base.Insert(commanderId, frameNumber, newCommand);                               
-                    }   
-
+                    base.Insert(commanderId, frameNumber, commands); 
                     break;
             }
         }    

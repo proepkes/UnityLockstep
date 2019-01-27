@@ -1,4 +1,5 @@
-﻿using System;                     
+﻿using System;
+using System.Collections.Generic;
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
@@ -6,29 +7,26 @@ using Lockstep.Network.Messages;
 namespace Lockstep.Client
 {
     public class Simulation
-    {                                       
-        public event Action<long> Ticked;
-
-        public byte LocalPlayerId { get; private set; }
-
-        public bool Running { get; set; }
-                                                                      
-        private readonly ISystems _systems;   
-
-        public float _tickDt;
-        public float _accumulatedTime;
-
-        public long CurrentTick { get; private set; }
+    {                              
+        public event Action<long> Ticked;     
 
         /// <summary>
         /// Amount of ticks until a command gets executed
         /// </summary>
         public int LagCompensation { get; set; } = 10;
-                                                                                 
-        public readonly ICommandBuffer CommandBuffer;
-        private readonly ILogService _logger;
 
-        private readonly object _currentTickLock = new object();
+        public byte LocalPlayerId { get; private set; }   
+
+        public bool Running { get; set; }   
+
+        public long CurrentTick { get; private set; }
+
+        public readonly ICommandBuffer CommandBuffer;   
+
+        public float _tickDt;
+        public float _accumulatedTime;
+        private readonly ISystems _systems;
+        private readonly List<ICommand> _temporaryCommandBuffer = new List<ICommand>(20);
 
 
         public Simulation(ISystems systems, ICommandBuffer commandBuffer, ILogService logger)
@@ -36,17 +34,13 @@ namespace Lockstep.Client
             _systems = systems;
             _systems.CommandBuffer = commandBuffer;
 
-            CommandBuffer = commandBuffer;
-            _logger = logger;
+            CommandBuffer = commandBuffer;          
             CommandBuffer.Inserted += (playerId, frameNumber, command) =>
-            {
-                lock (_currentTickLock)
+            {          
+                if (frameNumber < CurrentTick)
                 {
-                    if (playerId != LocalPlayerId && frameNumber < CurrentTick)
-                    {
-                        logger.Warn($"Rollback required, because we are at frame {CurrentTick} but player {playerId} sent us input for frame {frameNumber}");
-                    }
-                }
+                    logger.Warn($"Rollback required, because we are at frame {CurrentTick} but player {playerId} sent us input for frame {frameNumber}");
+                } 
             };
         }
 
@@ -61,13 +55,11 @@ namespace Lockstep.Client
         }   
 
         public void Execute(ICommand command)
-        {                                             
-            lock (_currentTickLock)
+        {
+            lock (_temporaryCommandBuffer)
             {
-                var executionTick = CurrentTick + LagCompensation;    
-
-                CommandBuffer.Insert(LocalPlayerId, executionTick, command);
-            } 
+                _temporaryCommandBuffer.Add(command);
+            }            
         }
 
         public void Update(float deltaTime)
@@ -77,27 +69,32 @@ namespace Lockstep.Client
                 return;
             }        
 
-            _accumulatedTime += deltaTime;
-                                                            
+            _accumulatedTime += deltaTime; 
+
             while (_accumulatedTime >= _tickDt)
             {
-                lock (_currentTickLock)
-                {
-                    Tick(); 
-                }        
+                Tick();
 
                 _accumulatedTime -= _tickDt;
             }                 
         }
-     
 
         private void Tick()
-        {                             
+        {
+            ICommand[] frameCommands;
+            lock (_temporaryCommandBuffer)
+            {
+                frameCommands = _temporaryCommandBuffer.ToArray();
+                _temporaryCommandBuffer.Clear();
+            }
+
+            CommandBuffer.Insert(LocalPlayerId, CurrentTick + LagCompensation, frameCommands);
+
             _systems.Tick();
+
             Ticked?.Invoke(CurrentTick);
 
             CurrentTick++;
         }
-
     }
 }

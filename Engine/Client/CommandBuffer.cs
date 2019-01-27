@@ -8,17 +8,17 @@ namespace Lockstep.Client.Implementations
 {                
     public class CommandBuffer : ICommandBuffer
     {                                   
-        private readonly Dictionary<long, List<ICommand>> _commands = new Dictionary<long, List<ICommand>>();
+        private readonly Dictionary<long, List<ICommand>> _buffer = new Dictionary<long, List<ICommand>>();
 
-        public event Action<byte, long, ICommand> Inserted;
+        public event Action<byte, long, ICommand[]> Inserted;
 
         public long Count
         {
             get
             {
-                lock (_commands)
+                lock (_buffer)
                 {
-                    return _commands.LongCount();
+                    return _buffer.LongCount();
                 }
             }
         }
@@ -27,32 +27,32 @@ namespace Lockstep.Client.Implementations
 
         public long Remaining => Count - ItemIndex;
 
-        public virtual void Insert(byte commanderId, long frameNumber, ICommand command)
+        public virtual void Insert(byte commanderId, long frameNumber, ICommand[] commands)
         {
-            lock (_commands)
+            lock (_buffer)
             {
-                if (!_commands.ContainsKey(frameNumber))
+                if (!_buffer.ContainsKey(frameNumber))
                 {
-                    _commands.Add(frameNumber, new List<ICommand>(10));
+                    _buffer.Add(frameNumber, new List<ICommand>(10));
                 }
 
-                _commands[frameNumber].Add(command);
+                _buffer[frameNumber].AddRange(commands);
 
-                Inserted?.Invoke(commanderId, frameNumber, command);
+                Inserted?.Invoke(commanderId, frameNumber, commands);
             }              
         }
 
         public ICommand[] GetNext()
         {                    
-            lock (_commands)
+            lock (_buffer)
             {
                 //If no commands were inserted then return an empty list
-                if (!_commands.ContainsKey(ItemIndex))
+                if (!_buffer.ContainsKey(ItemIndex))
                 {
-                    _commands[ItemIndex] = new List<ICommand>();
+                    _buffer[ItemIndex] = new List<ICommand>();
                 }
 
-                return _commands[ItemIndex++].ToArray();    
+                return _buffer[ItemIndex++].ToArray();    
 
             }                 
         }
