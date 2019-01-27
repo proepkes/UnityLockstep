@@ -20,7 +20,12 @@ namespace Lockstep.Client
 
         public long CurrentTick { get; private set; }
 
-        public ICommandBuffer LocalCommandBuffer => _systems.CommandBuffer;
+        /// <summary>
+        /// Amount of ticks until a command gets executed
+        /// </summary>
+        public int LagCompensation { get; set; } = 10;
+
+        public readonly ICommandBuffer LocalCommandBuffer = new CommandBuffer();
         public readonly ICommandBuffer RemoteCommandBuffer;
 
         private readonly object _currentTickLock = new object();
@@ -29,7 +34,7 @@ namespace Lockstep.Client
         public Simulation(ISystems systems, ICommandBuffer remoteCommandBuffer)
         {
             _systems = systems;
-            _systems.CommandBuffer = new CommandBuffer();
+            _systems.CommandBuffer = LocalCommandBuffer;
 
             RemoteCommandBuffer = remoteCommandBuffer;
             RemoteCommandBuffer.Inserted += (l, command) =>
@@ -51,7 +56,7 @@ namespace Lockstep.Client
         {                                             
             lock (_currentTickLock)
             {
-                var executionTick = CurrentTick + 20;
+                var executionTick = CurrentTick + LagCompensation;
 
                 //LocalCommandBuffer.Insert(nextTick, command);
                 RemoteCommandBuffer.Insert(executionTick, command);
