@@ -7,14 +7,17 @@ using Lockstep.Network.Utils;
 
 namespace Server
 {
+    /// <summary>
+    /// Relays input
+    /// </summary>
     public class Room
     {
-        private const int TargetFps = 50;
+        private const int TargetFps = 20;
 
         private byte _nextPlayerId;
         private readonly int _size;
 
-        private InputPacker _inputPacker; 
+        private InputBuffer _inputBuffer; 
         private readonly IServer _server;
 
         public bool Running { get; private set; } 
@@ -38,8 +41,8 @@ namespace Server
         {
             _server.ClientConnected += OnClientConnected;
             _server.ClientDisconnected += OnClientDisconnected;
-            _server.DataReceived += OnDataReceived;
-
+            _server.DataReceived += OnDataReceived;  
+            
             _server.Run(port);
 
             Console.WriteLine("Server started. Waiting for " + _size + " players...");
@@ -52,7 +55,7 @@ namespace Server
             if (_playerIds.Count == _size)
             {
                 Console.WriteLine("Room is full, starting new simulation...");
-                new Thread(Loop) { IsBackground = true }.Start();
+                StartSimulationOnConnectedPeers();
             }
             else
             {
@@ -62,12 +65,12 @@ namespace Server
 
         private void OnDataReceived(int clientId, byte[] data)
         {
-            var reader = new Deserializer(data);
-            var messageTag = (MessageTag)reader.GetByte();
+            var reader = new Deserializer(Compressor.Decompress(data));
+            var messageTag = (MessageTag)reader.PeekByte();
             switch (messageTag)
             {
                 case MessageTag.Input:
-                    _inputPacker?.AddInput(reader.GetRemainingBytes());
+                    _server.Distribute(data);    
                     break;
                 case MessageTag.HashCode:                                 
                     var pkt = new HashCode();
@@ -96,58 +99,17 @@ namespace Server
             {
                 Console.WriteLine(_playerIds.Count + " players remaining.");
             }
-        }              
+        }           
 
-        private void Loop()
-        {    
-            var timer = new Timer();
-            var dt = 1000.0 / TargetFps;
-
-            var accumulatedTime = 0.0;
-
-            _hashCodes.Clear();
-            var serializer = new Serializer();
-            _inputPacker = new InputPacker();
-
-            Running = true; 
-
-            StartSimulationOnConnectedPeers(serializer);
-
-            timer.Start();
-
-            Console.WriteLine("Simulation started");
-                                               
-            while (Running)
-            {       
-                timer.Tick();
-
-                accumulatedTime += timer.DeltaTime;
-
-                while (accumulatedTime >= dt)
-                {       
-                    serializer.Reset();
-
-                    _inputPacker.Pack(serializer);           
-                    _server.Distribute(serializer.Data, serializer.Length);   
-
-                    accumulatedTime -= dt;
-                }
-
-                Thread.Sleep(1);
-            }
-
-            Console.WriteLine("Simulation stopped");
-        }
-
-        private void StartSimulationOnConnectedPeers(Serializer writer)
-        {                        
+        private void StartSimulationOnConnectedPeers()
+        {
+            Serializer writer = new Serializer();
             //Create a new seed and send it with a start-message to all clients
             //The message also contains the respective player-id and the servers' frame rate 
             var seed = new Random().Next(int.MinValue, int.MaxValue);
 
             foreach (var player in _playerIds)
-            {
-                writer.Reset();
+            {                    
                 writer.Put((byte)MessageTag.StartSimulation);
                 new Init
                 {
@@ -156,7 +118,7 @@ namespace Server
                     PlayerID = player.Value
                 }.Serialize(writer);
 
-                _server.Send(player.Key, writer.Data, writer.Length);
+                _server.Send(player.Key, Compressor.Compress(writer));
             }   
         }
     }

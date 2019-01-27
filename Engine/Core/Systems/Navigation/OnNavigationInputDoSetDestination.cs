@@ -15,20 +15,20 @@ namespace Lockstep.Core.Systems.Navigation
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            return context.CreateCollector(InputMatcher.NavigationInputData.Added());
+            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.Coordinate, InputMatcher.EntityIds));
         }
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasNavigationInputData;
+            return entity.hasCoordinate && entity.hasEntityIds;
         }
 
         protected override void Execute(List<InputEntity> inputs)
         {     
             foreach (var input in inputs)
             {
-                var destination = input.navigationInputData.Destination;
-                foreach (var entityId in input.navigationInputData.EntityIds)
+                var destination = input.coordinate.value;
+                foreach (var entityId in input.entityIds.values)
                 {
                     _navigationService.SetAgentDestination(entityId, destination);            
                 }  

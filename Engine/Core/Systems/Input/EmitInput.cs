@@ -14,19 +14,19 @@ namespace Lockstep.Core.Systems.Input
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            return context.CreateCollector(InputMatcher.Frame.Added());
+            return context.CreateCollector(InputMatcher.Commands.Added());
         }
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasFrame && entity.frame.value.Commands != null;
+            return entity.hasCommands;
         }
 
         protected override void Execute(List<InputEntity> entities)
         {
-            foreach (var command in _inputContext.frame.value.Commands)
+            foreach (var command in _inputContext.commands.input)
             {
-                command.Execute(_inputContext);
+                command?.Execute(_inputContext);
             }
         }    
     }

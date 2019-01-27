@@ -20,7 +20,10 @@ public class LiteNetLibClient : INetwork
             dataReader.Recycle();
         };
 
-        _client = new NetManager(_listener);
+        _client = new NetManager(_listener)
+        {
+            DisconnectTimeout = 30000
+        };
         _client.Start();
     }
     public void Connect(string serverIp, int port)
@@ -28,9 +31,9 @@ public class LiteNetLibClient : INetwork
         _client.Connect(serverIp, port, "SomeConnectionKey");
     }
 
-    public void Send(byte[] data, int length)
+    public void Send(byte[] data)
     {
-        _client.FirstPeer.Send(data, 0, length, DeliveryMethod.ReliableOrdered);
+        _client.FirstPeer.Send(data, DeliveryMethod.ReliableOrdered);
     }
 
     public void Update()

@@ -9,8 +9,10 @@ namespace Lockstep.Core.Interfaces
 
         void SetAgentDestination(int agentId, Vector2 newDestination);
 
+        void SetAgentPositions(Dictionary<int, Vector2> positions);
+
         void Tick();
 
-        Dictionary<int, Vector2> GetAgentPositions();
+        Dictionary<int, Vector2> GetAgentVelocities();
     }
 }

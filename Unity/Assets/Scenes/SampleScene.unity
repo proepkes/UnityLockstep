@@ -273,8 +273,51 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!1 &90465233
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 90465234}
+  - component: {fileID: 90465235}
+  m_Layer: 0
+  m_Name: Delete_Me
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &90465234
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90465233}
+  m_LocalRotation: {x: 0.02568964, y: 0.28296393, z: 0.056058433, w: 0.9571462}
+  m_LocalPosition: {x: 42, y: 42, z: 42}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 1, y: 33, z: 7}
+--- !u!114 &90465235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 90465233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b924ddc97a0ebd04b9d4b837b7778da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &97464389
 GameObject:
   m_ObjectHideFlags: 0
@@ -370,7 +413,7 @@ RectTransform:
   - {fileID: 1690724855}
   - {fileID: 1923207267}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -458,7 +501,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &739202181
 GameObject:
@@ -556,9 +599,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fcb7be03dda3f642b1a24576215f536, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EntityDatabase: {fileID: 11400000, guid: a0d4789ca6cc5ab42a1264102206ac3f, type: 2}
   ServerIp: 127.0.0.1
   ServerPort: 9050
+  EntityDatabase: {fileID: 11400000, guid: a0d4789ca6cc5ab42a1264102206ac3f, type: 2}
 --- !u!114 &1524441392
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -586,7 +629,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1549690249
 GameObject:
@@ -908,5 +951,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

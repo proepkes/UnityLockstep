@@ -2,6 +2,7 @@
 using System.Linq; 
 using Lockstep.Client;
 using Lockstep.Client.Implementations;
+using Lockstep.Client.Interfaces;
 using Lockstep.Core;
 using Lockstep.Core.Data;             
 using Moq;
@@ -24,7 +25,7 @@ namespace Test
             var contexts = new Contexts();
             contexts.SubscribeId();
 
-            var numEntities = 10;
+            const int numEntities = 10;
 
             for (uint i = 0; i < numEntities; i++)
             {
@@ -39,9 +40,9 @@ namespace Test
         [Fact]
         public void TestCommandIsExecuted()
         {
-            var command = new Mock<ICommand>(); 
+            var command = new Mock<ISerializableCommand>(); 
 
-            new Simulation(new LockstepSystems(new Contexts()), new LocalDataReceiver()).Execute(command.Object);           
+            new Simulation(new LockstepSystems(new Contexts()), null).Execute(command.Object);           
 
             command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Once);
         }

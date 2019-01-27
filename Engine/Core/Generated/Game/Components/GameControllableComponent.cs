@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly ControllableComponent controllableComponent = new ControllableComponent();
+    static readonly Lockstep.Core.Components.Game.ControllableComponent controllableComponent = new Lockstep.Core.Components.Game.ControllableComponent();
 
     public bool isControllable {
         get { return HasComponent(GameComponentsLookup.Controllable); }

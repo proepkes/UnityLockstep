@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly HashableComponent hashableComponent = new HashableComponent();
+    static readonly Lockstep.Core.Components.Game.HashableComponent hashableComponent = new Lockstep.Core.Components.Game.HashableComponent();
 
     public bool isHashable {
         get { return HasComponent(GameComponentsLookup.Hashable); }

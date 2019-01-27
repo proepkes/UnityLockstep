@@ -14,8 +14,10 @@ namespace Lockstep.Commands
 
         public void Execute(InputContext context)
         {        
-            var e = context.CreateEntity();    
-            e.AddSpawnInputData(0, EntityConfigId, Position);   
+            var e = context.CreateEntity();
+            e.AddCoordinate(Position);
+            e.AddEntityConfigId(EntityConfigId);
+            e.AddPlayerId(0);
         }  
 
         public void Serialize(Serializer writer)

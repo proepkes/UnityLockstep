@@ -8,15 +8,15 @@
 //------------------------------------------------------------------------------
 public partial class GameStateContext {
 
-    public GameStateEntity gameStateInGameEntity { get { return GetGroup(GameStateMatcher.GameStateInGame).GetSingleEntity(); } }
+    public GameStateEntity pausedEntity { get { return GetGroup(GameStateMatcher.Paused).GetSingleEntity(); } }
 
-    public bool isGameStateInGame {
-        get { return gameStateInGameEntity != null; }
+    public bool isPaused {
+        get { return pausedEntity != null; }
         set {
-            var entity = gameStateInGameEntity;
+            var entity = pausedEntity;
             if (value != (entity != null)) {
                 if (value) {
-                    CreateEntity().isGameStateInGame = true;
+                    CreateEntity().isPaused = true;
                 } else {
                     entity.Destroy();
                 }
@@ -35,18 +35,18 @@ public partial class GameStateContext {
 //------------------------------------------------------------------------------
 public partial class GameStateEntity {
 
-    static readonly GameStateInGameComponent gameStateInGameComponent = new GameStateInGameComponent();
+    static readonly Lockstep.Core.Components.GameState.PausedComponent pausedComponent = new Lockstep.Core.Components.GameState.PausedComponent();
 
-    public bool isGameStateInGame {
-        get { return HasComponent(GameStateComponentsLookup.GameStateInGame); }
+    public bool isPaused {
+        get { return HasComponent(GameStateComponentsLookup.Paused); }
         set {
-            if (value != isGameStateInGame) {
-                var index = GameStateComponentsLookup.GameStateInGame;
+            if (value != isPaused) {
+                var index = GameStateComponentsLookup.Paused;
                 if (value) {
                     var componentPool = GetComponentPool(index);
                     var component = componentPool.Count > 0
                             ? componentPool.Pop()
-                            : gameStateInGameComponent;
+                            : pausedComponent;
 
                     AddComponent(index, component);
                 } else {
@@ -67,17 +67,17 @@ public partial class GameStateEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameStateMatcher {
 
-    static Entitas.IMatcher<GameStateEntity> _matcherGameStateInGame;
+    static Entitas.IMatcher<GameStateEntity> _matcherPaused;
 
-    public static Entitas.IMatcher<GameStateEntity> GameStateInGame {
+    public static Entitas.IMatcher<GameStateEntity> Paused {
         get {
-            if (_matcherGameStateInGame == null) {
-                var matcher = (Entitas.Matcher<GameStateEntity>)Entitas.Matcher<GameStateEntity>.AllOf(GameStateComponentsLookup.GameStateInGame);
+            if (_matcherPaused == null) {
+                var matcher = (Entitas.Matcher<GameStateEntity>)Entitas.Matcher<GameStateEntity>.AllOf(GameStateComponentsLookup.Paused);
                 matcher.componentNames = GameStateComponentsLookup.componentNames;
-                _matcherGameStateInGame = matcher;
+                _matcherPaused = matcher;
             }
 
-            return _matcherGameStateInGame;
+            return _matcherPaused;
         }
     }
 }

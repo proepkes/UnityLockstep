@@ -9,6 +9,6 @@ namespace Lockstep.Client.Interfaces
         /// <summary>
         /// Send data reliable ordered
         /// </summary>                    
-        void Send(byte[] data, int length);   
+        void Send(byte[] data);   
     }
 }

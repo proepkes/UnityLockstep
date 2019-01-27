@@ -20,14 +20,22 @@ namespace Lockstep.Core.DefaultServices.Navigation
             _agents[agentId].Destination = newDestination;
         }
 
+        public void SetAgentPositions(Dictionary<int, Vector2> positions)
+        {
+            foreach (var pair in positions)
+            {
+                _agents[pair.Key].Position = pair.Value;
+            }
+        }
+
         public void Tick()
         {
             Parallel.ForEach(_agents.Values, agent => agent.Update());  
         }
 
-        public Dictionary<int, Vector2> GetAgentPositions()
+        public Dictionary<int, Vector2> GetAgentVelocities()
         {
-            return _agents.ToDictionary(pair => pair.Key, pair => pair.Value.Position);
+            return _agents.ToDictionary(pair => pair.Key, pair => pair.Value.Velocity);
         }
     }
 }

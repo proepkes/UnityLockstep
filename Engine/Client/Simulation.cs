@@ -1,53 +1,96 @@
-﻿using System;
+﻿using System;                 
+using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Core.Data;
-using Lockstep.Core.Interfaces;    
+using Lockstep.Core.Interfaces;
+using Lockstep.Network.Messages;
 
 namespace Lockstep.Client
 {
     public class Simulation
-    {
-        public event EventHandler Started;
-        public event Action<uint> Ticked;
+    {                                       
+        public event Action<long> Ticked;
 
-        private readonly ISystems _systems;
+        public bool Running { get; set; }
+                                                                      
+        private readonly ISystems _systems;   
 
-        private readonly IDataReceiver _dataReceiver;
-        private readonly FrameBuffer _frameBuffer = new FrameBuffer();
+        public float _tickDt;
+        public float _accumulatedTime;
 
-        public Simulation(ISystems systems, IDataReceiver dataReceiver)
+        public long CurrentTick { get; private set; }
+
+        /// <summary>
+        /// Amount of ticks until a command gets executed
+        /// </summary>
+        public int LagCompensation { get; set; } = 10;
+
+        public readonly ICommandBuffer LocalCommandBuffer = new CommandBuffer();
+        public readonly ICommandBuffer RemoteCommandBuffer;
+
+        private readonly object _currentTickLock = new object();
+
+
+        public Simulation(ISystems systems, ICommandBuffer remoteCommandBuffer)
         {
             _systems = systems;
-            _systems.SetFrameBuffer(_frameBuffer);
+            _systems.CommandBuffer = LocalCommandBuffer;
 
-            _dataReceiver = dataReceiver;
-
-            _dataReceiver.InitReceived += OnInitReceived;
-            _dataReceiver.FrameReceived += OnFrameReceived;
+            RemoteCommandBuffer = remoteCommandBuffer;
+            RemoteCommandBuffer.Inserted += (l, command) =>
+            {
+                LocalCommandBuffer.Insert(l, command);
+            };
         }
-        private void OnInitReceived(object sender, EventArgs e)
-        {
+
+        public void Start(Init init)
+        {             
+            _tickDt = 1000f / init.TargetFPS;
+
             _systems.Initialize();
-            Started?.Invoke(this, EventArgs.Empty);
-        }
 
-        private void OnFrameReceived(object sender, Frame e)
-        {
-            _frameBuffer.Insert(e);
-
-            //TODO: only for debugging, frames should be executed later in fixed update, in case frames don't arrive in time this would halt the simulation
-            Tick();
-        }
-
-        private void Tick()
-        {                                       
-            _systems.Tick();
-            Ticked?.Invoke(_frameBuffer.ItemIndex);                                                                
-        }  
+            Running = true;
+        }   
 
         public void Execute(ICommand command)
-        {
-            _dataReceiver.Receive(command);
-        }         
+        {                                             
+            lock (_currentTickLock)
+            {
+                var executionTick = CurrentTick + LagCompensation;
+
+                //LocalCommandBuffer.Insert(nextTick, command);
+                RemoteCommandBuffer.Insert(executionTick, command);
+            } 
+        }
+
+        public void Update(float deltaTime)
+        {                             
+            if (!Running)                        
+            {
+                return;
+            }        
+
+            _accumulatedTime += deltaTime;
+                                                            
+            while (_accumulatedTime >= _tickDt)
+            {
+                lock (_currentTickLock)
+                {
+                    Tick(); 
+                }        
+
+                _accumulatedTime -= _tickDt;
+            }                 
+        }
+     
+
+        private void Tick()
+        {                             
+            _systems.Tick();
+            Ticked?.Invoke(CurrentTick);
+
+            CurrentTick++;
+        }
+
     }
 }

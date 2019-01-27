@@ -1,56 +1,58 @@
-﻿using System.Collections;   
-using Lockstep.Client;
-using Lockstep.Client.Implementations;
+﻿using System.Collections;           
+using Lockstep.Client;                  
 using Lockstep.Client.Interfaces;
 using Lockstep.Commands;
 using Lockstep.Core;
-using Lockstep.Network;
 using Lockstep.Network.Messages;
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
-{
+{      
     public static RTSNetworkedSimulation Instance;
-                                        
-    private Simulation _simulation;
-    private readonly LiteNetLibClient _client = new LiteNetLibClient(); 
-                                           
-    public RTSEntityDatabase EntityDatabase;
-
-    public bool Connected => _client.Connected;
 
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
 
-    private bool _simulationStarted;
-    private LockstepSystems _systems;
-    private NetworkedDataReceiver _dataReceiver;
+    public Simulation Simulation;
+    public LockstepSystems Systems;
+    public RTSEntityDatabase EntityDatabase;
+
+    public bool Connected => _client.Connected;
+
+    private NetworkCommandBuffer _remoteCommandBuffer;
+    private readonly LiteNetLibClient _client = new LiteNetLibClient();
 
     private void Awake()
-    {
+    {                                
         Instance = this;
-        _dataReceiver = new NetworkedDataReceiver(_client)
-            .RegisterCommand(() => new SpawnCommand())
-            .RegisterCommand(() => new NavigateCommand());
 
-        _systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase),
-            new UnityLogger());
+        Systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
 
-        _simulation =
-            new Simulation(_systems, _dataReceiver);      
-            
+        _remoteCommandBuffer = new NetworkCommandBuffer(_client);
+        _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
+        _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 
-        _simulation.Started += (sender, args) => _simulationStarted = true;
-        _simulation.Ticked += id =>
+        Simulation = new Simulation(Systems, _remoteCommandBuffer);
+
+        _remoteCommandBuffer.InitReceived += StartSimulation;   
+
+        Simulation.Ticked += id =>
         {
-            _dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
+            //_dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
         };
+    }
+
+    private void StartSimulation(Init data)
+    {
+        Simulation.Start(data);
+
+        _remoteCommandBuffer.InitReceived -= StartSimulation;
     }
 
 
     public void Execute(ISerializableCommand command)
     {
-        _simulation.Execute(command);
+        Simulation.Execute(command);
     }
 
     private void Start()
@@ -68,26 +70,13 @@ public class RTSNetworkedSimulation : MonoBehaviour
     void Update()
     {
         _client.Update();
-    }
 
-    void FixedUpdate()
-    {
-        //if (!_simulationStarted)
-        //{
-        //    return;
-        //}   
-
-        //simulation.Simulate(); 
-
-        //if (simulation.FrameCounter % 10 == 0)
-        //{
-        //    LockstepNetwork.Instance.SendHashCode(new Checksum{FrameNumber = simulation.FrameCounter, Value = simulation.CalculateChecksum()});
-        //}                               
-    }
+        Simulation.Update(Time.deltaTime * 1000);
+    }   
 
     void OnGUI()
     {
-        if (_simulationStarted)
+        if (Simulation.Running)
         {
             GUILayout.BeginVertical(GUILayout.Width(100f));
             GUI.color = Color.white;

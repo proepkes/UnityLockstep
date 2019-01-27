@@ -69,7 +69,7 @@ public partial class Contexts {
         game.AddEntityIndex(new Entitas.PrimaryEntityIndex<GameEntity, int>(
             Id,
             game.GetGroup(GameMatcher.Id),
-            (e, c) => ((IdComponent)c).value));
+            (e, c) => ((Lockstep.Core.Components.Game.IdComponent)c).value));
     }
 }
 

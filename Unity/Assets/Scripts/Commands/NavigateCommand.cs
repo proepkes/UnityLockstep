@@ -15,7 +15,8 @@ namespace Lockstep.Commands
         public void Execute(InputContext context)
         {
             var e = context.CreateEntity();
-            e.AddNavigationInputData(EntityIds, Destination);                              
+            e.AddEntityIds(EntityIds);
+            e.AddCoordinate(Destination);                           
         }
 
         public void Serialize(Serializer writer)

@@ -25,11 +25,10 @@ public class UnityInput : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.X))
-        {
-            var pos = GetWorldPos(Input.mousePosition);
+        {                 
             RTSNetworkedSimulation.Instance.Execute(new NavigateCommand
             {
-                Destination = new BEPUutilities.Vector2(pos.X, pos.Y),
+                Destination = GetWorldPos(Input.mousePosition),
                 EntityIds = Contexts.sharedInstance.game.GetEntities().Select(entity => entity.id.value).ToArray()
             });
         }
