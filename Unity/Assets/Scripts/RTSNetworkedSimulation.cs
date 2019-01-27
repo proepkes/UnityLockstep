@@ -2,7 +2,8 @@
 using Lockstep.Client;                  
 using Lockstep.Client.Interfaces;
 using Lockstep.Commands;
-using Lockstep.Core;             
+using Lockstep.Core;
+using Lockstep.Network.Messages;
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
@@ -16,9 +17,10 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public LockstepSystems Systems;
     public RTSEntityDatabase EntityDatabase;
 
-    public bool Connected => _client.Connected; 
+    public bool Connected => _client.Connected;
 
-    private readonly LiteNetLibClient _client = new LiteNetLibClient();  
+    private NetworkCommandBuffer _remoteCommandBuffer;
+    private readonly LiteNetLibClient _client = new LiteNetLibClient();
 
     private void Awake()
     {                                
@@ -26,14 +28,25 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         Systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
 
-        Simulation = new Simulation(Systems, _client); 
-        Simulation.RegisterCommand(() => new SpawnCommand());
-        Simulation.RegisterCommand(() => new NavigateCommand());
+        _remoteCommandBuffer = new NetworkCommandBuffer(_client);
+        _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
+        _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
+
+        Simulation = new Simulation(Systems, _remoteCommandBuffer);
+
+        _remoteCommandBuffer.InitReceived += StartSimulation;   
 
         Simulation.Ticked += id =>
         {
             //_dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
         };
+    }
+
+    private void StartSimulation(Init data)
+    {
+        Simulation.Start(data);
+
+        _remoteCommandBuffer.InitReceived -= StartSimulation;
     }
 
 

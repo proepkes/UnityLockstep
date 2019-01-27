@@ -1,10 +1,11 @@
-﻿using Lockstep.Core.Interfaces;
+﻿using System.Collections.Generic;
+using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.DefaultServices
 {
     class DefaultHashService : IHashService
     {
-        public long CalculateHashCode(GameEntity[] entities)
+        public long CalculateHashCode(IEnumerable<GameEntity> entities)
         {
             long hashCode = 0;
             foreach (var entity in entities)

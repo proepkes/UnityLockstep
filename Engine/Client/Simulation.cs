@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System;                 
 using Lockstep.Client.Implementations;
-using Lockstep.Client.Interfaces;       
+using Lockstep.Client.Interfaces;
+using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
-using Lockstep.Network;
 using Lockstep.Network.Messages;
-using Lockstep.Network.Utils;
 
 namespace Lockstep.Client
 {
@@ -16,8 +13,7 @@ namespace Lockstep.Client
 
         public bool Running { get; set; }
                                                                       
-        private readonly ISystems _systems;
-        private readonly INetwork _network;
+        private readonly ISystems _systems;   
 
         public float _tickDt;
         public float _accumulatedTime;
@@ -25,45 +21,41 @@ namespace Lockstep.Client
         public long CurrentTick { get; private set; }
 
         public ICommandBuffer LocalCommandBuffer => _systems.CommandBuffer;
-        public readonly CommandBuffer NetworkCommandBuffer;
+        public readonly ICommandBuffer RemoteCommandBuffer;
 
-        private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();   
+        private readonly object _currentTickLock = new object();
 
-        public Simulation(ISystems systems, INetwork network)
+
+        public Simulation(ISystems systems, ICommandBuffer remoteCommandBuffer)
         {
             _systems = systems;
             _systems.CommandBuffer = new CommandBuffer();
 
-            NetworkCommandBuffer = new CommandBuffer();
-
-            _network = network;
-            _network.DataReceived += OnDataReceived;         
-        }
-
-
-        public void RegisterCommand(Func<ISerializableCommand> commandFactory)
-        {
-            var tag = commandFactory.Invoke().Tag;
-            if (_commandFactories.ContainsKey(tag))
+            RemoteCommandBuffer = remoteCommandBuffer;
+            RemoteCommandBuffer.Inserted += (l, command) =>
             {
-                throw new InvalidDataException("The command tag " + tag + " is already registered. Every command tag must be unique.");
-            }
-            _commandFactories.Add(tag, commandFactory);   
+                LocalCommandBuffer.Insert(l, command);
+            };
         }
 
-        public void Execute(ISerializableCommand command)
-        {         
-            //Execute the command locally on the next tick
-            _systems.CommandBuffer.Insert(CurrentTick + 1, command);
-            
-            //Tell the server
-            var writer = new Serializer();
-            writer.Put((byte)MessageTag.Input);
-            writer.Put(CurrentTick + 1);
-            writer.Put(command.Tag);
-            command.Serialize(writer);
+        public void Start(Init init)
+        {             
+            _tickDt = 1000f / init.TargetFPS;
 
-            _network.Send(Compressor.Compress(writer));  
+            _systems.Initialize();
+
+            Running = true;
+        }   
+
+        public void Execute(ICommand command)
+        {                                             
+            lock (_currentTickLock)
+            {
+                var executionTick = CurrentTick + 20;
+
+                //LocalCommandBuffer.Insert(nextTick, command);
+                RemoteCommandBuffer.Insert(executionTick, command);
+            } 
         }
 
         public void Update(float deltaTime)
@@ -76,21 +68,16 @@ namespace Lockstep.Client
             _accumulatedTime += deltaTime;
                                                             
             while (_accumulatedTime >= _tickDt)
-            {            
-                Tick();          
+            {
+                lock (_currentTickLock)
+                {
+                    Tick(); 
+                }        
 
                 _accumulatedTime -= _tickDt;
             }                 
         }
-
-        private void StartSimulation(int targetFps)
-        {
-            _tickDt = 1000f / targetFps;
-
-            _systems.Initialize();
-
-            Running = true;                         
-        }         
+     
 
         private void Tick()
         {                             
@@ -100,33 +87,5 @@ namespace Lockstep.Client
             CurrentTick++;
         }
 
-        private void OnDataReceived(byte[] data)
-        {
-            data = Compressor.Decompress(data);
-
-            var reader = new Deserializer(data);
-            var messageTag = (MessageTag)reader.GetByte();
-            switch (messageTag)
-            {
-                case MessageTag.StartSimulation:
-                    var init = new Init();
-                    init.Deserialize(reader);
-                    StartSimulation(init.TargetFPS);
-                    break;
-                case MessageTag.Input:
-                    var frameNumber = reader.GetLong();   
-                    var tag = reader.GetUShort();
-
-                    if (_commandFactories.ContainsKey(tag))
-                    {
-                        var newCommand = _commandFactories[tag].Invoke();
-                        newCommand.Deserialize(reader);
-
-                        NetworkCommandBuffer.Insert(frameNumber, newCommand);
-                    }  
-                                                                                    
-                    break;
-            }
-        }
     }
 }

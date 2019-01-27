@@ -1,7 +1,9 @@
-﻿namespace Lockstep.Core.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Lockstep.Core.Interfaces
 {
     public interface IHashService : IService
     {  
-        long CalculateHashCode(GameEntity[] hashableEntities);
+        long CalculateHashCode(IEnumerable<GameEntity> hashableEntities);
     }
 }

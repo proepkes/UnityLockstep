@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
@@ -8,6 +9,8 @@ namespace Lockstep.Client.Implementations
     public class CommandBuffer : ICommandBuffer
     {                                   
         private readonly Dictionary<long, List<ICommand>> _commands = new Dictionary<long, List<ICommand>>();
+
+        public event Action<long, ICommand> Inserted;
 
         public long Count
         {
@@ -24,7 +27,7 @@ namespace Lockstep.Client.Implementations
 
         public long Remaining => Count - ItemIndex;
 
-        public void Insert(long frameNumber, ICommand command)
+        public virtual void Insert(long frameNumber, ICommand command)
         {
             lock (_commands)
             {
@@ -34,6 +37,8 @@ namespace Lockstep.Client.Implementations
                 }
 
                 _commands[frameNumber].Add(command);
+
+                Inserted?.Invoke(frameNumber, command);
             }              
         }
 
