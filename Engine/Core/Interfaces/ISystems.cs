@@ -1,10 +1,10 @@
-﻿namespace Lockstep.Core.Interfaces
+﻿using Lockstep.Core.Data;
+
+namespace Lockstep.Core.Interfaces
 {
     public interface ISystems
     {
-        Contexts Contexts { get; }
-
-        ICommandBuffer CommandBuffer { get; set; }          
+        void SetInput(ICommand[] input);       
 
         void Initialize();
 

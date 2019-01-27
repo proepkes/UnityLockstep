@@ -21,7 +21,7 @@ namespace Lockstep.Client
 
         public long CurrentTick { get; private set; }
 
-        public readonly ICommandBuffer CommandBuffer;   
+        public readonly ICommandBuffer CommandBuffer;
 
         public float _tickDt;
         public float _accumulatedTime;
@@ -29,19 +29,11 @@ namespace Lockstep.Client
         private readonly List<ICommand> _temporaryCommandBuffer = new List<ICommand>(20);
 
 
-        public Simulation(ISystems systems, ICommandBuffer commandBuffer, ILogService logger)
+        public Simulation(ISystems systems, ICommandBuffer commandBuffer)
         {
-            _systems = systems;
-            _systems.CommandBuffer = commandBuffer;
+            _systems = systems;                       
 
-            CommandBuffer = commandBuffer;          
-            CommandBuffer.Inserted += (playerId, frameNumber, command) =>
-            {          
-                if (frameNumber < CurrentTick)
-                {
-                    logger.Warn($"Rollback required, because we are at frame {CurrentTick} but player {playerId} sent us input for frame {frameNumber}");
-                } 
-            };
+            CommandBuffer = commandBuffer;    
         }
 
         public void Start(Init init)
@@ -67,7 +59,9 @@ namespace Lockstep.Client
             if (!Running)                        
             {
                 return;
-            }        
+            }
+                   
+            SyncCommandBuffer();
 
             _accumulatedTime += deltaTime; 
 
@@ -80,7 +74,7 @@ namespace Lockstep.Client
         }
 
         private void Tick()
-        {
+        {           
             ICommand[] frameCommands;
             lock (_temporaryCommandBuffer)
             {
@@ -88,13 +82,42 @@ namespace Lockstep.Client
                 _temporaryCommandBuffer.Clear();
             }
 
-            CommandBuffer.Insert(LocalPlayerId, CurrentTick + LagCompensation, frameCommands);
+
+            //Commit our input to the buffer, make sure we don't overwrite any other input by locking it
+            //Possible scenario without locking:
+            // 1. buffer index matches our current tick, no rollback required
+            // 2. buffer receives old input (index gets set to the past)
+            // 3. because of (1) we don't roll back and insert our input
+            // 4. buffer index is set to our currenttick, so the input from (2) would never be executed
+            CommandBuffer.Lock();
+            SyncCommandBuffer();
+
+            if (frameCommands.Length > 0)
+            {
+                CommandBuffer.Insert(LocalPlayerId, CurrentTick + LagCompensation, frameCommands);
+            }
+
+            _systems.SetInput(CommandBuffer.GetNext());
+            CommandBuffer.Release();
 
             _systems.Tick();
 
             Ticked?.Invoke(CurrentTick);
 
             CurrentTick++;
+        }
+
+        private void SyncCommandBuffer()
+        {
+            while (CommandBuffer.NextFrameIndex < CurrentTick)
+            {
+                //The buffer contains inputs from the past, rollback and execute them
+                
+                //TODO: real rollback :).. this method works if there is only one player who sends commands because commands from other players dont have to be reverted
+                _systems.SetInput(CommandBuffer.GetNext());  
+                _systems.Tick();
+
+            }
         }
     }
 }

@@ -32,7 +32,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 
-        Simulation = new Simulation(Systems, _remoteCommandBuffer, new UnityLogger()){ LagCompensation = 4 };
+        Simulation = new Simulation(Systems, _remoteCommandBuffer){ LagCompensation = 3 };
 
         _remoteCommandBuffer.InitReceived += StartSimulation;   
 
@@ -71,7 +71,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     void Update()
     {
         _client.Update();
-
+                                                                                            
         Simulation.Update(Time.deltaTime * 1000);
     }            
 

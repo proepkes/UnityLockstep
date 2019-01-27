@@ -1,12 +1,12 @@
-﻿using Lockstep.Core.Features;
+﻿using Lockstep.Core.Data;
+using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core
 {
     public sealed class LockstepSystems : Entitas.Systems, ISystems
     {                      
-        public Contexts Contexts { get; }
-        public ICommandBuffer CommandBuffer { get; set; }   
+        public Contexts Contexts { get; }                     
 
         public LockstepSystems(Contexts contexts, params IService[] additionalServices)
         {
@@ -26,18 +26,15 @@ namespace Lockstep.Core
             Add(new GameEventSystems(Contexts));
 
             Add(new HashCodeFeature(Contexts, serviceContainer));
-        } 
+        }         
 
+        public void SetInput(ICommand[] input)
+        {
+            Contexts.input.SetCommands(input);
+        }
 
         public void Tick()
-        {
-            if (CommandBuffer == null)
-            {
-                return;;
-            }
-
-            Contexts.input.SetCommands(CommandBuffer.GetNext());
-
+        {        
             Execute();
             Cleanup();
         }

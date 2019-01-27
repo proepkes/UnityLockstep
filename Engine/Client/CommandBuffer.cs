@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 
@@ -8,53 +9,65 @@ namespace Lockstep.Client.Implementations
 {                
     public class CommandBuffer : ICommandBuffer
     {                                   
-        private readonly Dictionary<long, List<ICommand>> _buffer = new Dictionary<long, List<ICommand>>();
+        /// <summary>
+        /// Mapping: FrameNumber -> Commands per player(Id)
+        /// </summary>
+        private readonly Dictionary<long, Dictionary<byte, List<ICommand>>> _buffer = new Dictionary<long, Dictionary<byte, List<ICommand>>>(5000);    
 
-        public event Action<byte, long, ICommand[]> Inserted;
-
-        public long Count
+        public void Lock()
         {
-            get
-            {
-                lock (_buffer)
-                {
-                    return _buffer.LongCount();
-                }
-            }
+            _mutex.WaitOne();
         }
 
-        public long ItemIndex { get; private set; }
+        public void Release()
+        {
+            _mutex.ReleaseMutex();
+        }
 
-        public long Remaining => Count - ItemIndex;
+        public long NextFrameIndex { get; private set; }
+
+        private readonly Mutex _mutex = new Mutex();
 
         public virtual void Insert(byte commanderId, long frameNumber, ICommand[] commands)
         {
-            lock (_buffer)
+            _mutex.WaitOne();
+
+            if (!_buffer.ContainsKey(frameNumber))
             {
-                if (!_buffer.ContainsKey(frameNumber))
-                {
-                    _buffer.Add(frameNumber, new List<ICommand>(10));
-                }
+                _buffer.Add(frameNumber, new Dictionary<byte, List<ICommand>>(10)); //Initial size for 10 players
+            }
 
-                _buffer[frameNumber].AddRange(commands);
+            if (!_buffer[frameNumber].ContainsKey(commanderId))
+            {
+                _buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame
+            }
 
-                Inserted?.Invoke(commanderId, frameNumber, commands);
-            }              
+            //TODO: order by timestamp in case of multiple commands in the same frame => if commands intersect, the first one should win, requires !serverside! timestamp
+            //ordering is enough, validation should take place in the simulation(core)
+            _buffer[frameNumber][commanderId].AddRange(commands);
+
+            if (frameNumber < NextFrameIndex)
+            {
+                NextFrameIndex = frameNumber;
+            }
+
+            _mutex.ReleaseMutex();
         }
 
         public ICommand[] GetNext()
-        {                    
-            lock (_buffer)
+        {
+            _mutex.WaitOne();
+            //If no commands were inserted then return an empty list
+            if (!_buffer.ContainsKey(NextFrameIndex))
             {
-                //If no commands were inserted then return an empty list
-                if (!_buffer.ContainsKey(ItemIndex))
-                {
-                    _buffer[ItemIndex] = new List<ICommand>();
-                }
+                    _buffer.Add(NextFrameIndex, new Dictionary<byte, List<ICommand>>());
+            }
 
-                return _buffer[ItemIndex++].ToArray();    
+            var result = _buffer[NextFrameIndex++].SelectMany(pair => pair.Value).ToArray();
 
-            }                 
+            _mutex.ReleaseMutex();
+
+            return result;
         }
     }
 }
