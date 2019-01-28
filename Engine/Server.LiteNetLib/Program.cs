@@ -9,7 +9,7 @@ namespace Server
     {                                   
         static void Main(string[] args)
         {
-            int roomSize = 1;
+            int roomSize = 2;
             int waitInSeconds = 1;
 
             var sw = new Stopwatch();

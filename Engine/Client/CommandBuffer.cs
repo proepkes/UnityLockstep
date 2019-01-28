@@ -11,28 +11,28 @@ namespace Lockstep.Client.Implementations
     {                                   
         /// <summary>
         /// Mapping: FrameNumber -> Commands per player(Id)
-        /// </summary>
-        private readonly Dictionary<uint, Dictionary<byte, List<ICommand>>> _buffer = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);              
+        /// </summary>    
+        public Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);
 
-        public uint NextFrameIndex { get; private set; }    
+        public uint NextFrameIndex { get; set; }    
 
         public virtual void Insert(byte commanderId, uint frameNumber, ICommand[] commands)
         {
-            lock (_buffer)
+            lock (Buffer)
             {        
-                if (!_buffer.ContainsKey(frameNumber))
+                if (!Buffer.ContainsKey(frameNumber))
                 {
-                    _buffer.Add(frameNumber, new Dictionary<byte, List<ICommand>>(10)); //Initial size for 10 players
+                    Buffer.Add(frameNumber, new Dictionary<byte, List<ICommand>>(10)); //Initial size for 10 players
                 }
 
-                if (!_buffer[frameNumber].ContainsKey(commanderId))
+                if (!Buffer[frameNumber].ContainsKey(commanderId))
                 {
-                    _buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame
+                    Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame
                 }
 
                 //TODO: order by timestamp in case of multiple commands in the same frame => if commands intersect, the first one should win, requires !serverside! timestamp
                 //ordering is enough, validation should take place in the simulation(core)
-                _buffer[frameNumber][commanderId].AddRange(commands);
+                Buffer[frameNumber][commanderId].AddRange(commands);
 
                 if (frameNumber < NextFrameIndex)
                 {
@@ -43,15 +43,15 @@ namespace Lockstep.Client.Implementations
 
         public ICommand[] GetNext()
         {
-            lock (_buffer)
+            lock (Buffer)
             {      
                 //If no commands were inserted then return an empty list
-                if (!_buffer.ContainsKey(NextFrameIndex))
+                if (!Buffer.ContainsKey(NextFrameIndex))
                 {
-                    _buffer.Add(NextFrameIndex, new Dictionary<byte, List<ICommand>>());
+                    Buffer.Add(NextFrameIndex, new Dictionary<byte, List<ICommand>>());
                 }
 
-                return _buffer[NextFrameIndex++].SelectMany(pair => pair.Value).ToArray();
+                return Buffer[NextFrameIndex++].SelectMany(pair => pair.Value).ToArray();
             }
         }
     }

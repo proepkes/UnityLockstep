@@ -59,13 +59,17 @@ namespace Lockstep.Client
                 return;
             }
                    
-            SyncCommandBuffer();
 
             _accumulatedTime += deltaTime; 
 
             while (_accumulatedTime >= _tickDt)
             {
-                Tick();
+                lock (CommandBuffer.Buffer)
+                {
+                    SyncCommandBuffer();
+
+                    Tick();
+                }
 
                 _accumulatedTime -= _tickDt;
             }                 
@@ -92,20 +96,20 @@ namespace Lockstep.Client
 
         private void SyncCommandBuffer()
         {
-            //While buffer contains inputs from the past, rollback and execute them     
-
+            //While buffer contains inputs from the past, rollback and execute them
+            var from = CommandBuffer.NextFrameIndex;
             if (CommandBuffer.NextFrameIndex < _systems.CurrentTick)
             {
                 var targetTick = _systems.CurrentTick;
 
                 _systems.RevertToTick(CommandBuffer.NextFrameIndex);
 
-                while (CommandBuffer.NextFrameIndex <= targetTick)
+                while (_systems.CurrentTick < targetTick)
                 {
                     _systems.Tick(CommandBuffer.GetNext());
                 }
-            }  
-            
+                ((NetworkCommandBuffer)CommandBuffer).Log(from);
+            }   
         }
     }
 }

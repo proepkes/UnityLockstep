@@ -28,7 +28,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         Systems = new GameSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
 
-        _remoteCommandBuffer = new NetworkCommandBuffer(_client);
+        _remoteCommandBuffer = new NetworkCommandBuffer(_client, new UnityLogger());
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 

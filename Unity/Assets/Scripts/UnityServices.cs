@@ -27,7 +27,7 @@ public class UnityGameService : IGameService
         var viewGo = Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
         if (viewGo != null)
         {
-            viewGo.Link(entity);
+            //viewGo.Link(entity);
 
             var componentSetters = viewGo.GetComponents<IComponentSetter>();
             foreach (var componentSetter in componentSetters)

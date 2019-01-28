@@ -6,5 +6,6 @@
         Frame,
         Input,
         HashCode,
+        Log
     }
 }

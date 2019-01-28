@@ -27,7 +27,7 @@ namespace Lockstep.Core
 
             Add(new InputFeature(Contexts, serviceContainer));
 
-            Add(new NavigationFeature(Contexts, serviceContainer));
+            //Add(new NavigationFeature(Contexts, serviceContainer));
 
             Add(new GameEventSystems(Contexts));
 
@@ -43,7 +43,7 @@ namespace Lockstep.Core
         }
 
         public void RevertToTick(uint tick)
-        {       
+        {
             foreach (var system in _executeSystems)
             {
                 if (system is IStateSystem stateSystem)
@@ -52,7 +52,7 @@ namespace Lockstep.Core
                 }
             }
 
-            Contexts.gameState.ReplaceTick(tick);
+            Contexts.gameState.ReplaceTick(tick);   
         }
     }
 }     

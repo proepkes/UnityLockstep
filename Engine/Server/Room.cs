@@ -72,6 +72,7 @@ namespace Server
                 case MessageTag.Input:
                     _server.Distribute(clientId, data);    
                     break;
+
                 case MessageTag.HashCode:                                 
                     var pkt = new HashCode();
                     pkt.Deserialize(reader);
@@ -83,6 +84,10 @@ namespace Server
                     {
                         Console.WriteLine((_hashCodes[pkt.FrameNumber] == pkt.Value ? "HashCode valid" : "Desync") + ": " + pkt.Value);
                     }
+                    break;
+
+                default:
+                    _server.Distribute(data);
                     break;
             }      
         }
