@@ -13,14 +13,12 @@ namespace Lockstep.Client
         /// <summary>
         /// Amount of ticks until a command gets executed
         /// </summary>
-        public int LagCompensation { get; set; } = 10;
+        public uint LagCompensation { get; set; } = 10;
 
         public byte LocalPlayerId { get; private set; }   
 
-        public bool Running { get; set; }   
-
-        public long CurrentTick { get; private set; }
-
+        public bool Running { get; set; }
+                                                           
         public readonly ICommandBuffer CommandBuffer;
 
         public float _tickDt;
@@ -84,28 +82,30 @@ namespace Lockstep.Client
                                                                                                                      
             if (frameCommands.Length > 0)
             {
-                CommandBuffer.Insert(LocalPlayerId, CurrentTick + LagCompensation, frameCommands);
+                CommandBuffer.Insert(LocalPlayerId, _systems.CurrentTick + LagCompensation, frameCommands);
             }
+                                     
+            _systems.Tick(CommandBuffer.GetNext());
 
-            _systems.SetInput(CommandBuffer.GetNext()); 
-            _systems.Tick();
-
-            Ticked?.Invoke(CurrentTick);
-
-            CurrentTick++;
+            Ticked?.Invoke(_systems.CurrentTick);      
         }
 
         private void SyncCommandBuffer()
         {
-            while (CommandBuffer.NextFrameIndex < CurrentTick)
-            {
-                //While buffer contains inputs from the past, rollback and execute them
-                
-                //TODO: real rollback :).. this method works if there is only one player who sends commands because commands from other players dont have to be reverted
-                _systems.SetInput(CommandBuffer.GetNext());  
-                _systems.Tick();
+            //While buffer contains inputs from the past, rollback and execute them     
 
-            }
+            if (CommandBuffer.NextFrameIndex < _systems.CurrentTick)
+            {
+                var targetTick = _systems.CurrentTick;
+
+                _systems.RevertToTick(CommandBuffer.NextFrameIndex);
+
+                while (CommandBuffer.NextFrameIndex < targetTick)
+                {
+                    _systems.Tick(CommandBuffer.GetNext());
+                }
+            }  
+            
         }
     }
 }

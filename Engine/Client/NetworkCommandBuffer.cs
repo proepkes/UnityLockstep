@@ -34,7 +34,7 @@ namespace Lockstep.Client
             _commandFactories.Add(tag, commandFactory);
         }         
 
-        public override void Insert(byte commanderId, long frameNumber, ICommand[] commands)
+        public override void Insert(byte commanderId, uint frameNumber, ICommand[] commands)
         {   
             base.Insert(commanderId, frameNumber, commands);
 
@@ -71,7 +71,7 @@ namespace Lockstep.Client
                     break;
                 case MessageTag.Input:
                     var commanderId = reader.GetByte();
-                    var frameNumber = reader.GetLong();
+                    var frameNumber = reader.GetUInt();
                     var countCommands = reader.GetInt();
                     var commands = new ICommand[countCommands];
                     for (var i = 0; i < countCommands; i++)

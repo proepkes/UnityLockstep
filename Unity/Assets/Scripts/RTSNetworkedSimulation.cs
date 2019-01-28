@@ -14,7 +14,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public int ServerPort = 9050;
 
     public Simulation Simulation;
-    public LockstepSystems Systems;
+    public GameSystems Systems;
     public RTSEntityDatabase EntityDatabase;
 
     public bool Connected => _client.Connected;
@@ -26,7 +26,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     {                                
         Instance = this;
 
-        Systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
+        Systems = new GameSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
 
         _remoteCommandBuffer = new NetworkCommandBuffer(_client);
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());

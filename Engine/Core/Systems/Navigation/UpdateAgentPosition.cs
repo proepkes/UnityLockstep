@@ -18,7 +18,7 @@ namespace Lockstep.Core.Systems.Navigation
 
         public void Execute()
         {
-            var updatedPositions = new Dictionary<int, Vector2>();
+            var updatedPositions = new Dictionary<uint, Vector2>();
 
             foreach (var entity in _gameContext.GetEntities())
             {
@@ -32,5 +32,5 @@ namespace Lockstep.Core.Systems.Navigation
             
             _navigationService.SetAgentPositions(updatedPositions);
         }
-    }
+    }   
 }

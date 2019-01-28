@@ -5,14 +5,14 @@ namespace Lockstep.Core.Interfaces
 {
     public interface INavigationService : IService
     {
-        void AddAgent(int id, Vector2 position);
+        void AddAgent(uint id, Vector2 position);
 
-        void SetAgentDestination(int agentId, Vector2 newDestination);
+        void SetAgentDestination(uint agentId, Vector2 newDestination);
 
-        void SetAgentPositions(Dictionary<int, Vector2> positions);
+        void SetAgentPositions(Dictionary<uint, Vector2> positions);
 
         void Tick();
 
-        Dictionary<int, Vector2> GetAgentVelocities();
+        Dictionary<uint, Vector2> GetAgentVelocities();
     }
 }

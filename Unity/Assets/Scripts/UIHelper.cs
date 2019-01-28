@@ -15,11 +15,11 @@ public class UIHelper : MonoBehaviour
         if (RTSNetworkedSimulation.Instance.Simulation.Running)
         {
             HashCodeText.text = "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
+            CurrentTickText.text = "CurrentTick: " + RTSNetworkedSimulation.Instance.Systems.CurrentTick;
         }
 
         AgentCountText.text = "Agents: " + Contexts.sharedInstance.game.GetEntities().Length;
 
         ConnectedText.text = "Connected: " + RTSNetworkedSimulation.Instance.Connected;
-        CurrentTickText.text = "CurrentTick: " + RTSNetworkedSimulation.Instance.Simulation.CurrentTick;
     }
 }

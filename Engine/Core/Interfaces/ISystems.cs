@@ -3,11 +3,12 @@
 namespace Lockstep.Core.Interfaces
 {
     public interface ISystems
-    {
-        void SetInput(ICommand[] input);       
-
+    {                           
+        uint CurrentTick { get; }        
         void Initialize();
 
-        void Tick();                              
+        void Tick(ICommand[] input);
+
+        void RevertToTick(uint tick);
     }
 }

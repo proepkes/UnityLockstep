@@ -11,18 +11,21 @@ public static class GameStateComponentsLookup {
     public const int HashCode = 0;
     public const int Paused = 1;
     public const int PlayerId = 2;
+    public const int Tick = 3;
 
-    public const int TotalComponents = 3;
+    public const int TotalComponents = 4;
 
     public static readonly string[] componentNames = {
         "HashCode",
         "Paused",
-        "PlayerId"
+        "PlayerId",
+        "Tick"
     };
 
     public static readonly System.Type[] componentTypes = {
         typeof(Lockstep.Core.Components.GameState.HashCodeComponent),
         typeof(Lockstep.Core.Components.GameState.PausedComponent),
-        typeof(Lockstep.Core.Components.GameState.PlayerIdComponent)
+        typeof(Lockstep.Core.Components.GameState.PlayerIdComponent),
+        typeof(Lockstep.Core.Components.GameState.TickComponent)
     };
 }

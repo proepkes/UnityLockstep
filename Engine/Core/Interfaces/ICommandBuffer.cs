@@ -5,12 +5,9 @@ namespace Lockstep.Core.Interfaces
 {
     public interface ICommandBuffer
     {
-        void Lock();
-        void Release();
+        uint NextFrameIndex { get; }          
 
-        long NextFrameIndex { get; }          
-
-        void Insert(byte commanderId, long frameNumber, ICommand[] commands);
+        void Insert(byte commanderId, uint frameNumber, ICommand[] commands);
 
         ICommand[] GetNext();
     }

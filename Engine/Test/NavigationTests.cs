@@ -23,8 +23,7 @@ namespace Test
         public void TestNavigableEntityGetsAddedToNavigationService()
         {
             var service = new Mock<INavigationService>();
-            var contexts = new Contexts();
-            contexts.SubscribeId();
+            var contexts = new Contexts();       
 
 
             var e = contexts.game.CreateEntity();
@@ -34,12 +33,12 @@ namespace Test
 
             system.Execute();
 
-            service.Verify(s => s.AddAgent(It.IsAny<int>(), It.IsAny<Vector2>()), Times.Never);
+            service.Verify(s => s.AddAgent(It.IsAny<uint>(), It.IsAny<Vector2>()), Times.Never);
 
             e.isNavigable = true;
             system.Execute();
 
-            service.Verify(s => s.AddAgent(It.IsAny<int>(), It.IsAny<Vector2>()), Times.Once);
+            service.Verify(s => s.AddAgent(It.IsAny<uint>(), It.IsAny<Vector2>()), Times.Once);
         }
     }
 }
