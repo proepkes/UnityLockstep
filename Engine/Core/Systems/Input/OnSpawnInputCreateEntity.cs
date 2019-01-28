@@ -57,12 +57,15 @@ namespace Lockstep.Core.Systems.Input
 
         public void RevertToTick(uint tick)
         {
-            for (;tick < _gameStateContext.tick.value; tick++)
+            for (;tick <= _gameStateContext.tick.value; tick++)
             {
-                foreach (var entityId in _createdEntities[tick])
-                {
-                    _gameContext.GetEntityWithId(entityId).Destroy();
-                    _nextEntityId--;
+                if (_createdEntities.ContainsKey(tick))
+                {      
+                    foreach (var entityId in _createdEntities[tick])
+                    {
+                        _gameContext.GetEntityWithId(entityId).Destroy();
+                        _nextEntityId--;
+                    }
                 }
             }
         }

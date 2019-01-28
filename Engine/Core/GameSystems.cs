@@ -43,9 +43,7 @@ namespace Lockstep.Core
         }
 
         public void RevertToTick(uint tick)
-        {
-            Contexts.gameState.ReplaceTick(tick);
-
+        {       
             foreach (var system in _executeSystems)
             {
                 if (system is IStateSystem stateSystem)
@@ -53,6 +51,8 @@ namespace Lockstep.Core
                     stateSystem.RevertToTick(tick);
                 }
             }
+
+            Contexts.gameState.ReplaceTick(tick);
         }
     }
 }     

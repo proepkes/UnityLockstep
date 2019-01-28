@@ -100,7 +100,7 @@ namespace Lockstep.Client
 
                 _systems.RevertToTick(CommandBuffer.NextFrameIndex);
 
-                while (CommandBuffer.NextFrameIndex < targetTick)
+                while (CommandBuffer.NextFrameIndex <= targetTick)
                 {
                     _systems.Tick(CommandBuffer.GetNext());
                 }
