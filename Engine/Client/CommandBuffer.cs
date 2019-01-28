@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+﻿using System.Collections.Generic;
+using System.Linq;            
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 
@@ -14,9 +12,11 @@ namespace Lockstep.Client.Implementations
         /// </summary>    
         public Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);
 
+        public uint LastInsertedFrame { get; private set; }
+
         public uint NextFrameIndex { get; set; }    
 
-        public virtual void Insert(byte commanderId, uint frameNumber, ICommand[] commands)
+        public virtual void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
         {
             lock (Buffer)
             {        
@@ -34,17 +34,28 @@ namespace Lockstep.Client.Implementations
                 //ordering is enough, validation should take place in the simulation(core)
                 Buffer[frameNumber][commanderId].AddRange(commands);
 
-                if (frameNumber < NextFrameIndex)
-                {
-                    NextFrameIndex = frameNumber;
-                }
+                LastInsertedFrame = frameNumber;
             }     
         }
 
-        public ICommand[] GetNext()
+        public Dictionary<byte, List<ICommand>> GetNext()
         {
             lock (Buffer)
             {      
+                //If no commands were inserted then return an empty list
+                if (!Buffer.ContainsKey(NextFrameIndex))
+                {
+                    Buffer.Add(NextFrameIndex, new Dictionary<byte, List<ICommand>>());
+                }
+
+                return Buffer[NextFrameIndex++];
+            }
+        }
+
+        public ICommand[] GetNextMany()
+        {              
+            lock (Buffer)
+            {
                 //If no commands were inserted then return an empty list
                 if (!Buffer.ContainsKey(NextFrameIndex))
                 {

@@ -38,10 +38,8 @@ namespace Lockstep.Client
             _commandFactories.Add(tag, commandFactory);
         }         
 
-        public override void Insert(byte commanderId, uint frameNumber, ICommand[] commands)
-        {   
-            base.Insert(commanderId, frameNumber, commands);
-
+        public override void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
+        {                                                     
             //Tell the server
             var writer = new Serializer();
             writer.Put((byte)MessageTag.Input);
@@ -107,7 +105,7 @@ namespace Lockstep.Client
                         }
                     }
 
-                    base.Insert(commanderId, frameNumber, commands); 
+                    base.Insert(frameNumber, commanderId, commands); 
                     break;
             }
         }    

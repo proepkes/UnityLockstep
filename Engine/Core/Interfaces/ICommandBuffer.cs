@@ -8,10 +8,14 @@ namespace Lockstep.Core.Interfaces
     {
         Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; }
 
+        uint LastInsertedFrame { get; }
+
         uint NextFrameIndex { get; set; }
 
-        void Insert(byte commanderId, uint frameNumber, ICommand[] commands);
+        void Insert(uint frameNumber, byte commanderId, ICommand[] commands);
 
-        ICommand[] GetNext();
+        Dictionary<byte, List<ICommand>> GetNext();
+
+        ICommand[] GetNextMany();
     }
 }

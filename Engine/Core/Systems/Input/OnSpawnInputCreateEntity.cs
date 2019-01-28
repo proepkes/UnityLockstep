@@ -66,6 +66,8 @@ namespace Lockstep.Core.Systems.Input
                         _gameContext.GetEntityWithId(entityId).Destroy();
                         _nextEntityId--;
                     }
+
+                    _createdEntities[tick].Clear();
                 }
             }
         }
