@@ -12,9 +12,7 @@ namespace Lockstep.Client.Implementations
         /// </summary>    
         public Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);
 
-        public uint LastInsertedFrame { get; private set; }
-
-        public uint NextFrameIndex { get; set; }    
+        public uint LastInsertedFrame { get; private set; }      
 
         public virtual void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
         {
@@ -38,32 +36,33 @@ namespace Lockstep.Client.Implementations
             }     
         }
 
-        public Dictionary<byte, List<ICommand>> GetNext()
+        public Dictionary<byte, List<ICommand>> Get(uint frame)
         {
-            lock (Buffer)
-            {      
-                //If no commands were inserted then return an empty list
-                if (!Buffer.ContainsKey(NextFrameIndex))
-                {
-                    Buffer.Add(NextFrameIndex, new Dictionary<byte, List<ICommand>>());
-                }
-
-                return Buffer[NextFrameIndex++];
-            }
-        }
-
-        public ICommand[] GetNextMany()
-        {              
             lock (Buffer)
             {
                 //If no commands were inserted then return an empty list
-                if (!Buffer.ContainsKey(NextFrameIndex))
+                if (!Buffer.ContainsKey(frame))
                 {
-                    Buffer.Add(NextFrameIndex, new Dictionary<byte, List<ICommand>>());
+                    Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
                 }
 
-                return Buffer[NextFrameIndex++].SelectMany(pair => pair.Value).ToArray();
+                return Buffer[frame];
             }
         }
+
+        public ICommand[] GetMany(uint frame)
+        {
+            lock (Buffer)
+            {
+                //If no commands were inserted then return an empty list
+                if (!Buffer.ContainsKey(frame))
+                {
+                    Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
+                }
+
+                return Buffer[frame].SelectMany(pair => pair.Value).ToArray();
+            }
+        }
+               
     }
 }

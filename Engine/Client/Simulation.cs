@@ -34,12 +34,13 @@ namespace Lockstep.Client
         public uint LastValidatedFrame = 0;
 
 
-        public Simulation(ISystems systems, ICommandBuffer remoteCommandBuffer, ILogService logger)
+        public Simulation(ISystems systems, ICommandBuffer remoteCommandBuffer)
         {
             _systems = systems;                       
 
             RemoteCommandBuffer = remoteCommandBuffer;
-            _logger = logger;
+
+            _logger = systems.Services.Get<ILogService>();
         }
 
         public void Start(Init init)
@@ -66,13 +67,13 @@ namespace Lockstep.Client
             {
                 return;
             }
-                   
+
+            SyncCommandBuffer();
 
             _accumulatedTime += deltaTime; 
 
             while (_accumulatedTime >= _tickDt)
             {        
-                SyncCommandBuffer();
 
                 Tick();
 
@@ -92,11 +93,10 @@ namespace Lockstep.Client
             if (frameCommands.Length > 0)
             {
                 LocalCommandBuffer.Insert(_systems.CurrentTick + LagCompensation, LocalPlayerId, frameCommands);
-                RemoteCommandBuffer.Insert(_systems.CurrentTick + LagCompensation, LocalPlayerId,  frameCommands);
-                _logger.Warn("Last command for frame: " + (_systems.CurrentTick + LagCompensation));
+                RemoteCommandBuffer.Insert(_systems.CurrentTick + LagCompensation, LocalPlayerId,  frameCommands);     
             }
                                      
-            _systems.Tick(LocalCommandBuffer.GetNextMany());
+            _systems.Tick(LocalCommandBuffer.GetMany(_systems.CurrentTick));
 
             Ticked?.Invoke(_systems.CurrentTick);      
         }
@@ -109,9 +109,9 @@ namespace Lockstep.Client
             {                  
                 var revertTick = currentRemoteFrame;
                                                                         
-                for (var remoteFrame = LastValidatedFrame; remoteFrame <= currentRemoteFrame; remoteFrame++)
+                for (var remoteFrame = LastValidatedFrame + 1; remoteFrame <= currentRemoteFrame; remoteFrame++)
                 {
-                    var allPlayerCommands = RemoteCommandBuffer.GetNext();
+                    var allPlayerCommands = RemoteCommandBuffer.Get(remoteFrame);
                     if (allPlayerCommands.Count <= 0)
                     {
                         continue;
@@ -127,8 +127,6 @@ namespace Lockstep.Client
                     foreach (var commandPerPlayer in allPlayerCommands)
                     {
                         LocalCommandBuffer.Insert(remoteFrame, commandPerPlayer.Key, commandPerPlayer.Value.ToArray());
-
-                        _logger.Warn("Adding command from frame: " + remoteFrame);
                     }
                 }
 
@@ -136,16 +134,12 @@ namespace Lockstep.Client
                 if (_systems.CurrentTick > revertTick)
                 {      
                     var targetTick = _systems.CurrentTick;  
-
-                    _logger.Warn("Reverting to: " + revertTick);
-                    LocalCommandBuffer.NextFrameIndex = revertTick;
-                    _systems.RevertToTick(revertTick);
-
+                    
+                    _systems.RevertToTick(revertTick); 
+                                                                         
                     while (_systems.CurrentTick < targetTick)
-                    {
-
-                        _logger.Warn("Tick: " + _systems.CurrentTick);
-                        _systems.Tick(LocalCommandBuffer.GetNextMany());
+                    {            
+                        _systems.Tick(LocalCommandBuffer.GetMany(_systems.CurrentTick));
                     }
                 }
 

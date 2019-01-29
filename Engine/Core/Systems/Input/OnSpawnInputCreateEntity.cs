@@ -14,10 +14,12 @@ namespace Lockstep.Core.Systems.Input
         private readonly GameStateContext _gameStateContext;
 
         private readonly Dictionary<uint, List<uint>> _createdEntities = new Dictionary<uint, List<uint>>();
+        private ILogService logger;
 
-        public OnSpawnInputCreateEntity(Contexts contexts, IGameService gameService) : base(contexts.input)
+        public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services) : base(contexts.input)
         {
-            _gameService = gameService; 
+            _gameService = services.Get<IGameService>();
+            logger = services.Get<ILogService>();
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;
         }
@@ -56,11 +58,12 @@ namespace Lockstep.Core.Systems.Input
         }
 
         public void RevertToTick(uint tick)
-        {
+        {                                                                                                                                  
             for (;tick <= _gameStateContext.tick.value; tick++)
-            {
+            {                             
                 if (_createdEntities.ContainsKey(tick))
-                {      
+                {
+                    logger.Warn("Destroying " + _createdEntities[tick].Count + " Entities from tick " + tick);
                     foreach (var entityId in _createdEntities[tick])
                     {
                         _gameContext.GetEntityWithId(entityId).Destroy();

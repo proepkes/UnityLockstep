@@ -26,13 +26,13 @@ public class RTSNetworkedSimulation : MonoBehaviour
     {                                
         Instance = this;
 
-        Systems = new GameSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
+        Systems = new GameSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger());
 
         _remoteCommandBuffer = new NetworkCommandBuffer(_client, new UnityLogger());
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 
-        Simulation = new Simulation(Systems, _remoteCommandBuffer, new UnityLogger()) { LagCompensation = 5 };
+        Simulation = new Simulation(Systems, _remoteCommandBuffer) { LagCompensation = 3 };
 
         _remoteCommandBuffer.InitReceived += StartSimulation;   
 

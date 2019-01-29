@@ -9,7 +9,9 @@ namespace Lockstep.Core
 {
     public sealed class GameSystems : Entitas.Systems, ISystems
     {
-        private Contexts Contexts { get; }
+        private Contexts Contexts { get; }  
+
+        public ServiceContainer Services { get; }
 
         public uint CurrentTick => Contexts.gameState.tick.value;
 
@@ -17,22 +19,22 @@ namespace Lockstep.Core
         {
             Contexts = contexts;      
 
-            var serviceContainer = new ServiceContainer();
+            Services = new ServiceContainer();
             foreach (var service in additionalServices)
             {
-                serviceContainer.Register(service);
+                Services.Register(service);
             }
                                                     
             Add(new IncrementTick(Contexts));
 
-            Add(new InputFeature(Contexts, serviceContainer));
+            Add(new InputFeature(Contexts, Services));
 
             //Add(new NavigationFeature(Contexts, serviceContainer));
 
             Add(new GameEventSystems(Contexts));
 
-            Add(new HashCodeFeature(Contexts, serviceContainer));
-        }                                
+            Add(new HashCodeFeature(Contexts, Services));
+        }
 
         public void Tick(ICommand[] input)
         {

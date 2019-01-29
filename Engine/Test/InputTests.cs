@@ -54,46 +54,46 @@ namespace Test
         [Fact]
         public void TestStoreEvents()
         {
-            var contexts = new Contexts();
+            //var contexts = new Contexts();
 
-            var spawnSystem = new OnSpawnInputCreateEntity(contexts, new DefaultGameService());
+            //var spawnSystem = new OnSpawnInputCreateEntity(contexts, new DefaultGameService());
 
-            var systems = new Systems()
-                .Add(new IncrementTick(contexts))
-                .Add(spawnSystem);
+            //var systems = new Systems()
+            //    .Add(new IncrementTick(contexts))
+            //    .Add(spawnSystem);
 
-            systems.Initialize();
+            //systems.Initialize();
 
-            for (int i = 0; i < 50; i++)
-            {
-                var input = contexts.input.CreateEntity();
-                input.AddCoordinate(new Vector2());
-                input.AddEntityConfigId(0);
-            }
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    var input = contexts.input.CreateEntity();
+            //    input.AddCoordinate(new Vector2());
+            //    input.AddEntityConfigId(0);
+            //}
 
-            systems.Execute();  //Tick 1   
+            //systems.Execute();  //Tick 1   
 
-            for (int i = 0; i < 50; i++)
-            {
-                var input = contexts.input.CreateEntity();
-                input.AddCoordinate(new Vector2());
-                input.AddEntityConfigId(0);
-            }
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    var input = contexts.input.CreateEntity();
+            //    input.AddCoordinate(new Vector2());
+            //    input.AddEntityConfigId(0);
+            //}
 
-            systems.Execute();  //Tick 2  
+            //systems.Execute();  //Tick 2  
 
 
-            spawnSystem.RevertToTick(0);
-            contexts.gameState.ReplaceTick(0);
+            //spawnSystem.RevertToTick(0);
+            //contexts.gameState.ReplaceTick(0);
 
-            for (int i = 0; i < 50; i++)
-            {
-                var input = contexts.input.CreateEntity();
-                input.AddCoordinate(new Vector2());
-                input.AddEntityConfigId(0);
-            }
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    var input = contexts.input.CreateEntity();
+            //    input.AddCoordinate(new Vector2());
+            //    input.AddEntityConfigId(0);
+            //}
 
-            systems.Execute();  //Tick 1   
+            //systems.Execute();  //Tick 1   
                                                
         }
     }
