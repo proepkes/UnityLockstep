@@ -62,8 +62,9 @@ namespace Lockstep.Core.Systems.Input
                 if (_createdEntities.ContainsKey(tick))
                 {
                     foreach (var entityId in _createdEntities[tick])
-                    {
-                        _gameContext.GetEntities().First(entity => entity.id.value == entityId).Destroy();
+                    {   
+                        _gameService.UnloadEntity(entityId);
+                        _gameContext.GetEntityWithId(entityId).Destroy();
                         _nextEntityId--;   
                     }
 
