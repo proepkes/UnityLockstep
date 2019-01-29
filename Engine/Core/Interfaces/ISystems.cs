@@ -1,6 +1,4 @@
-﻿using Lockstep.Core.Data;
-
-namespace Lockstep.Core.Interfaces
+﻿namespace Lockstep.Core.Interfaces
 {
     public interface ISystems
     {

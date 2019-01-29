@@ -1,5 +1,6 @@
 ﻿using System.Collections;           
-using Lockstep.Client;                  
+using Lockstep.Client;
+using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Commands;
 using Lockstep.Core;
@@ -28,7 +29,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         Systems = new GameSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger());
 
-        _remoteCommandBuffer = new NetworkCommandBuffer(_client, new UnityLogger());
+        _remoteCommandBuffer = new NetworkCommandBuffer(_client);
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 

@@ -5,7 +5,6 @@
         StartSimulation,
         Frame,
         Input,
-        HashCode,
-        Log
+        HashCode
     }
 }

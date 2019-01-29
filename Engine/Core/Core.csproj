@@ -138,13 +138,11 @@
     <Compile Include="Components\Game\HashableComponent.cs" />
     <Compile Include="Components\GameState\PausedComponent.cs" />
     <Compile Include="Components\Input\EntityIdsComponent.cs" />
-    <Compile Include="Data\AgentConfig.cs" />
-    <Compile Include="Data\ICommand.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="DefaultServices\DefaultGameService.cs" />
     <Compile Include="DefaultServices\DefaultHashService.cs" />
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
-    <Compile Include="Interfaces\ICommandBuffer.cs" />
     <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />

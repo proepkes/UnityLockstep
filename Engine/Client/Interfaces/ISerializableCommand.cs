@@ -1,4 +1,4 @@
-﻿using Lockstep.Core.Data;
+﻿using Lockstep.Core.Interfaces;
 using Lockstep.Network;
 
 namespace Lockstep.Client.Interfaces

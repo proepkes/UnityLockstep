@@ -1,6 +1,6 @@
 ﻿using Entitas;
 using Entitas.CodeGeneration.Attributes;
-using Lockstep.Core.Data;
+using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Components.Input
 {

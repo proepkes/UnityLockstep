@@ -5,7 +5,7 @@ using Lockstep.Client;
 using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Core;
-using Lockstep.Core.Data;             
+using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
 using Moq;
 using Shouldly;

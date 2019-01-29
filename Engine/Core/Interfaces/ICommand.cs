@@ -1,4 +1,4 @@
-﻿namespace Lockstep.Core.Data
+﻿namespace Lockstep.Core.Interfaces
 {
     public interface ICommand
     {             

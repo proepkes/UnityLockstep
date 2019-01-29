@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Lockstep.Core.Data;
+﻿using System.Collections.Generic;
+using Lockstep.Core.Interfaces;
 
-namespace Lockstep.Core.Interfaces
+namespace Lockstep.Client.Interfaces
 {
     public interface ICommandBuffer
-    {
-        Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; }
-
+    {                                                                         
         uint LastInsertedFrame { get; }           
 
         void Insert(uint frameNumber, byte commanderId, ICommand[] commands);

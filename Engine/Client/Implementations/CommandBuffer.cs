@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;            
-using Lockstep.Core.Data;
+using System.Linq;              
+using Lockstep.Client.Interfaces;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client.Implementations
@@ -10,7 +10,7 @@ namespace Lockstep.Client.Implementations
         /// <summary>
         /// Mapping: FrameNumber -> Commands per player(Id)
         /// </summary>    
-        public Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);
+        protected Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);
 
         public uint LastInsertedFrame { get; private set; }      
 
