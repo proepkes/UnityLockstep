@@ -33,7 +33,7 @@ namespace Test
         {
             _outputHelper = outputHelper;
         }
-        public void Warn(string message)
+        public void Warn(object message)
         {
             _outputHelper.WriteLine($"Warn: {message}");
         }

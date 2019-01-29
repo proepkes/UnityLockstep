@@ -23,10 +23,15 @@ namespace Server.LiteNetLib
                 DisconnectTimeout = 30000
             };
         }
-                        
+
         public void Distribute(byte[] data)
         {
             _server.SendToAll(data, DeliveryMethod.ReliableOrdered);
+        }
+
+        public void Distribute(int clientId, byte[] data)
+        {
+            _server.SendToAll(data, DeliveryMethod.ReliableOrdered, _server.ConnectedPeerList.First(peer => peer.Id == clientId));
         }
 
         public void Send(int clientId, byte[] data)

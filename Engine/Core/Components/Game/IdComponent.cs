@@ -7,6 +7,6 @@ namespace Lockstep.Core.Components.Game
     public class IdComponent : IComponent
     {
         [PrimaryEntityIndex]
-        public int value;
+        public uint value;
     }
 }

@@ -1,13 +1,16 @@
-﻿namespace Lockstep.Core.Interfaces
+﻿using Lockstep.Core.Data;
+
+namespace Lockstep.Core.Interfaces
 {
     public interface ISystems
     {
-        Contexts Contexts { get; }
+        ServiceContainer Services { get; }
 
-        ICommandBuffer CommandBuffer { get; set; }          
-
+        uint CurrentTick { get; }        
         void Initialize();
 
-        void Tick();                              
+        void Tick(ICommand[] input);
+
+        void RevertFromTick(uint tick);
     }
 }

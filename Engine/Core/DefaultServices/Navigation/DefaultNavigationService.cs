@@ -8,19 +8,19 @@ namespace Lockstep.Core.DefaultServices.Navigation
 {                                   
     public class DefaultNavigationService: INavigationService
     {                                  
-        private readonly Dictionary<int, Agent> _agents = new Dictionary<int, Agent>();      
+        private readonly Dictionary<uint, Agent> _agents = new Dictionary<uint, Agent>();      
 
-        public void AddAgent(int id, Vector2 position)
+        public void AddAgent(uint id, Vector2 position)
         {
             _agents.Add(id, new Agent(position));
         }
 
-        public void SetAgentDestination(int agentId, Vector2 newDestination)
+        public void SetAgentDestination(uint agentId, Vector2 newDestination)
         {
             _agents[agentId].Destination = newDestination;
         }
 
-        public void SetAgentPositions(Dictionary<int, Vector2> positions)
+        public void SetAgentPositions(Dictionary<uint, Vector2> positions)
         {
             foreach (var pair in positions)
             {
@@ -33,7 +33,7 @@ namespace Lockstep.Core.DefaultServices.Navigation
             Parallel.ForEach(_agents.Values, agent => agent.Update());  
         }
 
-        public Dictionary<int, Vector2> GetAgentVelocities()
+        public Dictionary<uint, Vector2> GetAgentVelocities()
         {
             return _agents.ToDictionary(pair => pair.Key, pair => pair.Value.Velocity);
         }

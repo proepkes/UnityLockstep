@@ -8,7 +8,7 @@ namespace Lockstep.Commands
     {
         public ushort Tag => 1;
 
-        public int[] EntityIds;
+        public uint[] EntityIds;
 
         public Vector2 Destination;    
 
@@ -22,15 +22,15 @@ namespace Lockstep.Commands
         public void Serialize(Serializer writer)
         {
             writer.PutArray(EntityIds);
-            writer.Put((long)Destination.X);
-            writer.Put((long)Destination.Y);
+            writer.Put(Destination.X.RawValue);
+            writer.Put(Destination.Y.RawValue);
         }
 
         public void Deserialize(Deserializer reader)
         {
-            EntityIds = reader.GetIntArray();
-            Destination.X = reader.GetLong();
-            Destination.Y = reader.GetLong();
+            EntityIds = reader.GetUIntArray();
+            Destination.X.RawValue = reader.GetLong();
+            Destination.Y.RawValue = reader.GetLong();
         }
 
     }

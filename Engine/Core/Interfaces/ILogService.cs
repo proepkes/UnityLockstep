@@ -2,6 +2,6 @@
 {
     public interface ILogService : IService
     {
-        void Warn(string message);
+        void Warn(object message);
     }
 }

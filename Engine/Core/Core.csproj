@@ -56,7 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EventStore.cs" />
+    <Compile Include="Features\StatefulFeature.cs" />
+    <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
@@ -77,8 +78,8 @@
     <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
-    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
+    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
@@ -103,6 +104,9 @@
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\GameState\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\VelocityComponent.cs" />
@@ -131,9 +135,6 @@
     <Compile Include="Components\Input\FrameComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContextsIdExtensions.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Components\Game\HashableComponent.cs" />
     <Compile Include="Components\GameState\PausedComponent.cs" />
     <Compile Include="Components\Input\EntityIdsComponent.cs" />
@@ -154,13 +155,15 @@
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
     <Compile Include="Interfaces\ISystems.cs" />
-    <Compile Include="LockstepSystems.cs" />
+    <Compile Include="GameSystems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
+    <Compile Include="Systems\GameState\IncrementTick.cs" />
     <Compile Include="Systems\Input\CleanupInput.cs" />
     <Compile Include="Systems\Input\EmitInput.cs" />
-    <Compile Include="Systems\Input\OnSpawnInputDoLoadEntityIntoGame.cs" />
+    <Compile Include="Systems\Input\OnSpawnInputCreateEntity.cs" />
+    <Compile Include="Interfaces\IStateSystem.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
     <Compile Include="Systems\Navigation\OnNavigationInputDoSetDestination.cs" />
@@ -168,5 +171,6 @@
     <Compile Include="Systems\Navigation\UpdateAgentPosition.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

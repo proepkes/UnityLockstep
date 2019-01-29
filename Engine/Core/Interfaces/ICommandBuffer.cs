@@ -1,18 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using Lockstep.Core.Data;
 
 namespace Lockstep.Core.Interfaces
 {
     public interface ICommandBuffer
     {
-        event Action<long, ICommand> Inserted;
+        Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; }
 
-        long Count { get; }
-        long ItemIndex { get; }
-        long Remaining { get; }
+        uint LastInsertedFrame { get; }           
 
-        void Insert(long frameNumber, ICommand command);
+        void Insert(uint frameNumber, byte commanderId, ICommand[] commands);
 
-        ICommand[] GetNext();
+        Dictionary<byte, List<ICommand>> Get(uint frame);
+
+        ICommand[] GetMany(uint frame);
     }
 }

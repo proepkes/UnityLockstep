@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;            
 using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 
@@ -8,53 +7,62 @@ namespace Lockstep.Client.Implementations
 {                
     public class CommandBuffer : ICommandBuffer
     {                                   
-        private readonly Dictionary<long, List<ICommand>> _commands = new Dictionary<long, List<ICommand>>();
+        /// <summary>
+        /// Mapping: FrameNumber -> Commands per player(Id)
+        /// </summary>    
+        public Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);
 
-        public event Action<long, ICommand> Inserted;
+        public uint LastInsertedFrame { get; private set; }      
 
-        public long Count
+        public virtual void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
         {
-            get
-            {
-                lock (_commands)
+            lock (Buffer)
+            {        
+                if (!Buffer.ContainsKey(frameNumber))
                 {
-                    return _commands.LongCount();
+                    Buffer.Add(frameNumber, new Dictionary<byte, List<ICommand>>(10)); //Initial size for 10 players
                 }
+
+                if (!Buffer[frameNumber].ContainsKey(commanderId))
+                {
+                    Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame
+                }
+
+                //TODO: order by timestamp in case of multiple commands in the same frame => if commands intersect, the first one should win, requires !serverside! timestamp
+                //ordering is enough, validation should take place in the simulation(core)
+                Buffer[frameNumber][commanderId].AddRange(commands);
+
+                LastInsertedFrame = frameNumber;
+            }     
+        }
+
+        public Dictionary<byte, List<ICommand>> Get(uint frame)
+        {
+            lock (Buffer)
+            {
+                //If no commands were inserted then return an empty list
+                if (!Buffer.ContainsKey(frame))
+                {
+                    Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
+                }
+
+                return Buffer[frame];
             }
         }
 
-        public long ItemIndex { get; private set; }
-
-        public long Remaining => Count - ItemIndex;
-
-        public virtual void Insert(long frameNumber, ICommand command)
+        public ICommand[] GetMany(uint frame)
         {
-            lock (_commands)
-            {
-                if (!_commands.ContainsKey(frameNumber))
-                {
-                    _commands.Add(frameNumber, new List<ICommand>(10));
-                }
-
-                _commands[frameNumber].Add(command);
-
-                Inserted?.Invoke(frameNumber, command);
-            }              
-        }
-
-        public ICommand[] GetNext()
-        {                    
-            lock (_commands)
+            lock (Buffer)
             {
                 //If no commands were inserted then return an empty list
-                if (!_commands.ContainsKey(ItemIndex))
+                if (!Buffer.ContainsKey(frame))
                 {
-                    _commands[ItemIndex] = new List<ICommand>();
+                    Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
                 }
 
-                return _commands[ItemIndex++].ToArray();    
-
-            }                 
+                return Buffer[frame].SelectMany(pair => pair.Value).ToArray();
+            }
         }
+               
     }
 }

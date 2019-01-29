@@ -1,10 +1,16 @@
 ﻿using System;
-using System.Linq; 
+using System.Linq;
+using BEPUutilities;
+using Entitas;
 using Lockstep.Client;
 using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Core;
-using Lockstep.Core.Data;             
+using Lockstep.Core.Data;
+using Lockstep.Core.DefaultServices;
+using Lockstep.Core.Systems.GameState;
+using Lockstep.Core.Systems.Input;
+using Lockstep.Network.Messages;
 using Moq;
 using Shouldly;
 using Xunit;
@@ -13,17 +19,19 @@ using Xunit.Abstractions;
 namespace Test
 {    
     public class InputParseTest
-    {               
+    {
+        private readonly ITestOutputHelper _output;
+
         public InputParseTest(ITestOutputHelper output)
         {
+            _output = output;
             Console.SetOut(new Converter(output));
         }        
 
         [Fact]
         public void TestGameEntityHasUniqueId()
         {
-            var contexts = new Contexts();
-            contexts.SubscribeId();
+            var contexts = new Contexts();  
 
             const int numEntities = 10;
 
@@ -40,12 +48,181 @@ namespace Test
         [Fact]
         public void TestCommandIsExecuted()
         {
-            var command = new Mock<ISerializableCommand>(); 
+            //var command = new Mock<ISerializableCommand>(); 
 
-            new Simulation(new LockstepSystems(new Contexts()), null).Execute(command.Object);           
+            //new Simulation(new GameSystems(new Contexts()), null).Execute(command.Object);           
 
-            command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Once);
+            //command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Once);
         }
-               
+
+        [Fact]
+        public void TestCreateEntityRollbackLocal()
+        {                      
+            var contexts = new Contexts();   
+
+            var systems = new GameSystems(contexts, new TestLogger(_output));
+            var commandBuffer = new CommandBuffer();
+
+            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0 };
+
+            sim.Start(new Init { TargetFPS = 1});
+
+
+            sim.Update(1000);     
+            sim.Update(1000);                                             
+            sim.Update(1000);
+
+            for (int i = 0; i < 10; i++)
+            {
+                sim.Execute(new SpawnCommand());
+            }
+
+            commandBuffer.Insert(2, 1, new ICommand[] { });
+                                                                 
+            sim.Update(1000);   //3 = 30         
+
+            sim.Update(1000);
+
+            for (int i = 0; i < 10; i++)
+            {
+                sim.Execute(new SpawnCommand());
+            }
+
+            sim.Update(1000);
+            contexts.game.count.ShouldBe(20);
+            _output.WriteLine("Count: " + contexts.game.count);
+            for (int i = 0; i < 10; i++)
+            {
+                sim.Execute(new SpawnCommand());
+            }
+            sim.Update(1000);
+
+            _output.WriteLine("Count: " + contexts.game.count);
+            _output.WriteLine("Revert to 3");
+            commandBuffer.Insert(3, 1, new ICommand[] { });
+
+            sim.Update(1000);
+            _output.WriteLine("Count: " + contexts.game.count);
+            sim.Update(1000);
+            commandBuffer.Insert(4, 1, new ICommand[] { });
+            for (int i = 0; i < 10; i++)
+            {
+                sim.Execute(new SpawnCommand());
+            }
+            sim.Update(1000);
+            sim.Update(1000);
+            sim.Update(1000);
+            for (int i = 0; i < 10; i++)
+            {
+                commandBuffer.Insert(5, 1, new ICommand[] { new SpawnCommand() });
+            }
+            sim.Update(1000);  
+
+
+            contexts.game.count.ShouldBe(50); 
+        }
+
+        [Fact]
+        public void TestCreateEntityRollbackRemote()
+        {
+            var contexts = new Contexts();
+
+            var systems = new GameSystems(contexts, new TestLogger(_output));
+            var commandBuffer = new CommandBuffer();
+
+            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0 };
+
+            sim.Start(new Init { TargetFPS = 1 });
+
+            sim.Update(1000);
+            for (int i = 0; i < 10; i++)
+            {
+                sim.Execute(new SpawnCommand());
+            }
+            sim.Update(1000); 
+            sim.Update(1000);
+            sim.Update(1000);      
+            sim.Update(1000);   
+
+            for (int i = 0; i < 10; i++)
+            {
+                commandBuffer.Insert(2, 1, new ICommand[] { new SpawnCommand() });
+            }              
+
+            sim.Update(1000);                     
+
+            for (int i = 0; i < 10; i++)
+            {
+                commandBuffer.Insert(4, 1, new ICommand[] { new SpawnCommand() });
+            }
+
+                                       
+            for (int i = 0; i < 100; i++)
+            {
+                sim.Update(1000);
+            }                          
+
+            for (int i = 0; i < 10; i++)
+            {
+                commandBuffer.Insert(5, 1, new ICommand[] { new SpawnCommand() });
+            }
+
+            sim.Update(1000);    
+            sim.Update(1000);
+            sim.Update(1000);
+
+
+            for (int i = 0; i < 10; i++)
+            {
+                commandBuffer.Insert(7, 1, new ICommand[] { new SpawnCommand() });
+            }
+            sim.Update(1000);
+
+            sim.Update(1000);
+            sim.Update(1000);
+            sim.Update(1000);
+            sim.Update(1000);
+            sim.Update(1000);
+
+            _output.WriteLine("Count: " + contexts.game.count);
+            _output.WriteLine("Revert to 3");
+            for (int i = 0; i < 10; i++)
+            {
+                commandBuffer.Insert(8, 1, new ICommand[] { new SpawnCommand() });
+            }
+
+            sim.Update(1000);
+            _output.WriteLine("Count: " + contexts.game.count);
+            sim.Update(1000);
+            sim.Update(1000);
+            sim.Update(1000);
+            sim.Update(1000);
+            for (int i = 0; i < 10; i++)
+            {
+                commandBuffer.Insert(9, 1, new ICommand[] { new SpawnCommand() });
+            }
+            sim.Update(1000);   
+
+            contexts.game.count.ShouldBe(70);
+        }
+
+
+        public class SpawnCommand : ICommand
+        {
+            public ushort Tag => 2;
+
+            public int EntityConfigId;
+
+            public Vector2 Position;
+
+            public void Execute(InputContext context)
+            {
+                var e = context.CreateEntity();
+                e.AddCoordinate(Position);
+                e.AddEntityConfigId(EntityConfigId);
+                e.AddPlayerId(0);
+            }     
+
+        }
     }
 }

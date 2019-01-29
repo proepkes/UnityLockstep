@@ -7,7 +7,7 @@ using Lockstep.Network.Utils;
 
 namespace Server
 {
-    //Buffers input and distributes it in fixed timesteps
+    //Buffers input and distributes it in fixed timesteps, probably legacy and no longer required.
     class BufferedRoom
     {
         private const int TargetFps = 20;
@@ -127,7 +127,7 @@ namespace Server
                     serializer.Reset();
 
                     _inputBuffer.Pack(serializer);           
-                    _server.Distribute(Compressor.Compress(serializer));   
+                    //_server.Distribute(Compressor.Compress(serializer));   
 
                     accumulatedTime -= dt;
                 }

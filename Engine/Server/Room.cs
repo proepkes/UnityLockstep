@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.Collections.Generic;     
 using Lockstep.Network;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
@@ -12,12 +11,11 @@ namespace Server
     /// </summary>
     public class Room
     {
-        private const int TargetFps = 20;
+        private const int TargetFps = 40;
 
         private byte _nextPlayerId;
         private readonly int _size;
-
-        private InputBuffer _inputBuffer; 
+                                            
         private readonly IServer _server;
 
         public bool Running { get; private set; } 
@@ -70,8 +68,9 @@ namespace Server
             switch (messageTag)
             {
                 case MessageTag.Input:
-                    _server.Distribute(data);    
+                    _server.Distribute(clientId, data);    
                     break;
+
                 case MessageTag.HashCode:                                 
                     var pkt = new HashCode();
                     pkt.Deserialize(reader);
@@ -83,6 +82,10 @@ namespace Server
                     {
                         Console.WriteLine((_hashCodes[pkt.FrameNumber] == pkt.Value ? "HashCode valid" : "Desync") + ": " + pkt.Value);
                     }
+                    break;
+
+                default:
+                    _server.Distribute(data);
                     break;
             }      
         }
@@ -103,13 +106,15 @@ namespace Server
 
         private void StartSimulationOnConnectedPeers()
         {
-            Serializer writer = new Serializer();
+            var writer = new Serializer();
+
             //Create a new seed and send it with a start-message to all clients
             //The message also contains the respective player-id and the servers' frame rate 
             var seed = new Random().Next(int.MinValue, int.MaxValue);
 
             foreach (var player in _playerIds)
-            {                    
+            {
+                writer.Reset();
                 writer.Put((byte)MessageTag.StartSimulation);
                 new Init
                 {

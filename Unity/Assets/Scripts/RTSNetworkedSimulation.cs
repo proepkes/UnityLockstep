@@ -14,7 +14,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public int ServerPort = 9050;
 
     public Simulation Simulation;
-    public LockstepSystems Systems;
+    public GameSystems Systems;
     public RTSEntityDatabase EntityDatabase;
 
     public bool Connected => _client.Connected;
@@ -26,13 +26,13 @@ public class RTSNetworkedSimulation : MonoBehaviour
     {                                
         Instance = this;
 
-        Systems = new LockstepSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase));
+        Systems = new GameSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger());
 
-        _remoteCommandBuffer = new NetworkCommandBuffer(_client);
+        _remoteCommandBuffer = new NetworkCommandBuffer(_client, new UnityLogger());
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 
-        Simulation = new Simulation(Systems, _remoteCommandBuffer);
+        Simulation = new Simulation(Systems, _remoteCommandBuffer) { LagCompensation = 3 };
 
         _remoteCommandBuffer.InitReceived += StartSimulation;   
 
@@ -44,6 +44,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     private void StartSimulation(Init data)
     {
+        Debug.Log("Starting as player:" + data.PlayerID);
         Simulation.Start(data);
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
@@ -70,20 +71,9 @@ public class RTSNetworkedSimulation : MonoBehaviour
     void Update()
     {
         _client.Update();
-
+                                                                                            
         Simulation.Update(Time.deltaTime * 1000);
-    }   
-
-    void OnGUI()
-    {
-        if (Simulation.Running)
-        {
-            GUILayout.BeginVertical(GUILayout.Width(100f));
-            GUI.color = Color.white;
-            GUILayout.Label("HashCode: " + Contexts.sharedInstance.gameState.hashCode.value);
-            GUILayout.EndVertical();
-        }
-    }
+    }            
 
     public IEnumerator AutoConnect()
     {
