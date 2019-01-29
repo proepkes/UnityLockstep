@@ -51,6 +51,11 @@ namespace Lockstep.Client
 
         public void Execute(ICommand command)
         {
+            if (!Running)
+            {
+                return;
+            }
+
             lock (_temporaryCommandBuffer)
             {
                 _temporaryCommandBuffer.Add(command);
@@ -101,8 +106,9 @@ namespace Lockstep.Client
             var currentRemoteFrame = RemoteCommandBuffer.LastInsertedFrame;
   
             if (LastValidatedFrame < currentRemoteFrame)
-            {                                                                                                                             
-                var revertFrame = currentRemoteFrame; //We guess everything was predicted correctly
+            {
+                //We guess everything was predicted correctly
+                var revertFrame = currentRemoteFrame; 
                                                                         
                 for (var remoteFrame = LastValidatedFrame + 1; remoteFrame <= currentRemoteFrame; remoteFrame++)
                 {

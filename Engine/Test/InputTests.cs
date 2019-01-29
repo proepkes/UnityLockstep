@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Linq;
-using BEPUutilities;
-using Entitas;
+using BEPUutilities;      
 using Lockstep.Client;
 using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Core;
-using Lockstep.Core.Data;
-using Lockstep.Core.DefaultServices;
-using Lockstep.Core.Systems.GameState;
-using Lockstep.Core.Systems.Input;
+using Lockstep.Core.Data;             
 using Lockstep.Network.Messages;
 using Moq;
 using Shouldly;
@@ -43,18 +39,9 @@ namespace Test
             contexts.game.count.ShouldBe(numEntities);
             contexts.game.GetEntities().Select(entity => entity.hasId).ShouldAllBe(b => true);
             contexts.game.GetEntities().Select(entity => entity.id.value).ShouldBeUnique();
-        }  
+        }    
 
-        [Fact]
-        public void TestCommandIsExecuted()
-        {
-            //var command = new Mock<ISerializableCommand>(); 
-
-            //new Simulation(new GameSystems(new Contexts()), null).Execute(command.Object);           
-
-            //command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Once);
-        }
-
+        //Tests regarding Rollback currently require to remove the line from Simulation where input gets added to the remoteBuffer. Otherwise the input loops back into the simulation
         [Fact]
         public void TestCreateEntityRollbackLocal()
         {                      
@@ -125,6 +112,7 @@ namespace Test
         [Fact]
         public void TestCreateEntityRollbackRemote()
         {
+            
             var contexts = new Contexts();
 
             var systems = new GameSystems(contexts, new TestLogger(_output));
