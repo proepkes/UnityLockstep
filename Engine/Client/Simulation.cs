@@ -108,7 +108,7 @@ namespace Lockstep.Client
             if (LastValidatedFrame < currentRemoteFrame)
             {
                 //We guess everything was predicted correctly
-                var revertFrame = currentRemoteFrame; 
+                var firstMispredictedFrame = currentRemoteFrame; 
                                                                         
                 for (var remoteFrame = LastValidatedFrame + 1; remoteFrame <= currentRemoteFrame; remoteFrame++)
                 {
@@ -119,10 +119,10 @@ namespace Lockstep.Client
                         continue;
                     }
 
-                    if (remoteFrame < revertFrame)
+                    if (firstMispredictedFrame > remoteFrame)
                     {
-                        //Store the first frame where prediction was false (frame has commands)
-                        revertFrame = remoteFrame;
+                        //Set the first mispredicted frame to the first frame which contains commands
+                        firstMispredictedFrame = remoteFrame;
                     }
 
                     //Merge commands into the local command buffer
@@ -132,19 +132,19 @@ namespace Lockstep.Client
                     }
                 }
 
-                //Only rollback if we are ahead (network can be ahead when lag compensation is higher than lag itself)
-                if (_systems.CurrentTick > revertFrame)
+                //Only rollback if the mispredicted frame was in the past (the frame can be in the future due to high lag compensation)
+                if (firstMispredictedFrame < _systems.CurrentTick)
                 {      
                     var targetTick = _systems.CurrentTick;  
                     
-                    //Revert everything that happened one tick after the last validated input
-                    _systems.RevertFromTick(revertFrame + 1);
+                    //Revert everything that happened one tick after the last validated input (because input always gets executed one tick after it was inserted)
+                    _systems.RevertFromTick(firstMispredictedFrame + 1);
 
                     //Execute all commands again, beginning from the first frame that contains remote input up to our last local state
-                    while (revertFrame <= targetTick)
+                    while (firstMispredictedFrame <= targetTick)
                     {   
-                        _systems.Tick(LocalCommandBuffer.GetMany(revertFrame));
-                        revertFrame++;
+                        _systems.Tick(LocalCommandBuffer.GetMany(firstMispredictedFrame));
+                        firstMispredictedFrame++;
                     }
                 }
 
