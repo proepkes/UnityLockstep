@@ -132,7 +132,7 @@
     <Compile Include="Components\Input\PlayerIdComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Input\FrameComponent.cs" />
+    <Compile Include="Components\Input\CommandsComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\HashableComponent.cs" />
