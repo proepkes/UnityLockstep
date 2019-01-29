@@ -14,12 +14,12 @@ namespace Lockstep.Core.Systems.Input
         private readonly GameStateContext _gameStateContext;
 
         private readonly Dictionary<uint, List<uint>> _createdEntities = new Dictionary<uint, List<uint>>();
-        private ILogService logger;
+        private readonly ILogService _logger;
 
         public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services) : base(contexts.input)
         {
             _gameService = services.Get<IGameService>();
-            logger = services.Get<ILogService>();
+            _logger = services.Get<ILogService>();
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;
         }
@@ -63,7 +63,7 @@ namespace Lockstep.Core.Systems.Input
             {                             
                 if (_createdEntities.ContainsKey(tick))
                 {
-                    logger.Warn("Destroying " + _createdEntities[tick].Count + " Entities from tick " + tick);
+                    _logger?.Warn("Destroying " + _createdEntities[tick].Count + " Entities from tick " + tick);
                     foreach (var entityId in _createdEntities[tick])
                     {
                         _gameContext.GetEntityWithId(entityId).Destroy();

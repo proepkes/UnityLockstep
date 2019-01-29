@@ -131,7 +131,7 @@ namespace Lockstep.Client
                 }
 
                 //Only rollback if we are ahead (network can be ahead when lag compensation is higher than lag itself)
-                if (_systems.CurrentTick > revertTick)
+                //if (_systems.CurrentTick > revertTick)
                 {      
                     var targetTick = _systems.CurrentTick;  
                     
