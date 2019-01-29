@@ -11,6 +11,6 @@ namespace Lockstep.Core.Interfaces
 
         void Tick(ICommand[] input);
 
-        void RevertToTick(uint tick);
+        void RevertFromTick(uint tick);
     }
 }

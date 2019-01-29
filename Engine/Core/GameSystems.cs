@@ -24,7 +24,7 @@ namespace Lockstep.Core
             {
                 Services.Register(service);
             }
-                                                    
+                                 
             Add(new IncrementTick(Contexts));
 
             Add(new InputFeature(Contexts, Services));
@@ -34,6 +34,7 @@ namespace Lockstep.Core
             Add(new GameEventSystems(Contexts));
 
             Add(new HashCodeFeature(Contexts, Services));
+
         }
 
         public void Tick(ICommand[] input)
@@ -44,7 +45,7 @@ namespace Lockstep.Core
             Cleanup();
         }
 
-        public void RevertToTick(uint tick)
+        public void RevertFromTick(uint tick)
         {
             foreach (var system in _executeSystems)
             {
@@ -53,8 +54,8 @@ namespace Lockstep.Core
                     stateSystem.RevertToTick(tick);
                 }
             }
-
-            Contexts.gameState.ReplaceTick(tick);   
+                                                        
+            Contexts.gameState.ReplaceTick(tick - 1);   
         }
     }
 }     

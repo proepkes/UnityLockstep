@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BEPUutilities;
 using Entitas;
 using Lockstep.Core.Interfaces;
@@ -51,28 +52,33 @@ namespace Lockstep.Core.Systems.Input
                     _createdEntities.Add(_gameStateContext.tick.value, new List<uint>());
                 }
 
-                _createdEntities[_gameStateContext.tick.value].Add(_nextEntityId);
-
-                _nextEntityId++;
+                _createdEntities[_gameStateContext.tick.value].Add(_nextEntityId);      
+                _nextEntityId++;  
             }
+
+            _logger?.Warn(_gameStateContext.tick.value + ": " + inputs.Count + " added");
         }
 
         public void RevertToTick(uint tick)
-        {                                                                                                                                  
+        {
+            var t = tick;
+            var count = 0;
             for (;tick <= _gameStateContext.tick.value; tick++)
             {                             
                 if (_createdEntities.ContainsKey(tick))
                 {
-                    _logger?.Warn("Destroying " + _createdEntities[tick].Count + " Entities from tick " + tick);
                     foreach (var entityId in _createdEntities[tick])
                     {
-                        _gameContext.GetEntityWithId(entityId).Destroy();
+                        _gameContext.GetEntities().First(entity => entity.id.value == entityId).Destroy();
                         _nextEntityId--;
+                        count++;
                     }
 
                     _createdEntities[tick].Clear();
                 }
             }
+
+            _logger?.Warn(t + " -> " + tick + ": " + count + " destroyed");
         }
     }
 }

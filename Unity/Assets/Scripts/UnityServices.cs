@@ -47,7 +47,7 @@ public class UnityGameService : IGameService
 
 public class UnityLogger : ILogService
 {
-    public void Warn(string message)
+    public void Warn(object message)
     {
         Debug.LogWarning(message);
     }

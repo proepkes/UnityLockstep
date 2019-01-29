@@ -73,7 +73,9 @@ namespace Lockstep.Client
             _accumulatedTime += deltaTime; 
 
             while (_accumulatedTime >= _tickDt)
-            {        
+            {
+
+                _logger.Warn(" ========= " + (_systems.CurrentTick + 1) + " ========= ");
 
                 Tick();
 
@@ -82,20 +84,20 @@ namespace Lockstep.Client
         }
 
         private void Tick()
-        {           
+        {            
             ICommand[] frameCommands;
             lock (_temporaryCommandBuffer)
             {
                 frameCommands = _temporaryCommandBuffer.ToArray();
                 _temporaryCommandBuffer.Clear();
-            }                    
-                                                                                                                     
+            }
+
             if (frameCommands.Length > 0)
             {
                 LocalCommandBuffer.Insert(_systems.CurrentTick + LagCompensation, LocalPlayerId, frameCommands);
                 RemoteCommandBuffer.Insert(_systems.CurrentTick + LagCompensation, LocalPlayerId,  frameCommands);     
             }
-                                     
+
             _systems.Tick(LocalCommandBuffer.GetMany(_systems.CurrentTick));
 
             Ticked?.Invoke(_systems.CurrentTick);      
@@ -106,26 +108,31 @@ namespace Lockstep.Client
             var currentRemoteFrame = RemoteCommandBuffer.LastInsertedFrame;
   
             if (LastValidatedFrame < currentRemoteFrame)
-            {                  
-                var revertTick = currentRemoteFrame;
+            {   
+                _logger.Warn("Catching up: " + LastValidatedFrame + " -> " + currentRemoteFrame + " of " + _systems.CurrentTick);
+
+                var revertFrame = currentRemoteFrame; //We guess everything was predicted correctly
                                                                         
                 for (var remoteFrame = LastValidatedFrame + 1; remoteFrame <= currentRemoteFrame; remoteFrame++)
                 {
+                    //All frames that have no commands were predicted correctly => increase remote frame
                     var allPlayerCommands = RemoteCommandBuffer.Get(remoteFrame);
                     if (allPlayerCommands.Count <= 0)
                     {
                         continue;
                     }
 
-                    if (remoteFrame < revertTick)
+                    if (remoteFrame < revertFrame)
                     {
-                        //Save the first tick which contains remote commands
-                        revertTick = remoteFrame;
+                        //Store the first frame where predicion was false (frame has commands)
+                        revertFrame = remoteFrame;
                     }
 
                     //Merge commands into the local command buffer
                     foreach (var commandPerPlayer in allPlayerCommands)
                     {
+
+                        _logger.Warn("Insert remote commands from " + remoteFrame);
                         LocalCommandBuffer.Insert(remoteFrame, commandPerPlayer.Key, commandPerPlayer.Value.ToArray());
                     }
                 }
@@ -135,11 +142,22 @@ namespace Lockstep.Client
                 {      
                     var targetTick = _systems.CurrentTick;  
                     
-                    _systems.RevertToTick(revertTick); 
-                                                                         
-                    while (_systems.CurrentTick < targetTick)
-                    {            
-                        _systems.Tick(LocalCommandBuffer.GetMany(_systems.CurrentTick));
+                    //Revert everything that happened one tick after the last validated input
+                    _systems.RevertFromTick(revertFrame + 1);
+
+                    //Execute all commands again, beginning from the first frame that contains remote input
+                    while (revertFrame <= targetTick)
+                    {
+                        if (LocalCommandBuffer.GetMany(_systems.CurrentTick).Length > 0)
+                        {
+
+                            _logger.Warn("Execute " +  LocalCommandBuffer.GetMany(revertFrame).Length + " commands from tick " + revertFrame);
+                        }
+
+                        _logger.Warn(">>>>========= " + (revertFrame) + " ========= ");
+                        _systems.Tick(LocalCommandBuffer.GetMany(revertFrame));
+
+                        revertFrame++;
                     }
                 }
 

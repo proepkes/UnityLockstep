@@ -16,8 +16,7 @@ namespace Server
 
         private byte _nextPlayerId;
         private readonly int _size;
-
-        private InputBuffer _inputBuffer; 
+                                            
         private readonly IServer _server;
 
         public bool Running { get; private set; } 
