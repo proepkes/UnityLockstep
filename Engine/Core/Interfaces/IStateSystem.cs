@@ -2,6 +2,6 @@
 {
     public interface IStateSystem
     {
-        void RevertToTick(uint tick);
+        void RevertFromTick(uint tick);
     }
 }

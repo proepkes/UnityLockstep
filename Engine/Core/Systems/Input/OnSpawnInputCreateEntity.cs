@@ -14,13 +14,11 @@ namespace Lockstep.Core.Systems.Input
         private readonly GameContext _gameContext;
         private readonly GameStateContext _gameStateContext;
 
-        private readonly Dictionary<uint, List<uint>> _createdEntities = new Dictionary<uint, List<uint>>();
-        private readonly ILogService _logger;
+        private readonly Dictionary<uint, List<uint>> _createdEntities = new Dictionary<uint, List<uint>>();        
 
         public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services) : base(contexts.input)
         {
-            _gameService = services.Get<IGameService>();
-            _logger = services.Get<ILogService>();
+            _gameService = services.Get<IGameService>();     
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;
         }
@@ -54,15 +52,11 @@ namespace Lockstep.Core.Systems.Input
 
                 _createdEntities[_gameStateContext.tick.value].Add(_nextEntityId);      
                 _nextEntityId++;  
-            }
-
-            _logger?.Warn(_gameStateContext.tick.value + ": " + inputs.Count + " added");
+            }                                                                                    
         }
 
-        public void RevertToTick(uint tick)
-        {
-            var t = tick;
-            var count = 0;
+        public void RevertFromTick(uint tick)
+        {                  
             for (;tick <= _gameStateContext.tick.value; tick++)
             {                             
                 if (_createdEntities.ContainsKey(tick))
@@ -70,15 +64,12 @@ namespace Lockstep.Core.Systems.Input
                     foreach (var entityId in _createdEntities[tick])
                     {
                         _gameContext.GetEntities().First(entity => entity.id.value == entityId).Destroy();
-                        _nextEntityId--;
-                        count++;
+                        _nextEntityId--;   
                     }
 
                     _createdEntities[tick].Clear();
                 }
-            }
-
-            _logger?.Warn(t + " -> " + tick + ": " + count + " destroyed");
+            }                                                                     
         }
     }
 }

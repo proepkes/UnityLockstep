@@ -4,13 +4,13 @@ namespace Lockstep.Core.Features
 {
     public abstract class StatefulFeature : Feature, IStateSystem
     {     
-        public void RevertToTick(uint tick)
+        public void RevertFromTick(uint tick)
         {
             foreach (var system in _executeSystems)
             {
                 if (system is IStateSystem stateSystem)
                 {
-                    stateSystem.RevertToTick(tick);
+                    stateSystem.RevertFromTick(tick);
                 }
             }
         }

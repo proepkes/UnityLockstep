@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.Collections.Generic;     
 using Lockstep.Network;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
@@ -12,7 +11,7 @@ namespace Server
     /// </summary>
     public class Room
     {
-        private const int TargetFps = 20;
+        private const int TargetFps = 40;
 
         private byte _nextPlayerId;
         private readonly int _size;
@@ -107,7 +106,8 @@ namespace Server
 
         private void StartSimulationOnConnectedPeers()
         {
-            Serializer writer = new Serializer();
+            var writer = new Serializer();
+
             //Create a new seed and send it with a start-message to all clients
             //The message also contains the respective player-id and the servers' frame rate 
             var seed = new Random().Next(int.MinValue, int.MaxValue);

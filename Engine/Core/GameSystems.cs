@@ -2,8 +2,7 @@
 using Lockstep.Core.Data;
 using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
-using Lockstep.Core.Systems.GameState;
-using Lockstep.Core.Systems.Input;
+using Lockstep.Core.Systems.GameState;    
 
 namespace Lockstep.Core
 {
@@ -51,10 +50,14 @@ namespace Lockstep.Core
             {
                 if (system is IStateSystem stateSystem)
                 {
-                    stateSystem.RevertToTick(tick);
+                    stateSystem.RevertFromTick(tick);
                 }
             }
-                                                        
+            
+            //Example: tick = 50, currentTick = 60
+            //All ticks from 50 to 60 are reverted
+            //The state is now the same it was as in 49
+            //=> Set new tick to 49 (= tick - 1)
             Contexts.gameState.ReplaceTick(tick - 1);   
         }
     }
