@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -56,7 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\StatefulFeature.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
@@ -104,6 +103,9 @@
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Features\StatefulFeature.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameState\TickComponent.cs" />
