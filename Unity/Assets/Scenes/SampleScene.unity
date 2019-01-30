@@ -1007,6 +1007,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: '[ Debug ]'
       objectReference: {fileID: 0}
+    - target: {fileID: 1693163423286094, guid: 9aecd875d3db643668201ca25d9026bd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4120396180661002, guid: 9aecd875d3db643668201ca25d9026bd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1053,6 +1057,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7061114025118689810, guid: 9aecd875d3db643668201ca25d9026bd, type: 3}
+    - {fileID: 8358915464787808764, guid: 9aecd875d3db643668201ca25d9026bd, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 9aecd875d3db643668201ca25d9026bd, type: 3}
 --- !u!1 &2042152885
 GameObject:

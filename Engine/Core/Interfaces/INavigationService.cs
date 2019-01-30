@@ -7,6 +7,8 @@ namespace Lockstep.Core.Interfaces
     {
         void AddAgent(uint id, Vector2 position);
 
+        void RemoveAgent(uint id);
+
         void SetAgentDestination(uint agentId, Vector2 newDestination);
 
         void SetAgentPositions(Dictionary<uint, Vector2> positions);

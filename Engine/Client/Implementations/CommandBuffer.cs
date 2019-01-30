@@ -28,8 +28,6 @@ namespace Lockstep.Client.Implementations
                     Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame
                 }
 
-                //TODO: order by timestamp in case of multiple commands in the same frame => if commands intersect, the first one should win, requires !serverside! timestamp
-                //ordering is enough, validation should take place in the simulation(core)
                 Buffer[frameNumber][commanderId].AddRange(commands);
 
                 LastInsertedFrame = frameNumber;

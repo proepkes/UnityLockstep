@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using DesperateDevs.Utils;
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
 using Lockstep.Core.Systems.GameState;    
@@ -7,9 +8,9 @@ namespace Lockstep.Core
 {
     public sealed class GameSystems : Entitas.Systems, ITickable
     {
-        private Contexts Contexts { get; }  
+        private Contexts Contexts { get; }
 
-        public ServiceContainer Services { get; }
+        private ServiceContainer Services { get; }
 
         public uint CurrentTick => Contexts.gameState.tick.value;
 
@@ -18,6 +19,7 @@ namespace Lockstep.Core
         private readonly IGameService _game;
         private readonly IStorageService _storage;
         private readonly GameContext _gameContext;
+        private readonly INavigationService _navigation;
 
         public GameSystems(Contexts contexts, params IService[] additionalServices)
         {
@@ -31,6 +33,7 @@ namespace Lockstep.Core
 
             _storage = Services.Get<IStorageService>();
             _game = Services.Get<IGameService>();
+            _navigation = Services.Get<INavigationService>();
             _gameContext = contexts.game;
 
             Add(new IncrementTick(Contexts));
@@ -53,18 +56,49 @@ namespace Lockstep.Core
         public void RevertToTick(uint tick)
         {
             //Revert all changes that were done after the given tick   
-            var entityReferences = _storage.GetChanges(tick + 1).Select(id => _gameContext.GetEntityWithIdReference(id)).ToList(); 
+            var entityReferences = _storage.GetFirstChangeOccurences(tick + 1).Select(id => _gameContext.GetEntityWithIdReference(id)).ToList(); 
 
             foreach (var entityId in entityReferences.Where(e => e.isNew).Select(e => e.idReference.referenceId))
             {
+                _navigation.RemoveAgent(entityId);
+
                 _game.UnloadEntity(entityId);
                 _gameContext.GetEntityWithId(entityId).Destroy();  
             }
-
-            //TODO: select will fail if the entity got destroyed in the local simulation but the changebuffer has changes
-            foreach (var entity in entityReferences.Where(e => !e.isNew).Select(e => _gameContext.GetEntityWithId(e.idReference.referenceId)))
+                                                                                                                           
+            foreach (var entity in entityReferences.Where(e => !e.isNew))
             {
-                //TODO: revert changes and add previously removed entities                              
+                var referencedEntity = _gameContext.GetEntityWithId(entity.idReference.referenceId);
+                //Check if the entity got destroyed locally
+                if (referencedEntity == null)
+                {     
+                    //TODO: restore locally destroyed entities
+                }
+                else
+                {
+                    //Entity is in the game locally, revert to old state
+                    var currentComponents = referencedEntity.GetComponentIndices();
+                    var previousComponents = entity.GetComponentIndices();
+
+                    var sameComponents = previousComponents.Intersect(currentComponents);
+                    var onlyLocalComponents = currentComponents.Except(new[] {GameComponentsLookup.Id }).Except(previousComponents).ToList();
+                    var missingComponents = previousComponents.Except(new []{ GameComponentsLookup.IdReference }).Except(currentComponents).ToList();
+                                                          
+                    foreach (var index in sameComponents)
+                    {                                                         
+                        referencedEntity.ReplaceComponent(index, entity.GetComponent(index));  
+                    }
+
+                    foreach (var index in onlyLocalComponents)
+                    {                                               
+                        referencedEntity.RemoveComponent(index);
+                    }
+
+                    foreach (var index in missingComponents)
+                    {                                                   
+                        referencedEntity.AddComponent(index, entity.GetComponent(index));
+                    }
+                }
             }           
 
             for (var i = tick; i <= Contexts.gameState.tick.value; i++)
@@ -72,10 +106,11 @@ namespace Lockstep.Core
                 _storage.RemoveChanges(i);    
             }
 
+            //Reverted to a tick in the past => all our nice predictions are invalid now, delete them
             foreach (var entity in entityReferences)
             {
                 entity.Destroy();
-            }
+            }              
 
             Contexts.gameState.ReplaceTick(tick);   
         }

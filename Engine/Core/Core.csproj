@@ -61,6 +61,7 @@
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCommandsComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNewComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdReferenceComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
@@ -100,11 +102,17 @@
     <Compile Include="Generated\Input\InputEntity.cs" />
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
+    <Compile Include="Generated\Events\Components\DestinationListenerComponent.cs" />
     <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
+    <Compile Include="Generated\Events\Interfaces\IDestinationListener.cs" />
     <Compile Include="Generated\Events\Interfaces\IPositionListener.cs" />
+    <Compile Include="Generated\Events\Systems\DestinationEventSystem.cs" />
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\PositionComponent - Copy.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\NewComponent.cs" />

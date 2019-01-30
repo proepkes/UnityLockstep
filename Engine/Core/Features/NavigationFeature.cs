@@ -9,11 +9,11 @@ namespace Lockstep.Core.Features
         {
             var navigationService = serviceContainer.Get<INavigationService>();
 
-            Add(new OnNavigableDoRegisterAgent(contexts, navigationService));
+            //Add(new OnNavigableDoRegisterAgent(contexts, navigationService));
             Add(new OnNavigationInputDoSetDestination(contexts, navigationService));     
             Add(new NavigationTick(contexts, navigationService));
-            Add(new SyncAgentVelocity(contexts, navigationService)); 
-            Add(new UpdateAgentPosition(contexts, navigationService));
+            //Add(new SyncAgentVelocity(contexts, navigationService)); 
+            //Add(new UpdateAgentPosition(contexts, navigationService));
         }
     }
 }

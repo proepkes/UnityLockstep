@@ -19,12 +19,7 @@ namespace Lockstep.Core.DefaultServices
             _changed.Remove(at);
         }
                   
-        /// <summary>
-        /// Returns the first occurence of all items in the change-buffer at or after the given tick
-        /// </summary>
-        /// <param name="from"></param>
-        /// <returns></returns>
-        public IEnumerable<uint> GetChanges(uint @from)
+        public IEnumerable<uint> GetFirstChangeOccurences(uint @from)
         {   
             var result = new List<uint>();
             foreach (var e in _changed.Where(pair => pair.Key >= @from).SelectMany(pair => pair.Value))

@@ -38,10 +38,10 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         _remoteCommandBuffer.InitReceived += StartSimulation;   
 
-        Simulation.Ticked += id =>
-        {
-            //_dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
-        };
+        //Simulation.Ticked += id =>
+        //{
+        //    _dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
+        //};
     }
 
     private void StartSimulation(Init data)

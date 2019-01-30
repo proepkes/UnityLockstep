@@ -6,8 +6,12 @@ namespace Lockstep.Core.Interfaces
     {                                                 
         void RegisterChange(uint tick, List<uint> entities);
                                 
-        void RemoveChanges(uint at);      
+        void RemoveChanges(uint at);
 
-        IEnumerable<uint> GetChanges(uint minTick);
+        /// <summary>                   
+        /// </summary>
+        /// <param name="minTick"></param>
+        /// <returns>The first occurence of each item in the storage at or after the given tick</returns>
+        IEnumerable<uint> GetFirstChangeOccurences(uint minTick);
     }
 }

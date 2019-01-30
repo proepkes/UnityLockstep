@@ -6,11 +6,13 @@ namespace Lockstep.Core.Systems.Navigation
 {
     public class OnNavigationInputDoSetDestination : ReactiveSystem<InputEntity>
     {                                               
-        private readonly INavigationService _navigationService;     
+        private readonly INavigationService _navigationService;
+        private GameContext _contextsGame;
 
         public OnNavigationInputDoSetDestination(Contexts contexts, INavigationService navigationService) : base(contexts.input)
         {                                 
-            _navigationService = navigationService;  
+            _navigationService = navigationService;
+            _contextsGame = contexts.game;
         }
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
@@ -30,7 +32,8 @@ namespace Lockstep.Core.Systems.Navigation
                 var destination = input.coordinate.value;
                 foreach (var entityId in input.entityIds.values)
                 {
-                    _navigationService.SetAgentDestination(entityId, destination);            
+                    _contextsGame.GetEntityWithId(entityId).ReplaceDestination(destination);
+                    //_navigationService.SetAgentDestination(entityId, destination);            
                 }  
             }
         }

@@ -11,8 +11,13 @@ namespace Lockstep.Core.DefaultServices.Navigation
         private readonly Dictionary<uint, Agent> _agents = new Dictionary<uint, Agent>();      
 
         public void AddAgent(uint id, Vector2 position)
-        {
+        {       
             _agents.Add(id, new Agent(position));
+        }
+
+        public void RemoveAgent(uint id)
+        {
+            _agents.Remove(id);
         }
 
         public void SetAgentDestination(uint agentId, Vector2 newDestination)
