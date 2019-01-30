@@ -6,28 +6,34 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-public partial class GameEntity {
+public partial class GameEntity
+{
 
     public Lockstep.Core.Components.Game.IdReferenceComponent idReference { get { return (Lockstep.Core.Components.Game.IdReferenceComponent)GetComponent(GameComponentsLookup.IdReference); } }
     public bool hasIdReference { get { return HasComponent(GameComponentsLookup.IdReference); } }
 
-    public void AddIdReference(uint newInternalId, uint newReferenceId) {
+    public void AddIdReference(uint newInternalId, uint newReferenceId, uint newTick)
+    {
         var index = GameComponentsLookup.IdReference;
         var component = (Lockstep.Core.Components.Game.IdReferenceComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.IdReferenceComponent));
         component.internalId = newInternalId;
         component.referenceId = newReferenceId;
+        component.tick = newTick;
         AddComponent(index, component);
     }
 
-    public void ReplaceIdReference(uint newInternalId, uint newReferenceId) {
+    public void ReplaceIdReference(uint newInternalId, uint newReferenceId, uint newTick)
+    {
         var index = GameComponentsLookup.IdReference;
         var component = (Lockstep.Core.Components.Game.IdReferenceComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.IdReferenceComponent));
         component.internalId = newInternalId;
         component.referenceId = newReferenceId;
+        component.tick = newTick;
         ReplaceComponent(index, component);
     }
 
-    public void RemoveIdReference() {
+    public void RemoveIdReference()
+    {
         RemoveComponent(GameComponentsLookup.IdReference);
     }
 }
@@ -40,13 +46,17 @@ public partial class GameEntity {
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-public sealed partial class GameMatcher {
+public sealed partial class GameMatcher
+{
 
     static Entitas.IMatcher<GameEntity> _matcherIdReference;
 
-    public static Entitas.IMatcher<GameEntity> IdReference {
-        get {
-            if (_matcherIdReference == null) {
+    public static Entitas.IMatcher<GameEntity> IdReference
+    {
+        get
+        {
+            if (_matcherIdReference == null)
+            {
                 var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.IdReference);
                 matcher.componentNames = GameComponentsLookup.componentNames;
                 _matcherIdReference = matcher;

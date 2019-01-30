@@ -28,7 +28,11 @@ namespace Lockstep.Core.Systems.Navigation
                 {
                     velocity.Normalize();
                 }
-                entity.ReplacePosition(entity.position.value + velocity);
+
+                if ((entity.destination.value - entity.position.value).LengthSquared() > 2)
+                {
+                    entity.ReplacePosition(entity.position.value + velocity);
+                }
             }
         }
     }

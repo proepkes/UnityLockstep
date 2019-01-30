@@ -56,7 +56,7 @@ namespace Lockstep.Core.Systems
                     backupEntity.AddComponent(index, component2);
                 }
 
-                backupEntity.AddIdReference(_internalIdCounter, e.id.value);
+                backupEntity.AddIdReference(_internalIdCounter, e.id.value, _gameStateContext.tick.value);
 
                 changedEntities.Add(_internalIdCounter);
                 _internalIdCounter++;

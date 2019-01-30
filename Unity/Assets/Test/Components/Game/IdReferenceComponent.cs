@@ -11,5 +11,7 @@ namespace Lockstep.Core.Components.Game
         public uint internalId;
 
         public uint referenceId;
+
+        public uint tick;
     }
 }
