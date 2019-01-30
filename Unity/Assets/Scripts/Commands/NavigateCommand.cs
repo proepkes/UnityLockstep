@@ -12,9 +12,8 @@ namespace Lockstep.Commands
 
         public Vector2 Destination;    
 
-        public void Execute(InputContext context)
-        {
-            var e = context.CreateEntity();
+        public void Execute(InputEntity e)
+        {                                  
             e.AddEntityIds(EntityIds);
             e.AddCoordinate(Destination);                           
         }

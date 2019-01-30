@@ -2,6 +2,6 @@
 {
     public interface ICommand
     {             
-        void Execute(InputContext context);
+        void Execute(InputEntity inputEntity);
     }
 }

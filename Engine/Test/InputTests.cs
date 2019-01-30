@@ -203,9 +203,8 @@ namespace Test
 
             public Vector2 Position;
 
-            public void Execute(InputContext context)
-            {
-                var e = context.CreateEntity();
+            public void Execute(InputEntity e)
+            {                                   
                 e.AddCoordinate(Position);
                 e.AddEntityConfigId(EntityConfigId);
                 e.AddPlayerId(0);

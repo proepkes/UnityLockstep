@@ -26,7 +26,7 @@ namespace Lockstep.Core.Systems.Input
         {
             foreach (var command in _inputContext.commands.input)
             {
-                command?.Execute(_inputContext);
+                command?.Execute(_inputContext.CreateEntity());
             }
         }    
     }
