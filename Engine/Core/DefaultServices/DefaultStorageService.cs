@@ -5,14 +5,9 @@ using Lockstep.Core.Interfaces;
 namespace Lockstep.Core.DefaultServices
 {
     public class DefaultStorageService : IStorageService
-    {
-        private readonly Dictionary<uint, List<uint>> _added = new Dictionary<uint, List<uint>>();
+    {                                                                                                
         private readonly Dictionary<uint, List<GameEntity>> _changed = new Dictionary<uint, List<GameEntity>>();
-
-        public void RegisterNew(uint tick, List<uint> ids)
-        {
-            _added.Add(tick, ids);
-        }
+             
 
         public void RegisterChange(uint tick, List<GameEntity> entities)
         {
@@ -23,15 +18,24 @@ namespace Lockstep.Core.DefaultServices
         {
             _changed.Remove(at);
         }
+                  
+        /// <summary>
+        /// Returns the first occurence of all entities in the change-buffer at or after the given tick
+        /// </summary>
+        /// <param name="from"></param>
+        /// <returns></returns>
+        public IEnumerable<GameEntity> GetChanges(uint @from)
+        {   
+            var result = new Dictionary<uint, GameEntity>();
+            foreach (var e in _changed.Where(pair => pair.Key >= @from).SelectMany(pair => pair.Value))
+            {
+                if (!result.ContainsKey(e.idReference.value))
+                {
+                    result.Add(e.idReference.value, e);
+                }    
+            }
 
-        public void RemoveNewEntites(uint at)
-        {
-            _added.Remove(at);
-        }
-
-        public IEnumerable<uint> GetAllNew(uint @from)
-        {                               
-            return _added.Where(pair => pair.Key >= from).SelectMany(pair => pair.Value);
+            return result.Select(pair => pair.Value);
         }
     }
 }

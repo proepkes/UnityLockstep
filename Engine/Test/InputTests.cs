@@ -28,7 +28,7 @@ namespace Test
         [Fact]
         public void TestGameEntityHasUniqueId()
         {
-            var storeChangedEntities = new StoreChangedEntities(new Contexts(), new ServiceContainer());
+            var storeChangedEntities = new StoreNewOrChangedEntities(new Contexts(), new ServiceContainer());
             storeChangedEntities.Activate();
 
             var contexts = new Contexts();  
