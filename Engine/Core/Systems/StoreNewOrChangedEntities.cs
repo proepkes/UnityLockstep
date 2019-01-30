@@ -10,8 +10,7 @@ namespace Lockstep.Core.Systems
     {                                                                                                                             
         private readonly GameStateContext _gameStateContext;   
         private readonly GameContext _gameContext;
-        private int[] _componentIndices;
-        private uint _internalIdCounter;
+        private int[] _componentIndices;    
         
         public StoreNewOrChangedEntities(Contexts contexts, ServiceContainer services) : base(contexts.game)
         {
@@ -39,8 +38,7 @@ namespace Lockstep.Core.Systems
         }
 
         protected override void Execute(List<GameEntity> entities)
-        {                                                      
-            var changedEntities = new List<uint>(entities.Count);
+        {                                                           
             foreach (var e in entities)
             {
                 var backupEntity = _gameContext.CreateEntity();
@@ -54,10 +52,7 @@ namespace Lockstep.Core.Systems
                     backupEntity.AddComponent(index, component2);
                 }
 
-                backupEntity.AddIdReference(_internalIdCounter, e.id.value, _gameStateContext.tick.value);
-
-                changedEntities.Add(_internalIdCounter);
-                _internalIdCounter++;
+                backupEntity.AddIdReference(e.id.value, _gameStateContext.tick.value);
             }                                                                              
         }
     }

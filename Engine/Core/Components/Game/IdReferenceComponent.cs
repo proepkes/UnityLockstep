@@ -7,11 +7,8 @@ namespace Lockstep.Core.Components.Game
     [Game]
     public class IdReferenceComponent : IComponent
     {
-        [PrimaryEntityIndex]
-        public uint internalId;
-
-        public uint referenceId;
-
         public uint tick;
+
+        public uint value;      
     }
 }

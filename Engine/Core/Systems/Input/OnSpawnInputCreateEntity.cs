@@ -20,12 +20,12 @@ namespace Lockstep.Core.Systems.Input
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {                                
-            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.EntityConfigId, InputMatcher.Coordinate));
+            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.EntityConfigId, InputMatcher.Coordinate, InputMatcher.PlayerId));
         }
 
         protected override bool Filter(InputEntity entity)
         {                     
-            return entity.hasEntityConfigId && entity.hasCoordinate;
+            return entity.hasEntityConfigId && entity.hasCoordinate && entity.hasPlayerId;
         }
 
         protected override void Execute(List<InputEntity> inputs)
@@ -36,6 +36,8 @@ namespace Lockstep.Core.Systems.Input
 
                 e.isNew = true;
                 e.AddId(_nextEntityId);
+                e.AddOwnerId(input.playerId.value);
+
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);
 

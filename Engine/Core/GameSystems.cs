@@ -62,9 +62,9 @@ namespace Lockstep.Core
             Services.Get<ILogService>().Warn("Revert to " + tick);
 
             //Revert all changes that were done after the given tick     
-            var entityReferences = _gameContext.GetEntities().Where(e => e.hasIdReference && e.idReference.tick > tick).Select(id => _gameContext.GetEntityWithIdReference(id.idReference.referenceId)).ToList();
+            var entityReferences = _gameContext.GetEntities().Where(e => e.hasIdReference && e.idReference.tick > tick).ToList();
 
-            foreach (var entityId in entityReferences.Where(e => e.isNew).Select(e => e.idReference.referenceId))
+            foreach (var entityId in entityReferences.Where(e => e.isNew).Select(e => e.idReference.value))
             {
                 _navigation.RemoveAgent(entityId);
 
@@ -74,7 +74,7 @@ namespace Lockstep.Core
                                                                                                                            
             foreach (var entity in entityReferences.Where(e => !e.isNew))
             {
-                var referencedEntity = _gameContext.GetEntityWithId(entity.idReference.referenceId);
+                var referencedEntity = _gameContext.GetEntityWithId(entity.idReference.value);
                 //Check if the entity got destroyed locally
                 if (referencedEntity == null)
                 {     

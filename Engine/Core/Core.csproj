@@ -112,7 +112,7 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Game\PositionComponent - Copy.cs" />
+    <Compile Include="Components\Game\DestinationComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\NewComponent.cs" />

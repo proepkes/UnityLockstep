@@ -11,21 +11,19 @@ public partial class GameEntity {
     public Lockstep.Core.Components.Game.IdReferenceComponent idReference { get { return (Lockstep.Core.Components.Game.IdReferenceComponent)GetComponent(GameComponentsLookup.IdReference); } }
     public bool hasIdReference { get { return HasComponent(GameComponentsLookup.IdReference); } }
 
-    public void AddIdReference(uint newInternalId, uint newReferenceId, uint newTick) {
+    public void AddIdReference(uint newTick, uint newValue) {
         var index = GameComponentsLookup.IdReference;
         var component = (Lockstep.Core.Components.Game.IdReferenceComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.IdReferenceComponent));
-        component.internalId = newInternalId;
-        component.referenceId = newReferenceId;
         component.tick = newTick;
+        component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceIdReference(uint newInternalId, uint newReferenceId, uint newTick) {
+    public void ReplaceIdReference(uint newTick, uint newValue) {
         var index = GameComponentsLookup.IdReference;
         var component = (Lockstep.Core.Components.Game.IdReferenceComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.IdReferenceComponent));
-        component.internalId = newInternalId;
-        component.referenceId = newReferenceId;
         component.tick = newTick;
+        component.value = newValue;
         ReplaceComponent(index, component);
     }
 
