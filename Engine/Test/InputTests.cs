@@ -26,21 +26,7 @@ namespace Test
             _output = output;
             Console.SetOut(new Converter(output));
         }
-
-        [Fact]
-        public void TestDefaultStorage()
-        {
-            var s = new DefaultStorageService();
-            uint frame = 0;
-
-            s.RegisterChange(frame++, new List<uint>(){ 1, 2 });
-            s.RegisterChange(frame++, new List<uint>() { 1, 4, 5, 9 });
-            s.RegisterChange(frame++, new List<uint>() { 3, 4, 5 });
-            s.RegisterChange(frame, new List<uint>() { 1, 4, 8, 9 });   
             
-            s.GetFirstChangeOccurences(1).ShouldBe(new List<uint>{1,4,5,9,3,8});
-        }
-
         [Fact]
         public void TestGameEntityHasUniqueId()
         {

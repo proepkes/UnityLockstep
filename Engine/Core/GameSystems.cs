@@ -15,8 +15,7 @@ namespace Lockstep.Core
 
         public int EntitiesInCurrentTick => Contexts.game.GetEntities().Count(e => e.hasId);
 
-        private readonly IGameService _game;
-        private readonly IStorageService _storage;
+        private readonly IGameService _game;        
         private readonly GameContext _gameContext;
         private readonly INavigationService _navigation;
 
@@ -29,8 +28,7 @@ namespace Lockstep.Core
             {
                 Services.Register(service);
             }
-
-            _storage = Services.Get<IStorageService>();
+                                                        
             _game = Services.Get<IGameService>();
             _navigation = Services.Get<INavigationService>();
             _gameContext = contexts.game;
@@ -56,8 +54,8 @@ namespace Lockstep.Core
         {
             Services.Get<ILogService>().Warn("Revert to " + tick);
 
-            //Revert all changes that were done after the given tick   
-            var entityReferences = _storage.GetFirstChangeOccurences(tick + 1).Select(id => _gameContext.GetEntityWithIdReference(id)).ToList(); 
+            //Revert all changes that were done after the given tick     
+            var entityReferences = _gameContext.GetEntities().Where(e => e.hasIdReference && e.idReference.tick > tick).Select(id => _gameContext.GetEntityWithIdReference(id.idReference.referenceId)).ToList();
 
             foreach (var entityId in entityReferences.Where(e => e.isNew).Select(e => e.idReference.referenceId))
             {
@@ -104,12 +102,14 @@ namespace Lockstep.Core
                         referencedEntity.AddComponent(index, entity.GetComponent(index));
                     }
                 }
-            }           
-
-            for (var i = tick; i <= Contexts.gameState.tick.value; i++)
-            {                                                                    
-                _storage.RemoveChanges(i);    
             }
+
+
+            //TODO: cleanup backup-entities < last validated tick
+            //for (var i = tick; i <= Contexts.gameState.tick.value; i++)
+            //{                                                                    
+            //    _storage.RemoveChanges(i);    
+            //}
 
             //Reverted to a tick in the past => all predictions are invalid now, delete them
             foreach (var entity in entityReferences)

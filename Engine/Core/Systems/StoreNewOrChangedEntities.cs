@@ -8,8 +8,7 @@ namespace Lockstep.Core.Systems
 {
     public class StoreNewOrChangedEntities : ReactiveSystem<GameEntity>
     {                                                                                                                             
-        private readonly GameStateContext _gameStateContext;
-        private readonly IStorageService _storageService;
+        private readonly GameStateContext _gameStateContext;   
         private readonly GameContext _gameContext;
         private int[] _componentIndices;
         private uint _internalIdCounter;
@@ -17,8 +16,7 @@ namespace Lockstep.Core.Systems
         public StoreNewOrChangedEntities(Contexts contexts, ServiceContainer services) : base(contexts.game)
         {
             _gameContext = contexts.game;
-            _gameStateContext = contexts.gameState;
-            _storageService = services.Get<IStorageService>();  
+            _gameStateContext = contexts.gameState;                
         }
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
@@ -60,9 +58,7 @@ namespace Lockstep.Core.Systems
 
                 changedEntities.Add(_internalIdCounter);
                 _internalIdCounter++;
-            }
-
-            _storageService.RegisterChange(_gameStateContext.tick.value, changedEntities);
+            }                                                                              
         }
     }
 }
