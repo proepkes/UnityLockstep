@@ -6,6 +6,7 @@ using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Core;
 using Lockstep.Core.Interfaces;
+using Lockstep.Core.Systems;
 using Lockstep.Network.Messages;
 using Moq;
 using Shouldly;
@@ -27,6 +28,9 @@ namespace Test
         [Fact]
         public void TestGameEntityHasUniqueId()
         {
+            var storeChangedEntities = new StoreChangedEntities(new Contexts(), new ServiceContainer());
+            storeChangedEntities.Activate();
+
             var contexts = new Contexts();  
 
             const int numEntities = 10;
@@ -68,6 +72,7 @@ namespace Test
                                                                  
             sim.Update(1000);   //3 = 30         
 
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(10);
             sim.Update(1000);
 
             for (int i = 0; i < 10; i++)
@@ -76,7 +81,7 @@ namespace Test
             }
 
             sim.Update(1000);
-            contexts.game.count.ShouldBe(20);
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(20);
             _output.WriteLine("Count: " + contexts.game.count);
             for (int i = 0; i < 10; i++)
             {
@@ -103,10 +108,10 @@ namespace Test
             {
                 commandBuffer.Insert(5, 1, new ICommand[] { new SpawnCommand() });
             }
-            sim.Update(1000);  
+            sim.Update(1000);
 
 
-            contexts.game.count.ShouldBe(50); 
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(50); 
         }
 
         [Fact]

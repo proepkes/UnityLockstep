@@ -24,7 +24,7 @@ namespace Lockstep.Client
 
         public float _tickDt;
         public float _accumulatedTime;
-        private readonly ISystems _systems;
+        private readonly ITickable _tickable;
         private readonly List<ICommand> _temporaryCommandBuffer = new List<ICommand>(20);
 
 
@@ -32,9 +32,9 @@ namespace Lockstep.Client
         public uint LastValidatedFrame = 0;
 
 
-        public Simulation(ISystems systems, ICommandBuffer remoteCommandBuffer)
+        public Simulation(ITickable tickable, ICommandBuffer remoteCommandBuffer)
         {
-            _systems = systems;                       
+            _tickable = tickable;                       
 
             RemoteCommandBuffer = remoteCommandBuffer;      
         }
@@ -44,7 +44,7 @@ namespace Lockstep.Client
             _tickDt = 1000f / init.TargetFPS;
             LocalPlayerId = init.PlayerID;
 
-            _systems.Initialize();
+            _tickable.Initialize();
 
             Running = true;
         }   
@@ -92,13 +92,13 @@ namespace Lockstep.Client
 
             if (frameCommands.Length > 0)
             {
-                LocalCommandBuffer.Insert(_systems.CurrentTick + LagCompensation, LocalPlayerId, frameCommands);
-                RemoteCommandBuffer.Insert(_systems.CurrentTick + LagCompensation, LocalPlayerId,  frameCommands);     
+                LocalCommandBuffer.Insert(_tickable.CurrentTick + LagCompensation, LocalPlayerId, frameCommands);
+                RemoteCommandBuffer.Insert(_tickable.CurrentTick + LagCompensation, LocalPlayerId,  frameCommands);     
             }
 
-            _systems.Tick(LocalCommandBuffer.GetMany(_systems.CurrentTick));
+            _tickable.Tick(LocalCommandBuffer.GetMany(_tickable.CurrentTick));
 
-            Ticked?.Invoke(_systems.CurrentTick);      
+            Ticked?.Invoke(_tickable.CurrentTick);      
         }
 
         private void SyncCommandBuffer()
@@ -133,18 +133,19 @@ namespace Lockstep.Client
                 }
 
                 //Only rollback if the mispredicted frame was in the past (the frame can be in the future due to high lag compensation)
-                if (firstMispredictedFrame < _systems.CurrentTick)
+                if (firstMispredictedFrame < _tickable.CurrentTick)
                 {      
-                    var targetTick = _systems.CurrentTick;  
-                    
-                    //Revert everything that happened one tick after the last validated input (because input always gets executed one tick after it was inserted)
-                    _systems.RevertFromTick(firstMispredictedFrame + 1);
+                    var targetTick = _tickable.CurrentTick;  
+                                                                                                                                                                     
+                    _tickable.RevertToTick(firstMispredictedFrame);
+
+                    var validFrame = firstMispredictedFrame;
 
                     //Execute all commands again, beginning from the first frame that contains remote input up to our last local state
-                    while (firstMispredictedFrame <= targetTick)
+                    while (validFrame <= targetTick)
                     {   
-                        _systems.Tick(LocalCommandBuffer.GetMany(firstMispredictedFrame));
-                        firstMispredictedFrame++;
+                        _tickable.Tick(LocalCommandBuffer.GetMany(validFrame));
+                        validFrame++;
                     }
                 }
 

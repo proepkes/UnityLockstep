@@ -13,15 +13,16 @@ public static class GameComponentsLookup {
     public const int Hashable = 2;
     public const int Health = 3;
     public const int Id = 4;
-    public const int MaxSpeed = 5;
-    public const int Navigable = 6;
-    public const int OwnerId = 7;
-    public const int Position = 8;
-    public const int Team = 9;
-    public const int Velocity = 10;
-    public const int PositionListener = 11;
+    public const int IdReference = 5;
+    public const int MaxSpeed = 6;
+    public const int Navigable = 7;
+    public const int OwnerId = 8;
+    public const int Position = 9;
+    public const int Team = 10;
+    public const int Velocity = 11;
+    public const int PositionListener = 12;
 
-    public const int TotalComponents = 12;
+    public const int TotalComponents = 13;
 
     public static readonly string[] componentNames = {
         "Asset",
@@ -29,6 +30,7 @@ public static class GameComponentsLookup {
         "Hashable",
         "Health",
         "Id",
+        "IdReference",
         "MaxSpeed",
         "Navigable",
         "OwnerId",
@@ -44,6 +46,7 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.Components.Game.HashableComponent),
         typeof(Lockstep.Core.Components.Game.HealthComponent),
         typeof(Lockstep.Core.Components.Game.IdComponent),
+        typeof(Lockstep.Core.Components.Game.IdReferenceComponent),
         typeof(Lockstep.Core.Components.Game.MaxSpeedComponent),
         typeof(Lockstep.Core.Components.Game.NavigableComponent),
         typeof(Lockstep.Core.Components.Game.OwnerIdComponent),

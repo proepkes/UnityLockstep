@@ -6,7 +6,7 @@ using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Systems.Input
 {
-    public class OnSpawnInputCreateEntity : ReactiveSystem<InputEntity>, IStateSystem
+    public class OnSpawnInputCreateEntity : ReactiveSystem<InputEntity>
     {
         private uint _nextEntityId;
 
@@ -24,7 +24,7 @@ namespace Lockstep.Core.Systems.Input
         }
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
-        {
+        {                                
             return context.CreateCollector(InputMatcher.AllOf(InputMatcher.EntityConfigId, InputMatcher.Coordinate));
         }
 
@@ -53,24 +53,6 @@ namespace Lockstep.Core.Systems.Input
                 _createdEntities[_gameStateContext.tick.value].Add(_nextEntityId);      
                 _nextEntityId++;  
             }                                                                                    
-        }
-
-        public void RevertFromTick(uint tick)
-        {                  
-            for (;tick <= _gameStateContext.tick.value; tick++)
-            {                             
-                if (_createdEntities.ContainsKey(tick))
-                {
-                    foreach (var entityId in _createdEntities[tick])
-                    {   
-                        _gameService.UnloadEntity(entityId);
-                        _gameContext.GetEntityWithId(entityId).Destroy();
-                        _nextEntityId--;   
-                    }
-
-                    _createdEntities[tick].Clear();
-                }
-            }                                                                     
-        }
+        }    
     }
 }
