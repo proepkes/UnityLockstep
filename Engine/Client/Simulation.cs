@@ -122,6 +122,7 @@ namespace Lockstep.Client
                     //Merge commands into the local command buffer
                     foreach (var commandPerPlayer in allPlayerCommands)
                     {
+                        //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's ids have to be adjusted, maybe introduce attribute to identify command properties that point to entities
                         //TODO: order by timestamp in case of multiple commands in the same frame => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered
                         //ordering is enough, validation should take place in the simulation(core)                                                                    
                         _localCommandBuffer.Insert(remoteFrame, commandPerPlayer.Key, commandPerPlayer.Value.ToArray());

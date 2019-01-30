@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using DesperateDevs.Utils;
+﻿using System.Linq;          
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
 using Lockstep.Core.Systems.GameState;    
@@ -55,6 +54,8 @@ namespace Lockstep.Core
 
         public void RevertToTick(uint tick)
         {
+            Services.Get<ILogService>().Warn("Revert to " + tick);
+
             //Revert all changes that were done after the given tick   
             var entityReferences = _storage.GetFirstChangeOccurences(tick + 1).Select(id => _gameContext.GetEntityWithIdReference(id)).ToList(); 
 
@@ -81,9 +82,13 @@ namespace Lockstep.Core
                     var previousComponents = entity.GetComponentIndices();
 
                     var sameComponents = previousComponents.Intersect(currentComponents);
-                    var onlyLocalComponents = currentComponents.Except(new[] {GameComponentsLookup.Id }).Except(previousComponents).ToList();
-                    var missingComponents = previousComponents.Except(new []{ GameComponentsLookup.IdReference }).Except(currentComponents).ToList();
-                                                          
+                    var onlyLocalComponents = currentComponents.Except(new[] {GameComponentsLookup.Id }).Except(previousComponents);
+                    var missingComponents = previousComponents.Except(new []{ GameComponentsLookup.IdReference }).Except(currentComponents);
+
+
+                    Services.Get<ILogService>().Warn("sameComponents: " + sameComponents.Count());
+                    Services.Get<ILogService>().Warn("onlyLocalComponents: " + onlyLocalComponents.Count());
+                    Services.Get<ILogService>().Warn("missingComponents: " + missingComponents.Count());
                     foreach (var index in sameComponents)
                     {                                                         
                         referencedEntity.ReplaceComponent(index, entity.GetComponent(index));  
@@ -106,7 +111,7 @@ namespace Lockstep.Core
                 _storage.RemoveChanges(i);    
             }
 
-            //Reverted to a tick in the past => all our nice predictions are invalid now, delete them
+            //Reverted to a tick in the past => all predictions are invalid now, delete them
             foreach (var entity in entityReferences)
             {
                 entity.Destroy();
