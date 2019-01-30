@@ -4,10 +4,10 @@ namespace Lockstep.Core.Interfaces
 {
     public interface IStorageService : IService
     {                                                 
-        void RegisterChange(uint tick, List<GameEntity> entities);
+        void RegisterChange(uint tick, List<uint> entities);
                                 
         void RemoveChanges(uint at);      
 
-        IEnumerable<GameEntity> GetChanges(uint minTick);
+        IEnumerable<uint> GetChanges(uint minTick);
     }
 }

@@ -52,16 +52,16 @@ namespace Lockstep.Core
 
         public void RevertToTick(uint tick)
         {
-            //Revert all changes that were done after the given tick
-            var changedEntities = _storage.GetChanges(tick + 1).ToList();
+            //Revert all changes that were done after the given tick   
+            var entityReferences = _storage.GetChanges(tick + 1).Select(id => _gameContext.GetEntityWithIdReference(id)).ToList(); 
 
-            foreach (var entityId in changedEntities.Where(entity => entity.isNew).Select(e => e.idReference.value))
+            foreach (var entityId in entityReferences.Where(e => e.isNew).Select(e => e.idReference.referenceId))
             {
                 _game.UnloadEntity(entityId);
                 _gameContext.GetEntityWithId(entityId).Destroy();  
             }
 
-            foreach (var entity in changedEntities.Where(entity => !entity.isNew))
+            foreach (var entity in entityReferences.Where(e => !e.isNew).Select(e => _gameContext.GetEntityWithId(e.idReference.referenceId)))
             {
                 //TODO: revert changes and add previously removed entities                              
             }           
@@ -71,7 +71,7 @@ namespace Lockstep.Core
                 _storage.RemoveChanges(i);    
             }
 
-            foreach (var entity in changedEntities)
+            foreach (var entity in entityReferences)
             {
                 entity.Destroy();
             }

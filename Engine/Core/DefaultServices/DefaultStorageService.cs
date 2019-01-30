@@ -5,11 +5,11 @@ using Lockstep.Core.Interfaces;
 namespace Lockstep.Core.DefaultServices
 {
     public class DefaultStorageService : IStorageService
-    {                                                                                                
-        private readonly Dictionary<uint, List<GameEntity>> _changed = new Dictionary<uint, List<GameEntity>>();
-             
+    {                                 
+        //Mapping: 
+        private readonly Dictionary<uint, List<uint>> _changed = new Dictionary<uint, List<uint>>(); 
 
-        public void RegisterChange(uint tick, List<GameEntity> entities)
+        public void RegisterChange(uint tick, List<uint> entities)
         {
             _changed.Add(tick, entities);
         }
@@ -20,22 +20,22 @@ namespace Lockstep.Core.DefaultServices
         }
                   
         /// <summary>
-        /// Returns the first occurence of all entities in the change-buffer at or after the given tick
+        /// Returns the first occurence of all items in the change-buffer at or after the given tick
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
-        public IEnumerable<GameEntity> GetChanges(uint @from)
+        public IEnumerable<uint> GetChanges(uint @from)
         {   
-            var result = new Dictionary<uint, GameEntity>();
+            var result = new List<uint>();
             foreach (var e in _changed.Where(pair => pair.Key >= @from).SelectMany(pair => pair.Value))
             {
-                if (!result.ContainsKey(e.idReference.value))
+                if (!result.Contains(e))
                 {
-                    result.Add(e.idReference.value, e);
+                    result.Add(e);
                 }    
             }
 
-            return result.Select(pair => pair.Value);
+            return result;
         }
     }
 }
