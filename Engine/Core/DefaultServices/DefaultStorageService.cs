@@ -6,7 +6,7 @@ namespace Lockstep.Core.DefaultServices
 {
     public class DefaultStorageService : IStorageService
     {                                 
-        //Mapping: 
+        //Mapping: tick -> ids of backup-entities for changed entities
         private readonly Dictionary<uint, List<uint>> _changed = new Dictionary<uint, List<uint>>(); 
 
         public void RegisterChange(uint tick, List<uint> entities)

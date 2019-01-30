@@ -61,6 +61,7 @@ namespace Lockstep.Core
                 _gameContext.GetEntityWithId(entityId).Destroy();  
             }
 
+            //TODO: select will fail if the entity got destroyed in the local simulation but the changebuffer has changes
             foreach (var entity in entityReferences.Where(e => !e.isNew).Select(e => _gameContext.GetEntityWithId(e.idReference.referenceId)))
             {
                 //TODO: revert changes and add previously removed entities                              
