@@ -39,6 +39,7 @@ namespace Lockstep.Core.Systems.Input
             {
                 var e = _gameContext.CreateEntity();
 
+                e.isNew = true;
                 e.AddId(_nextEntityId);
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);

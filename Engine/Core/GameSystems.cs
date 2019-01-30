@@ -36,9 +36,10 @@ namespace Lockstep.Core
             Add(new IncrementTick(Contexts));
 
             Add(new CoreSystems(contexts, Services));
+                                                            
+            Add(new StoreNewOrChangedEntities(contexts, Services)); 
 
-            Add(new StoreNewEntities(contexts, Services));
-            Add(new StoreChangedEntities(contexts, Services));
+            Add(new RemoveNewFlag(contexts));
         }
 
         public void Tick(ICommand[] input)
@@ -51,22 +52,29 @@ namespace Lockstep.Core
 
         public void RevertToTick(uint tick)
         {
-            //Remove all entities that were created after the given tick
-            var newEntities = _storage.GetAllNew(tick + 1);   
-            foreach (var entityId in newEntities)
+            //Revert all changes that were done after the given tick
+            var changedEntities = _storage.GetChanges(tick + 1).ToList();
+
+            foreach (var entityId in changedEntities.Where(entity => entity.isNew).Select(e => e.idReference.value))
             {
                 _game.UnloadEntity(entityId);
                 _gameContext.GetEntityWithId(entityId).Destroy();  
             }
 
-            //TODO: revert changes and add previously removed entities
+            foreach (var entity in changedEntities.Where(entity => !entity.isNew))
+            {
+                //TODO: revert changes and add previously removed entities                              
+            }           
 
             for (var i = tick; i <= Contexts.gameState.tick.value; i++)
+            {                                                                    
+                _storage.RemoveChanges(i);    
+            }
+
+            foreach (var entity in changedEntities)
             {
-                //TODO: storage.remove = memory leak? entity.destroy required?
-                _storage.RemoveChanges(i);
-                _storage.RemoveNewEntites(i);
-            }                                                                                                                         
+                entity.Destroy();
+            }
 
             Contexts.gameState.ReplaceTick(tick);   
         }
