@@ -38,7 +38,7 @@ namespace Lockstep.Core
 
             Add(new CoreSystems(contexts, Services));
                                                             
-            Add(new StoreNewOrChangedEntities(contexts, Services)); 
+            Add(new StoreNewOrChangedEntities(contexts)); 
 
             Add(new RemoveNewFlag(contexts));
         }
@@ -62,17 +62,17 @@ namespace Lockstep.Core
             Services.Get<ILogService>().Warn("Revert to " + tick);
 
             //Revert all changes that were done after the given tick     
-            var entityReferences = _gameContext.GetEntities().Where(e => e.hasIdReference && e.idReference.tick > tick).ToList();
+            var shadows = _gameContext.GetEntities().Where(e => e.hasIdReference && e.idReference.tick > tick).ToList();
 
-            foreach (var entityId in entityReferences.Where(e => e.isNew).Select(e => e.idReference.value))
-            {
-                _navigation.RemoveAgent(entityId);
+            foreach (var shadow in shadows.Where(e => e.isNew))
+            {                         
+                //_navigation.RemoveAgent(shadow);
 
-                _game.UnloadEntity(entityId);
-                _gameContext.GetEntityWithId(entityId).Destroy();  
+                _game.UnloadEntity(shadow);
+                _gameContext.GetEntityWithId(shadow).Destroy();  
             }
                                                                                                                            
-            foreach (var entity in entityReferences.Where(e => !e.isNew))
+            foreach (var entity in shadows.Where(e => !e.isNew))
             {
                 var referencedEntity = _gameContext.GetEntityWithId(entity.idReference.value);
                 //Check if the entity got destroyed locally
@@ -119,7 +119,7 @@ namespace Lockstep.Core
             //}
 
             //Reverted to a tick in the past => all predictions are invalid now, delete them
-            foreach (var entity in entityReferences)
+            foreach (var entity in shadows)
             {
                 entity.Destroy();
             }              

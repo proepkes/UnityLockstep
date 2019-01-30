@@ -12,7 +12,7 @@ namespace Lockstep.Core.Systems
         private readonly GameContext _gameContext;
         private int[] _componentIndices;    
         
-        public StoreNewOrChangedEntities(Contexts contexts, ServiceContainer services) : base(contexts.game)
+        public StoreNewOrChangedEntities(Contexts contexts) : base(contexts.game)
         {
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;                
