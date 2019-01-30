@@ -11,6 +11,6 @@ namespace Lockstep.Client.Interfaces
 
         Dictionary<byte, List<ICommand>> Get(uint frame);
 
-        ICommand[] GetMany(uint frame);
+        //ICommand[] GetMany(uint frame);
     }
 }

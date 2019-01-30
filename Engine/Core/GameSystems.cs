@@ -1,11 +1,12 @@
-﻿using System.Linq;          
+﻿using System.Collections.Generic;
+using System.Linq;          
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
 using Lockstep.Core.Systems.GameState;    
 
 namespace Lockstep.Core
 {
-    public sealed class GameSystems : Entitas.Systems, ITickable
+    public sealed class GameSystems : Entitas.Systems, IWorld
     {
         private Contexts Contexts { get; }
 
@@ -42,7 +43,13 @@ namespace Lockstep.Core
             Add(new RemoveNewFlag(contexts));
         }
 
-        public void Tick(ICommand[] input)
+        public void Initialize(byte playerId)
+        {
+            Initialize();
+            Contexts.gameState.SetPlayerId(playerId);
+        }
+
+        public void Tick(Dictionary<byte, List<ICommand>> input)
         {
             Contexts.input.SetCommands(input);
                         

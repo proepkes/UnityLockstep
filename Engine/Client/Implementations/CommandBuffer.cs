@@ -25,7 +25,7 @@ namespace Lockstep.Client.Implementations
 
                 if (!Buffer[frameNumber].ContainsKey(commanderId))
                 {
-                    Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame
+                    Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame per player
                 }
 
                 Buffer[frameNumber][commanderId].AddRange(commands);
@@ -48,19 +48,19 @@ namespace Lockstep.Client.Implementations
             }
         }
 
-        public ICommand[] GetMany(uint frame)
-        {
-            lock (Buffer)
-            {
-                //If no commands were inserted then return an empty list
-                if (!Buffer.ContainsKey(frame))
-                {
-                    Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
-                }
+        //public ICommand[] GetMany(uint frame)
+        //{
+        //    lock (Buffer)
+        //    {
+        //        //If no commands were inserted then return an empty list
+        //        if (!Buffer.ContainsKey(frame))
+        //        {
+        //            Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
+        //        }
 
-                return Buffer[frame].SelectMany(pair => pair.Value).ToArray();
-            }
-        }
+        //        return Buffer[frame].SelectMany(pair => pair.Value).ToArray();
+        //    }
+        //}
                
     }
 }

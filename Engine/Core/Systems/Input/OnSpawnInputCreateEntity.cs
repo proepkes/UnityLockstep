@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;     
 using BEPUutilities;
 using Entitas;
 using Lockstep.Core.Interfaces;
@@ -11,16 +10,12 @@ namespace Lockstep.Core.Systems.Input
         private uint _nextEntityId;
 
         private readonly IGameService _gameService;
-        private readonly GameContext _gameContext;
-        private readonly GameStateContext _gameStateContext;
-
-        private readonly Dictionary<uint, List<uint>> _createdEntities = new Dictionary<uint, List<uint>>();        
+        private readonly GameContext _gameContext; 
 
         public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services) : base(contexts.input)
         {
             _gameService = services.Get<IGameService>();     
-            _gameContext = contexts.game;
-            _gameStateContext = contexts.gameState;
+            _gameContext = contexts.game;              
         }
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
@@ -44,14 +39,7 @@ namespace Lockstep.Core.Systems.Input
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);
 
-                _gameService.LoadEntity(e, input.entityConfigId.value);
-
-                if (!_createdEntities.ContainsKey(_gameStateContext.tick.value))
-                {
-                    _createdEntities.Add(_gameStateContext.tick.value, new List<uint>());
-                }
-
-                _createdEntities[_gameStateContext.tick.value].Add(_nextEntityId);      
+                _gameService.LoadEntity(e, input.entityConfigId.value);    
                 _nextEntityId++;  
             }                                                                                    
         }    

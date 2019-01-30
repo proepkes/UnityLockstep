@@ -15,7 +15,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
 
-    public ITickable Systems;
+    public IWorld Systems;
     public Simulation Simulation;
     public RTSEntityDatabase EntityDatabase;
 

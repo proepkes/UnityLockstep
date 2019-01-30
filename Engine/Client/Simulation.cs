@@ -6,7 +6,7 @@ using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
 
 namespace Lockstep.Client
-{
+{                    
     public class Simulation
     {                                        
         /// <summary>
@@ -16,20 +16,19 @@ namespace Lockstep.Client
 
         public bool Running { get; private set; }
 
-        public byte LocalPlayerId { get; private set; }
-
+        public byte LocalPlayerId { get; private set; } 
 
         private float _tickDt;
         private float _accumulatedTime;
         private uint _lastValidatedFrame;
 
-        private readonly ITickable _world;
+        private readonly IWorld _world;
         private readonly ICommandBuffer _remoteCommandBuffer;
         private readonly ICommandBuffer _localCommandBuffer = new CommandBuffer();
 
         private readonly List<ICommand> _commandCache = new List<ICommand>(20); 
 
-        public Simulation(ITickable world, ICommandBuffer remoteCommandBuffer)
+        public Simulation(IWorld world, ICommandBuffer remoteCommandBuffer)
         {
             _world = world;     
             _remoteCommandBuffer = remoteCommandBuffer;      
@@ -40,7 +39,7 @@ namespace Lockstep.Client
             _tickDt = 1000f / init.TargetFPS;
             LocalPlayerId = init.PlayerID;
 
-            _world.Initialize();
+            _world.Initialize(LocalPlayerId);
 
             Running = true;
         }   
@@ -92,7 +91,7 @@ namespace Lockstep.Client
                 _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId,  frameCommands);     
             }
 
-            _world.Tick(_localCommandBuffer.GetMany(_world.CurrentTick));     
+            _world.Tick(_localCommandBuffer.Get(_world.CurrentTick));     
         }
 
         private void SyncCommandBuffer()
@@ -141,7 +140,7 @@ namespace Lockstep.Client
                     //Execute all commands again, beginning from the first frame that contains remote input up to our last local state
                     while (validFrame <= targetTick)
                     {   
-                        _world.Tick(_localCommandBuffer.GetMany(validFrame));
+                        _world.Tick(_localCommandBuffer.Get(validFrame));
                         validFrame++;
                     }
                 }

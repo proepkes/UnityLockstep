@@ -168,8 +168,8 @@
     <Compile Include="Interfaces\IHashService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
-    <Compile Include="Interfaces\ITickable.cs" />
     <Compile Include="CoreSystems.cs" />
+    <Compile Include="Interfaces\IWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />

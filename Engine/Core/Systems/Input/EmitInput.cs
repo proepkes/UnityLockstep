@@ -24,9 +24,16 @@ namespace Lockstep.Core.Systems.Input
 
         protected override void Execute(List<InputEntity> entities)
         {
-            foreach (var command in _inputContext.commands.input)
+            foreach (var commandInput in _inputContext.commands.input)
             {
-                command?.Execute(_inputContext.CreateEntity());
+                var commanderId = commandInput.Key;
+                foreach (var command in commandInput.Value)
+                {
+                    var inputEntity = _inputContext.CreateEntity();
+                    inputEntity.AddPlayerId(commanderId);
+
+                    command.Execute(inputEntity);
+                }
             }
         }    
     }
