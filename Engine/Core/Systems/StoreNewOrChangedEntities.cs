@@ -22,7 +22,7 @@ namespace Lockstep.Core.Systems
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
         {
-            //Listen for changes on all components except Id
+            //Listen for changes on all components except IdReference
             _componentIndices = GameComponentsLookup.componentNames
                 .Except(new[] { GameComponentsLookup.componentNames[GameComponentsLookup.IdReference] })
                 .Select(componentName => (int)typeof(GameComponentsLookup)
