@@ -31,7 +31,7 @@ namespace Lockstep.Core.Systems
                         .GetRawConstantValue())
                 .ToArray();
 
-            return context.CreateCollector(GameMatcher.AnyOf(_componentIndices));
+            return context.CreateCollector(GameMatcher.AnyOf(_componentIndices).NoneOf(GameMatcher.IdReference));
         }
 
         protected override bool Filter(GameEntity entity)
