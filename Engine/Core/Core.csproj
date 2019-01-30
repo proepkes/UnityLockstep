@@ -56,12 +56,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Features\StatefulFeature.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCommandsComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameIdReferenceComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
@@ -78,8 +78,8 @@
     <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
-    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
@@ -104,6 +104,11 @@
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\IdReferenceComponent.cs" />
+    <Compile Include="DefaultServices\DefaultStorageService.cs" />
+    <Compile Include="GameSystems.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameState\TickComponent.cs" />
@@ -132,19 +137,17 @@
     <Compile Include="Components\Input\PlayerIdComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Input\FrameComponent.cs" />
+    <Compile Include="Components\Input\CommandsComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\HashableComponent.cs" />
     <Compile Include="Components\GameState\PausedComponent.cs" />
     <Compile Include="Components\Input\EntityIdsComponent.cs" />
-    <Compile Include="Data\AgentConfig.cs" />
-    <Compile Include="Data\ICommand.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="DefaultServices\DefaultGameService.cs" />
     <Compile Include="DefaultServices\DefaultHashService.cs" />
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
-    <Compile Include="Interfaces\ICommandBuffer.cs" />
     <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />
@@ -154,16 +157,18 @@
     <Compile Include="Interfaces\IHashService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
-    <Compile Include="Interfaces\ISystems.cs" />
-    <Compile Include="GameSystems.cs" />
+    <Compile Include="Interfaces\IStorageService.cs" />
+    <Compile Include="Interfaces\ITickable.cs" />
+    <Compile Include="CoreSystems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
+    <Compile Include="Systems\StoreNewEntities.cs" />
+    <Compile Include="Systems\StoreChangedEntities.cs" />
     <Compile Include="Systems\GameState\IncrementTick.cs" />
     <Compile Include="Systems\Input\CleanupInput.cs" />
     <Compile Include="Systems\Input\EmitInput.cs" />
     <Compile Include="Systems\Input\OnSpawnInputCreateEntity.cs" />
-    <Compile Include="Interfaces\IStateSystem.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
     <Compile Include="Systems\Navigation\OnNavigationInputDoSetDestination.cs" />

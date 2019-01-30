@@ -1,18 +1,23 @@
-﻿using System;
-using Lockstep.Core.Data;
-using Lockstep.Core.Features;
+﻿using System.Linq;
 using Lockstep.Core.Interfaces;
+using Lockstep.Core.Systems;
 using Lockstep.Core.Systems.GameState;    
 
 namespace Lockstep.Core
 {
-    public sealed class GameSystems : Entitas.Systems, ISystems
+    public sealed class GameSystems : Entitas.Systems, ITickable
     {
         private Contexts Contexts { get; }  
 
         public ServiceContainer Services { get; }
 
         public uint CurrentTick => Contexts.gameState.tick.value;
+
+        public int EntitiesInCurrentTick => Contexts.game.GetEntities().Count(e => e.hasId);
+
+        private readonly IGameService _game;
+        private readonly IStorageService _storage;
+        private readonly GameContext _gameContext;
 
         public GameSystems(Contexts contexts, params IService[] additionalServices)
         {
@@ -23,17 +28,17 @@ namespace Lockstep.Core
             {
                 Services.Register(service);
             }
-                                 
+
+            _storage = Services.Get<IStorageService>();
+            _game = Services.Get<IGameService>();
+            _gameContext = contexts.game;
+
             Add(new IncrementTick(Contexts));
 
-            Add(new InputFeature(Contexts, Services));
+            Add(new CoreSystems(contexts, Services));
 
-            //Add(new NavigationFeature(Contexts, serviceContainer));
-
-            Add(new GameEventSystems(Contexts));
-
-            Add(new HashCodeFeature(Contexts, Services));
-
+            Add(new StoreNewEntities(contexts, Services));
+            Add(new StoreChangedEntities(contexts, Services));
         }
 
         public void Tick(ICommand[] input)
@@ -44,21 +49,26 @@ namespace Lockstep.Core
             Cleanup();
         }
 
-        public void RevertFromTick(uint tick)
+        public void RevertToTick(uint tick)
         {
-            foreach (var system in _executeSystems)
+            //Remove all entities that were created after the given tick
+            var newEntities = _storage.GetAllNew(tick + 1);   
+            foreach (var entityId in newEntities)
             {
-                if (system is IStateSystem stateSystem)
-                {
-                    stateSystem.RevertFromTick(tick);
-                }
+                _game.UnloadEntity(entityId);
+                _gameContext.GetEntityWithId(entityId).Destroy();  
             }
-            
-            //Example: tick = 50, currentTick = 60
-            //All ticks from 50 to 60 are reverted
-            //The state is now the same it was as in 49
-            //=> Set new tick to 49 (= tick - 1)
-            Contexts.gameState.ReplaceTick(tick - 1);   
+
+            //TODO: revert changes and add previously removed entities
+
+            for (var i = tick; i <= Contexts.gameState.tick.value; i++)
+            {
+                //TODO: storage.remove = memory leak? entity.destroy required?
+                _storage.RemoveChanges(i);
+                _storage.RemoveNewEntites(i);
+            }                                                                                                                         
+
+            Contexts.gameState.ReplaceTick(tick);   
         }
     }
 }     

@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Lockstep.Client.Implementations;
+using System.IO;            
 using Lockstep.Client.Interfaces;
-using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
 
-namespace Lockstep.Client
+namespace Lockstep.Client.Implementations
 {
     public class NetworkCommandBuffer : CommandBuffer
     {
         //TODO: refactor: don't receive meta information through commandbuffer
         public event Action<Init> InitReceived;
 
-        private readonly INetwork _network;
-        private readonly ILogService _log;
+        private readonly INetwork _network;   
         private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
 
-        public NetworkCommandBuffer(INetwork network, ILogService log)
+        public NetworkCommandBuffer(INetwork network)
         {                        
-            _network = network;
-            _log = log;
+            _network = network;     
             _network.DataReceived += OnDataReceived;
         }
                   
@@ -56,16 +51,7 @@ namespace Lockstep.Client
             }
 
             _network.Send(Compressor.Compress(writer));
-        }
-
-        public void Log(uint frameNumber)
-        {                     
-            var writer = new Serializer();
-            writer.Put((byte)MessageTag.Log);    
-            writer.Put(frameNumber);        
-
-            _network.Send(Compressor.Compress(writer));
-        }
+        }      
 
         private void OnDataReceived(byte[] data)
         {
@@ -74,15 +60,7 @@ namespace Lockstep.Client
             var reader = new Deserializer(data);
             var messageTag = (MessageTag)reader.GetByte();
             switch (messageTag)
-            {
-                case MessageTag.Log:   
-                    var n = reader.GetUInt();
-                    var count = Buffer.SelectMany(pair => pair.Value).SelectMany(pair => pair.Value).Count();
-                    if (count > 0)
-                    {
-                        _log.Warn(count.ToString());
-                    }     
-                    break;
+            {                  
                 case MessageTag.StartSimulation:
                     var init = new Init();
                     init.Deserialize(reader);

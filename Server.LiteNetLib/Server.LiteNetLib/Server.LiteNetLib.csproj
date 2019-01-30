@@ -7,13 +7,13 @@
 
   <ItemGroup>
     <Reference Include="LiteNetLib">
-      <HintPath>..\..\Engine\Dependencies\LiteNetLib.dll</HintPath>
+      <HintPath>..\Integration\LiteNetLib.dll</HintPath>
     </Reference>
     <Reference Include="Lockstep.Network">
-      <HintPath>..\..\Engine\Server\bin\Debug\netstandard2.0\Lockstep.Network.dll</HintPath>
+      <HintPath>..\Integration\Lockstep.Network.dll</HintPath>
     </Reference>
     <Reference Include="Server">
-      <HintPath>..\..\Engine\Server\bin\Debug\netstandard2.0\Server.dll</HintPath>
+      <HintPath>..\Integration\Server.dll</HintPath>
     </Reference>
   </ItemGroup>
 

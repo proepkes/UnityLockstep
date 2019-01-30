@@ -18,7 +18,7 @@ public class UIHelper : MonoBehaviour
             CurrentTickText.text = "CurrentTick: " + RTSNetworkedSimulation.Instance.Systems.CurrentTick;
         }
 
-        AgentCountText.text = "Agents: " + Contexts.sharedInstance.game.GetEntities().Length;
+        AgentCountText.text = "Agents: " + RTSNetworkedSimulation.Instance.Systems.EntitiesInCurrentTick;
 
         ConnectedText.text = "Connected: " + RTSNetworkedSimulation.Instance.Connected;
     }

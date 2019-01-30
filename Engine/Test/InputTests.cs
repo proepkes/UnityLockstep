@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
-using BEPUutilities;
-using Entitas;
+using BEPUutilities;      
 using Lockstep.Client;
 using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Core;
-using Lockstep.Core.Data;
-using Lockstep.Core.DefaultServices;
-using Lockstep.Core.Systems.GameState;
-using Lockstep.Core.Systems.Input;
+using Lockstep.Core.Interfaces;
+using Lockstep.Core.Systems;
 using Lockstep.Network.Messages;
 using Moq;
 using Shouldly;
@@ -31,6 +28,9 @@ namespace Test
         [Fact]
         public void TestGameEntityHasUniqueId()
         {
+            var storeChangedEntities = new StoreChangedEntities(new Contexts(), new ServiceContainer());
+            storeChangedEntities.Activate();
+
             var contexts = new Contexts();  
 
             const int numEntities = 10;
@@ -43,18 +43,9 @@ namespace Test
             contexts.game.count.ShouldBe(numEntities);
             contexts.game.GetEntities().Select(entity => entity.hasId).ShouldAllBe(b => true);
             contexts.game.GetEntities().Select(entity => entity.id.value).ShouldBeUnique();
-        }  
+        }    
 
-        [Fact]
-        public void TestCommandIsExecuted()
-        {
-            //var command = new Mock<ISerializableCommand>(); 
-
-            //new Simulation(new GameSystems(new Contexts()), null).Execute(command.Object);           
-
-            //command.Verify(c => c.Execute(It.IsAny<InputContext>()), Times.Once);
-        }
-
+        //Tests regarding Rollback currently require to remove the line from Simulation where input gets added to the remoteBuffer. Otherwise the input loops back into the simulation
         [Fact]
         public void TestCreateEntityRollbackLocal()
         {                      
@@ -81,6 +72,7 @@ namespace Test
                                                                  
             sim.Update(1000);   //3 = 30         
 
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(10);
             sim.Update(1000);
 
             for (int i = 0; i < 10; i++)
@@ -89,7 +81,7 @@ namespace Test
             }
 
             sim.Update(1000);
-            contexts.game.count.ShouldBe(20);
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(20);
             _output.WriteLine("Count: " + contexts.game.count);
             for (int i = 0; i < 10; i++)
             {
@@ -116,15 +108,16 @@ namespace Test
             {
                 commandBuffer.Insert(5, 1, new ICommand[] { new SpawnCommand() });
             }
-            sim.Update(1000);  
+            sim.Update(1000);
 
 
-            contexts.game.count.ShouldBe(50); 
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(50); 
         }
 
         [Fact]
         public void TestCreateEntityRollbackRemote()
         {
+            
             var contexts = new Contexts();
 
             var systems = new GameSystems(contexts, new TestLogger(_output));
@@ -215,9 +208,8 @@ namespace Test
 
             public Vector2 Position;
 
-            public void Execute(InputContext context)
-            {
-                var e = context.CreateEntity();
+            public void Execute(InputEntity e)
+            {                                   
                 e.AddCoordinate(Position);
                 e.AddEntityConfigId(EntityConfigId);
                 e.AddPlayerId(0);

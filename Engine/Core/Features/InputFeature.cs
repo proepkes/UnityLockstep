@@ -1,11 +1,8 @@
-﻿using System;
-using Lockstep.Core.Data;
-using Lockstep.Core.Interfaces;
-using Lockstep.Core.Systems.Input;
+﻿using Lockstep.Core.Systems.Input;
 
 namespace Lockstep.Core.Features
 {                                    
-    public sealed class InputFeature : StatefulFeature
+    public sealed class InputFeature : Feature
     {
         public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
         {

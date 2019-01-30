@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using Entitas;
 using Entitas.Unity;
+using Entitas.VisualDebugging.Unity;
 using Lockstep.Core.Interfaces;          
 
 public interface IEventListener
@@ -16,6 +18,7 @@ public interface IComponentSetter
 public class UnityGameService : IGameService
 {
     private readonly RTSEntityDatabase _entityDatabase;
+    private Dictionary<uint, GameObject> linkedEntities = new Dictionary<uint, GameObject>();
 
     public UnityGameService(RTSEntityDatabase entityDatabase)
     {
@@ -24,10 +27,11 @@ public class UnityGameService : IGameService
 
     public void LoadEntity(GameEntity entity, int configId)
     {
+        //TODO: pooling
         var viewGo = Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
         if (viewGo != null)
         {
-            //viewGo.Link(entity);
+            viewGo.Link(entity);
 
             var componentSetters = viewGo.GetComponents<IComponentSetter>();
             foreach (var componentSetter in componentSetters)
@@ -41,8 +45,17 @@ public class UnityGameService : IGameService
             {
                 listener.RegisterListeners(entity);
             }
+
+            linkedEntities.Add(entity.id.value, viewGo);
         }
-    }   
+    }
+
+    public void UnloadEntity(uint entityId)
+    {
+        linkedEntities[entityId].Unlink();
+        linkedEntities[entityId].DestroyGameObject();
+        linkedEntities.Remove(entityId);
+    }
 }
 
 public class UnityLogger : ILogService

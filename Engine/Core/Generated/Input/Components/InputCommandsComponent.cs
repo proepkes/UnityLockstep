@@ -12,7 +12,7 @@ public partial class InputContext {
     public Lockstep.Core.Components.Input.CommandsComponent commands { get { return commandsEntity.commands; } }
     public bool hasCommands { get { return commandsEntity != null; } }
 
-    public InputEntity SetCommands(Lockstep.Core.Data.ICommand[] newInput) {
+    public InputEntity SetCommands(Lockstep.Core.Interfaces.ICommand[] newInput) {
         if (hasCommands) {
             throw new Entitas.EntitasException("Could not set Commands!\n" + this + " already has an entity with Lockstep.Core.Components.Input.CommandsComponent!",
                 "You should check if the context already has a commandsEntity before setting it or use context.ReplaceCommands().");
@@ -22,7 +22,7 @@ public partial class InputContext {
         return entity;
     }
 
-    public void ReplaceCommands(Lockstep.Core.Data.ICommand[] newInput) {
+    public void ReplaceCommands(Lockstep.Core.Interfaces.ICommand[] newInput) {
         var entity = commandsEntity;
         if (entity == null) {
             entity = SetCommands(newInput);
@@ -49,14 +49,14 @@ public partial class InputEntity {
     public Lockstep.Core.Components.Input.CommandsComponent commands { get { return (Lockstep.Core.Components.Input.CommandsComponent)GetComponent(InputComponentsLookup.Commands); } }
     public bool hasCommands { get { return HasComponent(InputComponentsLookup.Commands); } }
 
-    public void AddCommands(Lockstep.Core.Data.ICommand[] newInput) {
+    public void AddCommands(Lockstep.Core.Interfaces.ICommand[] newInput) {
         var index = InputComponentsLookup.Commands;
         var component = (Lockstep.Core.Components.Input.CommandsComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Input.CommandsComponent));
         component.input = newInput;
         AddComponent(index, component);
     }
 
-    public void ReplaceCommands(Lockstep.Core.Data.ICommand[] newInput) {
+    public void ReplaceCommands(Lockstep.Core.Interfaces.ICommand[] newInput) {
         var index = InputComponentsLookup.Commands;
         var component = (Lockstep.Core.Components.Input.CommandsComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Input.CommandsComponent));
         component.input = newInput;

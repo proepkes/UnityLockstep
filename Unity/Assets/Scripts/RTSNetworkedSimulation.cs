@@ -1,8 +1,10 @@
 ﻿using System.Collections;           
-using Lockstep.Client;                  
+using Lockstep.Client;
+using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
 using Lockstep.Commands;
 using Lockstep.Core;
+using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
 using UnityEngine;           
                               
@@ -13,8 +15,8 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
 
+    public ITickable Systems;
     public Simulation Simulation;
-    public GameSystems Systems;
     public RTSEntityDatabase EntityDatabase;
 
     public bool Connected => _client.Connected;
@@ -28,7 +30,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         Systems = new GameSystems(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger());
 
-        _remoteCommandBuffer = new NetworkCommandBuffer(_client, new UnityLogger());
+        _remoteCommandBuffer = new NetworkCommandBuffer(_client);
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
 
