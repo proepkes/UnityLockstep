@@ -4,9 +4,9 @@ using Entitas;
 namespace Lockstep.Core.Systems
 {     
     public sealed class RemoveNewFlag : ICleanupSystem
-    {              
-        readonly IGroup<GameEntity> _group;
-        readonly List<GameEntity> _buffer = new List<GameEntity>();
+    {
+        private readonly IGroup<GameEntity> _group;
+        private readonly List<GameEntity> _buffer = new List<GameEntity>();
 
         public RemoveNewFlag(Contexts contexts)
         {

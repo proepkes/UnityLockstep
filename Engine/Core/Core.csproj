@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -61,6 +61,7 @@
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCommandsComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNewComponent.cs" />
     <Compile Include="Generated\Game\Components\GameIdReferenceComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
@@ -100,18 +102,23 @@
     <Compile Include="Generated\Input\InputEntity.cs" />
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
+    <Compile Include="Generated\Events\Components\DestinationListenerComponent.cs" />
     <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
+    <Compile Include="Generated\Events\Interfaces\IDestinationListener.cs" />
     <Compile Include="Generated\Events\Interfaces\IPositionListener.cs" />
+    <Compile Include="Generated\Events\Systems\DestinationEventSystem.cs" />
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\PositionComponent - Copy.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\NewComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\IdReferenceComponent.cs" />
-    <Compile Include="DefaultServices\DefaultStorageService.cs" />
     <Compile Include="GameSystems.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -161,7 +168,6 @@
     <Compile Include="Interfaces\IHashService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
-    <Compile Include="Interfaces\IStorageService.cs" />
     <Compile Include="Interfaces\ITickable.cs" />
     <Compile Include="CoreSystems.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -15,8 +15,7 @@ namespace Lockstep.Core
         {
             RegisterDefault(new DefaultHashService());
             RegisterDefault(new DefaultGameService());
-            RegisterDefault(new DefaultNavigationService());
-            RegisterDefault(new DefaultStorageService());
+            RegisterDefault(new DefaultNavigationService());   
         }
 
         public void Register(IService instance)

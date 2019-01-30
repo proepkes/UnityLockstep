@@ -8,7 +8,7 @@ namespace Lockstep.Core
         {                
             Add(new InputFeature(contexts, services));
 
-            //Add(new NavigationFeature(Contexts, serviceContainer));
+            Add(new NavigationFeature(contexts, services));
 
             Add(new GameEventSystems(contexts));
 

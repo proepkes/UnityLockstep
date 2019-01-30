@@ -8,26 +8,30 @@
 //------------------------------------------------------------------------------
 public static class GameComponentsLookup {
 
-    public const int Asset = 0;
-    public const int Controllable = 1;
-    public const int Hashable = 2;
-    public const int Health = 3;
-    public const int Id = 4;
-    public const int IdReference = 5;
-    public const int MaxSpeed = 6;
-    public const int Navigable = 7;
-    public const int New = 8;
-    public const int OwnerId = 9;
-    public const int Position = 10;
-    public const int Team = 11;
-    public const int Velocity = 12;
-    public const int PositionListener = 13;
+    public const int DestinationListener = 0;
+    public const int Asset = 1;
+    public const int Controllable = 2;
+    public const int Destination = 3;
+    public const int Hashable = 4;
+    public const int Health = 5;
+    public const int Id = 6;
+    public const int IdReference = 7;
+    public const int MaxSpeed = 8;
+    public const int Navigable = 9;
+    public const int New = 10;
+    public const int OwnerId = 11;
+    public const int Position = 12;
+    public const int Team = 13;
+    public const int Velocity = 14;
+    public const int PositionListener = 15;
 
-    public const int TotalComponents = 14;
+    public const int TotalComponents = 16;
 
     public static readonly string[] componentNames = {
+        "DestinationListener",
         "Asset",
         "Controllable",
+        "Destination",
         "Hashable",
         "Health",
         "Id",
@@ -43,8 +47,10 @@ public static class GameComponentsLookup {
     };
 
     public static readonly System.Type[] componentTypes = {
+        typeof(DestinationListenerComponent),
         typeof(Lockstep.Core.Components.Game.AssetComponent),
         typeof(Lockstep.Core.Components.Game.ControllableComponent),
+        typeof(Lockstep.Core.Components.Game.DestinationComponent),
         typeof(Lockstep.Core.Components.Game.HashableComponent),
         typeof(Lockstep.Core.Components.Game.HealthComponent),
         typeof(Lockstep.Core.Components.Game.IdComponent),

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BEPUutilities;
 using Entitas;
 using Lockstep.Core.Interfaces;
@@ -20,7 +21,7 @@ namespace Lockstep.Core.Systems.Navigation
         {
             var updatedPositions = new Dictionary<uint, Vector2>();
 
-            foreach (var entity in _gameContext.GetEntities())
+            foreach (var entity in _gameContext.GetEntities().Where(e => e.hasId))
             {
                 if (entity.velocity.value != Vector2.Zero)
                 {

@@ -63,6 +63,7 @@ public partial class Contexts : Entitas.IContexts {
 public partial class Contexts {
 
     public const string Id = "Id";
+    public const string IdReference = "IdReference";
 
     [Entitas.CodeGeneration.Attributes.PostConstructor]
     public void InitializeEntityIndices() {
@@ -70,6 +71,11 @@ public partial class Contexts {
             Id,
             game.GetGroup(GameMatcher.Id),
             (e, c) => ((Lockstep.Core.Components.Game.IdComponent)c).value));
+
+        game.AddEntityIndex(new Entitas.PrimaryEntityIndex<GameEntity, uint>(
+            IdReference,
+            game.GetGroup(GameMatcher.IdReference),
+            (e, c) => ((Lockstep.Core.Components.Game.IdReferenceComponent)c).internalId));
     }
 }
 
@@ -77,6 +83,10 @@ public static class ContextsExtensions {
 
     public static GameEntity GetEntityWithId(this GameContext context, uint value) {
         return ((Entitas.PrimaryEntityIndex<GameEntity, uint>)context.GetEntityIndex(Contexts.Id)).GetEntity(value);
+    }
+
+    public static GameEntity GetEntityWithIdReference(this GameContext context, uint internalId) {
+        return ((Entitas.PrimaryEntityIndex<GameEntity, uint>)context.GetEntityIndex(Contexts.IdReference)).GetEntity(internalId);
     }
 }
 //------------------------------------------------------------------------------
