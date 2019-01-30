@@ -2,7 +2,11 @@
 
 [![Discord](https://img.shields.io/discord/413156098993029120.svg)](https://discord.gg/F9hJhcX) 
 
-A WIP implementation of the Serverbeat-Protocol described here: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/
+Initial commit was targeting the following protocl: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/. It turned out that bad network conditions made the game unplayable. The project has shifted to an architecture you see below. 
+
+Currently the rollback of adding new entities is working (for 2 players). If you spawn entities in both instances the game will result in a synced state no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
+
+Rollback for entity-changes is currently in progress. Using the navigation-feature in combination with rollback will lead to desync or game crashes.
 
 ![Overview](/Docs/Overview.svg "Overview")
 
@@ -16,8 +20,7 @@ A WIP implementation of the Serverbeat-Protocol described here: https://www.redd
 4. Hit play and wait until connection to server is established
 5. Holding right mouse button will continously spawn new agents, press 'X' to navigate all agents to your current mouse position
    
-### Getting Multiplayer
-
+### Getting Multipla
 1. Build and run the Unityproject
 2. Start the server. The roomsize will default to 2 after a few seconds of no input
 3. Hit play in Unity so you should now have two instances of the game running
