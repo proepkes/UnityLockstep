@@ -97,8 +97,7 @@ namespace Lockstep.Client
             var currentRemoteFrame = _remoteCommandBuffer.LastInsertedFrame;
   
             if (_lastValidatedFrame < currentRemoteFrame)
-            {
-                _world.Services.Get<ILogService>().Warn("Keep up from "+ _lastValidatedFrame + " to " + currentRemoteFrame);
+            {                                                                                                                       
                 //We guess everything was predicted correctly (except the last received frame)
                 var firstMispredictedFrame = currentRemoteFrame; 
                                                                         
@@ -117,8 +116,7 @@ namespace Lockstep.Client
                         firstMispredictedFrame = remoteFrame;
                     }             
 
-                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's entity-ids have to be adjusted
-                    //TODO: order by timestamp in case of multiple commands in the same frame => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered, ordering is enough, validation should take place in the simulation(core)                                                                    
+                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's entity-ids have to be adjusted 
                     _world.AddInput(remoteFrame, allPlayerCommands);   
                 }
 
