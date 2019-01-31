@@ -16,15 +16,15 @@ namespace Lockstep.Core.Systems.Navigation
 
         public void Execute()
         {
-            var agentVelocities = _navigationService.GetAgentVelocities();
-            foreach (var velocity in agentVelocities)
-            {
-                var gameEntity = _gameContext.GetEntityWithId(velocity.Key);
-                if (gameEntity.velocity.value != velocity.Value)
-                {
-                    gameEntity.ReplaceVelocity(velocity.Value);
-                }
-            }                                   
+            //var agentVelocities = _navigationService.GetAgentVelocities();
+            //foreach (var velocity in agentVelocities)
+            //{
+            //    var gameEntity = _gameContext.GetEntityWithId(velocity.Key);
+            //    if (gameEntity.velocity.value != velocity.Value)
+            //    {
+            //        gameEntity.ReplaceVelocity(velocity.Value);
+            //    }
+            //}                                   
         }      
     }
 }     

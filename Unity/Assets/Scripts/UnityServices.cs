@@ -7,7 +7,7 @@ using Lockstep.Core.Interfaces;
 
 public interface IEventListener
 {
-    void RegisterListeners(IEntity entity);
+    void RegisterListeners(GameEntity entity);
 }
 
 public interface IComponentSetter
@@ -46,7 +46,7 @@ public class UnityGameService : IViewService
                 listener.RegisterListeners(entity);
             }
 
-            linkedEntities.Add(entity.id.value, viewGo);
+            linkedEntities.Add(entity.localId.value, viewGo);
         }
     }
 

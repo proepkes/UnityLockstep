@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Entitas;
 using Lockstep.Core.Interfaces;
 
@@ -17,12 +18,12 @@ namespace Lockstep.Core.Systems.Navigation
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.Coordinate, InputMatcher.Selection));
+            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.Coordinate, InputMatcher.Selection, InputMatcher.PlayerId));
         }
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasCoordinate && entity.hasSelection;
+            return entity.hasCoordinate && entity.hasSelection && entity.hasPlayerId;
         }
 
         protected override void Execute(List<InputEntity> inputs)
@@ -30,9 +31,17 @@ namespace Lockstep.Core.Systems.Navigation
             foreach (var input in inputs)
             {
                 var destination = input.coordinate.value;
-                foreach (var entityId in input.selection.entityIds)
+
+                var selectedEntities = _contextsGame.GetEntities(
+                        GameMatcher.AllOf(GameMatcher.OwnerId, GameMatcher.Id))
+                        .Where(entity => 
+                            input.selection.entityIds.Contains(entity.id.value) &&
+                            entity.ownerId.value == input.playerId.value);
+
+                foreach (var entity in selectedEntities)
                 {
-                    _contextsGame.GetEntityWithId(entityId).ReplaceDestination(destination);
+                    entity.ReplaceDestination(destination);
+
                     //_navigationService.SetAgentDestination(entityId, destination);            
                 }  
             }

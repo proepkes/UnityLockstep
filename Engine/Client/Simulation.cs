@@ -23,7 +23,7 @@ namespace Lockstep.Client
         private readonly IWorld _world;
         private readonly ICommandBuffer _remoteCommandBuffer;                         
 
-        private readonly Dictionary<byte, List<ICommand>> _commandCache = new Dictionary<byte, List<ICommand>>();
+        private readonly List<ICommand> _commandCache = new List<ICommand>();
 
         public Simulation(IWorld world, ICommandBuffer remoteCommandBuffer)
         {
@@ -35,9 +35,7 @@ namespace Lockstep.Client
         {             
             _tickDt = 1000f / init.TargetFPS;
             LocalPlayerId = init.PlayerID;
-
-            _commandCache.Add(LocalPlayerId, new List<ICommand>());
-
+                                                                     
             _world.Initialize(LocalPlayerId);
 
             Running = true;
@@ -52,7 +50,7 @@ namespace Lockstep.Client
 
             lock (_commandCache)
             {
-                _commandCache[LocalPlayerId].Add(command);
+                _commandCache.Add(command);
             }            
         }
 
@@ -79,12 +77,12 @@ namespace Lockstep.Client
         {                              
             lock (_commandCache)
             {
-                if (_commandCache[LocalPlayerId].Count > 0)
+                if (_commandCache.Count > 0)
                 {
-                    _world.AddInput(_world.CurrentTick + LagCompensation, _commandCache);
-                    _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache[LocalPlayerId].ToArray());
+                    _world.AddInput(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache);
+                    _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache.ToArray());
 
-                    _commandCache[LocalPlayerId].Clear();  
+                    _commandCache.Clear();  
                 }
             }    
 
@@ -113,10 +111,14 @@ namespace Lockstep.Client
                     {
                         //Set the first mispredicted frame to the first frame which contains commands
                         firstMispredictedFrame = remoteFrame;
-                    }             
+                    }
 
-                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's entity-ids have to be adjusted 
-                    _world.AddInput(remoteFrame, allPlayerCommands);   
+                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's entity-ids have to be adjusted
+                    //https://github.com/proepkes/UnityLockstep/wiki/Rollback-WIP-Log
+                    foreach (var playerCommands in allPlayerCommands)
+                    {
+                        _world.AddInput(remoteFrame, playerCommands.Key, playerCommands.Value);
+                    }
                 }
 
                 //Only rollback if the mispredicted frame was in the past (the frame can be in the future due to high lag compensation)
