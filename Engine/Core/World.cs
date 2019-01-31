@@ -81,10 +81,10 @@ namespace Lockstep.Core
             var spawnedShadows = shadows.Where(e => e.isNew).ToList();
 
             //A shadow refers to its entity through ownerId + id
-            var shadowsOfNewEntitiesPerPlayer = spawnedShadows.ToLookup(e => e.ownerId.value, e => e.id.value);
+            var spawnedShadowsPerPlayer = spawnedShadows.ToLookup(e => e.ownerId.value, e => e.id.value);
 
             var invalidEntities = new List<GameEntity>(200);
-            foreach (var shadowsPerOwner in shadowsOfNewEntitiesPerPlayer)
+            foreach (var shadowsPerOwner in spawnedShadowsPerPlayer)
             {
                 var ownerId = shadowsPerOwner.Key;
 

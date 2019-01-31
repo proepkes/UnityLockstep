@@ -43,8 +43,8 @@ namespace Lockstep.Core.Systems
                 var shadowEntity = _gameContext.CreateEntity();
 
                 //TODO: find out a way to only copy components that actually changed
-                //LocalId is primary index => don't copy. LocalId is inside _componentIndices because we need to catch new entities that may only have a LocalId-component and I'm too lazy to create a separate componentIndicesWithoutLocalIdArray
-                foreach (var index in _componentIndices.Where(i => i != GameComponentsLookup.LocalId && e.HasComponent(i)))
+                //LocalId is primary index => don't copy
+                foreach (var index in e.GetComponentIndices().Where(i => i != GameComponentsLookup.LocalId))
                 {      
                     var component1 = e.GetComponent(index);
                     var component2 = shadowEntity.CreateComponent(index, component1.GetType());
