@@ -1,7 +1,5 @@
-﻿using System;
-using BEPUutilities;     
-using Lockstep.Client.Interfaces;
-using Lockstep.Core.Data;
+﻿using BEPUutilities;     
+using Lockstep.Client.Interfaces;   
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Commands
