@@ -78,10 +78,10 @@ namespace Lockstep.Core
         {                                                                 
             var shadows = _gameContext.GetEntities().Where(e => e.isShadow && e.tick.value >= tick).ToList();
 
-            var spawnedShadows = shadows.Where(e => e.isNew);
+            var spawnedShadows = shadows.Where(e => e.isNew).ToList();
 
             //A shadow refers to its entity through ownerId + id
-            var shadowsOfNewEntitiesPerPlayer = shadows.Where(e => e.isNew).ToLookup(e => e.ownerId.value, e => e.id.value);
+            var shadowsOfNewEntitiesPerPlayer = spawnedShadows.ToLookup(e => e.ownerId.value, e => e.id.value);
 
             var invalidEntities = new List<GameEntity>(200);
             foreach (var shadowsPerOwner in shadowsOfNewEntitiesPerPlayer)
