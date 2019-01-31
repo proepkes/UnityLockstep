@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;            
-using Lockstep.Client.Interfaces;
+using Lockstep.Client.Interfaces;   
 using Lockstep.Core.Interfaces;
 using Lockstep.Network;
 using Lockstep.Network.Messages;

@@ -14,7 +14,7 @@ namespace Lockstep.Core
         public ServiceContainer()
         {
             RegisterDefault(new DefaultHashService());
-            RegisterDefault(new DefaultGameService());
+            RegisterDefault(new DefaultViewService());
             RegisterDefault(new DefaultNavigationService());   
         }
 

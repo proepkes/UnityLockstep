@@ -1,4 +1,4 @@
-﻿using Entitas;
+﻿using Entitas;              
 
 namespace Lockstep.Core.Components.Input
 {

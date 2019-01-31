@@ -1,5 +1,5 @@
 ﻿using BEPUutilities;     
-using Lockstep.Client.Interfaces;
+using Lockstep.Client.Interfaces;   
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Commands
@@ -8,26 +8,26 @@ namespace Lockstep.Commands
     {
         public ushort Tag => 1;
 
-        public uint[] EntityIds;
+        public uint[] Selection;
 
         public Vector2 Destination;    
 
         public void Execute(InputEntity e)
-        {                                  
-            e.AddEntityIds(EntityIds);
+        {                              
+            e.AddSelection(Selection);
             e.AddCoordinate(Destination);                           
         }
 
         public void Serialize(Serializer writer)
-        {
-            writer.PutArray(EntityIds);
+        {          
+            writer.PutArray(Selection);
             writer.Put(Destination.X.RawValue);
             writer.Put(Destination.Y.RawValue);
         }
 
         public void Deserialize(Deserializer reader)
         {
-            EntityIds = reader.GetUIntArray();
+            Selection = reader.GetUIntArray();   
             Destination.X.RawValue = reader.GetLong();
             Destination.Y.RawValue = reader.GetLong();
         }

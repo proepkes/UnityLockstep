@@ -11,14 +11,14 @@ public partial class GameEntity {
     public Lockstep.Core.Components.Game.OwnerIdComponent ownerId { get { return (Lockstep.Core.Components.Game.OwnerIdComponent)GetComponent(GameComponentsLookup.OwnerId); } }
     public bool hasOwnerId { get { return HasComponent(GameComponentsLookup.OwnerId); } }
 
-    public void AddOwnerId(int newValue) {
+    public void AddOwnerId(byte newValue) {
         var index = GameComponentsLookup.OwnerId;
         var component = (Lockstep.Core.Components.Game.OwnerIdComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.OwnerIdComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceOwnerId(int newValue) {
+    public void ReplaceOwnerId(byte newValue) {
         var index = GameComponentsLookup.OwnerId;
         var component = (Lockstep.Core.Components.Game.OwnerIdComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.OwnerIdComponent));
         component.value = newValue;

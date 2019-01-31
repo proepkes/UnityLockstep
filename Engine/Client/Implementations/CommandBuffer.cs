@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;              
-using Lockstep.Client.Interfaces;
+﻿using System.Collections.Generic;   
+using Lockstep.Client.Interfaces;  
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client.Implementations
@@ -25,7 +24,7 @@ namespace Lockstep.Client.Implementations
 
                 if (!Buffer[frameNumber].ContainsKey(commanderId))
                 {
-                    Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame
+                    Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame per player
                 }
 
                 Buffer[frameNumber][commanderId].AddRange(commands);
@@ -46,21 +45,6 @@ namespace Lockstep.Client.Implementations
 
                 return Buffer[frame];
             }
-        }
-
-        public ICommand[] GetMany(uint frame)
-        {
-            lock (Buffer)
-            {
-                //If no commands were inserted then return an empty list
-                if (!Buffer.ContainsKey(frame))
-                {
-                    Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
-                }
-
-                return Buffer[frame].SelectMany(pair => pair.Value).ToArray();
-            }
-        }
-               
+        }       
     }
 }

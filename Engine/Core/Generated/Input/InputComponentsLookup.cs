@@ -8,27 +8,27 @@
 //------------------------------------------------------------------------------
 public static class InputComponentsLookup {
 
-    public const int Commands = 0;
-    public const int Coordinate = 1;
-    public const int EntityConfigId = 2;
-    public const int EntityIds = 3;
-    public const int PlayerId = 4;
+    public const int Coordinate = 0;
+    public const int EntityConfigId = 1;
+    public const int PlayerId = 2;
+    public const int Selection = 3;
+    public const int Tick = 4;
 
     public const int TotalComponents = 5;
 
     public static readonly string[] componentNames = {
-        "Commands",
         "Coordinate",
         "EntityConfigId",
-        "EntityIds",
-        "PlayerId"
+        "PlayerId",
+        "Selection",
+        "Tick"
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(Lockstep.Core.Components.Input.CommandsComponent),
         typeof(Lockstep.Core.Components.Input.CoordinateComponent),
         typeof(Lockstep.Core.Components.Input.EntityConfigIdComponent),
-        typeof(Lockstep.Core.Components.Input.EntityIdsComponent),
-        typeof(Lockstep.Core.Components.Input.PlayerIdComponent)
+        typeof(Lockstep.Core.Components.Input.PlayerIdComponent),
+        typeof(Lockstep.Core.Components.Input.SelectionComponent),
+        typeof(Lockstep.Core.Components.Input.TickComponent)
     };
 }

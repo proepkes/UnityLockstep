@@ -1,58 +1,53 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using BEPUutilities;
-using Entitas;
+using Entitas;             
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Systems.Input
 {
-    public class OnSpawnInputCreateEntity : ReactiveSystem<InputEntity>
-    {
-        private uint _nextEntityId;
-
-        private readonly IGameService _gameService;
+    public class OnSpawnInputCreateEntity : IExecuteSystem
+    {                                  
+        private readonly IViewService _viewService;
         private readonly GameContext _gameContext;
-        private readonly GameStateContext _gameStateContext;
+        private readonly GameStateContext _gameStateContext;   
+        private readonly IGroup<InputEntity> _spawnInputs;
 
-        private readonly Dictionary<uint, List<uint>> _createdEntities = new Dictionary<uint, List<uint>>();        
-
-        public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services) : base(contexts.input)
+        public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services)
         {
-            _gameService = services.Get<IGameService>();     
+            _viewService = services.Get<IViewService>();     
             _gameContext = contexts.game;
-            _gameStateContext = contexts.gameState;
-        }
+            _gameStateContext = contexts.gameState;  
 
-        protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
-        {                                
-            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.EntityConfigId, InputMatcher.Coordinate));
-        }
+            _spawnInputs = contexts.input.GetGroup(
+                InputMatcher.AllOf(
+                    InputMatcher.EntityConfigId, 
+                    InputMatcher.Coordinate,
+                    InputMatcher.PlayerId,
+                    InputMatcher.Tick));
+        }       
 
-        protected override bool Filter(InputEntity entity)
-        {                     
-            return entity.hasEntityConfigId && entity.hasCoordinate;
-        }
-
-        protected override void Execute(List<InputEntity> inputs)
+        public void Execute()
         {
-            foreach (var input in inputs)
+            uint newId = 0;
+            var currentEntities = _gameContext.GetEntities(GameMatcher.Id);
+            if (currentEntities.Length > 0)
             {
+                newId = _gameContext.GetEntities(GameMatcher.Id).Max(e => e.id.value) + 1;
+            }
+
+            //TODO: order by timestamp instead of playerId => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered                                                                 
+            foreach (var input in _spawnInputs.GetEntities().Where(entity => entity.tick.value == _gameStateContext.tick.value).OrderBy(entity => entity.playerId.value))
+            {                                                       
                 var e = _gameContext.CreateEntity();
 
                 e.isNew = true;
-                e.AddId(_nextEntityId);
+                e.AddId(newId++);
+                e.AddOwnerId(input.playerId.value);
+
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);
 
-                _gameService.LoadEntity(e, input.entityConfigId.value);
-
-                if (!_createdEntities.ContainsKey(_gameStateContext.tick.value))
-                {
-                    _createdEntities.Add(_gameStateContext.tick.value, new List<uint>());
-                }
-
-                _createdEntities[_gameStateContext.tick.value].Add(_nextEntityId);      
-                _nextEntityId++;  
+                _viewService.LoadView(e, input.entityConfigId.value);   
             }                                                                                    
         }    
     }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;      
-using Lockstep.Client.Implementations;
-using Lockstep.Client.Interfaces;
+﻿using System.Collections.Generic;        
+using Lockstep.Client.Interfaces;     
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
 
 namespace Lockstep.Client
-{
+{                    
     public class Simulation
     {                                        
         /// <summary>
@@ -16,31 +14,31 @@ namespace Lockstep.Client
 
         public bool Running { get; private set; }
 
-        public byte LocalPlayerId { get; private set; }
-
+        public byte LocalPlayerId { get; private set; } 
 
         private float _tickDt;
         private float _accumulatedTime;
         private uint _lastValidatedFrame;
 
-        private readonly ITickable _world;
-        private readonly ICommandBuffer _remoteCommandBuffer;
-        private readonly ICommandBuffer _localCommandBuffer = new CommandBuffer();
+        private readonly IWorld _world;
+        private readonly ICommandBuffer _remoteCommandBuffer;                         
 
-        private readonly List<ICommand> _commandCache = new List<ICommand>(20); 
+        private readonly Dictionary<byte, List<ICommand>> _commandCache = new Dictionary<byte, List<ICommand>>();
 
-        public Simulation(ITickable world, ICommandBuffer remoteCommandBuffer)
+        public Simulation(IWorld world, ICommandBuffer remoteCommandBuffer)
         {
             _world = world;     
-            _remoteCommandBuffer = remoteCommandBuffer;      
+            _remoteCommandBuffer = remoteCommandBuffer;
         }
 
-        public void Start(Init init)
+        public void Initialize(Init init)
         {             
             _tickDt = 1000f / init.TargetFPS;
             LocalPlayerId = init.PlayerID;
 
-            _world.Initialize();
+            _commandCache.Add(LocalPlayerId, new List<ICommand>());
+
+            _world.Initialize(LocalPlayerId);
 
             Running = true;
         }   
@@ -54,7 +52,7 @@ namespace Lockstep.Client
 
             lock (_commandCache)
             {
-                _commandCache.Add(command);
+                _commandCache[LocalPlayerId].Add(command);
             }            
         }
 
@@ -78,21 +76,19 @@ namespace Lockstep.Client
         }
 
         private void Tick()
-        {            
-            ICommand[] frameCommands;
+        {                              
             lock (_commandCache)
             {
-                frameCommands = _commandCache.ToArray();
-                _commandCache.Clear();
-            }
+                if (_commandCache[LocalPlayerId].Count > 0)
+                {
+                    _world.AddInput(_world.CurrentTick + LagCompensation, _commandCache);
+                    _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache[LocalPlayerId].ToArray());
 
-            if (frameCommands.Length > 0)
-            {
-                _localCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, frameCommands);
-                _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId,  frameCommands);     
-            }
+                    _commandCache[LocalPlayerId].Clear();  
+                }
+            }    
 
-            _world.Tick(_localCommandBuffer.GetMany(_world.CurrentTick));     
+            _world.Tick();     
         }
 
         private void SyncCommandBuffer()
@@ -100,7 +96,7 @@ namespace Lockstep.Client
             var currentRemoteFrame = _remoteCommandBuffer.LastInsertedFrame;
   
             if (_lastValidatedFrame < currentRemoteFrame)
-            {
+            {                                                                                                                       
                 //We guess everything was predicted correctly (except the last received frame)
                 var firstMispredictedFrame = currentRemoteFrame; 
                                                                         
@@ -108,7 +104,7 @@ namespace Lockstep.Client
                 {
                     //All frames that have no commands were predicted correctly => increase remote frame
                     var allPlayerCommands = _remoteCommandBuffer.Get(remoteFrame);
-                    if (allPlayerCommands.Count <= 0)
+                    if (allPlayerCommands.Count == 0)
                     {
                         continue;
                     }
@@ -117,32 +113,26 @@ namespace Lockstep.Client
                     {
                         //Set the first mispredicted frame to the first frame which contains commands
                         firstMispredictedFrame = remoteFrame;
-                    }
+                    }             
 
-                    //Merge commands into the local command buffer
-                    foreach (var commandPerPlayer in allPlayerCommands)
-                    {
-                        //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's ids have to be adjusted, maybe introduce attribute to identify command properties that point to entities
-                        //TODO: order by timestamp in case of multiple commands in the same frame => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered
-                        //ordering is enough, validation should take place in the simulation(core)                                                                    
-                        _localCommandBuffer.Insert(remoteFrame, commandPerPlayer.Key, commandPerPlayer.Value.ToArray());
-                    }
+                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's entity-ids have to be adjusted 
+                    _world.AddInput(remoteFrame, allPlayerCommands);   
                 }
 
                 //Only rollback if the mispredicted frame was in the past (the frame can be in the future due to high lag compensation)
-                if (firstMispredictedFrame < _world.CurrentTick)
+                if (firstMispredictedFrame <= _world.CurrentTick)
                 {      
                     var targetTick = _world.CurrentTick;  
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
 
-                    var validFrame = firstMispredictedFrame;
+                    var validInputFrame = firstMispredictedFrame;
 
                     //Execute all commands again, beginning from the first frame that contains remote input up to our last local state
-                    while (validFrame <= targetTick)
+                    while (validInputFrame <= targetTick)
                     {   
-                        _world.Tick(_localCommandBuffer.GetMany(validFrame));
-                        validFrame++;
+                        _world.Tick();
+                        validInputFrame++;
                     }
                 }
 

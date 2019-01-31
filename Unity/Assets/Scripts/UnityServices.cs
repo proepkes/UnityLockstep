@@ -15,7 +15,7 @@ public interface IComponentSetter
     void SetComponent(GameEntity entity);
 }
 
-public class UnityGameService : IGameService
+public class UnityGameService : IViewService
 {
     private readonly RTSEntityDatabase _entityDatabase;
     private Dictionary<uint, GameObject> linkedEntities = new Dictionary<uint, GameObject>();
@@ -25,7 +25,7 @@ public class UnityGameService : IGameService
         _entityDatabase = entityDatabase;
     }
 
-    public void LoadEntity(GameEntity entity, int configId)
+    public void LoadView(GameEntity entity, int configId)
     {
         //TODO: pooling
         var viewGo = Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
@@ -50,7 +50,7 @@ public class UnityGameService : IGameService
         }
     }
 
-    public void UnloadEntity(uint entityId)
+    public void DeleteView(uint entityId)
     {
         linkedEntities[entityId].Unlink();
         linkedEntities[entityId].DestroyGameObject();

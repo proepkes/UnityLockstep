@@ -15,12 +15,12 @@ public static class GameComponentsLookup {
     public const int Hashable = 4;
     public const int Health = 5;
     public const int Id = 6;
-    public const int IdReference = 7;
-    public const int MaxSpeed = 8;
-    public const int Navigable = 9;
-    public const int New = 10;
-    public const int OwnerId = 11;
-    public const int Position = 12;
+    public const int MaxSpeed = 7;
+    public const int Navigable = 8;
+    public const int New = 9;
+    public const int OwnerId = 10;
+    public const int Position = 11;
+    public const int Shadow = 12;
     public const int Team = 13;
     public const int Velocity = 14;
     public const int PositionListener = 15;
@@ -35,12 +35,12 @@ public static class GameComponentsLookup {
         "Hashable",
         "Health",
         "Id",
-        "IdReference",
         "MaxSpeed",
         "Navigable",
         "New",
         "OwnerId",
         "Position",
+        "Shadow",
         "Team",
         "Velocity",
         "PositionListener"
@@ -54,12 +54,12 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.Components.Game.HashableComponent),
         typeof(Lockstep.Core.Components.Game.HealthComponent),
         typeof(Lockstep.Core.Components.Game.IdComponent),
-        typeof(Lockstep.Core.Components.Game.IdReferenceComponent),
         typeof(Lockstep.Core.Components.Game.MaxSpeedComponent),
         typeof(Lockstep.Core.Components.Game.NavigableComponent),
         typeof(Lockstep.Core.Components.Game.NewComponent),
         typeof(Lockstep.Core.Components.Game.OwnerIdComponent),
         typeof(Lockstep.Core.Components.Game.PositionComponent),
+        typeof(Lockstep.Core.Components.Game.ShadowComponent),
         typeof(Lockstep.Core.Components.Game.TeamComponent),
         typeof(Lockstep.Core.Components.Game.VelocityComponent),
         typeof(PositionListenerComponent)

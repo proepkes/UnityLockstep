@@ -15,7 +15,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
 
-    public ITickable Systems;
+    public IWorld Systems;
     public Simulation Simulation;
     public RTSEntityDatabase EntityDatabase;
 
@@ -47,7 +47,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     private void StartSimulation(Init data)
     {
         Debug.Log("Starting as player:" + data.PlayerID);
-        Simulation.Start(data);
+        Simulation.Initialize(data);
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
     }

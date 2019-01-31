@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -60,10 +60,14 @@
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputCommandsComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputSelectionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNewComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameIdReferenceComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameShadowComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
@@ -75,15 +79,11 @@
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHashableComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputEntityIdsComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
+    <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
-    <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
@@ -112,13 +112,16 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Game\PositionComponent - Copy.cs" />
+    <Compile Include="Components\Input\TickComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\DestinationComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\NewComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Game\IdReferenceComponent.cs" />
+    <Compile Include="Components\Game\ShadowComponent.cs" />
     <Compile Include="GameSystems.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -148,14 +151,11 @@
     <Compile Include="Components\Input\PlayerIdComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Input\CommandsComponent.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Components\Game\HashableComponent.cs" />
     <Compile Include="Components\GameState\PausedComponent.cs" />
-    <Compile Include="Components\Input\EntityIdsComponent.cs" />
+    <Compile Include="Components\Input\SelectionComponent.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
-    <Compile Include="DefaultServices\DefaultGameService.cs" />
+    <Compile Include="DefaultServices\DefaultViewService.cs" />
     <Compile Include="DefaultServices\DefaultHashService.cs" />
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
@@ -163,13 +163,13 @@
     <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />
     <Compile Include="Features\NavigationFeature.cs" />
-    <Compile Include="Interfaces\IGameService.cs" />
+    <Compile Include="Interfaces\IViewService.cs" />
     <Compile Include="Interfaces\IGridService.cs" />
     <Compile Include="Interfaces\IHashService.cs" />
     <Compile Include="Interfaces\ILogService.cs" />
     <Compile Include="Interfaces\INavigationService.cs" />
-    <Compile Include="Interfaces\ITickable.cs" />
     <Compile Include="CoreSystems.cs" />
+    <Compile Include="Interfaces\IWorld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceContainer.cs" />
     <Compile Include="Systems\CalculateHashCode.cs" />
@@ -177,7 +177,6 @@
     <Compile Include="Systems\StoreNewOrChangedEntities.cs" />
     <Compile Include="Systems\GameState\IncrementTick.cs" />
     <Compile Include="Systems\Input\CleanupInput.cs" />
-    <Compile Include="Systems\Input\EmitInput.cs" />
     <Compile Include="Systems\Input\OnSpawnInputCreateEntity.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />

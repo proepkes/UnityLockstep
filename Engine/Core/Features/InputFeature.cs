@@ -6,12 +6,11 @@ namespace Lockstep.Core.Features
     {
         public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
         {
-            //TODO: Add InputValidationSystem by matching input with playerId  
-            Add(new EmitInput(contexts)); 
-
+            //TODO: Add InputValidationSystem using input's playerIdComponent
+            
             Add(new OnSpawnInputCreateEntity(contexts, serviceContainer));
 
-            Add(new CleanupInput(contexts));
+            //Add(new CleanupInput(contexts));
         }
 
     }

@@ -10,10 +10,9 @@ namespace Lockstep.Core.Systems
     {                                                                                                                             
         private readonly GameStateContext _gameStateContext;   
         private readonly GameContext _gameContext;
-        private int[] _componentIndices;
-        private uint _internalIdCounter;
+        private int[] _componentIndices;    
         
-        public StoreNewOrChangedEntities(Contexts contexts, ServiceContainer services) : base(contexts.game)
+        public StoreNewOrChangedEntities(Contexts contexts) : base(contexts.game)
         {
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;                
@@ -23,24 +22,23 @@ namespace Lockstep.Core.Systems
         {
             //Listen for changes on all components except IdReference
             _componentIndices = GameComponentsLookup.componentNames
-                .Except(new[] { GameComponentsLookup.componentNames[GameComponentsLookup.IdReference] })
+                .Except(new[] { GameComponentsLookup.componentNames[GameComponentsLookup.Shadow] })
                 .Select(componentName => (int)typeof(GameComponentsLookup)
                         .GetFields()
                         .First(info => info.Name == componentName)
                         .GetRawConstantValue())
                 .ToArray();
 
-            return context.CreateCollector(GameMatcher.AnyOf(_componentIndices).NoneOf(GameMatcher.IdReference));
+            return context.CreateCollector(GameMatcher.AnyOf(_componentIndices).NoneOf(GameMatcher.Shadow));
         }
 
         protected override bool Filter(GameEntity entity)
         {
-            return entity.hasId && !entity.hasIdReference;
+            return entity.hasId && !entity.hasShadow;
         }
 
         protected override void Execute(List<GameEntity> entities)
-        {                                                      
-            var changedEntities = new List<uint>(entities.Count);
+        {                                                           
             foreach (var e in entities)
             {
                 var backupEntity = _gameContext.CreateEntity();
@@ -54,10 +52,7 @@ namespace Lockstep.Core.Systems
                     backupEntity.AddComponent(index, component2);
                 }
 
-                backupEntity.AddIdReference(_internalIdCounter, e.id.value, _gameStateContext.tick.value);
-
-                changedEntities.Add(_internalIdCounter);
-                _internalIdCounter++;
+                backupEntity.AddShadow(e.id.value, _gameStateContext.tick.value);
             }                                                                              
         }
     }
