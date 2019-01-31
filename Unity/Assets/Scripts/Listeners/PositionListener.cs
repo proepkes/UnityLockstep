@@ -5,9 +5,9 @@ public class PositionListener : MonoBehaviour, IEventListener, IPositionListener
 {
     private GameEntity _entity;   
 
-    public void RegisterListeners(IEntity entity)
+    public void RegisterListeners(GameEntity entity)
     {
-        _entity = (GameEntity)entity;
+        _entity = entity;
         _entity.AddPositionListener(this);
     }
 

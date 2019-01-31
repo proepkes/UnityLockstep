@@ -71,7 +71,7 @@ namespace Test
             commandBuffer.Insert(2, 1, new ICommand[] { });
                                                                  
             sim.Update(1000);   //3 = 30          
-            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(10);
+            contexts.game.GetEntities().Count(entity => !entity.isShadow).ShouldBe(10);
 
             sim.Update(1000);
 
@@ -82,7 +82,7 @@ namespace Test
 
             sim.Update(1000);
 
-            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(20);     
+            contexts.game.GetEntities().Count(entity => !entity.isShadow).ShouldBe(20);     
 
 
             for (int i = 0; i < 10; i++)
@@ -91,14 +91,14 @@ namespace Test
             }
             sim.Update(1000);
 
-            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(30);
+            contexts.game.GetEntities().Count(entity => !entity.isShadow).ShouldBe(30);
                                                                   
             _output.WriteLine("Revert to 3");
             commandBuffer.Insert(3, 1, new ICommand[] { });
 
             sim.Update(1000);
 
-            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(30);
+            contexts.game.GetEntities().Count(entity => !entity.isShadow).ShouldBe(30);
 
             sim.Update(1000);
             commandBuffer.Insert(4, 1, new ICommand[] { });
@@ -108,7 +108,7 @@ namespace Test
             }
             sim.Update(1000);
 
-            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(40);
+            contexts.game.GetEntities().Count(entity => !entity.isShadow).ShouldBe(40);
 
             sim.Update(1000);
             sim.Update(1000);
@@ -119,7 +119,7 @@ namespace Test
             sim.Update(1000);
 
 
-            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(50); 
+            contexts.game.GetEntities().Count(entity => !entity.isShadow).ShouldBe(50); 
         }
 
         [Fact]

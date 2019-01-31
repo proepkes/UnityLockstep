@@ -7,7 +7,7 @@ using Lockstep.Core.Interfaces;
 
 public interface IEventListener
 {
-    void RegisterListeners(IEntity entity);
+    void RegisterListeners(GameEntity entity);
 }
 
 public interface IComponentSetter

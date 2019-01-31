@@ -3,7 +3,7 @@ using System.Linq;
 using Entitas;
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
-using Lockstep.Core.Systems.GameState;    
+using Lockstep.Core.Systems.GameState;
 
 namespace Lockstep.Core
 {
@@ -17,29 +17,29 @@ namespace Lockstep.Core
 
         public int EntitiesInCurrentTick => Contexts.game.GetEntities().Count(e => !e.isShadow);
 
-        private readonly IViewService _view;        
+        private readonly IViewService _view;
         private readonly GameContext _gameContext;
         private readonly INavigationService _navigation;
         private readonly IPlayerEntityIdProvider _idProvider;
 
         public World(Contexts contexts, params IService[] additionalServices)
         {
-            Contexts = contexts;      
+            Contexts = contexts;
 
             Services = new ServiceContainer();
             foreach (var service in additionalServices)
             {
                 Services.Register(service);
             }
-                                                        
+
             _view = Services.Get<IViewService>();
             _navigation = Services.Get<INavigationService>();
             _idProvider = Services.Get<IPlayerEntityIdProvider>();
-            _gameContext = contexts.game;  
+            _gameContext = contexts.game;
 
             Add(new CoreSystems(contexts, Services));
-                                                            
-            Add(new StoreNewOrChangedEntities(contexts)); 
+
+            Add(new StoreNewOrChangedEntities(contexts));
 
             Add(new RemoveNewFlag(contexts));
 
@@ -63,7 +63,7 @@ namespace Lockstep.Core
                 inputEntity.AddPlayerId(player);
             }
         }
-              
+
         public void Tick()
         {
             Execute();
@@ -75,12 +75,10 @@ namespace Lockstep.Core
         /// </summary>
         /// <param name="tick"></param>
         public void RevertToTick(uint tick)
-        {
-            Services.Get<ILogService>().Warn("Revert to " + tick);
-             
+        {                                                                 
             var shadows = _gameContext.GetEntities().Where(e => e.isShadow && e.tick.value >= tick).ToList();
 
-            var shadowsOfNewEntities = shadows.Where(e => e.isNew);
+            var spawnedShadows = shadows.Where(e => e.isNew);
 
             //A shadow refers to its entity through ownerId + id
             var shadowsOfNewEntitiesPerPlayer = shadows.Where(e => e.isNew).ToLookup(e => e.ownerId.value, e => e.id.value);
@@ -93,10 +91,11 @@ namespace Lockstep.Core
                 var invalidShadowsOfOwner = _gameContext.GetEntities(
                         GameMatcher.AllOf(
                             GameMatcher.Id,
-                            GameMatcher.OwnerId))
+                            GameMatcher.OwnerId)
+                            .NoneOf(GameMatcher.Shadow))
                     .Where(entity => ownerId == entity.ownerId.value && shadowsPerOwner.Contains(entity.id.value)).ToList();
 
-                invalidEntities.AddRange(invalidShadowsOfOwner); 
+                invalidEntities.AddRange(invalidShadowsOfOwner);
 
                 //Reset id service for the player to last valid state, since we created IDs that may not match with other players 
                 _idProvider.SetNext(ownerId, _idProvider.Get(ownerId) - (uint)invalidShadowsOfOwner.Count);
@@ -109,10 +108,9 @@ namespace Lockstep.Core
                 _gameContext.GetEntityWithLocalId(invalidEntity.localId.value).Destroy();
             }
 
-            //shadowsOfChangedEntities could contain shadowsOfNewEntities when a created entity changes in later ticks => 'e.isNew' is false one tick after an entity.
-            //That Entity has already been destroyed above so these changes don't have to be considered
-            //TODO: keep isNew = true as long as the entity doesn't change
-            var shadowsOfChangedEntities = shadows.Where(e => !e.isNew).Except(shadowsOfNewEntities);
+            //shadowsOfChangedEntities could contain spawnedShadows when a created entity changes in later ticks => 'e.isNew' is false one tick after an entity.
+            //That Entity has already been destroyed above so these changes don't have to be considered   
+            var shadowsOfChangedEntities = shadows.Where(e => !e.isNew).Except(spawnedShadows);
             foreach (var entity in shadows.Where(e => !e.isNew))
             {
                 //var referencedEntity = _gameContext.GetEntityWithId(entity.shadow.entityId);
@@ -163,9 +161,9 @@ namespace Lockstep.Core
             foreach (var entity in shadows)
             {
                 entity.Destroy();
-            }              
+            }
 
-            Contexts.gameState.ReplaceTick(tick);   
+            Contexts.gameState.ReplaceTick(tick);
         }
     }
-}     
+}

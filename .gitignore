@@ -274,3 +274,5 @@ Unity/Assembly-CSharp-Editor\.csproj
 /Unity/Assets/Editor Default Resources
 /Unity/Assets/Editor Default Resources.meta
 /Unity/Assets/Debug.meta
+/Unity/Assets/GitIgnored
+/Unity/Assets/GitIgnored.meta
