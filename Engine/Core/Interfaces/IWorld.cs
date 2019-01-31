@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
+using Lockstep.Core.Data;
 
 namespace Lockstep.Core.Interfaces
 {
     public interface IWorld
     {
-        int EntitiesInCurrentTick { get; }  
+        ServiceContainer Services { get; }
+        int EntitiesInCurrentTick { get; }
 
-        uint CurrentTick { get; }  
+        TickId CurrentTick { get; }  
         
         void Initialize(byte playerId);
 
-        void Tick(Dictionary<byte, List<ICommand>> input);
+        void AddInput(TickId tickId, Dictionary<PlayerId, List<ICommand>> input);
+
+        void Tick();
 
         void RevertToTick(uint tick);
     }

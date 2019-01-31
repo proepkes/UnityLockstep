@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;          
+using System.Linq;
+using Lockstep.Core.Data;
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
 using Lockstep.Core.Systems.GameState;    
@@ -10,13 +11,13 @@ namespace Lockstep.Core
     {
         private Contexts Contexts { get; }
 
-        private ServiceContainer Services { get; }
+        public ServiceContainer Services { get; }
 
-        public uint CurrentTick => Contexts.gameState.tick.value;
+        public TickId CurrentTick => Contexts.gameState.tick.value;
 
         public int EntitiesInCurrentTick => Contexts.game.GetEntities().Count(e => e.hasId);
 
-        private readonly IGameService _game;        
+        private readonly IViewService _view;        
         private readonly GameContext _gameContext;
         private readonly INavigationService _navigation;
 
@@ -30,17 +31,17 @@ namespace Lockstep.Core
                 Services.Register(service);
             }
                                                         
-            _game = Services.Get<IGameService>();
+            _view = Services.Get<IViewService>();
             _navigation = Services.Get<INavigationService>();
-            _gameContext = contexts.game;
-
-            Add(new IncrementTick(Contexts));
+            _gameContext = contexts.game;  
 
             Add(new CoreSystems(contexts, Services));
                                                             
             Add(new StoreNewOrChangedEntities(contexts)); 
 
             Add(new RemoveNewFlag(contexts));
+
+            Add(new IncrementTick(Contexts));
         }
 
         public void Initialize(byte playerId)
@@ -49,32 +50,45 @@ namespace Lockstep.Core
             Contexts.gameState.SetPlayerId(playerId);
         }
 
-        public void Tick(Dictionary<byte, List<ICommand>> input)
+        public void AddInput(TickId tickId, Dictionary<PlayerId, List<ICommand>> input)
         {
-            Contexts.input.SetCommands(input);
-                        
+            foreach (var playerId in input.Keys)
+            {
+                foreach (var command in input[playerId])
+                {
+                    var inputEntity = Contexts.input.CreateEntity();
+                    command.Execute(inputEntity);
+
+                    inputEntity.AddPlayerId(playerId);
+                    inputEntity.AddTickId(tickId);  
+                }
+            }
+        }
+
+        public void Tick()
+        {
             Execute();
             Cleanup();
-        }
+        }      
 
         public void RevertToTick(uint tick)
         {
             Services.Get<ILogService>().Warn("Revert to " + tick);
 
-            //Revert all changes that were done after the given tick     
-            var shadows = _gameContext.GetEntities().Where(e => e.hasIdReference && e.idReference.tick > tick).ToList();
+            //Revert all changes that were done in or after the given tick     
+            var shadows = _gameContext.GetEntities().Where(e => e.hasShadow && e.shadow.tick >= tick).ToList();
 
-            foreach (var shadow in shadows.Where(e => e.isNew))
+            foreach (var shadow in shadows.Where(e => e.isNew).Select(e => e.shadow.entityId))
             {                         
                 //_navigation.RemoveAgent(shadow);
 
-                _game.UnloadEntity(shadow);
+                _view.DeleteView(shadow);
                 _gameContext.GetEntityWithId(shadow).Destroy();  
             }
                                                                                                                            
             foreach (var entity in shadows.Where(e => !e.isNew))
             {
-                var referencedEntity = _gameContext.GetEntityWithId(entity.idReference.value);
+                var referencedEntity = _gameContext.GetEntityWithId(entity.shadow.entityId);
                 //Check if the entity got destroyed locally
                 if (referencedEntity == null)
                 {     
@@ -88,7 +102,7 @@ namespace Lockstep.Core
 
                     var sameComponents = previousComponents.Intersect(currentComponents);
                     var onlyLocalComponents = currentComponents.Except(new[] {GameComponentsLookup.Id }).Except(previousComponents);
-                    var missingComponents = previousComponents.Except(new []{ GameComponentsLookup.IdReference }).Except(currentComponents);
+                    var missingComponents = previousComponents.Except(new []{ GameComponentsLookup.Shadow }).Except(currentComponents);
 
 
                     Services.Get<ILogService>().Warn("sameComponents: " + sameComponents.Count());
@@ -112,7 +126,7 @@ namespace Lockstep.Core
             }
 
 
-            //TODO: cleanup backup-entities < last validated tick
+            //TODO: cleanup shadow-entities < last validated tick
             //for (var i = tick; i <= Contexts.gameState.tick.value; i++)
             //{                                                                    
             //    _storage.RemoveChanges(i);    

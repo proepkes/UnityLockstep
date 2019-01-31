@@ -47,7 +47,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     private void StartSimulation(Init data)
     {
         Debug.Log("Starting as player:" + data.PlayerID);
-        Simulation.Start(data);
+        Simulation.Initialize(data);
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
     }

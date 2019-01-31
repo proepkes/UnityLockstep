@@ -22,19 +22,19 @@ namespace Lockstep.Core.Systems
         {
             //Listen for changes on all components except IdReference
             _componentIndices = GameComponentsLookup.componentNames
-                .Except(new[] { GameComponentsLookup.componentNames[GameComponentsLookup.IdReference] })
+                .Except(new[] { GameComponentsLookup.componentNames[GameComponentsLookup.Shadow] })
                 .Select(componentName => (int)typeof(GameComponentsLookup)
                         .GetFields()
                         .First(info => info.Name == componentName)
                         .GetRawConstantValue())
                 .ToArray();
 
-            return context.CreateCollector(GameMatcher.AnyOf(_componentIndices).NoneOf(GameMatcher.IdReference));
+            return context.CreateCollector(GameMatcher.AnyOf(_componentIndices).NoneOf(GameMatcher.Shadow));
         }
 
         protected override bool Filter(GameEntity entity)
         {
-            return entity.hasId && !entity.hasIdReference;
+            return entity.hasId && !entity.hasShadow;
         }
 
         protected override void Execute(List<GameEntity> entities)
@@ -52,7 +52,7 @@ namespace Lockstep.Core.Systems
                     backupEntity.AddComponent(index, component2);
                 }
 
-                backupEntity.AddIdReference(e.id.value, _gameStateContext.tick.value);
+                backupEntity.AddShadow(e.id.value, _gameStateContext.tick.value);
             }                                                                              
         }
     }

@@ -2,13 +2,13 @@
 
 namespace Lockstep.Core.DefaultServices
 {
-    public class DefaultGameService : IGameService
+    public class DefaultViewService : IViewService
     {           
-        public void LoadEntity(GameEntity entity, int configId)
+        public void LoadView(GameEntity entity, int configId)
         {                 
         }
 
-        public void UnloadEntity(uint entityId)
+        public void DeleteView(uint entityId)
         {
             
         }     

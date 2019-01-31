@@ -29,7 +29,7 @@ public class UnityInput : MonoBehaviour
             RTSNetworkedSimulation.Instance.Execute(new NavigateCommand
             {
                 Destination = GetWorldPos(Input.mousePosition),
-                EntityIds = Contexts.sharedInstance.game.GetEntities().Where(entity => entity.hasId).Select(entity => entity.id.value).ToArray()
+                Selection = Contexts.sharedInstance.game.GetEntities().Where(entity => entity.hasId).Select(entity => entity.id.value).ToArray()
             });
         }
     }

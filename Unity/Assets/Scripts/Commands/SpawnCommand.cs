@@ -15,8 +15,7 @@ namespace Lockstep.Commands
         public void Execute(InputEntity e)
         {                                    
             e.AddCoordinate(Position);
-            e.AddEntityConfigId(EntityConfigId);
-            e.AddPlayerId(0);
+            e.AddEntityConfigId(EntityConfigId);     
         }  
 
         public void Serialize(Serializer writer)

@@ -4,8 +4,8 @@ using Lockstep.Core.Data;
 namespace Lockstep.Core.Components.Input
 {
     [Input]
-    public class PlayerIdComponent : IComponent
+    public class SelectionComponent : IComponent
     {
-        public PlayerId value;
+        public EntityId[] values;     
     }
 }

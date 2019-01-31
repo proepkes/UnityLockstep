@@ -56,7 +56,7 @@ namespace Test
 
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0 };
 
-            sim.Start(new Init { TargetFPS = 1});
+            sim.Initialize(new Init { TargetFPS = 1});
 
 
             sim.Update(1000);     
@@ -70,9 +70,9 @@ namespace Test
 
             commandBuffer.Insert(2, 1, new ICommand[] { });
                                                                  
-            sim.Update(1000);   //3 = 30         
-
+            sim.Update(1000);   //3 = 30          
             contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(10);
+
             sim.Update(1000);
 
             for (int i = 0; i < 10; i++)
@@ -81,20 +81,25 @@ namespace Test
             }
 
             sim.Update(1000);
-            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(20);
-            _output.WriteLine("Count: " + contexts.game.count);
+
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(20);     
+
+
             for (int i = 0; i < 10; i++)
             {
                 sim.Execute(new SpawnCommand());
             }
             sim.Update(1000);
 
-            _output.WriteLine("Count: " + contexts.game.count);
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(30);
+                                                                  
             _output.WriteLine("Revert to 3");
             commandBuffer.Insert(3, 1, new ICommand[] { });
 
             sim.Update(1000);
-            _output.WriteLine("Count: " + contexts.game.count);
+
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(30);
+
             sim.Update(1000);
             commandBuffer.Insert(4, 1, new ICommand[] { });
             for (int i = 0; i < 10; i++)
@@ -102,6 +107,9 @@ namespace Test
                 sim.Execute(new SpawnCommand());
             }
             sim.Update(1000);
+
+            contexts.game.GetEntities().Count(entity => entity.hasId).ShouldBe(40);
+
             sim.Update(1000);
             sim.Update(1000);
             for (int i = 0; i < 10; i++)
@@ -125,7 +133,7 @@ namespace Test
 
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0 };
 
-            sim.Start(new Init { TargetFPS = 1 });
+            sim.Initialize(new Init { TargetFPS = 1 });
 
             sim.Update(1000);
             for (int i = 0; i < 10; i++)
@@ -211,8 +219,7 @@ namespace Test
             public void Execute(InputEntity e)
             {                                   
                 e.AddCoordinate(Position);
-                e.AddEntityConfigId(EntityConfigId);
-                e.AddPlayerId(0);
+                e.AddEntityConfigId(EntityConfigId);   
             }     
 
         }
