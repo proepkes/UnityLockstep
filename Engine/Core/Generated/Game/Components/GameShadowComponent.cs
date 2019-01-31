@@ -8,27 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public Lockstep.Core.Components.Game.ShadowComponent shadow { get { return (Lockstep.Core.Components.Game.ShadowComponent)GetComponent(GameComponentsLookup.Shadow); } }
-    public bool hasShadow { get { return HasComponent(GameComponentsLookup.Shadow); } }
+    static readonly Lockstep.Core.Components.Game.ShadowComponent shadowComponent = new Lockstep.Core.Components.Game.ShadowComponent();
 
-    public void AddShadow(uint newEntityId, uint newTick) {
-        var index = GameComponentsLookup.Shadow;
-        var component = (Lockstep.Core.Components.Game.ShadowComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.ShadowComponent));
-        component.entityId = newEntityId;
-        component.tick = newTick;
-        AddComponent(index, component);
-    }
+    public bool isShadow {
+        get { return HasComponent(GameComponentsLookup.Shadow); }
+        set {
+            if (value != isShadow) {
+                var index = GameComponentsLookup.Shadow;
+                if (value) {
+                    var componentPool = GetComponentPool(index);
+                    var component = componentPool.Count > 0
+                            ? componentPool.Pop()
+                            : shadowComponent;
 
-    public void ReplaceShadow(uint newEntityId, uint newTick) {
-        var index = GameComponentsLookup.Shadow;
-        var component = (Lockstep.Core.Components.Game.ShadowComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.ShadowComponent));
-        component.entityId = newEntityId;
-        component.tick = newTick;
-        ReplaceComponent(index, component);
-    }
-
-    public void RemoveShadow() {
-        RemoveComponent(GameComponentsLookup.Shadow);
+                    AddComponent(index, component);
+                } else {
+                    RemoveComponent(index);
+                }
+            }
+        }
     }
 }
 

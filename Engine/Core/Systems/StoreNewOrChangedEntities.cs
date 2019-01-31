@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using DesperateDevs.Utils;
-using Entitas;                        
-using Lockstep.Core.Interfaces;
+using Entitas;                   
 
 namespace Lockstep.Core.Systems
 {
@@ -34,25 +33,27 @@ namespace Lockstep.Core.Systems
 
         protected override bool Filter(GameEntity entity)
         {
-            return entity.hasId && !entity.hasShadow;
+            return !entity.isShadow;
         }
 
         protected override void Execute(List<GameEntity> entities)
         {                                                           
             foreach (var e in entities)
             {
-                var backupEntity = _gameContext.CreateEntity();
+                var shadowEntity = _gameContext.CreateEntity();
 
-                //Id is primary index => don't copy. Id is inside _componentIndices because we need to catch new entities that only have an Id-component and I'm too lazy to create a separate componentIndicesWithoutIdArray
-                foreach (var index in _componentIndices.Where(i => i != GameComponentsLookup.Id && e.HasComponent(i)))
-                {        
+                //TODO: find out a way to only copy components that actually changed
+                //LocalId is primary index => don't copy. LocalId is inside _componentIndices because we need to catch new entities that may only have a LocalId-component and I'm too lazy to create a separate componentIndicesWithoutLocalIdArray
+                foreach (var index in _componentIndices.Where(i => i != GameComponentsLookup.LocalId && e.HasComponent(i)))
+                {      
                     var component1 = e.GetComponent(index);
-                    var component2 = backupEntity.CreateComponent(index, component1.GetType());
+                    var component2 = shadowEntity.CreateComponent(index, component1.GetType());
                     component1.CopyPublicMemberValues(component2);
-                    backupEntity.AddComponent(index, component2);
+                    shadowEntity.AddComponent(index, component2);
                 }
 
-                backupEntity.AddShadow(e.id.value, _gameStateContext.tick.value);
+                shadowEntity.isShadow = true;
+                shadowEntity.AddTick(_gameStateContext.tick.value);
             }                                                                              
         }
     }

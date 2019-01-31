@@ -51,7 +51,7 @@ namespace Test
         {                      
             var contexts = new Contexts();   
 
-            var systems = new GameSystems(contexts, new TestLogger(_output));
+            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
 
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0 };
@@ -128,7 +128,7 @@ namespace Test
             
             var contexts = new Contexts();
 
-            var systems = new GameSystems(contexts, new TestLogger(_output));
+            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
 
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0 };

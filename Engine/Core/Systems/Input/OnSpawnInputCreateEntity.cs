@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BEPUutilities;
 using Entitas;             
 using Lockstep.Core.Interfaces;
@@ -11,43 +12,45 @@ namespace Lockstep.Core.Systems.Input
         private readonly GameContext _gameContext;
         private readonly GameStateContext _gameStateContext;   
         private readonly IGroup<InputEntity> _spawnInputs;
+        private readonly IPlayerEntityIdProvider _idService;
+
+        private uint _localIdCounter;    
 
         public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services)
         {
-            _viewService = services.Get<IViewService>();     
+            _viewService = services.Get<IViewService>();
+            _idService = services.Get<IPlayerEntityIdProvider>();
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;  
 
             _spawnInputs = contexts.input.GetGroup(
                 InputMatcher.AllOf(
-                    InputMatcher.EntityConfigId, 
-                    InputMatcher.Coordinate,
+                    InputMatcher.EntityConfigId,
                     InputMatcher.PlayerId,
+                    InputMatcher.Coordinate,
                     InputMatcher.Tick));
         }       
 
         public void Execute()
-        {
-            uint newId = 0;
-            var currentEntities = _gameContext.GetEntities(GameMatcher.Id);
-            if (currentEntities.Length > 0)
-            {
-                newId = _gameContext.GetEntities(GameMatcher.Id).Max(e => e.id.value) + 1;
-            }
-
+        {      
             //TODO: order by timestamp instead of playerId => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered                                                                 
             foreach (var input in _spawnInputs.GetEntities().Where(entity => entity.tick.value == _gameStateContext.tick.value).OrderBy(entity => entity.playerId.value))
-            {                                                       
+            {          
                 var e = _gameContext.CreateEntity();
 
                 e.isNew = true;
-                e.AddId(newId++);
+
+                //composite primary key
+                e.AddId(_idService.GetNext(input.playerId.value));
                 e.AddOwnerId(input.playerId.value);
 
+                e.AddLocalId(_localIdCounter);  
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);
 
-                _viewService.LoadView(e, input.entityConfigId.value);   
+                _viewService.LoadView(e, input.entityConfigId.value);
+
+                _localIdCounter += 1;
             }                                                                                    
         }    
     }

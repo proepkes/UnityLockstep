@@ -46,7 +46,7 @@ public class UnityGameService : IViewService
                 listener.RegisterListeners(entity);
             }
 
-            linkedEntities.Add(entity.id.value, viewGo);
+            linkedEntities.Add(entity.localId.value, viewGo);
         }
     }
 

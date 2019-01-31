@@ -3,7 +3,7 @@
 namespace Lockstep.Core.Components.Input
 {
     [Input]
-    public class PlayerIdComponent : IComponent
+    public class TargetPlayerIdComponent : IComponent
     {
         public byte value;
     }

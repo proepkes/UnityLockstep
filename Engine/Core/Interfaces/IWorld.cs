@@ -11,7 +11,7 @@ namespace Lockstep.Core.Interfaces
         
         void Initialize(byte playerId);
 
-        void AddInput(uint tickId, Dictionary<byte, List<ICommand>> input);
+        void AddInput(uint tickId, byte player, List<ICommand> input);
 
         void Tick();
 
