@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Lockstep.Core.Data;
+﻿using System.Collections.Generic;   
 
 namespace Lockstep.Core.Interfaces
 {
@@ -8,11 +7,11 @@ namespace Lockstep.Core.Interfaces
         ServiceContainer Services { get; }
         int EntitiesInCurrentTick { get; }
 
-        TickId CurrentTick { get; }  
+        uint CurrentTick { get; }  
         
         void Initialize(byte playerId);
 
-        void AddInput(TickId tickId, Dictionary<PlayerId, List<ICommand>> input);
+        void AddInput(uint tickId, Dictionary<byte, List<ICommand>> input);
 
         void Tick();
 

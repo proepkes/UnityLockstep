@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;        
-using Lockstep.Client.Interfaces;
-using Lockstep.Core.Data;
+using Lockstep.Client.Interfaces;     
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
 
@@ -15,7 +14,7 @@ namespace Lockstep.Client
 
         public bool Running { get; private set; }
 
-        public PlayerId LocalPlayerId { get; private set; } 
+        public byte LocalPlayerId { get; private set; } 
 
         private float _tickDt;
         private float _accumulatedTime;
@@ -24,7 +23,7 @@ namespace Lockstep.Client
         private readonly IWorld _world;
         private readonly ICommandBuffer _remoteCommandBuffer;                         
 
-        private readonly Dictionary<PlayerId, List<ICommand>> _commandCache = new Dictionary<PlayerId, List<ICommand>>();
+        private readonly Dictionary<byte, List<ICommand>> _commandCache = new Dictionary<byte, List<ICommand>>();
 
         public Simulation(IWorld world, ICommandBuffer remoteCommandBuffer)
         {

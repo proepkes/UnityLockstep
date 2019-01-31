@@ -1,11 +1,10 @@
-﻿using Entitas;
-using Lockstep.Core.Data;
+﻿using Entitas;             
 
 namespace Lockstep.Core.Components.Game
 {
     [Game]
     public class OwnerIdComponent : IComponent
     {                        
-        public PlayerId value;
+        public byte value;
     }
 }

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using BEPUutilities;
-using Entitas;
-using Lockstep.Core.Data;
+using Entitas;             
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Systems.Input
@@ -19,13 +18,17 @@ namespace Lockstep.Core.Systems.Input
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;  
 
-            _spawnInputs = contexts.input.GetGroup(InputMatcher.AllOf(InputMatcher.EntityConfigId, InputMatcher.Coordinate,
-                InputMatcher.PlayerId, InputMatcher.TickId));
+            _spawnInputs = contexts.input.GetGroup(
+                InputMatcher.AllOf(
+                    InputMatcher.EntityConfigId, 
+                    InputMatcher.Coordinate,
+                    InputMatcher.PlayerId,
+                    InputMatcher.Tick));
         }       
 
         public void Execute()
         {
-            EntityId newId = 0;
+            uint newId = 0;
             var currentEntities = _gameContext.GetEntities(GameMatcher.Id);
             if (currentEntities.Length > 0)
             {
@@ -33,7 +36,7 @@ namespace Lockstep.Core.Systems.Input
             }
 
             //TODO: order by timestamp instead of playerId => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered                                                                 
-            foreach (var input in _spawnInputs.GetEntities().Where(entity => entity.tickId.value == _gameStateContext.tick.value).OrderBy(entity => entity.playerId.value))
+            foreach (var input in _spawnInputs.GetEntities().Where(entity => entity.tick.value == _gameStateContext.tick.value).OrderBy(entity => entity.playerId.value))
             {                                                       
                 var e = _gameContext.CreateEntity();
 

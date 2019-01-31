@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Lockstep.Core.Data;
+using System.Linq;              
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
 using Lockstep.Core.Systems.GameState;    
@@ -13,7 +12,7 @@ namespace Lockstep.Core
 
         public ServiceContainer Services { get; }
 
-        public TickId CurrentTick => Contexts.gameState.tick.value;
+        public uint CurrentTick => Contexts.gameState.tick.value;
 
         public int EntitiesInCurrentTick => Contexts.game.GetEntities().Count(e => e.hasId);
 
@@ -50,7 +49,7 @@ namespace Lockstep.Core
             Contexts.gameState.SetPlayerId(playerId);
         }
 
-        public void AddInput(TickId tickId, Dictionary<PlayerId, List<ICommand>> input)
+        public void AddInput(uint tick, Dictionary<byte, List<ICommand>> input)
         {
             foreach (var playerId in input.Keys)
             {
@@ -60,7 +59,7 @@ namespace Lockstep.Core
                     command.Execute(inputEntity);
 
                     inputEntity.AddPlayerId(playerId);
-                    inputEntity.AddTickId(tickId);  
+                    inputEntity.AddTick(tick);  
                 }
             }
         }

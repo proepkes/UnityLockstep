@@ -1,14 +1,13 @@
-﻿using Entitas;                          
-using Lockstep.Core.Data;
+﻿using Entitas;               
 
 namespace Lockstep.Core.Components.Game
 {
-    //Entities with this component store changes of other entities from the past
     [Game]
+    //A shadow refers to an entity in the past
     public class ShadowComponent : IComponent
     {                      
-        public EntityId entityId;
+        public uint entityId;
 
-        public TickId tick;      
+        public uint tick;      
     }
 }

@@ -30,7 +30,7 @@ namespace Lockstep.Core.Systems.Navigation
             foreach (var input in inputs)
             {
                 var destination = input.coordinate.value;
-                foreach (var entityId in input.selection.values)
+                foreach (var entityId in input.selection.entityIds)
                 {
                     _contextsGame.GetEntityWithId(entityId).ReplaceDestination(destination);
                     //_navigationService.SetAgentDestination(entityId, destination);            

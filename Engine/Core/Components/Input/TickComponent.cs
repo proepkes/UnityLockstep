@@ -3,8 +3,8 @@
 namespace Lockstep.Core.Components.Input
 {
     [Input]
-    public class SelectionComponent : IComponent
+    public class TickComponent : IComponent
     {
-        public uint[] entityIds;     
+        public uint value;
     }
 }

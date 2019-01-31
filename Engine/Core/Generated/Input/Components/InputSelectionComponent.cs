@@ -11,17 +11,17 @@ public partial class InputEntity {
     public Lockstep.Core.Components.Input.SelectionComponent selection { get { return (Lockstep.Core.Components.Input.SelectionComponent)GetComponent(InputComponentsLookup.Selection); } }
     public bool hasSelection { get { return HasComponent(InputComponentsLookup.Selection); } }
 
-    public void AddSelection(Lockstep.Core.Data.EntityId[] newValues) {
+    public void AddSelection(uint[] newEntityIds) {
         var index = InputComponentsLookup.Selection;
         var component = (Lockstep.Core.Components.Input.SelectionComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Input.SelectionComponent));
-        component.values = newValues;
+        component.entityIds = newEntityIds;
         AddComponent(index, component);
     }
 
-    public void ReplaceSelection(Lockstep.Core.Data.EntityId[] newValues) {
+    public void ReplaceSelection(uint[] newEntityIds) {
         var index = InputComponentsLookup.Selection;
         var component = (Lockstep.Core.Components.Input.SelectionComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Input.SelectionComponent));
-        component.values = newValues;
+        component.entityIds = newEntityIds;
         ReplaceComponent(index, component);
     }
 

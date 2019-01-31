@@ -12,7 +12,7 @@ public partial class GameStateContext {
     public Lockstep.Core.Components.GameState.TickComponent tick { get { return tickEntity.tick; } }
     public bool hasTick { get { return tickEntity != null; } }
 
-    public GameStateEntity SetTick(Lockstep.Core.Data.TickId newValue) {
+    public GameStateEntity SetTick(uint newValue) {
         if (hasTick) {
             throw new Entitas.EntitasException("Could not set Tick!\n" + this + " already has an entity with Lockstep.Core.Components.GameState.TickComponent!",
                 "You should check if the context already has a tickEntity before setting it or use context.ReplaceTick().");
@@ -22,7 +22,7 @@ public partial class GameStateContext {
         return entity;
     }
 
-    public void ReplaceTick(Lockstep.Core.Data.TickId newValue) {
+    public void ReplaceTick(uint newValue) {
         var entity = tickEntity;
         if (entity == null) {
             entity = SetTick(newValue);
@@ -49,14 +49,14 @@ public partial class GameStateEntity {
     public Lockstep.Core.Components.GameState.TickComponent tick { get { return (Lockstep.Core.Components.GameState.TickComponent)GetComponent(GameStateComponentsLookup.Tick); } }
     public bool hasTick { get { return HasComponent(GameStateComponentsLookup.Tick); } }
 
-    public void AddTick(Lockstep.Core.Data.TickId newValue) {
+    public void AddTick(uint newValue) {
         var index = GameStateComponentsLookup.Tick;
         var component = (Lockstep.Core.Components.GameState.TickComponent)CreateComponent(index, typeof(Lockstep.Core.Components.GameState.TickComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceTick(Lockstep.Core.Data.TickId newValue) {
+    public void ReplaceTick(uint newValue) {
         var index = GameStateComponentsLookup.Tick;
         var component = (Lockstep.Core.Components.GameState.TickComponent)CreateComponent(index, typeof(Lockstep.Core.Components.GameState.TickComponent));
         component.value = newValue;

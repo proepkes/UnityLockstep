@@ -1,6 +1,5 @@
 ﻿using Entitas;
-using Entitas.CodeGeneration.Attributes;
-using Lockstep.Core.Data;
+using Entitas.CodeGeneration.Attributes; 
 
 namespace Lockstep.Core.Components.Game
 {
@@ -8,6 +7,6 @@ namespace Lockstep.Core.Components.Game
     public sealed class IdComponent : IComponent
     {    
         [PrimaryEntityIndex]
-        public EntityId value;
+        public uint value;
     }
 }

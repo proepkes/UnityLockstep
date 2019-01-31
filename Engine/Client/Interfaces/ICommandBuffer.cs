@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Lockstep.Core.Data;
+﻿using System.Collections.Generic;  
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client.Interfaces
@@ -8,10 +7,8 @@ namespace Lockstep.Client.Interfaces
     {                                                                         
         uint LastInsertedFrame { get; }           
 
-        void Insert(TickId frame, PlayerId commanderId, ICommand[] commands);
+        void Insert(uint frame, byte commanderId, ICommand[] commands);
 
-        Dictionary<PlayerId, List<ICommand>> Get(TickId frame);
-
-        //ICommand[] GetMany(uint frame);
+        Dictionary<byte, List<ICommand>> Get(uint frame); 
     }
 }

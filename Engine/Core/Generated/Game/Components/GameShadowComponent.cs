@@ -11,7 +11,7 @@ public partial class GameEntity {
     public Lockstep.Core.Components.Game.ShadowComponent shadow { get { return (Lockstep.Core.Components.Game.ShadowComponent)GetComponent(GameComponentsLookup.Shadow); } }
     public bool hasShadow { get { return HasComponent(GameComponentsLookup.Shadow); } }
 
-    public void AddShadow(Lockstep.Core.Data.EntityId newEntityId, Lockstep.Core.Data.TickId newTick) {
+    public void AddShadow(uint newEntityId, uint newTick) {
         var index = GameComponentsLookup.Shadow;
         var component = (Lockstep.Core.Components.Game.ShadowComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.ShadowComponent));
         component.entityId = newEntityId;
@@ -19,7 +19,7 @@ public partial class GameEntity {
         AddComponent(index, component);
     }
 
-    public void ReplaceShadow(Lockstep.Core.Data.EntityId newEntityId, Lockstep.Core.Data.TickId newTick) {
+    public void ReplaceShadow(uint newEntityId, uint newTick) {
         var index = GameComponentsLookup.Shadow;
         var component = (Lockstep.Core.Components.Game.ShadowComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.ShadowComponent));
         component.entityId = newEntityId;

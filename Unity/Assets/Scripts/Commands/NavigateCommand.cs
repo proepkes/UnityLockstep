@@ -10,33 +10,26 @@ namespace Lockstep.Commands
     {
         public ushort Tag => 1;
 
-        public EntityId[] Selection;
+        public uint[] Selection;
 
         public Vector2 Destination;    
 
         public void Execute(InputEntity e)
-        {
-
+        {                              
             e.AddSelection(Selection);
             e.AddCoordinate(Destination);                           
         }
 
         public void Serialize(Serializer writer)
-        {
-            var selection = new uint[Selection.Length];
-            Array.Copy(Selection, selection, Selection.Length);    
-
-            writer.PutArray(selection);
+        {          
+            writer.PutArray(Selection);
             writer.Put(Destination.X.RawValue);
             writer.Put(Destination.Y.RawValue);
         }
 
         public void Deserialize(Deserializer reader)
         {
-            var selection = reader.GetUIntArray(); 
-            Selection = new EntityId[selection.Length];
-            Array.Copy(selection, Selection, selection.Length);
-
+            Selection = reader.GetUIntArray();   
             Destination.X.RawValue = reader.GetLong();
             Destination.Y.RawValue = reader.GetLong();
         }

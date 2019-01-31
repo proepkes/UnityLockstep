@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -60,7 +60,7 @@
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputTickIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
@@ -112,17 +112,7 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\TeamId.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Data\EntityId.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Components\Input\TickIdComponent.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Data\PlayerId.cs" />
-    <Compile Include="Data\TickId.cs" />
+    <Compile Include="Components\Input\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\DestinationComponent.cs" />

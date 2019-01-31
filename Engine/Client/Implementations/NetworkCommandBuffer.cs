@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;            
-using Lockstep.Client.Interfaces;
-using Lockstep.Core.Data;
+using Lockstep.Client.Interfaces;   
 using Lockstep.Core.Interfaces;
 using Lockstep.Network;
 using Lockstep.Network.Messages;
@@ -34,7 +33,7 @@ namespace Lockstep.Client.Implementations
             _commandFactories.Add(tag, commandFactory);
         }         
 
-        public override void Insert(TickId frameNumber, PlayerId commanderId, ICommand[] commands)
+        public override void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
         {                                                     
             //Tell the server
             var writer = new Serializer();
