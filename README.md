@@ -2,7 +2,7 @@
 
 [![Discord](https://img.shields.io/discord/413156098993029120.svg)](https://discord.gg/F9hJhcX) 
 
-Initial commit was targeting the following protocl: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/. It turned out that bad network conditions made the game unplayable. The project has shifted to an architecture you see below. 
+Initial commit was targeting the following protocol: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/. It turned out that bad network conditions made the game unplayable. The project has shifted to an architecture you see below. 
 
 Currently the rollback of adding new entities is working (for 2 players). If you spawn entities in both instances the game will result in a synced state no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
 
