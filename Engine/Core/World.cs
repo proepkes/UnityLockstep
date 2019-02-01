@@ -67,7 +67,7 @@ namespace Lockstep.Core
         }
 
         public void Tick()
-        {
+        {                                              
             Execute();
             Cleanup();
         }
@@ -140,8 +140,7 @@ namespace Lockstep.Core
                     foreach (var index in onlyLocalComponents)
                     {
                         referencedEntity.RemoveComponent(index);
-                    }
-
+                    }            
                 }
             }      
 

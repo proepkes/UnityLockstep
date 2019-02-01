@@ -5,6 +5,7 @@ namespace Lockstep.Core.Interfaces
     public interface IWorld
     {
         ServiceContainer Services { get; }
+
         int EntitiesInCurrentTick { get; }
 
         uint CurrentTick { get; }  

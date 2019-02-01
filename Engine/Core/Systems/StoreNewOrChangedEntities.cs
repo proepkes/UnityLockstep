@@ -37,7 +37,7 @@ namespace Lockstep.Core.Systems
         }
 
         protected override void Execute(List<GameEntity> entities)
-        {                                                           
+        {       
             foreach (var e in entities)
             {
                 var shadowEntity = _gameContext.CreateEntity();

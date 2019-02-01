@@ -122,7 +122,7 @@ namespace Lockstep.Client
                         firstMispredictedFrame = remoteFrame;
                     }
 
-                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's entity-ids have to be adjusted
+                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback->fast-forward we generated local ids, the command's entity-ids have to be adjusted
                     //https://github.com/proepkes/UnityLockstep/wiki/Rollback-WIP-Log
                     foreach (var playerCommands in allPlayerCommands)
                     {
