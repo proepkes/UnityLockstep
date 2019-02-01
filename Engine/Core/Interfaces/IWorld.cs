@@ -4,7 +4,7 @@ namespace Lockstep.Core.Interfaces
 {
     public interface IWorld
     {
-        ServiceContainer Services { get; }
+        Services Services { get; }
 
         int EntitiesInCurrentTick { get; }
 
@@ -14,7 +14,9 @@ namespace Lockstep.Core.Interfaces
 
         void AddInput(uint tickId, byte player, List<ICommand> input);
 
-        void Tick();
+        void Predict();
+
+        void Simulate();
 
         void RevertToTick(uint tick);
     }

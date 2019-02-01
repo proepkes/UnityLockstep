@@ -95,7 +95,7 @@ namespace Lockstep.Client
                 }
             }    
 
-            _world.Tick();     
+            _world.Predict();     
         }
 
         private void SyncCommandBuffer()
@@ -123,7 +123,7 @@ namespace Lockstep.Client
                     }
 
                     //TODO: if command contains entity-ids (which can be predicted) and due to rollback->fast-forward we generated local ids, the command's entity-ids have to be adjusted
-                    //https://github.com/proepkes/UnityLockstep/wiki/Rollback-WIP-Log
+                    //https://github.com/proepkes/UnityLockstep/wiki/Rollback-devlog
                     foreach (var playerCommands in allPlayerCommands)
                     {
                         _world.AddInput(remoteFrame, playerCommands.Key, playerCommands.Value);
@@ -136,12 +136,12 @@ namespace Lockstep.Client
                     var targetTick = _world.CurrentTick;  
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
-                                                                  
+                    _world.Simulate();  
 
                     //Restore last local state
                     while (_world.CurrentTick < targetTick)
                     {   
-                        _world.Tick();      
+                        _world.Predict();      
                     }
                 }
 

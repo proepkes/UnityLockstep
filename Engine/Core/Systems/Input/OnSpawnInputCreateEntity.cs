@@ -16,7 +16,7 @@ namespace Lockstep.Core.Systems.Input
 
         private uint _localIdCounter;    
 
-        public OnSpawnInputCreateEntity(Contexts contexts, ServiceContainer services)
+        public OnSpawnInputCreateEntity(Contexts contexts, Services services)
         {
             _viewService = services.Get<IViewService>();
             _idService = services.Get<IPlayerEntityIdProvider>();

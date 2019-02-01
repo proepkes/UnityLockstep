@@ -10,10 +10,10 @@ namespace Lockstep.Core.Systems
 {
     public class VerifyShadows : IExecuteSystem
     {
-        private readonly ServiceContainer _services;
+        private readonly Services _services;
         private IGroup<GameEntity> shadows;
 
-        public VerifyShadows(Contexts contexts, ServiceContainer services)
+        public VerifyShadows(Contexts contexts, Services services)
         {
             _services = services;
             shadows = contexts.game.GetGroup(GameMatcher.Shadow);

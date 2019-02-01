@@ -5,9 +5,9 @@ namespace Lockstep.Core.Features
 {
     public sealed class NavigationFeature : Feature
     {
-        public NavigationFeature(Contexts contexts, ServiceContainer serviceContainer)
+        public NavigationFeature(Contexts contexts, Services services)
         {
-            var navigationService = serviceContainer.Get<INavigationService>();
+            var navigationService = services.Get<INavigationService>();
 
             //Add(new OnNavigableDoRegisterAgent(contexts, navigationService));
             Add(new OnNavigationInputDoSetDestination(contexts, navigationService));     
