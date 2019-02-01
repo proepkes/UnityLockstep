@@ -149,16 +149,7 @@ namespace Lockstep.Core
             foreach (var entity in shadows)
             {
                 entity.Destroy();
-            }
-
-
-            currentEntities = _gameContext.GetEntities(GameMatcher
-                .AllOf(
-                    GameMatcher.Id,
-                    GameMatcher.OwnerId)
-                .NoneOf(GameMatcher.Shadow));
-            var x = _gameContext.GetEntities(GameMatcher
-                .AllOf(GameMatcher.Shadow));
+            }                              
 
             Contexts.gameState.ReplaceTick(tick);
         }

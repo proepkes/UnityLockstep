@@ -29,7 +29,7 @@ public class UnityGameService : IViewService
 
     public void LoadView(GameEntity entity, int configId)
     {
-        //TODO: pooling
+        //TODO: pooling    
         var viewGo = Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
         if (viewGo != null)
         {
@@ -39,7 +39,7 @@ public class UnityGameService : IViewService
             foreach (var componentSetter in componentSetters)
             {
                 componentSetter.SetComponent(entity);
-                Object.Destroy((MonoBehaviour) componentSetter);
+                Object.Destroy((MonoBehaviour)componentSetter);
             }
 
             var eventListeners = viewGo.GetComponents<IEventListener>();
@@ -49,11 +49,11 @@ public class UnityGameService : IViewService
             }
 
             linkedEntities.Add(entity.localId.value, viewGo);
-        }
+        }      
     }
 
     public void DeleteView(uint entityId)
-    {              
+    {                                            
         var viewGo = linkedEntities[entityId];
         var eventListeners = viewGo.GetComponents<IEventListener>();
         foreach (var listener in eventListeners)
@@ -63,7 +63,7 @@ public class UnityGameService : IViewService
 
         linkedEntities[entityId].Unlink();
         linkedEntities[entityId].DestroyGameObject();
-        linkedEntities.Remove(entityId);
+        linkedEntities.Remove(entityId);      
     }
 }
 

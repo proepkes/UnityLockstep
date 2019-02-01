@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;        
+﻿using System.Collections.Generic;
+using System.Threading;
 using Lockstep.Client.Interfaces;     
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
@@ -38,10 +39,13 @@ namespace Lockstep.Client
             _tickDt = 1000f / init.TargetFPS;
             LocalPlayerId = init.PlayerID;
                                                                      
-            _world.Initialize(LocalPlayerId);
+            _world.Initialize(LocalPlayerId);        
+        }
 
+        public void Start()
+        {
             Running = true;
-        }   
+        }
 
         public void Execute(ICommand command)
         {
@@ -56,7 +60,7 @@ namespace Lockstep.Client
             }            
         }
 
-        public void Update(float deltaTime)
+        public void Update(float elapsedMilliseconds)
         {                             
             if (!Running)                        
             {
@@ -65,7 +69,7 @@ namespace Lockstep.Client
 
             SyncCommandBuffer();
 
-            _accumulatedTime += deltaTime; 
+            _accumulatedTime += elapsedMilliseconds; 
 
             while (_accumulatedTime >= _tickDt)
             {                                                                                
@@ -143,6 +147,31 @@ namespace Lockstep.Client
 
                 _lastValidatedFrame = currentRemoteFrame;
             }   
+        }
+
+
+        /// <summary>
+        /// Experimental
+        /// </summary>
+        public void StartAsThread()
+        {
+            new Thread(Loop) { IsBackground = true }.Start();
+        }
+
+        private void Loop()
+        {
+            var timer = new Timer();    
+
+            Running = true;
+
+            timer.Start();
+
+            while (Running)
+            {
+                Update(timer.Tick());
+
+                Thread.Sleep(1);
+            }
         }
     }
 }

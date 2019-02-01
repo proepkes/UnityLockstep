@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using BEPUutilities;
 using Entitas;
 using Lockstep.Client;
@@ -338,10 +339,25 @@ namespace Test
             contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 0).ShouldBe(2);
             contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 1).ShouldBe(8);
             ExpectEntityCount(contexts, 10);
-            ExpectShadowCount(contexts, 20); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1
-                                                                                                                             
+            ExpectShadowCount(contexts, 20); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1     
+        }
 
-                                  
+        [Fact]
+        public void TestThread()
+        {
+            var contexts = new Contexts();
+
+            var systems = new World(contexts, new TestLogger(_output));
+            var commandBuffer = new CommandBuffer();
+
+            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+
+            sim.Initialize(new Init { TargetFPS = 10 });             
+            sim.StartAsThread();
+
+            Thread.Sleep(1000);
+
+            systems.CurrentTick.ShouldBeInRange(9u, 11u);
         }
 
         private void ExpectEntityCount(Contexts contexts, int value)
