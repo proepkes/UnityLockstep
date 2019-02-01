@@ -123,27 +123,20 @@ namespace Lockstep.Core
                 {
                     //Entity is in the game locally, revert to old state
                     var currentComponents = referencedEntity.GetComponentIndices();
-                    var previousComponents = shadow.GetComponentIndices();
+                    var previousComponents = shadow.GetComponentIndices().Except(new[] { GameComponentsLookup.Shadow, GameComponentsLookup.Tick }).ToArray();
 
                     var sameComponents = previousComponents.Intersect(currentComponents);
+                    var missingComponents = previousComponents.Except(currentComponents);
                     var onlyLocalComponents = currentComponents.Except(new[] { GameComponentsLookup.LocalId }).Except(previousComponents);
-                    var missingComponents = previousComponents.Except(new[] { GameComponentsLookup.Shadow, GameComponentsLookup.Tick }).Except(currentComponents);
 
-      
-                    foreach (var index in sameComponents)
-                    {
-                        referencedEntity.ReplaceComponent(index, shadow.GetComponent(index));
-                    }
 
+                    shadow.CopyTo(referencedEntity, true, sameComponents.ToArray());
+                    shadow.CopyTo(referencedEntity, false, missingComponents.ToArray()); 
                     foreach (var index in onlyLocalComponents)
                     {
                         referencedEntity.RemoveComponent(index);
                     }
 
-                    foreach (var index in missingComponents)
-                    {
-                        referencedEntity.AddComponent(index, shadow.GetComponent(index));
-                    }
                 }
             }      
 
