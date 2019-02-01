@@ -44,6 +44,8 @@ namespace Lockstep.Core
             Add(new RemoveNewFlag(contexts));
 
             Add(new IncrementTick(Contexts));
+
+            Add(new VerifyShadows(Contexts, Services)); 
         }
 
         public void Initialize(byte playerId)

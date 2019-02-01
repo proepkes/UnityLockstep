@@ -11,7 +11,7 @@ namespace Server
     /// </summary>
     public class Room
     {
-        private const int TargetFps = 40;
+        private const int TargetFps = 30;
 
         private byte _nextPlayerId;
         private readonly int _size;

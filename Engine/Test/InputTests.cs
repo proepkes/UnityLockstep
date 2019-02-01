@@ -204,16 +204,14 @@ namespace Test
             sim.Update(1000);
             sim.Update(1000);
             sim.Update(1000);
-
-            _output.WriteLine("Count: " + contexts.game.count);
+                                                                  
             _output.WriteLine("Revert to 3");
             for (int i = 0; i < 10; i++)
             {
                 commandBuffer.Insert(8, 1, new ICommand[] { new SpawnCommand() });
             }
 
-            sim.Update(1000);
-            _output.WriteLine("Count: " + contexts.game.count);
+            sim.Update(1000);                                   
             sim.Update(1000);
             sim.Update(1000);
             sim.Update(1000);
@@ -222,16 +220,16 @@ namespace Test
             {
                 commandBuffer.Insert(9, 1, new ICommand[] { new SpawnCommand() });
             }
-            sim.Update(1000);   
+            sim.Update(1000);
 
-            contexts.game.count.ShouldBe(70);
+            ExpectEntityCount(contexts, 70);
         }
 
 
         [Fact]
         public void TestEntityRollbackWithLocalChanges()
         {
-            var contexts = Contexts.sharedInstance;
+            var contexts = new Contexts();
 
             var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
@@ -308,7 +306,7 @@ namespace Test
 
             commandBuffer.Insert(4, 1, new ICommand[] { new SpawnCommand() }); //Revert to 4
 
-            sim.Update(1000); //7                          
+            sim.Update(1000); //8                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 3);
             ExpectShadowCount(contexts, 5);
@@ -334,14 +332,15 @@ namespace Test
             systems.CurrentTick.ShouldBe(frameCounter++);   
 
             sim.Execute(new SpawnCommand());
-            commandBuffer.Insert(6, 1, new ICommand[] { new MoveSpecificCommand(contexts.game, 1),  }); //Revert to 4 
+            commandBuffer.Insert(6, 1, new ICommand[] { new MoveSpecificCommand(contexts.game, 1),  }); 
 
             sim.Update(1000);
             contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 0).ShouldBe(2);
             contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 1).ShouldBe(8);
             ExpectEntityCount(contexts, 10);
-            ExpectShadowCount(contexts, 21);
+            ExpectShadowCount(contexts, 20); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1
                                                                                                                              
+
                                   
         }
 
