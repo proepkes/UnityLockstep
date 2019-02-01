@@ -11,6 +11,11 @@ public class PositionListener : MonoBehaviour, IEventListener, IPositionListener
         _entity.AddPositionListener(this);
     }
 
+    public void UnregisterListeners()
+    {
+        _entity.RemovePositionListener(this);
+    }
+
     public void OnPosition(GameEntity entity, BEPUutilities.Vector2 newPosition)
     {                                    
         transform.position = new Vector3((float) newPosition.X, 1, (float) newPosition.Y);

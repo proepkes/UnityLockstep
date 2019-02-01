@@ -8,6 +8,8 @@ using Lockstep.Core.Interfaces;
 public interface IEventListener
 {
     void RegisterListeners(GameEntity entity);
+    void UnregisterListeners();
+
 }
 
 public interface IComponentSetter
@@ -51,7 +53,14 @@ public class UnityGameService : IViewService
     }
 
     public void DeleteView(uint entityId)
-    {
+    {              
+        var viewGo = linkedEntities[entityId];
+        var eventListeners = viewGo.GetComponents<IEventListener>();
+        foreach (var listener in eventListeners)
+        {
+            listener.UnregisterListeners();
+        }
+
         linkedEntities[entityId].Unlink();
         linkedEntities[entityId].DestroyGameObject();
         linkedEntities.Remove(entityId);

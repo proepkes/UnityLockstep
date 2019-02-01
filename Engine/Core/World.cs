@@ -109,10 +109,8 @@ namespace Lockstep.Core
             }
                                                        
             foreach (var shadow in shadows.Except(spawnedShadows))
-            {                    
-                Services.Get<ILogService>().Warn("Looking for: [" +shadow.ownerId.value + "] - " + shadow.id.value);
-                var referencedEntity = currentEntities.FirstOrDefault(e =>
-                    e.id.value == shadow.id.value && e.ownerId.value == shadow.ownerId.value);
+            {                                                                                                                
+                var referencedEntity = currentEntities.FirstOrDefault(e => e.hasId && e.hasOwnerId && e.id.value == shadow.id.value && e.ownerId.value == shadow.ownerId.value);
 
                 //Check if the entity got destroyed locally
                 if (referencedEntity == null)
@@ -126,12 +124,17 @@ namespace Lockstep.Core
                     var previousComponents = shadow.GetComponentIndices().Except(new[] { GameComponentsLookup.Shadow, GameComponentsLookup.Tick }).ToArray();
 
                     var sameComponents = previousComponents.Intersect(currentComponents);
-                    var missingComponents = previousComponents.Except(currentComponents);
-                    var onlyLocalComponents = currentComponents.Except(new[] { GameComponentsLookup.LocalId }).Except(previousComponents);
-
+                    var missingComponents = previousComponents.Except(currentComponents).ToArray();
+                    var onlyLocalComponents = currentComponents.Except(new[] { GameComponentsLookup.LocalId }).Except(previousComponents); 
 
                     shadow.CopyTo(referencedEntity, true, sameComponents.ToArray());
-                    shadow.CopyTo(referencedEntity, false, missingComponents.ToArray()); 
+
+                    //CopyTo with 0 params would copy all...
+                    if (missingComponents.Length > 0)
+                    {   
+                        shadow.CopyTo(referencedEntity, false, missingComponents);
+                    }
+
                     foreach (var index in onlyLocalComponents)
                     {
                         referencedEntity.RemoveComponent(index);
