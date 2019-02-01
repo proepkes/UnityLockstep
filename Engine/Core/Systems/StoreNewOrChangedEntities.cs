@@ -33,7 +33,7 @@ namespace Lockstep.Core.Systems
 
         protected override bool Filter(GameEntity entity)
         {
-            return !entity.isShadow;
+            return entity.hasId && !entity.isShadow;
         }
 
         protected override void Execute(List<GameEntity> entities)

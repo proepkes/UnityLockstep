@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -56,11 +56,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultServices\DefaultPlayerEntityIdProvider.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameOwnerIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameLocalIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
@@ -73,7 +73,6 @@
     <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMaxSpeedComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNavigableComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameOwnerIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHashableComponent.cs" />
@@ -116,6 +115,12 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\Game\OwnerIdComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DefaultServices\DefaultPlayerEntityIdProvider.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Components\Game\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +158,6 @@
     <Compile Include="Components\Game\IdComponent.cs" />
     <Compile Include="Components\Game\MaxSpeedComponent.cs" />
     <Compile Include="Components\Game\NavigableComponent.cs" />
-    <Compile Include="Components\Game\OwnerIdComponent.cs" />
     <Compile Include="Components\Game\PositionComponent.cs" />
     <Compile Include="Components\Game\TeamComponent.cs" />
   </ItemGroup>

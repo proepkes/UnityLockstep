@@ -13,6 +13,10 @@ namespace Lockstep.Core.DefaultServices
 
         public uint Get(byte key)
         {
+            if (!_idMap.ContainsKey(key))
+            {
+                _idMap.Add(key, 0);
+            }
             return _idMap[key];
         }
 
@@ -30,7 +34,14 @@ namespace Lockstep.Core.DefaultServices
 
         public void SetNext(byte key, uint value)
         {
-            _idMap[key] = value;
+            if (!_idMap.ContainsKey(key))
+            {
+                _idMap.Add(key, value);
+            }
+            else
+            {
+                _idMap[key] = value;
+            }
         }
     }
 }

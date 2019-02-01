@@ -25,11 +25,16 @@ public class UnityInput : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.X))
-        {                 
+        {
+            var e = Contexts.sharedInstance.game.GetEntities().Where(entity => !entity.isShadow)
+                .Select(entity => entity.id.value).ToArray();
+
+            Debug.Log("Navigating: " + string.Join(", ", e));
+
             RTSNetworkedSimulation.Instance.Execute(new NavigateCommand
             {
                 Destination = GetWorldPos(Input.mousePosition),
-                Selection = Contexts.sharedInstance.game.GetEntities().Where(entity => entity.hasId).Select(entity => entity.id.value).ToArray()
+                Selection = e
             });
         }
     }

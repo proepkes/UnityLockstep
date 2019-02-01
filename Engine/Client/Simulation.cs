@@ -12,6 +12,8 @@ namespace Lockstep.Client
         /// </summary>
         public uint LagCompensation { get; set; }
 
+        public bool SendCommandsToBuffer { get; set; } = true;
+
         public bool Running { get; private set; }
 
         public byte LocalPlayerId { get; private set; } 
@@ -80,7 +82,10 @@ namespace Lockstep.Client
                 if (_commandCache.Count > 0)
                 {
                     _world.AddInput(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache);
-                    _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache.ToArray());
+                    if (SendCommandsToBuffer)
+                    {
+                        _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache.ToArray()); 
+                    }
 
                     _commandCache.Clear();  
                 }
@@ -127,14 +132,12 @@ namespace Lockstep.Client
                     var targetTick = _world.CurrentTick;  
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
+                                                                  
 
-                    var validInputFrame = firstMispredictedFrame;
-
-                    //Execute all commands again, beginning from the first frame that contains remote input up to our last local state
-                    while (validInputFrame <= targetTick)
+                    //Restore last local state
+                    while (_world.CurrentTick < targetTick)
                     {   
-                        _world.Tick();
-                        validInputFrame++;
+                        _world.Tick();      
                     }
                 }
 

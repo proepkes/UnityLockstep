@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Entitas;
+using Entitas;                          
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
 using Lockstep.Core.Systems.GameState;
@@ -75,30 +75,30 @@ namespace Lockstep.Core
         /// </summary>
         /// <param name="tick"></param>
         public void RevertToTick(uint tick)
-        {                                                                 
-            var shadows = _gameContext.GetEntities().Where(e => e.isShadow && e.tick.value >= tick).ToList();
+        {
+            var currentEntities = _gameContext.GetEntities(GameMatcher
+                .AllOf(
+                    GameMatcher.Id,
+                    GameMatcher.OwnerId)
+                .NoneOf(GameMatcher.Shadow));
+
+            //Get first occurence of each shadow per entity
+            var shadows = _gameContext.GetEntities(GameMatcher.Shadow).Where(e => e.tick.value >= tick).OrderBy(e => e.tick.value).Distinct(new ShadowEqualityComparer()).ToList();
 
             var spawnedShadows = shadows.Where(e => e.isNew).ToList();
 
-            //A shadow refers to its entity through ownerId + id
-            var spawnedShadowsPerPlayer = spawnedShadows.ToLookup(e => e.ownerId.value, e => e.id.value);
-
+            //A shadow refers to its entity through ownerId + id, create a lookup per player to adjust the IDs later on              
             var invalidEntities = new List<GameEntity>(200);
-            foreach (var shadowsPerOwner in spawnedShadowsPerPlayer)
+            foreach (var spawnedShadowsPerOwner in spawnedShadows.ToLookup(e => e.ownerId.value, e => e.id.value))
             {
-                var ownerId = shadowsPerOwner.Key;
+                var ownerId = spawnedShadowsPerOwner.Key;
 
-                var invalidShadowsOfOwner = _gameContext.GetEntities(
-                        GameMatcher.AllOf(
-                            GameMatcher.Id,
-                            GameMatcher.OwnerId)
-                            .NoneOf(GameMatcher.Shadow))
-                    .Where(entity => ownerId == entity.ownerId.value && shadowsPerOwner.Contains(entity.id.value)).ToList();
+                var referencedEntities = currentEntities.Where(entity => ownerId == entity.ownerId.value && spawnedShadowsPerOwner.Contains(entity.id.value)).ToList();
 
-                invalidEntities.AddRange(invalidShadowsOfOwner);
+                invalidEntities.AddRange(referencedEntities);
 
                 //Reset id service for the player to last valid state, since we created IDs that may not match with other players 
-                _idProvider.SetNext(ownerId, _idProvider.Get(ownerId) - (uint)invalidShadowsOfOwner.Count);
+                _idProvider.SetNext(ownerId, _idProvider.Get(ownerId) - (uint)referencedEntities.Count);
             }
 
             foreach (var invalidEntity in invalidEntities)
@@ -107,63 +107,74 @@ namespace Lockstep.Core
                 _view.DeleteView(invalidEntity.localId.value);
                 _gameContext.GetEntityWithLocalId(invalidEntity.localId.value).Destroy();
             }
+                                                       
+            foreach (var shadow in shadows.Except(spawnedShadows))
+            {                    
+                Services.Get<ILogService>().Warn("Looking for: [" +shadow.ownerId.value + "] - " + shadow.id.value);
+                var referencedEntity = currentEntities.FirstOrDefault(e =>
+                    e.id.value == shadow.id.value && e.ownerId.value == shadow.ownerId.value);
 
-            //shadowsOfChangedEntities could contain spawnedShadows when a created entity changes in later ticks => 'e.isNew' is false one tick after an entity.
-            //That Entity has already been destroyed above so these changes don't have to be considered   
-            var shadowsOfChangedEntities = shadows.Where(e => !e.isNew).Except(spawnedShadows);
-            foreach (var entity in shadows.Where(e => !e.isNew))
-            {
-                //var referencedEntity = _gameContext.GetEntityWithId(entity.shadow.entityId);
-                ////Check if the entity got destroyed locally
-                //if (referencedEntity == null)
-                //{     
-                //    //TODO: restore locally destroyed entities
-                //}
-                //else
-                //{
-                //    //Entity is in the game locally, revert to old state
-                //    var currentComponents = referencedEntity.GetComponentIndices();
-                //    var previousComponents = entity.GetComponentIndices();
+                //Check if the entity got destroyed locally
+                if (referencedEntity == null)
+                {
+                    //TODO: restore locally destroyed entities
+                }
+                else
+                {
+                    //Entity is in the game locally, revert to old state
+                    var currentComponents = referencedEntity.GetComponentIndices();
+                    var previousComponents = shadow.GetComponentIndices();
 
-                //    var sameComponents = previousComponents.Intersect(currentComponents);
-                //    var onlyLocalComponents = currentComponents.Except(new[] {GameComponentsLookup.Id }).Except(previousComponents);
-                //    var missingComponents = previousComponents.Except(new []{ GameComponentsLookup.Shadow }).Except(currentComponents);
+                    var sameComponents = previousComponents.Intersect(currentComponents);
+                    var onlyLocalComponents = currentComponents.Except(new[] { GameComponentsLookup.LocalId }).Except(previousComponents);
+                    var missingComponents = previousComponents.Except(new[] { GameComponentsLookup.Shadow, GameComponentsLookup.Tick }).Except(currentComponents);
 
+      
+                    foreach (var index in sameComponents)
+                    {
+                        referencedEntity.ReplaceComponent(index, shadow.GetComponent(index));
+                    }
 
-                //    Services.Get<ILogService>().Warn("sameComponents: " + sameComponents.Count());
-                //    Services.Get<ILogService>().Warn("onlyLocalComponents: " + onlyLocalComponents.Count());
-                //    Services.Get<ILogService>().Warn("missingComponents: " + missingComponents.Count());
-                //    foreach (var index in sameComponents)
-                //    {                                                         
-                //        referencedEntity.ReplaceComponent(index, entity.GetComponent(index));  
-                //    }
+                    foreach (var index in onlyLocalComponents)
+                    {
+                        referencedEntity.RemoveComponent(index);
+                    }
 
-                //    foreach (var index in onlyLocalComponents)
-                //    {                                               
-                //        referencedEntity.RemoveComponent(index);
-                //    }
+                    foreach (var index in missingComponents)
+                    {
+                        referencedEntity.AddComponent(index, shadow.GetComponent(index));
+                    }
+                }
+            }      
 
-                //    foreach (var index in missingComponents)
-                //    {                                                   
-                //        referencedEntity.AddComponent(index, entity.GetComponent(index));
-                //    }
-                //}
-            }
-
-
-            //TODO: cleanup shadow-entities < last validated tick
-            //for (var i = tick; i <= Contexts.gameState.tick.value; i++)
-            //{                                                                    
-            //    _storage.RemoveChanges(i);    
-            //}
-
-            //Reverted to a tick in the past => all predictions are invalid now, delete them
+            //Reverted to a tick in the past => all shadows are invalid now, delete them
             foreach (var entity in shadows)
             {
                 entity.Destroy();
             }
 
+
+            currentEntities = _gameContext.GetEntities(GameMatcher
+                .AllOf(
+                    GameMatcher.Id,
+                    GameMatcher.OwnerId)
+                .NoneOf(GameMatcher.Shadow));
+            var x = _gameContext.GetEntities(GameMatcher
+                .AllOf(GameMatcher.Shadow));
+
             Contexts.gameState.ReplaceTick(tick);
+        }
+    }
+    public class ShadowEqualityComparer : IEqualityComparer<GameEntity>
+    {
+        public bool Equals(GameEntity x, GameEntity y)
+        {
+            return x.id.value == y.id.value && x.ownerId.value == y.ownerId.value;
+        }
+
+        public int GetHashCode(GameEntity obj)
+        {
+            return (int) (obj.id.value << 8 + obj.ownerId.value);
         }
     }
 }

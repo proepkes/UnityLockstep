@@ -27,7 +27,7 @@ namespace Lockstep.Core.Systems.Navigation
                 {
                     entity.ReplacePosition(entity.position.value + entity.velocity.value);
 
-                    updatedPositions.Add(entity.id.value, entity.position.value);
+                    updatedPositions.Add(entity.localId.value, entity.position.value);
                 }
             } 
             
