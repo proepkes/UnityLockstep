@@ -8,24 +8,21 @@
 //------------------------------------------------------------------------------
 public static class ActorComponentsLookup {
 
-    public const int EntityCount = 0;
-    public const int Id = 1;
-    public const int Shadow = 2;
-    public const int Tick = 3;
+    public const int Backup = 0;
+    public const int EntityCount = 1;
+    public const int Id = 2;
 
-    public const int TotalComponents = 4;
+    public const int TotalComponents = 3;
 
     public static readonly string[] componentNames = {
+        "Backup",
         "EntityCount",
-        "Id",
-        "Shadow",
-        "Tick"
+        "Id"
     };
 
     public static readonly System.Type[] componentTypes = {
+        typeof(Lockstep.Core.Components.Actor.BackupComponent),
         typeof(Lockstep.Core.Components.Actor.EntityCountComponent),
-        typeof(Lockstep.Core.Components.Actor.IdComponent),
-        typeof(Lockstep.Core.Components.Actor.ShadowComponent),
-        typeof(Lockstep.Core.Components.Actor.TickComponent)
+        typeof(Lockstep.Core.Components.Actor.IdComponent)
     };
 }

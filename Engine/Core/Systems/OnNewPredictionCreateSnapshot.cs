@@ -20,7 +20,7 @@ namespace Lockstep.Core.Systems
             _actorContext = contexts.actor;
             _snapshotIndexService = services.Get<ISnapshotIndexService>();
 
-            _activeEntities = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Id, GameMatcher.ActorId).NoneOf(GameMatcher.Shadow)); 
+            _activeEntities = contexts.game.GetGroup(GameMatcher.LocalId); 
         }
 
         protected override ICollector<GameStateEntity> GetTrigger(IContext<GameStateEntity> context)
@@ -55,8 +55,7 @@ namespace Lockstep.Core.Systems
                     shadowActor.AddComponent(index, component2);
                 }
 
-                shadowActor.AddShadow(actor.id.value);
-                shadowActor.AddTick(currentTick);
+                shadowActor.AddBackup(actor.id.value, currentTick); 
             }
 
             Parallel.ForEach(_activeEntities.GetEntities(), e =>
@@ -72,8 +71,7 @@ namespace Lockstep.Core.Systems
                     shadowEntity.AddComponent(index, component2);
                 }
 
-                shadowEntity.AddShadow(e.id.value);
-                shadowEntity.AddTick(currentTick);
+                shadowEntity.AddBackup(e.id.value, currentTick);    
             });
         }
     }

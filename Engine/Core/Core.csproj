@@ -62,15 +62,13 @@
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\Actor\Components\ActorIdComponent.cs" />
-    <Compile Include="Generated\Actor\Components\ActorTickComponent.cs" />
-    <Compile Include="Generated\Actor\Components\ActorShadowComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorBackupComponent.cs" />
     <Compile Include="Generated\Actor\Components\ActorEntityCountComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameTickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameActorIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameLocalIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNewComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameShadowComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameBackupComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
@@ -90,8 +88,8 @@
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
     <Compile Include="Generated\Actor\ActorComponentsLookup.cs" />
-    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
+    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
@@ -128,11 +126,7 @@
     <Compile Include="Components\Actor\IdComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Game\TickComponent.cs" />
-    <Compile Include="Components\Actor\TickComponent.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Components\Actor\ShadowComponent.cs" />
+    <Compile Include="Components\Actor\BackupComponent.cs" />
     <Compile Include="Components\Actor\EntityCountComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -158,10 +152,10 @@
     <Compile Include="Components\Game\NewComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Game\ShadowComponent.cs" />
+    <Compile Include="Components\Game\BackupComponent.cs" />
     <Compile Include="Interfaces\ISnapshotIndexService.cs" />
     <Compile Include="Systems\OnNewPredictionCreateSnapshot.cs" />
-    <Compile Include="Systems\Debugging\VerifyNoDuplicateShadows.cs" />
+    <Compile Include="Systems\Debugging\VerifyNoDuplicateBackups.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>

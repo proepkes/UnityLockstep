@@ -358,7 +358,7 @@ namespace Test
 
         private void ExpectShadowCount(Contexts contexts, int value)
         {
-            contexts.game.GetEntities(GameMatcher.Shadow).Length.ShouldBe(value);
+            contexts.game.GetEntities(GameMatcher.Backup).Length.ShouldBe(value);
         }
 
         private void GameEntityCountMatchesActorEntityCount(Contexts contexts, byte actorId, int expectedCount)

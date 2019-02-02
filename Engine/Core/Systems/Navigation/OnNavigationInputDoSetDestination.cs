@@ -32,9 +32,9 @@ namespace Lockstep.Core.Systems.Navigation
             {
                 var destination = input.coordinate.value;
 
-                var selectedEntities = _contextsGame.GetEntities(
-                        GameMatcher.AllOf(GameMatcher.ActorId, GameMatcher.Id).NoneOf(GameMatcher.Shadow))
-                        .Where(entity => 
+                var selectedEntities = _contextsGame
+                    .GetEntities(GameMatcher.LocalId)
+                    .Where(entity => 
                             input.selection.entityIds.Contains(entity.id.value) &&
                             entity.actorId.value == input.actorId.value);
 

@@ -60,7 +60,7 @@ namespace Lockstep.Core
 
             Add(new IncrementTick(Contexts));
 
-            Add(new VerifyNoDuplicateShadows(Contexts, Services));
+            Add(new VerifyNoDuplicateBackups(Contexts, Services));
         }                       
 
         public void Initialize(byte playerId)
@@ -108,15 +108,25 @@ namespace Lockstep.Core
         /// </summary>
         /// <param name="tick"></param>
         public void RevertToTick(uint tick)
-        {                         
-            var currentEntities = _gameContext.GetEntities(GameMatcher.AllOf(GameMatcher.LocalId));   
-            
+        {
+            //Get the actual tick that we have a snapshot for
             var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);
-            var shadowEntities = _gameContext.GetEntities(GameMatcher.Shadow).Where(e => e.tick.value == resultTick).ToList();
-            var shadowActors = _gameContext.GetEntities(GameMatcher.Shadow).Where(e => e.tick.value == resultTick).ToList();
+                                                                              
+            var currentEntities = _gameContext.GetEntities(GameMatcher.LocalId);  
+            
+            var backedUpEntites = _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick == resultTick).Select(entity => entity.backup.localEntityId).ToList();
+
+            var backedUpActors = _actorContext.GetEntities(ActorMatcher.Backup).Where(e => e.backup.tick == resultTick);
+            foreach (var backedUpActor in backedUpActors)
+            {                          
+                backedUpActor.CopyTo(
+                    _actorContext.GetEntityWithId(backedUpActor.backup.actorId), //Current Actor
+                    true, //Replace components
+                    backedUpActor.GetComponentIndices().Except(new []{ ActorComponentsLookup.Backup }).ToArray()); //Copy everything except the backup-component
+            }
 
             //Entities that were created in the prediction have to be destroyed              
-            var invalidEntities = currentEntities.Except(shadowEntities, new CompositeKeyComparer()); 
+            var invalidEntities = currentEntities.Where(entity => !backedUpEntites.Contains(entity.localId.value)); 
             foreach (var invalidEntity in invalidEntities)
             {
                 //Here we have the actual entities, we can safely refer to them via the internal id

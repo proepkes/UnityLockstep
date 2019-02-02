@@ -11,28 +11,28 @@ public static class GameComponentsLookup {
     public const int DestinationListener = 0;
     public const int ActorId = 1;
     public const int Asset = 2;
-    public const int Controllable = 3;
-    public const int Destination = 4;
-    public const int Hashable = 5;
-    public const int Health = 6;
-    public const int Id = 7;
-    public const int LocalId = 8;
-    public const int MaxSpeed = 9;
-    public const int Navigable = 10;
-    public const int New = 11;
-    public const int Position = 12;
-    public const int Shadow = 13;
+    public const int Backup = 3;
+    public const int Controllable = 4;
+    public const int Destination = 5;
+    public const int Hashable = 6;
+    public const int Health = 7;
+    public const int Id = 8;
+    public const int LocalId = 9;
+    public const int MaxSpeed = 10;
+    public const int Navigable = 11;
+    public const int New = 12;
+    public const int Position = 13;
     public const int Team = 14;
-    public const int Tick = 15;
-    public const int Velocity = 16;
-    public const int PositionListener = 17;
+    public const int Velocity = 15;
+    public const int PositionListener = 16;
 
-    public const int TotalComponents = 18;
+    public const int TotalComponents = 17;
 
     public static readonly string[] componentNames = {
         "DestinationListener",
         "ActorId",
         "Asset",
+        "Backup",
         "Controllable",
         "Destination",
         "Hashable",
@@ -43,9 +43,7 @@ public static class GameComponentsLookup {
         "Navigable",
         "New",
         "Position",
-        "Shadow",
         "Team",
-        "Tick",
         "Velocity",
         "PositionListener"
     };
@@ -54,6 +52,7 @@ public static class GameComponentsLookup {
         typeof(DestinationListenerComponent),
         typeof(Lockstep.Core.Components.Game.ActorIdComponent),
         typeof(Lockstep.Core.Components.Game.AssetComponent),
+        typeof(Lockstep.Core.Components.Game.BackupComponent),
         typeof(Lockstep.Core.Components.Game.ControllableComponent),
         typeof(Lockstep.Core.Components.Game.DestinationComponent),
         typeof(Lockstep.Core.Components.Game.HashableComponent),
@@ -64,9 +63,7 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.Components.Game.NavigableComponent),
         typeof(Lockstep.Core.Components.Game.NewComponent),
         typeof(Lockstep.Core.Components.Game.PositionComponent),
-        typeof(Lockstep.Core.Components.Game.ShadowComponent),
         typeof(Lockstep.Core.Components.Game.TeamComponent),
-        typeof(Lockstep.Core.Components.Game.TickComponent),
         typeof(Lockstep.Core.Components.Game.VelocityComponent),
         typeof(PositionListenerComponent)
     };

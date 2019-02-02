@@ -5,27 +5,27 @@ using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Systems.Debugging
 {
-    public class VerifyNoDuplicateShadows : IExecuteSystem
+    public class VerifyNoDuplicateBackups : IExecuteSystem
     {
         private readonly Services _services;
-        private readonly IGroup<GameEntity> _shadows;
+        private readonly IGroup<GameEntity> _backups;
 
-        public VerifyNoDuplicateShadows(Contexts contexts, Services services)
+        public VerifyNoDuplicateBackups(Contexts contexts, Services services)
         {
             _services = services;
-            _shadows = contexts.game.GetGroup(GameMatcher.Shadow);
+            _backups = contexts.game.GetGroup(GameMatcher.Backup);
         }
         public void Execute()
         {
             var temp = new Dictionary<uint, List<Tuple<byte, uint>>>();
-            foreach (var shadow in _shadows)
+            foreach (var entity in _backups)
             {
-                if (temp.ContainsKey(shadow.tick.value))
+                if (temp.ContainsKey(entity.backup.tick))
                 {
-                    var others = temp[shadow.tick.value];
+                    var others = temp[entity.backup.tick];
                     foreach (var other in others)
                     {
-                        if (other.Item1 == shadow.actorId.value && other.Item2 == shadow.id.value)
+                        if (other.Item1 == entity.actorId.value && other.Item2 == entity.id.value)
                         {
                             _services.Get<ILogService>().Warn("Shadow duplicate!");
                         }
@@ -33,10 +33,10 @@ namespace Lockstep.Core.Systems.Debugging
                 }
                 else
                 {
-                    temp.Add(shadow.tick.value, new List<Tuple<byte, uint>>());
+                    temp.Add(entity.backup.tick, new List<Tuple<byte, uint>>());
                 }
 
-                temp[shadow.tick.value].Add(new Tuple<byte, uint>(shadow.actorId.value, shadow.id.value));
+                temp[entity.backup.tick].Add(new Tuple<byte, uint>(entity.actorId.value, entity.id.value));
             }
         }
     }

@@ -21,7 +21,7 @@ namespace Lockstep.Core.Systems.Navigation
             //All registered (navigable) entities have to be updated, because avoidance could move other entities aside
             //_navigationService.Tick();  
 
-            foreach (var entity in _contexts.game.GetEntities(GameMatcher.AllOf(GameMatcher.Destination).NoneOf(GameMatcher.Shadow)))
+            foreach (var entity in _contexts.game.GetEntities(GameMatcher.AllOf(GameMatcher.Destination).NoneOf(GameMatcher.Backup)))
             {
                 var velocity = entity.destination.value - entity.position.value;
                 if (velocity.LengthSquared() > Fix64.One)
