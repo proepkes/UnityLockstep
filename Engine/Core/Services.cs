@@ -6,17 +6,17 @@ using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core
 {
-    public class ServiceContainer
+    public class Services
     {
         private readonly Dictionary<string, IService> _instances = new Dictionary<string, IService>();
         private readonly Dictionary<string, IService> _defaults = new Dictionary<string, IService>();
 
-        public ServiceContainer()
+        public Services()
         {
             RegisterDefault(new DefaultHashService());
             RegisterDefault(new DefaultViewService());
-            RegisterDefault(new DefaultNavigationService());
-            RegisterDefault(new DefaultPlayerEntityIdProvider());
+            RegisterDefault(new DefaultNavigationService());         
+            RegisterDefault(new DefaultSnapshotIndexService());
         }
 
         public void Register(IService instance)

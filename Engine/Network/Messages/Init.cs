@@ -6,21 +6,25 @@ namespace Lockstep.Network.Messages
     {
         public int Seed { get; set; }
 
-        public byte PlayerID { get; set; }
+        public byte ActorID { get; set; }
+
+        public byte[] AllActors { get; set; }
 
         public int TargetFPS { get; set; } 
 
         public void Serialize(Serializer writer)
         {
             writer.Put(Seed);
-            writer.Put(PlayerID);
+            writer.Put(ActorID);
+            writer.PutBytesWithLength(AllActors);
             writer.Put(TargetFPS);
         }
 
         public void Deserialize(Deserializer reader)
         {
             Seed = reader.GetInt();
-            PlayerID = reader.GetByte();
+            ActorID = reader.GetByte();
+            AllActors = reader.GetBytesWithLength();
             TargetFPS = reader.GetInt();
         }
     }

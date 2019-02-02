@@ -27,7 +27,7 @@ namespace Lockstep.Core.Systems.Navigation
         {
             foreach (var entity in entities)
             {
-                _navigationService.AddAgent(entity.id.value, entity.position.value); 
+                _navigationService.AddAgent(entity.localId.value, entity.position.value); 
             } 
         }
     }

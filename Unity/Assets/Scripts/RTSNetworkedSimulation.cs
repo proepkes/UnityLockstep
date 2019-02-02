@@ -46,8 +46,8 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     private void StartSimulation(Init data)
     {
-        Debug.Log("Starting as player:" + data.PlayerID);
-        Simulation.Initialize(data);
+        Debug.Log($"Starting simulation. Total actors: {data.AllActors.Length}. Local ActorID: {data.ActorID}");
+        Simulation.Initialize(data);  
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
     }
@@ -73,7 +73,6 @@ public class RTSNetworkedSimulation : MonoBehaviour
     void Update()
     {
         _client.Update();
-                                                                                            
         Simulation.Update(Time.deltaTime * 1000);
     }            
 

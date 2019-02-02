@@ -4,16 +4,19 @@ namespace Lockstep.Core.Interfaces
 {
     public interface IWorld
     {
-        ServiceContainer Services { get; }
+        Services Services { get; }
+
         int EntitiesInCurrentTick { get; }
 
-        uint CurrentTick { get; }  
-        
-        void Initialize(byte playerId);
+        uint CurrentTick { get; }
 
-        void AddInput(uint tickId, byte player, List<ICommand> input);
+        void Initialize(byte[] allActorIds);
 
-        void Tick();
+        void AddInput(uint tickId, byte actorId, List<ICommand> input);
+
+        void Predict();
+
+        void Simulate();
 
         void RevertToTick(uint tick);
     }

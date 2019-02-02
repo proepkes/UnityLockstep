@@ -4,11 +4,11 @@ namespace Lockstep.Core.Features
 {                                    
     public sealed class InputFeature : Feature
     {
-        public InputFeature(Contexts contexts, ServiceContainer serviceContainer)
+        public InputFeature(Contexts contexts, Services services)
         {
             //TODO: Add InputValidationSystem
             
-            Add(new OnSpawnInputCreateEntity(contexts, serviceContainer));
+            Add(new OnSpawnInputCreateEntity(contexts, services));
 
 
             //TODO: Add CleanupInput that removes input of validated frames (no rollback required => can be removed)

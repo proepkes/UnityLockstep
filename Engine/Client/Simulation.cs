@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;        
+﻿using System.Collections.Generic;
+using System.Threading;
 using Lockstep.Client.Interfaces;     
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
@@ -11,6 +12,8 @@ namespace Lockstep.Client
         /// Amount of ticks until a command gets executed locally
         /// </summary>
         public uint LagCompensation { get; set; }
+
+        public bool SendCommandsToBuffer { get; set; } = true;
 
         public bool Running { get; private set; }
 
@@ -34,12 +37,12 @@ namespace Lockstep.Client
         public void Initialize(Init init)
         {             
             _tickDt = 1000f / init.TargetFPS;
-            LocalPlayerId = init.PlayerID;
+            LocalPlayerId = init.ActorID;
                                                                      
-            _world.Initialize(LocalPlayerId);
+            _world.Initialize(init.AllActors);
 
             Running = true;
-        }   
+        }    
 
         public void Execute(ICommand command)
         {
@@ -54,7 +57,7 @@ namespace Lockstep.Client
             }            
         }
 
-        public void Update(float deltaTime)
+        public void Update(float elapsedMilliseconds)
         {                             
             if (!Running)                        
             {
@@ -63,7 +66,7 @@ namespace Lockstep.Client
 
             SyncCommandBuffer();
 
-            _accumulatedTime += deltaTime; 
+            _accumulatedTime += elapsedMilliseconds; 
 
             while (_accumulatedTime >= _tickDt)
             {                                                                                
@@ -80,13 +83,16 @@ namespace Lockstep.Client
                 if (_commandCache.Count > 0)
                 {
                     _world.AddInput(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache);
-                    _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache.ToArray());
+                    if (SendCommandsToBuffer)
+                    {
+                        _remoteCommandBuffer.Insert(_world.CurrentTick + LagCompensation, LocalPlayerId, _commandCache.ToArray()); 
+                    }
 
                     _commandCache.Clear();  
                 }
-            }    
+            }                                                                                                          
 
-            _world.Tick();     
+            _world.Predict();     
         }
 
         private void SyncCommandBuffer()
@@ -113,8 +119,8 @@ namespace Lockstep.Client
                         firstMispredictedFrame = remoteFrame;
                     }
 
-                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback we generated local ids, the command's entity-ids have to be adjusted
-                    //https://github.com/proepkes/UnityLockstep/wiki/Rollback-WIP-Log
+                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback->fast-forward we generated local ids, the command's entity-ids have to be adjusted
+                    //https://github.com/proepkes/UnityLockstep/wiki/Rollback-devlog
                     foreach (var playerCommands in allPlayerCommands)
                     {
                         _world.AddInput(remoteFrame, playerCommands.Key, playerCommands.Value);
@@ -128,18 +134,45 @@ namespace Lockstep.Client
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
 
-                    var validInputFrame = firstMispredictedFrame;
+                    while (_world.CurrentTick < firstMispredictedFrame)
+                    {
+                        _world.Simulate();
+                    }
 
-                    //Execute all commands again, beginning from the first frame that contains remote input up to our last local state
-                    while (validInputFrame <= targetTick)
+                    //Restore last local state
+                    while (_world.CurrentTick < targetTick)
                     {   
-                        _world.Tick();
-                        validInputFrame++;
+                        _world.Predict();      
                     }
                 }
 
                 _lastValidatedFrame = currentRemoteFrame;
             }   
+        }
+
+
+        /// <summary>
+        /// Experimental
+        /// </summary>
+        public void StartAsThread()
+        {
+            new Thread(Loop) { IsBackground = true }.Start();
+        }
+
+        private void Loop()
+        {
+            var timer = new Timer();    
+
+            Running = true;
+
+            timer.Start();
+
+            while (Running)
+            {
+                Update(timer.Tick());
+
+                Thread.Sleep(1);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Server
+namespace Lockstep.Client
 {
     public class Timer
     {

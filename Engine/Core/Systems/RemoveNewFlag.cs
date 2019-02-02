@@ -10,7 +10,7 @@ namespace Lockstep.Core.Systems
 
         public RemoveNewFlag(Contexts contexts)
         {
-            _group = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.New).NoneOf(GameMatcher.Shadow));
+            _group = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.New).NoneOf(GameMatcher.Backup));
         }
 
         public void Cleanup()
