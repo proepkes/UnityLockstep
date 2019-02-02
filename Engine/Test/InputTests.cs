@@ -72,19 +72,19 @@ namespace Test
             sim.Update(1000); //1            
             systems.CurrentTick.ShouldBe((uint)2);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 1);
+            ExpectBackupCount(contexts, 1);
 
             sim.Update(1000); //2             
             systems.CurrentTick.ShouldBe((uint)3);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 1);
+            ExpectBackupCount(contexts, 1);
 
             commandBuffer.Insert(1, 1, new ICommand[] { });
                                                                  
             sim.Update(1000); //3                
             systems.CurrentTick.ShouldBe((uint)4);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 1);   
+            ExpectBackupCount(contexts, 1);   
 
 
             commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game), });
@@ -93,7 +93,7 @@ namespace Test
             sim.Update(1000); //4                
             systems.CurrentTick.ShouldBe((uint)5);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 2);
+            ExpectBackupCount(contexts, 2);
 
             for (int i = 0; i < 1; i++)
             {
@@ -104,7 +104,7 @@ namespace Test
             systems.CurrentTick.ShouldBe((uint)6);
 
             ExpectEntityCount(contexts, 2);
-            ExpectShadowCount(contexts, 3);
+            ExpectBackupCount(contexts, 3);
 
 
             for (int i = 0; i < 1; i++)
@@ -114,13 +114,13 @@ namespace Test
 
             sim.Update(1000); //6
             ExpectEntityCount(contexts, 3);
-            ExpectShadowCount(contexts, 4);
+            ExpectBackupCount(contexts, 4);
                                                   
             commandBuffer.Insert(3, 1, new ICommand[] { }); //Revert to 3
 
             sim.Update(1000);
             ExpectEntityCount(contexts, 3);
-            ExpectShadowCount(contexts, 4); 
+            ExpectBackupCount(contexts, 4); 
                                                                                                
             sim.Update(1000);
             commandBuffer.Insert(4, 1, new ICommand[] { });
@@ -130,7 +130,7 @@ namespace Test
             }
             sim.Update(1000);
             ExpectEntityCount(contexts, 4);
-            ExpectShadowCount(contexts, 5);
+            ExpectBackupCount(contexts, 5);
 
             sim.Update(1000);
             sim.Update(1000);
@@ -250,42 +250,38 @@ namespace Test
             sim.Update(1000); //1                           
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 0);
+            ExpectBackupCount(contexts, 0);
 
             sim.Update(1000); //2                             
-            systems.CurrentTick.ShouldBe(frameCounter++);
-            ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 0);
-            GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
-            GameEntityCountMatchesActorEntityCount(contexts, 1, 0);
-
-            commandBuffer.Insert(1, 1, new ICommand[] { });
+            systems.CurrentTick.ShouldBe(frameCounter++); 
 
             sim.Update(1000); //3                            
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 1);
+            ExpectBackupCount(contexts, 0);
 
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 0); 
 
             commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game), });       
 
             sim.Update(1000); //4                           
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 2);       
+            ExpectBackupCount(contexts, 1);       
            
             sim.Update(1000); //5                           
             systems.CurrentTick.ShouldBe(frameCounter++);
 
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 2);
+            ExpectBackupCount(contexts, 1);
 
             sim.Execute(new MoveEntitesOfSpecificActor(contexts.game, 0));
 
             sim.Update(1000); //6                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 3);
+            ExpectBackupCount(contexts, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 0);                                     
 
@@ -294,7 +290,7 @@ namespace Test
             sim.Update(1000); //7                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 2);
-            ExpectShadowCount(contexts, 4);
+            ExpectBackupCount(contexts, 2);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 1);
 
@@ -303,7 +299,7 @@ namespace Test
             sim.Update(1000); //8                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 3);
-            ExpectShadowCount(contexts, 5);
+            ExpectBackupCount(contexts, 4);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 2);
 
@@ -312,7 +308,7 @@ namespace Test
             sim.Update(1000);                           
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 9);
-            ExpectShadowCount(contexts, 11);
+            ExpectBackupCount(contexts, 7);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
@@ -328,8 +324,17 @@ namespace Test
 
             sim.Update(1000);
             ExpectEntityCount(contexts, 10);
-            ExpectShadowCount(contexts, 20); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1
+            ExpectBackupCount(contexts, 16); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 2);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
+
+            sim.Execute(new Spawn());
+            commandBuffer.Insert(11, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1), });
+            sim.Update(1000);
+
+            ExpectEntityCount(contexts, 11);
+            ExpectBackupCount(contexts, 25); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
         }
 
@@ -356,7 +361,7 @@ namespace Test
             contexts.game.GetEntities(GameMatcher.LocalId).Length.ShouldBe(value); 
         }
 
-        private void ExpectShadowCount(Contexts contexts, int value)
+        private void ExpectBackupCount(Contexts contexts, int value)
         {
             contexts.game.GetEntities(GameMatcher.Backup).Length.ShouldBe(value);
         }

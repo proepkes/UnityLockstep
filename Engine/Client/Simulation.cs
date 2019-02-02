@@ -91,7 +91,7 @@ namespace Lockstep.Client
                     _commandCache.Clear();  
                 }
             }    
-
+            _world.Services.Get<ILogService>().Warn("========== " + _world.CurrentTick + " ===============");
             _world.Predict();     
         }
 
@@ -133,7 +133,11 @@ namespace Lockstep.Client
                     var targetTick = _world.CurrentTick;  
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
-                    _world.Simulate();  
+
+                    while (_world.CurrentTick < firstMispredictedFrame)
+                    {
+                        _world.Simulate();
+                    }
 
                     //Restore last local state
                     while (_world.CurrentTick < targetTick)

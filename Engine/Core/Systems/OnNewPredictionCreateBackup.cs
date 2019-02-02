@@ -9,6 +9,7 @@ namespace Lockstep.Core.Systems
 {
     public class OnNewPredictionCreateBackup : ReactiveSystem<GameStateEntity>
     {
+        private readonly Services _services;
         private readonly IGroup<GameEntity> _activeEntities;
         private readonly ActorContext _actorContext;                 
         private readonly GameContext _gameContext;
@@ -17,6 +18,7 @@ namespace Lockstep.Core.Systems
 
         public OnNewPredictionCreateBackup(Contexts contexts, Services services) : base(contexts.gameState)
         {
+            _services = services;
             _gameContext = contexts.game;
             _actorContext = contexts.actor;
             _gameStateContext = contexts.gameState;
@@ -40,10 +42,14 @@ namespace Lockstep.Core.Systems
         {                                              
             var currentTick = _gameStateContext.tick.value;
 
+
             //Register the tick for which a snapshot is created
             _snapshotIndexService.AddIndex(currentTick);
 
-            foreach (var actor in _actorContext.GetEntities(ActorMatcher.Id))
+            var actors = _actorContext.GetEntities(ActorMatcher.Id);
+            var gameEnts = _activeEntities.GetEntities();
+
+            foreach (var actor in actors)
             {
                 var shadowActor = _actorContext.CreateEntity();
 
@@ -59,7 +65,7 @@ namespace Lockstep.Core.Systems
                 shadowActor.AddBackup(actor.id.value, currentTick); 
             }
 
-            Parallel.ForEach(_activeEntities.GetEntities(), e =>
+            foreach (var e in gameEnts)
             {
                 var shadowEntity = _gameContext.CreateEntity();
                                                                                      
@@ -72,8 +78,11 @@ namespace Lockstep.Core.Systems
                     shadowEntity.AddComponent(index, component2);
                 }
 
-                shadowEntity.AddBackup(e.id.value, currentTick);    
-            });
+                shadowEntity.AddBackup(e.localId.value, currentTick);    
+            }
+
+
+            _services.Get<ILogService>().Warn("New backup for " + currentTick + "(" + actors.Length + " actors, " + gameEnts.Length + " entities)");
         }
     }
 }

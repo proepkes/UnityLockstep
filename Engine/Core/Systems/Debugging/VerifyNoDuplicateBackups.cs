@@ -24,7 +24,7 @@ namespace Lockstep.Core.Systems.Debugging
                 {         
                     if (temp[entity.backup.tick].Contains(entity.backup.localEntityId))
                     {     
-                        _services.Get<ILogService>().Warn("Shadow duplicate!");
+                        _services.Get<ILogService>().Warn("Backup duplicate: " + temp[entity.backup.tick].Count + " backups in tick "+ entity.backup.tick +" are already pointing to " + entity.backup.localEntityId);
                     }    
                 }
                 else
