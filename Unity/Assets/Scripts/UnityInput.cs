@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Entitas;
 using FixMath.NET;
 using Lockstep.Commands;
 using UnityEngine;                      
@@ -26,8 +27,7 @@ public class UnityInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            var e = Contexts.sharedInstance.game.GetEntities().Where(entity => !entity.isShadow)
-                .Select(entity => entity.id.value).ToArray();
+            var e = Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Select(entity => entity.id.value).ToArray();
 
             Debug.Log("Navigating: " + string.Join(", ", e));
 
