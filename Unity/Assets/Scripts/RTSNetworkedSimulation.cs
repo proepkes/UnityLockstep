@@ -21,6 +21,8 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public bool Connected => _client.Connected;
 
+    public byte LocalPlayerId { get; private set; }
+
     private NetworkCommandBuffer _remoteCommandBuffer;
     private readonly LiteNetLibClient _client = new LiteNetLibClient();
 
@@ -46,6 +48,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     private void StartSimulation(Init data)
     {
+        LocalPlayerId = data.ActorID;
         Debug.Log($"Starting simulation. Total actors: {data.AllActors.Length}. Local ActorID: {data.ActorID}");
         Simulation.Initialize(data);  
 

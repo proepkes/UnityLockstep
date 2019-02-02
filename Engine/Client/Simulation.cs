@@ -134,11 +134,6 @@ namespace Lockstep.Client
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
 
-                    while (_world.CurrentTick < firstMispredictedFrame)
-                    {
-                        _world.Simulate();
-                    }
-
                     //Restore last local state
                     while (_world.CurrentTick < targetTick)
                     {   

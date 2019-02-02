@@ -6,13 +6,15 @@ using Lockstep.Core.Interfaces;
 namespace Lockstep.Core.Systems.Navigation
 {
     public class OnNavigationInputDoSetDestination : ReactiveSystem<InputEntity>
-    {                                               
+    {
+        private readonly Services _services;
         private readonly INavigationService _navigationService;
         private readonly GameContext _contextsGame;
 
-        public OnNavigationInputDoSetDestination(Contexts contexts, INavigationService navigationService) : base(contexts.input)
-        {                                 
-            _navigationService = navigationService;
+        public OnNavigationInputDoSetDestination(Contexts contexts, Services services) : base(contexts.input)
+        {
+            _services = services;
+            _navigationService = services.Get<INavigationService>();
             _contextsGame = contexts.game;
         }
 
@@ -32,6 +34,14 @@ namespace Lockstep.Core.Systems.Navigation
             {
                 var destination = input.coordinate.value;
 
+                foreach (var id in input.selection.entityIds)
+                {
+                    if (!_contextsGame.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == input.actorId.value).Select(entity => entity.id.value).Contains(id))
+                    {
+                        _services.Get<ILogService>().Warn("Id mismatch!");
+                    }
+
+                }
                 var selectedEntities = _contextsGame
                     .GetEntities(GameMatcher.LocalId)
                     .Where(entity => 

@@ -125,8 +125,8 @@ namespace Lockstep.Core
             foreach (var backedUpActor in backedUpActors)
             {                          
                 backedUpActor.CopyTo(
-                    _actorContext.GetEntityWithId(backedUpActor.backup.actorId), //Current Actor
-                    true, //Replace components
+                    _actorContext.GetEntityWithId(backedUpActor.backup.actorId),                                   //Current Actor
+                    true,                                                                             //Replace components
                     backedUpActor.GetComponentIndices().Except(new []{ ActorComponentsLookup.Backup }).ToArray()); //Copy everything except the backup-component
             }
 
@@ -135,17 +135,24 @@ namespace Lockstep.Core
             */
 
             var currentEntities = _gameContext.GetEntities(GameMatcher.LocalId);
-            var backedUpEntities = _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick == resultTick).Select(entity => entity.backup.localEntityId).ToList();
-
-            //Entities that were created in the prediction have to be destroyed              
-            var invalidEntities = currentEntities.Where(entity => !backedUpEntities.Contains(entity.localId.value)); 
+            var backupEntities = _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick == resultTick).ToList();
+            var backupEntityIds = backupEntities.Select(entity => entity.backup.localEntityId);
+                                                           
+            //Entities that were created in the prediction have to be destroyed  
+            var invalidEntities = currentEntities.Where(entity => !backupEntityIds.Contains(entity.localId.value)).ToList();
             foreach (var invalidEntity in invalidEntities)
             {
                 //Here we have the actual entities, we can safely refer to them via the internal id
                 _view.DeleteView(invalidEntity.localId.value);
-                _gameContext.GetEntityWithLocalId(invalidEntity.localId.value).Destroy();
+                invalidEntity.Destroy();
             }
 
+            //Entities that were created in the prediction have to be destroyed                                      
+            foreach (var backupEntity in backupEntities)
+            {    
+                var target = _gameContext.GetEntityWithLocalId(backupEntity.backup.localEntityId);
+                backupEntity.CopyTo(target, true, backupEntity.GetComponentIndices().Except(new []{GameComponentsLookup.Backup}).ToArray());
+            }
 
 
 
@@ -184,7 +191,13 @@ namespace Lockstep.Core
             //    }
             //}           
 
-            Contexts.gameState.ReplaceTick(resultTick);
+
+            Contexts.gameState.ReplaceTick(resultTick); 
+
+            while (Contexts.gameState.tick.value < tick)
+            {
+                Simulate();
+            }
         }
     }   
 }
