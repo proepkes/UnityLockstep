@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Entitas;
 using Lockstep.Core.Features;
@@ -102,7 +101,7 @@ namespace Lockstep.Core
             if (Contexts.gameState.isPredicting)
             {
                 Contexts.gameState.isPredicting = false;
-            }                                                                       
+            }          
 
             Execute();
             Cleanup();
