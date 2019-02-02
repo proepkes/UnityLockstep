@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System;                     
 using System.Linq;
 using System.Threading;
 using BEPUutilities;
 using Entitas;
 using Lockstep.Client;
-using Lockstep.Client.Implementations;
-using Lockstep.Client.Interfaces;
-using Lockstep.Core;
-using Lockstep.Core.DefaultServices;
-using Lockstep.Core.Interfaces;
-using Lockstep.Core.Systems;
-using Lockstep.Network.Messages;
-using Moq;
+using Lockstep.Client.Implementations; 
+using Lockstep.Core;                  
+using Lockstep.Core.Interfaces;    
+using Lockstep.Network.Messages;  
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -333,7 +328,7 @@ namespace Test
             sim.Update(1000);
 
             ExpectEntityCount(contexts, 11);
-            ExpectBackupCount(contexts, 25); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1
+            ExpectBackupCount(contexts, 25); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
         }

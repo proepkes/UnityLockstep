@@ -90,8 +90,8 @@ namespace Lockstep.Client
 
                     _commandCache.Clear();  
                 }
-            }    
-            _world.Services.Get<ILogService>().Warn("========== " + _world.CurrentTick + " ===============");
+            }                                                                                                          
+
             _world.Predict();     
         }
 

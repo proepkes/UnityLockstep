@@ -91,9 +91,7 @@ namespace Lockstep.Core
             if (!Contexts.gameState.isPredicting)
             {
                 Contexts.gameState.isPredicting = true;
-            }
-
-            Services.Get<ILogService>().Warn(" >> Predict " + CurrentTick);
+            }                                                        
 
             Execute();
             Cleanup();
@@ -104,8 +102,7 @@ namespace Lockstep.Core
             if (Contexts.gameState.isPredicting)
             {
                 Contexts.gameState.isPredicting = false;
-            }
-            Services.Get<ILogService>().Warn(" >> Simulate " + CurrentTick);
+            }                                                                       
 
             Execute();
             Cleanup();
@@ -116,11 +113,9 @@ namespace Lockstep.Core
         /// </summary>
         /// <param name="tick"></param>
         public void RevertToTick(uint tick)
-        {
-
+        {       
             //Get the actual tick that we have a snapshot for
-            var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);
-            Services.Get<ILogService>().Warn("Revert to " + resultTick);
+            var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);  
 
             /*
              * ====================== Revert actors ======================
@@ -188,8 +183,7 @@ namespace Lockstep.Core
             //            referencedEntity.RemoveComponent(index);
             //        }            
             //    }
-            //}      
-
+            //}           
 
             Contexts.gameState.ReplaceTick(resultTick);
         }
