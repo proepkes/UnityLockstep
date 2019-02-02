@@ -8,11 +8,11 @@ namespace Lockstep.Core.Interfaces
 
         int EntitiesInCurrentTick { get; }
 
-        uint CurrentTick { get; }  
-        
-        void Initialize(byte playerId);
+        uint CurrentTick { get; }
 
-        void AddInput(uint tickId, byte actor, List<ICommand> input);
+        void Initialize(byte[] allActorIds);
+
+        void AddInput(uint tickId, byte actorId, List<ICommand> input);
 
         void Predict();
 

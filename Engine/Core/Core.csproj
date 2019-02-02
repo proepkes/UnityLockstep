@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -59,7 +59,6 @@
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
-    <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\Actor\Components\ActorIdComponent.cs" />
     <Compile Include="Generated\Actor\Components\ActorBackupComponent.cs" />
@@ -166,7 +165,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GameState\HashCodeComponent.cs" />
-    <Compile Include="Components\GameState\PlayerIdComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\AssetComponent.cs" />

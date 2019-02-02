@@ -39,7 +39,7 @@ namespace Lockstep.Client
             _tickDt = 1000f / init.TargetFPS;
             LocalPlayerId = init.ActorID;
                                                                      
-            _world.Initialize(LocalPlayerId);
+            _world.Initialize(init.AllActors);
 
             Running = true;
         }    

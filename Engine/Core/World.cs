@@ -23,7 +23,7 @@ namespace Lockstep.Core
         private readonly IViewService _view;
         private readonly GameContext _gameContext;
         private readonly INavigationService _navigation;      
-        private ActorContext _actorContext;
+        private readonly ActorContext _actorContext;
 
         public World(Contexts contexts, params IService[] additionalServices)
         {
@@ -63,10 +63,15 @@ namespace Lockstep.Core
             Add(new VerifyNoDuplicateBackups(contexts, Services));
         }                       
 
-        public void Initialize(byte playerId)
-        {
+        public void Initialize(byte[] allActorIds)
+        {         
             Initialize();
-            Contexts.gameState.SetPlayerId(playerId);
+            foreach (var actorId in allActorIds)
+            {
+                var actor = Contexts.actor.CreateEntity();
+                actor.AddId(actorId);
+                actor.AddEntityCount(0);
+            }
         }
 
         public void AddInput(uint tickId, byte actor, List<ICommand> input)
@@ -111,10 +116,11 @@ namespace Lockstep.Core
         {
             //Get the actual tick that we have a snapshot for
             var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);
-                                                                              
-            var currentEntities = _gameContext.GetEntities(GameMatcher.LocalId);  
-            
-            var backedUpEntites = _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick == resultTick).Select(entity => entity.backup.localEntityId).ToList();
+
+            /*
+             * ====================== Revert actors ======================
+             * most importantly: the entity-count per actor gets reverted so the composite key (Id + ActorId) of GameEntities stays in sync
+             */
 
             var backedUpActors = _actorContext.GetEntities(ActorMatcher.Backup).Where(e => e.backup.tick == resultTick);
             foreach (var backedUpActor in backedUpActors)
@@ -125,8 +131,15 @@ namespace Lockstep.Core
                     backedUpActor.GetComponentIndices().Except(new []{ ActorComponentsLookup.Backup }).ToArray()); //Copy everything except the backup-component
             }
 
+            /*
+            * ====================== Revert game-entities ======================      
+            */
+
+            var currentEntities = _gameContext.GetEntities(GameMatcher.LocalId);
+            var backedUpEntities = _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick == resultTick).Select(entity => entity.backup.localEntityId).ToList();
+
             //Entities that were created in the prediction have to be destroyed              
-            var invalidEntities = currentEntities.Where(entity => !backedUpEntites.Contains(entity.localId.value)); 
+            var invalidEntities = currentEntities.Where(entity => !backedUpEntities.Contains(entity.localId.value)); 
             foreach (var invalidEntity in invalidEntities)
             {
                 //Here we have the actual entities, we can safely refer to them via the internal id
@@ -175,17 +188,5 @@ namespace Lockstep.Core
 
             Contexts.gameState.ReplaceTick(tick);
         }
-    }
-    public class CompositeKeyComparer : IEqualityComparer<GameEntity>
-    {
-        public bool Equals(GameEntity x, GameEntity y)
-        {
-            return x.id.value == y.id.value && x.actorId.value == y.actorId.value;
-        }
-
-        public int GetHashCode(GameEntity obj)
-        {
-            return (int)(obj.id.value << 8 + obj.actorId.value);
-        }
-    }
+    }   
 }
