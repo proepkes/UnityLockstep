@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;     
+using System.Collections.Generic;
+using System.Linq;
 using Lockstep.Network;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
@@ -119,8 +120,9 @@ namespace Server
                 new Init
                 {
                     Seed = seed,
-                    TargetFPS = TargetFps,
-                    PlayerID = player.Value
+                    ActorID = player.Value,
+                    AllActors = _playerIds.Values.ToArray(),
+                    TargetFPS = TargetFps
                 }.Serialize(writer);
 
                 _server.Send(player.Key, Compressor.Compress(writer));
