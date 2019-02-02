@@ -46,7 +46,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     private void StartSimulation(Init data)
     {
-        Debug.Log("Starting as actor id:" + data.ActorID + " / Total actors: " + data.AllActors.Length);
+        Debug.Log($"Starting simulation. Total actors: {data.AllActors.Length}. Local ActorID: {data.ActorID}");
         Simulation.Initialize(data);  
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;

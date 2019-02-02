@@ -13,11 +13,13 @@ namespace Lockstep.Core.Systems
         private readonly ActorContext _actorContext;                 
         private readonly GameContext _gameContext;
         private readonly ISnapshotIndexService _snapshotIndexService;
+        private GameStateContext _gameStateContext;
 
         public OnNewPredictionCreateBackup(Contexts contexts, Services services) : base(contexts.gameState)
         {
             _gameContext = contexts.game;
             _actorContext = contexts.actor;
+            _gameStateContext = contexts.gameState;
             _snapshotIndexService = services.Get<ISnapshotIndexService>();
 
             _activeEntities = contexts.game.GetGroup(GameMatcher.LocalId); 
@@ -35,14 +37,13 @@ namespace Lockstep.Core.Systems
         }
 
         protected override void Execute(List<GameStateEntity> entities)
-        {
-            var gameState = entities.SingleEntity();
-            var currentTick = gameState.tick.value;
+        {                                              
+            var currentTick = _gameStateContext.tick.value;
 
             //Register the tick for which a snapshot is created
             _snapshotIndexService.AddIndex(currentTick);
 
-            foreach (var actor in _actorContext.GetEntities())
+            foreach (var actor in _actorContext.GetEntities(ActorMatcher.Id))
             {
                 var shadowActor = _actorContext.CreateEntity();
 

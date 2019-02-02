@@ -154,7 +154,7 @@ namespace Test
 
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
 
-            sim.Initialize(new Init { TargetFPS = 1 });
+            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
 
             sim.Update(1000);
             for (int i = 0; i < 10; i++)
@@ -236,7 +236,7 @@ namespace Test
 
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
 
-            sim.Initialize(new Init { TargetFPS = 1 });
+            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
 
             uint frameCounter = 0;
 
@@ -343,7 +343,7 @@ namespace Test
 
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
 
-            sim.Initialize(new Init { TargetFPS = 10 });             
+            sim.Initialize(new Init { TargetFPS = 10, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
             sim.StartAsThread();
 
             Thread.Sleep(1000);
