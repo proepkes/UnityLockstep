@@ -3,7 +3,7 @@
 namespace Lockstep.Core.Components.Game
 {
     [Game]
-    public class OwnerIdComponent : IComponent
+    public class ActorIdComponent : IComponent
     {                        
         public byte value;
     }

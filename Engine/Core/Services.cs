@@ -15,8 +15,7 @@ namespace Lockstep.Core
         {
             RegisterDefault(new DefaultHashService());
             RegisterDefault(new DefaultViewService());
-            RegisterDefault(new DefaultNavigationService());
-            RegisterDefault(new DefaultPlayerEntityIdProvider());
+            RegisterDefault(new DefaultNavigationService());         
             RegisterDefault(new DefaultSnapshotIndexService());
         }
 

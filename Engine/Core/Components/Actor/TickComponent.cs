@@ -1,8 +1,8 @@
 ﻿using Entitas;
 
-namespace Lockstep.Core.Components.Game
+namespace Lockstep.Core.Components.Actor
 {                 
-    [Game]
+    [Actor]
     public class TickComponent : IComponent
     {
         public uint value;

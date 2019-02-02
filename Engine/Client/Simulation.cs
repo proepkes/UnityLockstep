@@ -39,13 +39,10 @@ namespace Lockstep.Client
             _tickDt = 1000f / init.TargetFPS;
             LocalPlayerId = init.PlayerID;
                                                                      
-            _world.Initialize(LocalPlayerId);        
-        }
+            _world.Initialize(LocalPlayerId);
 
-        public void Start()
-        {
             Running = true;
-        }
+        }    
 
         public void Execute(ICommand command)
         {

@@ -10,18 +10,17 @@ namespace Lockstep.Core.Systems
     public class OnNewPredictionCreateSnapshot : ReactiveSystem<GameStateEntity>
     {
         private readonly IGroup<GameEntity> _activeEntities;
-        private readonly GameStateContext _gameStateContext;
-        private readonly List<GameEntity> _buffer = new List<GameEntity>();
+        private readonly ActorContext _actorContext;                 
         private readonly GameContext _gameContext;
-        ISnapshotIndexService snapshotIndexService;
+        private readonly ISnapshotIndexService _snapshotIndexService;
 
         public OnNewPredictionCreateSnapshot(Contexts contexts, Services services) : base(contexts.gameState)
         {
             _gameContext = contexts.game;
-            _gameStateContext = contexts.gameState;
-            snapshotIndexService = services.Get<ISnapshotIndexService>();
+            _actorContext = contexts.actor;
+            _snapshotIndexService = services.Get<ISnapshotIndexService>();
 
-            _activeEntities = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Id, GameMatcher.OwnerId).NoneOf(GameMatcher.Shadow)); 
+            _activeEntities = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.Id, GameMatcher.ActorId).NoneOf(GameMatcher.Shadow)); 
         }
 
         protected override ICollector<GameStateEntity> GetTrigger(IContext<GameStateEntity> context)
@@ -37,14 +36,35 @@ namespace Lockstep.Core.Systems
 
         protected override void Execute(List<GameStateEntity> entities)
         {
-            snapshotIndexService.AddIndex(_gameStateContext.tick.value);
+            var gameState = entities.SingleEntity();
+            var currentTick = gameState.tick.value;
 
-            Parallel.ForEach(_activeEntities.GetEntities(_buffer), e =>
+            //Register the tick for which a snapshot is created
+            _snapshotIndexService.AddIndex(currentTick);
+
+            foreach (var actor in _actorContext.GetEntities())
+            {
+                var shadowActor = _actorContext.CreateEntity();
+
+                //LocalId is primary index => don't copy
+                foreach (var index in actor.GetComponentIndices().Except(new[] { ActorComponentsLookup.Id }))
+                {
+                    var component1 = actor.GetComponent(index);
+                    var component2 = shadowActor.CreateComponent(index, component1.GetType());
+                    component1.CopyPublicMemberValues(component2);
+                    shadowActor.AddComponent(index, component2);
+                }
+
+                shadowActor.AddShadow(actor.id.value);
+                shadowActor.AddTick(currentTick);
+            }
+
+            Parallel.ForEach(_activeEntities.GetEntities(), e =>
             {
                 var shadowEntity = _gameContext.CreateEntity();
                                                                                      
-                //LocalId is primary index => don't copy
-                foreach (var index in e.GetComponentIndices().Where(i => i != GameComponentsLookup.LocalId))
+                //LocalId is primary index => don't copy; id+actorId should be readonly and stay the same throughout the game
+                foreach (var index in e.GetComponentIndices().Except(new[] { GameComponentsLookup.LocalId, GameComponentsLookup.Id, GameComponentsLookup.ActorId }))
                 {
                     var component1 = e.GetComponent(index);
                     var component2 = shadowEntity.CreateComponent(index, component1.GetType());
@@ -52,8 +72,8 @@ namespace Lockstep.Core.Systems
                     shadowEntity.AddComponent(index, component2);
                 }
 
-                shadowEntity.isShadow = true;
-                shadowEntity.AddTick(_gameStateContext.tick.value);
+                shadowEntity.AddShadow(e.id.value);
+                shadowEntity.AddTick(currentTick);
             });
         }
     }

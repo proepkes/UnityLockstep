@@ -21,14 +21,16 @@ public partial class Contexts : Entitas.IContexts {
 
     static Contexts _sharedInstance;
 
+    public ActorContext actor { get; set; }
     public ConfigContext config { get; set; }
     public GameContext game { get; set; }
     public GameStateContext gameState { get; set; }
     public InputContext input { get; set; }
 
-    public Entitas.IContext[] allContexts { get { return new Entitas.IContext [] { config, game, gameState, input }; } }
+    public Entitas.IContext[] allContexts { get { return new Entitas.IContext [] { actor, config, game, gameState, input }; } }
 
     public Contexts() {
+        actor = new ActorContext();
         config = new ConfigContext();
         game = new GameContext();
         gameState = new GameStateContext();
@@ -62,10 +64,16 @@ public partial class Contexts : Entitas.IContexts {
 //------------------------------------------------------------------------------
 public partial class Contexts {
 
+    public const string Id = "Id";
     public const string LocalId = "LocalId";
 
     [Entitas.CodeGeneration.Attributes.PostConstructor]
     public void InitializeEntityIndices() {
+        actor.AddEntityIndex(new Entitas.PrimaryEntityIndex<ActorEntity, byte>(
+            Id,
+            actor.GetGroup(ActorMatcher.Id),
+            (e, c) => ((Lockstep.Core.Components.Actor.IdComponent)c).value));
+
         game.AddEntityIndex(new Entitas.PrimaryEntityIndex<GameEntity, uint>(
             LocalId,
             game.GetGroup(GameMatcher.LocalId),
@@ -74,6 +82,10 @@ public partial class Contexts {
 }
 
 public static class ContextsExtensions {
+
+    public static ActorEntity GetEntityWithId(this ActorContext context, byte value) {
+        return ((Entitas.PrimaryEntityIndex<ActorEntity, byte>)context.GetEntityIndex(Contexts.Id)).GetEntity(value);
+    }
 
     public static GameEntity GetEntityWithLocalId(this GameContext context, uint value) {
         return ((Entitas.PrimaryEntityIndex<GameEntity, uint>)context.GetEntityIndex(Contexts.LocalId)).GetEntity(value);
@@ -94,6 +106,7 @@ public partial class Contexts {
     [Entitas.CodeGeneration.Attributes.PostConstructor]
     public void InitializeContextObservers() {
         try {
+            CreateContextObserver(actor);
             CreateContextObserver(config);
             CreateContextObserver(game);
             CreateContextObserver(gameState);

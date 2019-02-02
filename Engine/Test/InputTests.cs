@@ -66,7 +66,7 @@ namespace Test
             systems.CurrentTick.ShouldBe((uint)1);
             for (int i = 0; i < 1; i++)
             {
-                sim.Execute(new SpawnCommand());
+                sim.Execute(new Spawn());
             }
 
             sim.Update(1000); //1            
@@ -87,7 +87,7 @@ namespace Test
             ExpectShadowCount(contexts, 1);   
 
 
-            commandBuffer.Insert(2, 1, new ICommand[] { new MoveCommand(contexts.game), });
+            commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game), });
 
 
             sim.Update(1000); //4                
@@ -97,7 +97,7 @@ namespace Test
 
             for (int i = 0; i < 1; i++)
             {
-                sim.Execute(new SpawnCommand());
+                sim.Execute(new Spawn());
             }
 
             sim.Update(1000); //5        
@@ -109,7 +109,7 @@ namespace Test
 
             for (int i = 0; i < 1; i++)
             {
-                sim.Execute(new SpawnCommand());
+                sim.Execute(new Spawn());
             }
 
             sim.Update(1000); //6
@@ -126,7 +126,7 @@ namespace Test
             commandBuffer.Insert(4, 1, new ICommand[] { });
             for (int i = 0; i < 1; i++)
             {
-                sim.Execute(new SpawnCommand());
+                sim.Execute(new Spawn());
             }
             sim.Update(1000);
             ExpectEntityCount(contexts, 4);
@@ -136,7 +136,7 @@ namespace Test
             sim.Update(1000);
             for (int i = 0; i < 1; i++)
             {
-                commandBuffer.Insert(5, 1, new ICommand[] { new SpawnCommand() });
+                commandBuffer.Insert(5, 1, new ICommand[] { new Spawn() });
             }
             sim.Update(1000);
 
@@ -159,7 +159,7 @@ namespace Test
             sim.Update(1000);
             for (int i = 0; i < 10; i++)
             {
-                sim.Execute(new SpawnCommand());
+                sim.Execute(new Spawn());
             }
             sim.Update(1000); 
             sim.Update(1000);
@@ -168,14 +168,14 @@ namespace Test
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(2, 1, new ICommand[] { new SpawnCommand() });
+                commandBuffer.Insert(2, 1, new ICommand[] { new Spawn() });
             }              
 
             sim.Update(1000);                     
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(4, 1, new ICommand[] { new SpawnCommand() });
+                commandBuffer.Insert(4, 1, new ICommand[] { new Spawn() });
             }
 
                                        
@@ -186,7 +186,7 @@ namespace Test
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(5, 1, new ICommand[] { new SpawnCommand() });
+                commandBuffer.Insert(5, 1, new ICommand[] { new Spawn() });
             }
 
             sim.Update(1000);    
@@ -196,7 +196,7 @@ namespace Test
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(7, 1, new ICommand[] { new SpawnCommand() });
+                commandBuffer.Insert(7, 1, new ICommand[] { new Spawn() });
             }
             sim.Update(1000);
 
@@ -209,7 +209,7 @@ namespace Test
             _output.WriteLine("Revert to 3");
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(8, 1, new ICommand[] { new SpawnCommand() });
+                commandBuffer.Insert(8, 1, new ICommand[] { new Spawn() });
             }
 
             sim.Update(1000);                                   
@@ -219,13 +219,12 @@ namespace Test
             sim.Update(1000);
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(9, 1, new ICommand[] { new SpawnCommand() });
+                commandBuffer.Insert(9, 1, new ICommand[] { new Spawn() });
             }
             sim.Update(1000);
 
             ExpectEntityCount(contexts, 70);
-        }
-
+        }        
 
         [Fact]
         public void TestEntityRollbackWithLocalChanges()
@@ -246,19 +245,19 @@ namespace Test
             sim.Update(1000); //0                           
             systems.CurrentTick.ShouldBe(frameCounter++);
 
-            sim.Execute(new SpawnCommand());
+            sim.Execute(new Spawn());
 
             sim.Update(1000); //1                           
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 1);
+            ExpectShadowCount(contexts, 0);
 
             sim.Update(1000); //2                             
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 1);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 0).ShouldBe(1);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 1).ShouldBe(0);
+            ExpectShadowCount(contexts, 0);
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 0);
 
             commandBuffer.Insert(1, 1, new ICommand[] { });
 
@@ -268,14 +267,12 @@ namespace Test
             ExpectShadowCount(contexts, 1);
 
 
-            commandBuffer.Insert(2, 1, new ICommand[] { new MoveCommand(contexts.game), });
-
+            commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game), });       
 
             sim.Update(1000); //4                           
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
-            ExpectShadowCount(contexts, 2);
-
+            ExpectShadowCount(contexts, 2);       
            
             sim.Update(1000); //5                           
             systems.CurrentTick.ShouldBe(frameCounter++);
@@ -283,47 +280,41 @@ namespace Test
             ExpectEntityCount(contexts, 1);
             ExpectShadowCount(contexts, 2);
 
-            sim.Execute(new MoveSpecificCommand(contexts.game, 0));
+            sim.Execute(new MoveEntitesOfSpecificActor(contexts.game, 0));
 
             sim.Update(1000); //6                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 1);
             ExpectShadowCount(contexts, 3);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(0).ShouldBe((uint)1);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(1).ShouldBe((uint)0);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 0).ShouldBe(1);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 1).ShouldBe(0);
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 0);                                     
 
-            commandBuffer.Insert(3, 1, new ICommand[] { new SpawnCommand() }); //Revert to 3
+            commandBuffer.Insert(3, 1, new ICommand[] { new Spawn() }); //Revert to 3
 
             sim.Update(1000); //7                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 2);
             ExpectShadowCount(contexts, 4);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(0).ShouldBe((uint)1);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(1).ShouldBe((uint)1);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 0).ShouldBe(1);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 1).ShouldBe(1);
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 1);
 
-            commandBuffer.Insert(4, 1, new ICommand[] { new SpawnCommand() }); //Revert to 4
+            commandBuffer.Insert(4, 1, new ICommand[] { new Spawn() }); //Revert to 4
 
             sim.Update(1000); //8                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 3);
             ExpectShadowCount(contexts, 5);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(0).ShouldBe((uint)1);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(1).ShouldBe((uint)2);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 0).ShouldBe(1);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 1).ShouldBe(2);
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 2);
 
-            commandBuffer.Insert(5, 1, new ICommand[] { new SpawnCommand(), new SpawnCommand(), new SpawnCommand(), new SpawnCommand(), new SpawnCommand(), new SpawnCommand() }); //Revert to 4
+            commandBuffer.Insert(5, 1, new ICommand[] { new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn() }); //Revert to 5
 
             sim.Update(1000);                           
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 9);
             ExpectShadowCount(contexts, 11);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(0).ShouldBe((uint)1);
-            systems.Services.Get<IPlayerEntityIdProvider>().Get(1).ShouldBe((uint)8);
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
             sim.Update(1000);
             systems.CurrentTick.ShouldBe(frameCounter++);
@@ -332,14 +323,14 @@ namespace Test
             sim.Update(1000);
             systems.CurrentTick.ShouldBe(frameCounter++);   
 
-            sim.Execute(new SpawnCommand());
-            commandBuffer.Insert(6, 1, new ICommand[] { new MoveSpecificCommand(contexts.game, 1),  }); 
+            sim.Execute(new Spawn());
+            commandBuffer.Insert(6, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1),  }); 
 
             sim.Update(1000);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 0).ShouldBe(2);
-            contexts.game.GetEntities().Count(entity => !entity.isShadow && entity.ownerId.value == 1).ShouldBe(8);
             ExpectEntityCount(contexts, 10);
-            ExpectShadowCount(contexts, 20); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1     
+            ExpectShadowCount(contexts, 20); //Last frame 11 shadows + 1 newShadow from player 0 + 8 move-shadows from player 1
+            GameEntityCountMatchesActorEntityCount(contexts, 0, 2);
+            GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
         }
 
         [Fact]
@@ -362,17 +353,23 @@ namespace Test
 
         private void ExpectEntityCount(Contexts contexts, int value)
         {
-            contexts.game.GetEntities().Count(entity => !entity.isShadow).ShouldBe(value);
-
+            contexts.game.GetEntities(GameMatcher.LocalId).Length.ShouldBe(value); 
         }
 
         private void ExpectShadowCount(Contexts contexts, int value)
-        {      
-            contexts.game.GetEntities().Count(entity => entity.isShadow).ShouldBe(value);
+        {
+            contexts.game.GetEntities(GameMatcher.Shadow).Length.ShouldBe(value);
+        }
+
+        private void GameEntityCountMatchesActorEntityCount(Contexts contexts, byte actorId, int expectedCount)
+        {
+            var gameEntityCount = contexts.game.GetEntities(GameMatcher.LocalId).Count(entity => entity.actorId.value == actorId);
+                gameEntityCount.ShouldBe(expectedCount);
+                gameEntityCount.ShouldBe((int)contexts.actor.GetEntities(ActorMatcher.Id).First(actor => actor.id.value == actorId).entityCount.value);
         }
 
 
-        public class SpawnCommand : ICommand
+        public class Spawn : ICommand
         {                             
             public int EntityConfigId;
 
@@ -382,43 +379,42 @@ namespace Test
             {                                   
                 e.AddCoordinate(Position);
                 e.AddEntityConfigId(EntityConfigId);   
-            }     
-
+            }  
         }
-        public class MoveCommand : ICommand
-        {  
 
-            private GameContext contexts;
+        //Hacky commands, don't do this in production. Commands should only modify the given input-entity
+        public class MoveAll : ICommand
+        {                               
+            private readonly GameContext _contexts;
 
-            public MoveCommand(GameContext contexts)
+            public MoveAll(GameContext contexts)
             {
-                this.contexts = contexts;
+                _contexts = contexts;
             }
 
             public void Execute(InputEntity e)
             {
-                foreach (var gameEntity in contexts.GetEntities().Where(entity => !entity.isShadow))
+                foreach (var gameEntity in _contexts.GetEntities(GameMatcher.LocalId))
                 {
                     gameEntity.ReplacePosition(new Vector2(2, 2));
                 }
-            }
-
+            }     
         }
 
-        public class MoveSpecificCommand : ICommand
+        public class MoveEntitesOfSpecificActor : ICommand
         {                                    
-            private GameContext contexts;
-            private readonly byte _commanderid;
+            private readonly GameContext _contexts;
+            private readonly byte _actorId;
 
-            public MoveSpecificCommand(GameContext contexts, byte commanderid)
+            public MoveEntitesOfSpecificActor(GameContext contexts, byte actorId)
             {
-                this.contexts = contexts;
-                _commanderid = commanderid;
+                _contexts = contexts;
+                _actorId = actorId;
             }
 
             public void Execute(InputEntity e)
             {
-                foreach (var gameEntity in contexts.GetEntities().Where(entity => !entity.isShadow && entity.ownerId.value == _commanderid))
+                foreach (var gameEntity in _contexts.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == _actorId))
                 {
                     gameEntity.ReplacePosition(new Vector2(2, 2));
                 }

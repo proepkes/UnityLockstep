@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -56,14 +56,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefaultServices\DefaultSnapshotIndexService.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePlayerIdComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameOwnerIdComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorIdComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorTickComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorShadowComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorEntityCountComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTickComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameActorIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameLocalIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNewComponent.cs" />
@@ -82,28 +85,33 @@
     <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputPlayerIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputActorIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputSelectionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
-    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
+    <Compile Include="Generated\Actor\ActorComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
+    <Compile Include="Generated\Actor\ActorAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
     <Compile Include="Generated\GameState\GameStateAttribute.cs" />
     <Compile Include="Generated\Config\ConfigAttribute.cs" />
     <Compile Include="Generated\Game\GameContext.cs" />
+    <Compile Include="Generated\Actor\ActorContext.cs" />
     <Compile Include="Generated\Input\InputContext.cs" />
     <Compile Include="Generated\GameState\GameStateContext.cs" />
     <Compile Include="Generated\Config\ConfigContext.cs" />
     <Compile Include="Generated\Game\GameMatcher.cs" />
+    <Compile Include="Generated\Actor\ActorMatcher.cs" />
     <Compile Include="Generated\Input\InputMatcher.cs" />
     <Compile Include="Generated\GameState\GameStateMatcher.cs" />
     <Compile Include="Generated\Config\ConfigMatcher.cs" />
     <Compile Include="Generated\Contexts.cs" />
     <Compile Include="Generated\Game\GameEntity.cs" />
+    <Compile Include="Generated\Actor\ActorEntity.cs" />
     <Compile Include="Generated\Input\InputEntity.cs" />
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
@@ -117,19 +125,27 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\GameState\PredictingComponent.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Components\Game\OwnerIdComponent.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="DefaultServices\DefaultPlayerEntityIdProvider.cs" />
+    <Compile Include="Components\Actor\IdComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\TickComponent.cs" />
+    <Compile Include="Components\Actor\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\Game\InternalIdComponent.cs" />
+    <Compile Include="Components\Actor\ShadowComponent.cs" />
+    <Compile Include="Components\Actor\EntityCountComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DefaultServices\DefaultSnapshotIndexService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\GameState\PredictingComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\ActorIdComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Components\Game\LocalIdComponent.cs" />
     <Compile Include="Components\Input\TargetPlayerIdComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,10 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\ShadowComponent.cs" />
-    <Compile Include="Interfaces\IIdProviderService.cs" />
     <Compile Include="Interfaces\ISnapshotIndexService.cs" />
     <Compile Include="Systems\OnNewPredictionCreateSnapshot.cs" />
-    <Compile Include="Systems\Debugging\VerifyShadows.cs" />
+    <Compile Include="Systems\Debugging\VerifyNoDuplicateShadows.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -172,7 +187,7 @@
   <ItemGroup>
     <Compile Include="Components\Input\CoordinateComponent.cs" />
     <Compile Include="Components\Input\EntityConfigIdComponent.cs" />
-    <Compile Include="Components\Input\CommanderId.cs" />
+    <Compile Include="Components\Input\ActorId.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\HashableComponent.cs" />

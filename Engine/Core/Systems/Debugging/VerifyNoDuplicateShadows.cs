@@ -1,34 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Entitas;
 using Lockstep.Core.Interfaces;
 
-namespace Lockstep.Core.Systems
+namespace Lockstep.Core.Systems.Debugging
 {
-    public class VerifyShadows : IExecuteSystem
+    public class VerifyNoDuplicateShadows : IExecuteSystem
     {
         private readonly Services _services;
-        private IGroup<GameEntity> shadows;
+        private readonly IGroup<GameEntity> _shadows;
 
-        public VerifyShadows(Contexts contexts, Services services)
+        public VerifyNoDuplicateShadows(Contexts contexts, Services services)
         {
             _services = services;
-            shadows = contexts.game.GetGroup(GameMatcher.Shadow);
+            _shadows = contexts.game.GetGroup(GameMatcher.Shadow);
         }
         public void Execute()
         {
             var temp = new Dictionary<uint, List<Tuple<byte, uint>>>();
-            foreach (var shadow in shadows)
+            foreach (var shadow in _shadows)
             {
                 if (temp.ContainsKey(shadow.tick.value))
                 {
                     var others = temp[shadow.tick.value];
                     foreach (var other in others)
                     {
-                        if (other.Item1 == shadow.ownerId.value && other.Item2 == shadow.id.value)
+                        if (other.Item1 == shadow.actorId.value && other.Item2 == shadow.id.value)
                         {
                             _services.Get<ILogService>().Warn("Shadow duplicate!");
                         }
@@ -39,7 +36,7 @@ namespace Lockstep.Core.Systems
                     temp.Add(shadow.tick.value, new List<Tuple<byte, uint>>());
                 }
 
-                temp[shadow.tick.value].Add(new Tuple<byte, uint>(shadow.ownerId.value, shadow.id.value));
+                temp[shadow.tick.value].Add(new Tuple<byte, uint>(shadow.actorId.value, shadow.id.value));
             }
         }
     }

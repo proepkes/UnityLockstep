@@ -2,7 +2,7 @@
 
 namespace Lockstep.Core
 {
-    public sealed class CoreSystems : Entitas.Systems
+    public sealed class CoreSystems : Feature
     {                     
         public CoreSystems(Contexts contexts, Services services)
         {                   

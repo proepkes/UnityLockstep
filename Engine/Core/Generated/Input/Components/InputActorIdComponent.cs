@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class InputEntity {
 
-    public Lockstep.Core.Components.Input.PlayerId playerId { get { return (Lockstep.Core.Components.Input.PlayerId)GetComponent(InputComponentsLookup.PlayerId); } }
-    public bool hasPlayerId { get { return HasComponent(InputComponentsLookup.PlayerId); } }
+    public Lockstep.Core.Components.Input.ActorId actorId { get { return (Lockstep.Core.Components.Input.ActorId)GetComponent(InputComponentsLookup.ActorId); } }
+    public bool hasActorId { get { return HasComponent(InputComponentsLookup.ActorId); } }
 
-    public void AddPlayerId(byte newValue) {
-        var index = InputComponentsLookup.PlayerId;
-        var component = (Lockstep.Core.Components.Input.PlayerId)CreateComponent(index, typeof(Lockstep.Core.Components.Input.PlayerId));
+    public void AddActorId(byte newValue) {
+        var index = InputComponentsLookup.ActorId;
+        var component = (Lockstep.Core.Components.Input.ActorId)CreateComponent(index, typeof(Lockstep.Core.Components.Input.ActorId));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplacePlayerId(byte newValue) {
-        var index = InputComponentsLookup.PlayerId;
-        var component = (Lockstep.Core.Components.Input.PlayerId)CreateComponent(index, typeof(Lockstep.Core.Components.Input.PlayerId));
+    public void ReplaceActorId(byte newValue) {
+        var index = InputComponentsLookup.ActorId;
+        var component = (Lockstep.Core.Components.Input.ActorId)CreateComponent(index, typeof(Lockstep.Core.Components.Input.ActorId));
         component.value = newValue;
         ReplaceComponent(index, component);
     }
 
-    public void RemovePlayerId() {
-        RemoveComponent(InputComponentsLookup.PlayerId);
+    public void RemoveActorId() {
+        RemoveComponent(InputComponentsLookup.ActorId);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class InputEntity {
 //------------------------------------------------------------------------------
 public sealed partial class InputMatcher {
 
-    static Entitas.IMatcher<InputEntity> _matcherPlayerId;
+    static Entitas.IMatcher<InputEntity> _matcherActorId;
 
-    public static Entitas.IMatcher<InputEntity> PlayerId {
+    public static Entitas.IMatcher<InputEntity> ActorId {
         get {
-            if (_matcherPlayerId == null) {
-                var matcher = (Entitas.Matcher<InputEntity>)Entitas.Matcher<InputEntity>.AllOf(InputComponentsLookup.PlayerId);
+            if (_matcherActorId == null) {
+                var matcher = (Entitas.Matcher<InputEntity>)Entitas.Matcher<InputEntity>.AllOf(InputComponentsLookup.ActorId);
                 matcher.componentNames = InputComponentsLookup.componentNames;
-                _matcherPlayerId = matcher;
+                _matcherActorId = matcher;
             }
 
-            return _matcherPlayerId;
+            return _matcherActorId;
         }
     }
 }

@@ -18,12 +18,12 @@ namespace Lockstep.Core.Systems.Navigation
 
         protected override ICollector<InputEntity> GetTrigger(IContext<InputEntity> context)
         {
-            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.Coordinate, InputMatcher.Selection, InputMatcher.PlayerId));
+            return context.CreateCollector(InputMatcher.AllOf(InputMatcher.Coordinate, InputMatcher.Selection, InputMatcher.ActorId));
         }
 
         protected override bool Filter(InputEntity entity)
         {
-            return entity.hasCoordinate && entity.hasSelection && entity.hasPlayerId;
+            return entity.hasCoordinate && entity.hasSelection && entity.hasActorId;
         }
 
         protected override void Execute(List<InputEntity> inputs)
@@ -33,10 +33,10 @@ namespace Lockstep.Core.Systems.Navigation
                 var destination = input.coordinate.value;
 
                 var selectedEntities = _contextsGame.GetEntities(
-                        GameMatcher.AllOf(GameMatcher.OwnerId, GameMatcher.Id).NoneOf(GameMatcher.Shadow))
+                        GameMatcher.AllOf(GameMatcher.ActorId, GameMatcher.Id).NoneOf(GameMatcher.Shadow))
                         .Where(entity => 
                             input.selection.entityIds.Contains(entity.id.value) &&
-                            entity.ownerId.value == input.playerId.value);
+                            entity.actorId.value == input.actorId.value);
 
                 foreach (var entity in selectedEntities)
                 {

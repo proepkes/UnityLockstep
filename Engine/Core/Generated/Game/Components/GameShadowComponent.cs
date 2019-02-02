@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    static readonly Lockstep.Core.Components.Game.ShadowComponent shadowComponent = new Lockstep.Core.Components.Game.ShadowComponent();
+    public Lockstep.Core.Components.Game.ShadowComponent shadow { get { return (Lockstep.Core.Components.Game.ShadowComponent)GetComponent(GameComponentsLookup.Shadow); } }
+    public bool hasShadow { get { return HasComponent(GameComponentsLookup.Shadow); } }
 
-    public bool isShadow {
-        get { return HasComponent(GameComponentsLookup.Shadow); }
-        set {
-            if (value != isShadow) {
-                var index = GameComponentsLookup.Shadow;
-                if (value) {
-                    var componentPool = GetComponentPool(index);
-                    var component = componentPool.Count > 0
-                            ? componentPool.Pop()
-                            : shadowComponent;
+    public void AddShadow(uint newLocalEntityIdRef) {
+        var index = GameComponentsLookup.Shadow;
+        var component = (Lockstep.Core.Components.Game.ShadowComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.ShadowComponent));
+        component.localEntityIdRef = newLocalEntityIdRef;
+        AddComponent(index, component);
+    }
 
-                    AddComponent(index, component);
-                } else {
-                    RemoveComponent(index);
-                }
-            }
-        }
+    public void ReplaceShadow(uint newLocalEntityIdRef) {
+        var index = GameComponentsLookup.Shadow;
+        var component = (Lockstep.Core.Components.Game.ShadowComponent)CreateComponent(index, typeof(Lockstep.Core.Components.Game.ShadowComponent));
+        component.localEntityIdRef = newLocalEntityIdRef;
+        ReplaceComponent(index, component);
+    }
+
+    public void RemoveShadow() {
+        RemoveComponent(GameComponentsLookup.Shadow);
     }
 }
 

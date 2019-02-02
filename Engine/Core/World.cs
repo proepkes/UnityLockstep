@@ -5,6 +5,7 @@ using Entitas;
 using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
+using Lockstep.Core.Systems.Debugging;
 using Lockstep.Core.Systems.GameState;
 
 namespace Lockstep.Core
@@ -17,12 +18,12 @@ namespace Lockstep.Core
 
         public uint CurrentTick => Contexts.gameState.tick.value;
 
-        public int EntitiesInCurrentTick => Contexts.game.GetEntities().Count(e => !e.isShadow);
+        public int EntitiesInCurrentTick => Contexts.game.GetEntities(GameMatcher.LocalId).Length;
 
         private readonly IViewService _view;
         private readonly GameContext _gameContext;
-        private readonly INavigationService _navigation;
-        private readonly IPlayerEntityIdProvider _idProvider;
+        private readonly INavigationService _navigation;      
+        private ActorContext _actorContext;
 
         public World(Contexts contexts, params IService[] additionalServices)
         {
@@ -35,10 +36,10 @@ namespace Lockstep.Core
             }
 
             _view = Services.Get<IViewService>();
-            _navigation = Services.Get<INavigationService>();
-            _idProvider = Services.Get<IPlayerEntityIdProvider>();
+            _navigation = Services.Get<INavigationService>();       
 
             _gameContext = contexts.game;
+            _actorContext = contexts.actor;
 
             AddFeatures(contexts);
         }
@@ -59,7 +60,7 @@ namespace Lockstep.Core
 
             Add(new IncrementTick(Contexts));
 
-            Add(new VerifyShadows(Contexts, Services));
+            Add(new VerifyNoDuplicateShadows(Contexts, Services));
         }                       
 
         public void Initialize(byte playerId)
@@ -68,7 +69,7 @@ namespace Lockstep.Core
             Contexts.gameState.SetPlayerId(playerId);
         }
 
-        public void AddInput(uint tickId, byte player, List<ICommand> input)
+        public void AddInput(uint tickId, byte actor, List<ICommand> input)
         {
             foreach (var command in input)
             {
@@ -76,7 +77,7 @@ namespace Lockstep.Core
                 command.Execute(inputEntity);
 
                 inputEntity.AddTick(tickId);
-                inputEntity.AddPlayerId(player);
+                inputEntity.AddActorId(actor);
             }
         }
 
@@ -108,37 +109,24 @@ namespace Lockstep.Core
         /// <param name="tick"></param>
         public void RevertToTick(uint tick)
         {                         
-            var currentEntities = _gameContext.GetEntities(GameMatcher
-                .AllOf(
-                    GameMatcher.Id,
-                    GameMatcher.OwnerId)
-                .NoneOf(GameMatcher.Shadow));   
+            var currentEntities = _gameContext.GetEntities(GameMatcher.AllOf(GameMatcher.LocalId));   
             
             var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);
-            var shadows = _gameContext.GetEntities(GameMatcher.Shadow).Where(e => e.tick.value == resultTick).ToList();  
+            var shadowEntities = _gameContext.GetEntities(GameMatcher.Shadow).Where(e => e.tick.value == resultTick).ToList();
+            var shadowActors = _gameContext.GetEntities(GameMatcher.Shadow).Where(e => e.tick.value == resultTick).ToList();
 
             //Entities that were created in the prediction have to be destroyed              
-            //var invalidEntities = new List<GameEntity>(200);
-            //foreach (var spawnedShadowsPerOwner in spawnedShadows.ToLookup(e => e.ownerId.value, e => e.id.value))
-            //{
-            //    var ownerId = spawnedShadowsPerOwner.Key;
+            var invalidEntities = currentEntities.Except(shadowEntities, new CompositeKeyComparer()); 
+            foreach (var invalidEntity in invalidEntities)
+            {
+                //Here we have the actual entities, we can safely refer to them via the internal id
+                _view.DeleteView(invalidEntity.localId.value);
+                _gameContext.GetEntityWithLocalId(invalidEntity.localId.value).Destroy();
+            }
 
-            //    var referencedEntities = currentEntities.Where(entity => ownerId == entity.ownerId.value && spawnedShadowsPerOwner.Contains(entity.id.value)).ToList();
 
-            //    invalidEntities.AddRange(referencedEntities);
 
-            //    //Reset id service for the player to last valid state, since we created IDs that may not match with other players 
-            //    _idProvider.SetNext(ownerId, _idProvider.Get(ownerId) - (uint)referencedEntities.Count);
-            //}
 
-            //foreach (var invalidEntity in invalidEntities)
-            //{
-            //    //Here we have the actual entities, we can safely refer to them via the internal id
-            //    _view.DeleteView(invalidEntity.localId.value);
-            //    _gameContext.GetEntityWithLocalId(invalidEntity.localId.value).Destroy();
-            //}
-            
-            
             //Apply old values to the components
             //foreach (var shadow in shadows.Except(spawnedShadows))
             //{                                                                                                                
@@ -173,9 +161,21 @@ namespace Lockstep.Core
             //        }            
             //    }
             //}      
-                       
+
 
             Contexts.gameState.ReplaceTick(tick);
         }
-    }     
+    }
+    public class CompositeKeyComparer : IEqualityComparer<GameEntity>
+    {
+        public bool Equals(GameEntity x, GameEntity y)
+        {
+            return x.id.value == y.id.value && x.actorId.value == y.actorId.value;
+        }
+
+        public int GetHashCode(GameEntity obj)
+        {
+            return (int)(obj.id.value << 8 + obj.actorId.value);
+        }
+    }
 }
