@@ -46,7 +46,7 @@ namespace Lockstep.Core
 
         private void AddFeatures(Contexts contexts)
         {
-            Add(new OnNewPredictionCreateSnapshot(contexts, Services));    
+            Add(new OnNewPredictionCreateBackup(contexts, Services));    
 
             Add(new InputFeature(contexts, Services));
 
@@ -58,9 +58,9 @@ namespace Lockstep.Core
 
             Add(new RemoveNewFlag(contexts));
 
-            Add(new IncrementTick(Contexts));
+            Add(new IncrementTick(contexts));
 
-            Add(new VerifyNoDuplicateBackups(Contexts, Services));
+            Add(new VerifyNoDuplicateBackups(contexts, Services));
         }                       
 
         public void Initialize(byte playerId)

@@ -7,14 +7,14 @@ using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Systems
 {
-    public class OnNewPredictionCreateSnapshot : ReactiveSystem<GameStateEntity>
+    public class OnNewPredictionCreateBackup : ReactiveSystem<GameStateEntity>
     {
         private readonly IGroup<GameEntity> _activeEntities;
         private readonly ActorContext _actorContext;                 
         private readonly GameContext _gameContext;
         private readonly ISnapshotIndexService _snapshotIndexService;
 
-        public OnNewPredictionCreateSnapshot(Contexts contexts, Services services) : base(contexts.gameState)
+        public OnNewPredictionCreateBackup(Contexts contexts, Services services) : base(contexts.gameState)
         {
             _gameContext = contexts.game;
             _actorContext = contexts.actor;
