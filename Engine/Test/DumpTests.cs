@@ -36,9 +36,8 @@ namespace Test
             var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
             var dirPath = Path.GetDirectoryName(codeBasePath);
 
-
-            var fileName = "-156373569948";
-            var data = ReadFile( $@"E:\Repositories\UnityLockstep\Engine\Test\bin\Debug\netcoreapp2.2\Dumps\{fileName}.txt"); 
+            var fileName = "18_130442405747_log";
+            var data = ReadFile( $@"{dirPath}\Dumps\{fileName}.txt"); 
             var deserializer = new Deserializer(data);
             var hashCode = deserializer.GetLong();
             var tick = deserializer.GetUInt();
@@ -46,28 +45,98 @@ namespace Test
             var allActors = deserializer.GetBytesWithLength();
 
             IFormatter formatter = new BinaryFormatter();
+            GameLog log;
             using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
             {
-                var dump = (CommandBuffer)formatter.Deserialize(stream);
-                foreach (var (tickId, actorCommands) in dump.Buffer)
-                {
-                    foreach (var (actorId, commands) in actorCommands)
-                    {
-                        commandBuffer.Insert(tickId, actorId, commands.ToArray());
-                    }
-                }
+                log = (GameLog)formatter.Deserialize(stream);
             }
-
+                  
             var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = allActors, ActorID = localActorId });
+            sim.Initialize(new Init { TargetFPS = 1000, AllActors = allActors, ActorID = localActorId });
 
-            for (int i = 0; i < tick; i++)
+            for (uint i = 0; i < tick; i++)
             {
-                sim.Update(1000);
+                if (log.Log.ContainsKey(i))
+                {
+                    var tickCommands = log.Log[i];
+                    {
+                        foreach (var (tickId, allCommands) in tickCommands)
+                        {
+                            foreach (var (actorId, commands) in allCommands)
+                            {
+                                if (actorId == localActorId)
+                                {
+                                    _output.WriteLine("Local: " + commands.Count + " commands");
+                                }
+                                commandBuffer.Insert(tickId, actorId, commands.ToArray()); 
+                            }
+                        }
+                    }   
+                }
+                sim.Update(1);
             }
 
             contexts.gameState.hashCode.value.ShouldBe(hashCode);
         }
+
+
+        [Fact]
+        public void TestDump2()
+        {
+            var contexts = new Contexts();
+
+            var systems = new World(contexts, new TestLogger(_output));
+            var commandBuffer = new CommandBuffer();
+
+            var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+            var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
+            var dirPath = Path.GetDirectoryName(codeBasePath);
+
+            var fileName = "-127091875993";
+            var data = ReadFile($@"{dirPath}\Dumps\{fileName}.txt");
+            var deserializer = new Deserializer(data);
+            var hashCode = deserializer.GetLong();
+            var tick = deserializer.GetUInt();
+            var localActorId = deserializer.GetByte();
+            var allActors = deserializer.GetBytesWithLength();
+
+            IFormatter formatter = new BinaryFormatter();
+            GameLog log;
+            using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
+            {
+                log = (GameLog)formatter.Deserialize(stream);
+            }
+
+            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            sim.Initialize(new Init { TargetFPS = 1000, AllActors = allActors, ActorID = localActorId });
+
+            var cs = log.GetAllCommandsForFrame(183);
+
+            for (uint i = 0; i < 300; i++)
+            {
+                if (log.Log.ContainsKey(i))
+                {
+                    var tickCommands = log.Log[i];
+                    {
+                        foreach (var (tickId, allCommands) in tickCommands)
+                        {
+                            foreach (var (actorId, commands) in allCommands)
+                            {
+                                if (actorId == localActorId)
+                                {
+                                    _output.WriteLine("Local: " + commands.Count + " commands");
+                                }
+                                commandBuffer.Insert(tickId, actorId, commands.ToArray());
+                            }
+                        }
+                    }
+                }
+                sim.Update(1);
+            }
+
+            contexts.gameState.hashCode.value.ShouldBe(hashCode);
+        }
+
 
         public static byte[] ReadFile(string filePath)
         {

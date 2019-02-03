@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client.Implementations
@@ -11,8 +12,7 @@ namespace Lockstep.Client.Implementations
         /// Mapping: FrameNumber -> Commands per player(Id)
         /// </summary>    
         public Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000);
-
-        public uint LastInsertedFrame { get; private set; }      
+                                                                  
 
         public virtual void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
         {
@@ -28,25 +28,32 @@ namespace Lockstep.Client.Implementations
                     Buffer[frameNumber].Add(commanderId, new List<ICommand>(5)); //Initial size of 5 commands per frame per player
                 }
 
-                Buffer[frameNumber][commanderId].AddRange(commands);
-
-                //TODO: store all received framenumbers instead of only the last one, no need to predict frames if input is already available so call simulate() instead => maybe create new snapshot on frames which already have input
-                LastInsertedFrame = frameNumber;
+                Buffer[frameNumber][commanderId].AddRange(commands);      
             }     
         }
 
-        public Dictionary<byte, List<ICommand>> Get(uint frame)
+        public Dictionary<uint, Dictionary<byte, List<ICommand>>> GetChanges()
         {
             lock (Buffer)
-            {
-                //If no commands were inserted then return an empty list
-                if (!Buffer.ContainsKey(frame))
-                {
-                    Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
-                }
-
-                return Buffer[frame];
+            {   
+                var result = Buffer.ToDictionary(pair => pair.Key, pair => pair.Value);
+                Buffer.Clear();
+                return result;
             }
-        }       
+        }
+
+        //public Dictionary<byte, List<ICommand>> Get(uint frame)
+        //{
+        //    lock (Buffer)
+        //    {
+        //        //If no commands were inserted then return an empty list
+        //        if (!Buffer.ContainsKey(frame))
+        //        {
+        //            Buffer.Add(frame, new Dictionary<byte, List<ICommand>>());
+        //        }
+
+        //        return Buffer[frame];
+        //    }
+        //}       
     }
 }

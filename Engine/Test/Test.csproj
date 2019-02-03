@@ -32,16 +32,10 @@
     <Reference Include="FixMath.NET">
       <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\Dependencies\Newtonsoft.Json.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Dumps\-156373569948.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Dumps\-411949218237.txt">
+    <None Update="Dumps\18_130442405747_log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

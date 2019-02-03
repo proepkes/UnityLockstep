@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Entitas;
 using Lockstep.Core.Interfaces;
 
@@ -9,8 +10,8 @@ namespace Lockstep.Core.Systems.Debugging
     {
         private readonly Services _services;                        
         private readonly GameContext _gameContext;
-        private InputContext _inputContext;
-        private GameStateContext _gameStateContext;
+        private readonly InputContext _inputContext;
+        private readonly GameStateContext _gameStateContext;
 
         public VerifySelectionIdExists(Contexts contexts, Services services) 
         {
@@ -30,13 +31,14 @@ namespace Lockstep.Core.Systems.Debugging
                         InputMatcher.ActorId))
                 .Where(entity => entity.tick.value < _gameStateContext.tick.value))
             {
-                foreach (var id in input.selection.entityIds)
-                {
-                    if (!_gameContext.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == input.actorId.value).Select(entity => entity.id.value).Contains(id))
-                    {
-                        _services.Get<ILogService>().Warn("Id mismatch for actor: " + input.actorId.value);
-                    }
+                var ents = _gameContext.GetEntities(GameMatcher.LocalId)
+                    .Where(entity => entity.actorId.value == input.actorId.value).Select(entity => entity.id.value);
+                var missing = input.selection.entityIds.Where(u => !ents.Contains(u)).ToList();
+                if (missing.Any())
+                {   
+                    _services.Get<ILogService>().Warn(missing.Count + " missing for actor: " + input.actorId.value);
                 }
+                
             }
         }
     }

@@ -1,8 +1,11 @@
 ﻿            
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Entitas;
 using FastFileLog;
 using Lockstep.Client;
 using Lockstep.Client.Commands;
@@ -73,11 +76,34 @@ public class RTSNetworkedSimulation : MonoBehaviour
         serializer.Put(PlayerId);
         serializer.PutBytesWithLength(AllActorIds);
         IFormatter formatter = new BinaryFormatter();
-
-        Stream stream = new FileStream(@"C:\Log\"+ Contexts.sharedInstance.gameState.hashCode.value+".txt", FileMode.Create, FileAccess.Write);
+                                                          
+        Stream stream = new FileStream(@"C:\Log\"+ PlayerId + "_"+ Contexts.sharedInstance.gameState.hashCode.value+"_log.txt", FileMode.Create, FileAccess.Write);
         stream.Write(serializer.Data, 0, serializer.Length);
-        formatter.Serialize(stream, Systems.DebugHelper);
-        stream.Close();   
+        formatter.Serialize(stream, Systems.GameLog);
+        stream.Close();
+
+                                                                           
+        var data = new List<string>();
+        foreach (var entity in Contexts.sharedInstance.game.GetEntities(GameMatcher.AllOf(GameMatcher.Id, GameMatcher.ActorId)).OrderBy(entity => entity.actorId.value).ThenBy(entity => entity.id.value))
+        {   
+            data.Add(entity.actorId.value.ToString());
+            data.Add(entity.id.value.ToString());
+            data.Add(entity.position.value.ToString());
+            data.Add("----------");
+        }
+        File.WriteAllLines(@"C:\Log\" + PlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_Ents.txt", data);
+
+
+        data = new List<string>();
+        foreach (var entity in Contexts.sharedInstance.input.GetEntities())
+        {
+            data.Add(entity.actorId.value.ToString());
+            data.Add(entity.tick.value.ToString());
+            data.Add(entity.hasCoordinate.ToString());
+            data.Add(entity.hasSelection.ToString());
+            data.Add("----------");
+        }
+        File.WriteAllLines(@"C:\Log\" + PlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_Input.txt", data);
     }
 
 

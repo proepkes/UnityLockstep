@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Entitas;
-using Lockstep.Client.Implementations;
+using Entitas;                            
 using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
@@ -14,7 +13,7 @@ namespace Lockstep.Core
     {
         private Contexts Contexts { get; }
 
-        public CommandBuffer DebugHelper { get; } = new CommandBuffer();
+        public GameLog GameLog { get; } = new GameLog();
 
         public Services Services { get; }
 
@@ -81,7 +80,8 @@ namespace Lockstep.Core
 
         public void AddInput(uint tickId, byte actor, List<ICommand> input)
         {
-            DebugHelper.Insert(tickId, actor, input.ToArray());
+            GameLog.Add(CurrentTick, tickId, actor, input.ToArray());
+
             foreach (var command in input)
             {
                 var inputEntity = Contexts.input.CreateEntity();
@@ -126,7 +126,9 @@ namespace Lockstep.Core
         /// </summary>
         /// <param name="tick"></param>
         public void RevertToTick(uint tick)
-        {       
+        {
+
+            Services.Get<ILogService>().Trace("Rollback to " + tick);
             //Get the actual tick that we have a snapshot for
             var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);  
 
@@ -161,49 +163,14 @@ namespace Lockstep.Core
                 invalidEntity.Destroy();
             }
 
-            //Entities that were created in the prediction have to be destroyed                                      
+            //Copy old state to the entity                                      
             foreach (var backupEntity in backupEntities)
             {    
                 var target = _gameContext.GetEntityWithLocalId(backupEntity.backup.localEntityId);
                 backupEntity.CopyTo(target, true, backupEntity.GetComponentIndices().Except(new []{GameComponentsLookup.Backup}).ToArray());
             }
 
-
-
-            //Apply old values to the components
-            //foreach (var shadow in shadows.Except(spawnedShadows))
-            //{                                                                                                                
-            //    var referencedEntity = currentEntities.FirstOrDefault(e => e.hasId && e.hasOwnerId && e.id.value == shadow.id.value && e.ownerId.value == shadow.ownerId.value);
-
-            //    //Check if the entity got destroyed locally
-            //    if (referencedEntity == null)
-            //    {
-            //        //TODO: restore locally destroyed entities
-            //    }
-            //    else
-            //    {
-            //        //Entity is in the game locally, revert to old state
-            //        var currentComponents = referencedEntity.GetComponentIndices();
-            //        var previousComponents = shadow.GetComponentIndices().Except(new[] { GameComponentsLookup.Shadow, GameComponentsLookup.Tick }).ToArray();
-
-            //        var sameComponents = previousComponents.Intersect(currentComponents);
-            //        var missingComponents = previousComponents.Except(currentComponents).ToArray();
-            //        var onlyLocalComponents = currentComponents.Except(new[] { GameComponentsLookup.LocalId }).Except(previousComponents); 
-
-            //        shadow.CopyTo(referencedEntity, true, sameComponents.ToArray());
-
-            //        //CopyTo with 0 params would copy all...
-            //        if (missingComponents.Length > 0)
-            //        {   
-            //            shadow.CopyTo(referencedEntity, false, missingComponents);
-            //        }
-
-            //        foreach (var index in onlyLocalComponents)
-            //        {
-            //            referencedEntity.RemoveComponent(index);
-            //        }            
-            //    }
-            //}           
+            //TODO: restore locally destroyed entities      
 
 
             Contexts.gameState.ReplaceTick(resultTick); 

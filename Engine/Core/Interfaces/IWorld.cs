@@ -5,7 +5,7 @@ namespace Lockstep.Core.Interfaces
 {
     public interface IWorld
     {
-        CommandBuffer DebugHelper { get; }
+        GameLog GameLog { get; }
 
         Services Services { get; }
 

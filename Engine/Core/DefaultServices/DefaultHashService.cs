@@ -3,7 +3,7 @@ using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.DefaultServices
 {
-    class DefaultHashService : IHashService
+    public class DefaultHashService : IHashService
     {
         public long CalculateHashCode(IEnumerable<GameEntity> entities)
         {

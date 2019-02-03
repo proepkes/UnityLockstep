@@ -23,12 +23,11 @@ namespace Lockstep.Core.Systems.Navigation
 
             foreach (var entity in _gameContext.GetEntities().Where(e => e.hasId))
             {
-                if (entity.velocity.value != Vector2.Zero)
-                {
-                    entity.ReplacePosition(entity.position.value + entity.velocity.value);
+                if (entity.velocity.value == Vector2.Zero)
+                    continue;
+                entity.ReplacePosition(entity.position.value + entity.velocity.value);
 
-                    updatedPositions.Add(entity.localId.value, entity.position.value);
-                }
+                updatedPositions.Add(entity.localId.value, entity.position.value);
             } 
             
             _navigationService.SetAgentPositions(updatedPositions);

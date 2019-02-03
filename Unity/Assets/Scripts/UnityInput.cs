@@ -27,7 +27,12 @@ public class UnityInput : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.X))
         {
-            var e = Contexts.sharedInstance.game.GetEntities(GameMatcher.Id).Select(entity => entity.id.value).ToArray();
+            var e = Contexts.sharedInstance.game
+                .GetEntities(GameMatcher.AllOf(
+                    GameMatcher.Id, 
+                    GameMatcher.ActorId))
+                .Where(entity => entity.actorId.value == RTSNetworkedSimulation.Instance.PlayerId)
+                .Select(entity => entity.id.value).ToArray();
 
             //Debug.Log("Navigating: " + string.Join(", ", e));
 
