@@ -6,7 +6,8 @@ using Lockstep.Core.Interfaces;
 namespace Lockstep.Core.Systems.Input
 {
     public class OnSpawnInputCreateEntity : IExecuteSystem
-    {                                  
+    {
+        private readonly Services _services;
         private readonly IViewService _viewService;
         private readonly GameContext _gameContext;
         private readonly GameStateContext _gameStateContext;   
@@ -17,6 +18,7 @@ namespace Lockstep.Core.Systems.Input
 
         public OnSpawnInputCreateEntity(Contexts contexts, Services services)
         {
+            _services = services;
             _viewService = services.Get<IViewService>();              
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;
@@ -31,17 +33,17 @@ namespace Lockstep.Core.Systems.Input
         }       
 
         public void Execute()
-        {
-            //TODO: order by timestamp instead of actorId => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered                                                                 
-            foreach (var input in _spawnInputs.GetEntities().Where(entity => entity.tick.value == _gameStateContext.tick.value).OrderBy(entity => entity.actorId.value))
+        {                                                             
+            foreach (var input in _spawnInputs.GetEntities().Where(entity => entity.tick.value == _gameStateContext.tick.value))
             {           
                 var actor = _actorContext.GetEntityWithId(input.actorId.value);
-                var nextEntityId = actor.entityCount.value + 1;
+                var nextEntityId = actor.entityCount.value;
 
                 var e = _gameContext.CreateEntity();
 
                 e.isNew = true;
-                                        
+                _services.Get<ILogService>().Trace(actor.id.value + " -> " + nextEntityId);
+
                 //composite primary key
                 e.AddId(nextEntityId);
                 e.AddActorId(input.actorId.value);
@@ -55,7 +57,7 @@ namespace Lockstep.Core.Systems.Input
 
                 _viewService.LoadView(e, input.entityConfigId.value);
 
-                actor.ReplaceEntityCount(nextEntityId);
+                actor.ReplaceEntityCount(nextEntityId + 1);
                 _localIdCounter += 1;
             }                                                                                    
         }    

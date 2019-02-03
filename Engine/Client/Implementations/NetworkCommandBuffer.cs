@@ -9,7 +9,7 @@ using Lockstep.Network.Utils;
 
 namespace Lockstep.Client.Implementations
 {
-    public class NetworkCommandBuffer : CommandBuffer
+    public sealed class NetworkCommandBuffer : CommandBuffer
     {
         //TODO: refactor: don't receive meta information through commandbuffer
         public event Action<Init> InitReceived;

@@ -29,7 +29,7 @@ public class UnityInput : MonoBehaviour
         {
             var e = Contexts.sharedInstance.game.GetEntities(GameMatcher.Id).Select(entity => entity.id.value).ToArray();
 
-            Debug.Log("Navigating: " + string.Join(", ", e));
+            //Debug.Log("Navigating: " + string.Join(", ", e));
 
             RTSNetworkedSimulation.Instance.Execute(new NavigateCommand
             {

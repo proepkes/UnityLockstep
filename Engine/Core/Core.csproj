@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -78,7 +78,7 @@
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHashableComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputTargetPlayerIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputTargetActorIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
@@ -153,6 +153,7 @@
   <ItemGroup>
     <Compile Include="Components\Game\BackupComponent.cs" />
     <Compile Include="Interfaces\ISnapshotIndexService.cs" />
+    <Compile Include="Systems\Debugging\VerifySelectionIdExists.cs" />
     <Compile Include="Systems\OnNewPredictionCreateBackup.cs" />
     <Compile Include="Systems\Debugging\VerifyNoDuplicateBackups.cs" />
     <Compile Include="World.cs" />
@@ -210,7 +211,7 @@
     <Compile Include="Systems\Input\OnSpawnInputCreateEntity.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
-    <Compile Include="Systems\Navigation\OnNavigationInputDoSetDestination.cs" />
+    <Compile Include="Systems\Navigation\ExecuteNavigationInput.cs" />
     <Compile Include="Systems\Navigation\SyncAgentVelocity.cs" />
     <Compile Include="Systems\Navigation\UpdateAgentPosition.cs" />
     <Compile Include="Util.cs" />

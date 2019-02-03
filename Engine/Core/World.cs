@@ -49,6 +49,8 @@ namespace Lockstep.Core
 
             Add(new InputFeature(contexts, Services));
 
+            Add(new VerifySelectionIdExists(contexts, Services));
+
             Add(new NavigationFeature(contexts, Services));
 
             Add(new GameEventSystems(contexts));
@@ -83,6 +85,10 @@ namespace Lockstep.Core
                 inputEntity.AddTick(tickId);
                 inputEntity.AddActorId(actor);
             }
+
+            //TODO: after adding input, order input by timestamp => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered
+            //ordering by timestamp requires loopback functionality because we have to wait for server-response; at the moment commands get distributed to all clients except oneself
+            //if a command comes back from server and it was our own command, the local command has to be overwritten instead of just adding it (as it is at the moment)
         }
 
         public void Predict()
@@ -92,6 +98,7 @@ namespace Lockstep.Core
                 Contexts.gameState.isPredicting = true;
             }                                                        
 
+            Services.Get<ILogService>().Trace("Predict " + CurrentTick);
             Execute();
             Cleanup();
         }
@@ -101,7 +108,9 @@ namespace Lockstep.Core
             if (Contexts.gameState.isPredicting)
             {
                 Contexts.gameState.isPredicting = false;
-            }          
+            }
+
+            Services.Get<ILogService>().Trace("Simulate " + CurrentTick);
 
             Execute();
             Cleanup();

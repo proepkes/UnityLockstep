@@ -29,6 +29,7 @@ namespace Lockstep.Client.Implementations
 
                 Buffer[frameNumber][commanderId].AddRange(commands);
 
+                //TODO: store all received framenumbers instead of only the last one, no need to predict frames if input is already available so call simulate() instead => maybe create new snapshot on frames which already have input
                 LastInsertedFrame = frameNumber;
             }     
         }
