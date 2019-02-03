@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Client.Implementations
-{                
+{              
+    [Serializable]
     public class CommandBuffer : ICommandBuffer
     {                                   
         /// <summary>

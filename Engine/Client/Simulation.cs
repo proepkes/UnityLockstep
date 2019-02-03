@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
-using Lockstep.Client.Interfaces;     
+using System.Threading;  
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
 

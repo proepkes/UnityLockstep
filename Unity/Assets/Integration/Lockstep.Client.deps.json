@@ -11,7 +11,10 @@
         "dependencies": {
           "Core": "1.0.0",
           "Lockstep.Network": "1.0.0",
-          "NETStandard.Library": "2.0.3"
+          "NETStandard.Library": "2.0.3",
+          "BEPUutilities": "1.5.0.0",
+          "Entitas": "0.0.0.0",
+          "FixMath.NET": "1.0.0.0"
         },
         "runtime": {
           "Lockstep.Client.dll": {}
@@ -25,9 +28,6 @@
       },
       "Core/1.0.0": {
         "dependencies": {
-          "Entitas": "0.0.0.0",
-          "BEPUutilities": "1.5.0.0",
-          "FixMath.NET": "1.0.0.0",
           "Entitas.CodeGeneration.Attributes": "0.0.0.0",
           "DesperateDevs.Utils": "0.0.0.0"
         },
@@ -40,15 +40,7 @@
           "Lockstep.Network.dll": {}
         }
       },
-      "Entitas.Reference/0.0.0.0": {
-        "runtime": {
-          "Entitas.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "BEPUutilities.Reference/1.5.0.0": {
+      "BEPUutilities/1.5.0.0": {
         "runtime": {
           "BEPUutilities.dll": {
             "assemblyVersion": "1.5.0.0",
@@ -56,7 +48,15 @@
           }
         }
       },
-      "FixMath.NET.Reference/1.0.0.0": {
+      "Entitas/0.0.0.0": {
+        "runtime": {
+          "Entitas.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "FixMath.NET/1.0.0.0": {
         "runtime": {
           "FixMath.NET.dll": {
             "assemblyVersion": "1.0.0.0",
@@ -112,17 +112,17 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Entitas.Reference/0.0.0.0": {
+    "BEPUutilities/1.5.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "BEPUutilities.Reference/1.5.0.0": {
+    "Entitas/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "FixMath.NET.Reference/1.0.0.0": {
+    "FixMath.NET/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

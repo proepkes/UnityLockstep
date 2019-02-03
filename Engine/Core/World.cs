@@ -15,6 +15,7 @@ namespace Lockstep.Core
         private Contexts Contexts { get; }
 
         public CommandBuffer DebugHelper { get; } = new CommandBuffer();
+
         public Services Services { get; }
 
         public uint CurrentTick => Contexts.gameState.tick.value;

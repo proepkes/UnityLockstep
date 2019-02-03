@@ -15,7 +15,7 @@ namespace Lockstep.Core.Systems
             _hashService = hashService;
             _gameStateContext = contexts.gameState;
 
-            _hashableEntities = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.LocalId, GameMatcher.Hashable));
+            _hashableEntities = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.LocalId, GameMatcher.Position));
         }
 
         public void Initialize()

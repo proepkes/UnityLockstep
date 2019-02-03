@@ -1,16 +1,17 @@
-﻿using System;                    
+﻿            
 using System.Collections;
 using System.IO;
-using System.Linq;
-using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using FastFileLog;
 using Lockstep.Client;
+using Lockstep.Client.Commands;
 using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
-using Lockstep.Commands;
 using Lockstep.Core;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
+using Lockstep.Network.Utils;
 using Newtonsoft.Json;
 using UnityEngine;           
                               
@@ -27,7 +28,8 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public bool Connected => _client.Connected;
 
-    public byte LocalPlayerId { get; private set; }
+    public byte PlayerId { get; private set; }
+    public byte[] AllActorIds { get; private set; }
 
     private NetworkCommandBuffer _remoteCommandBuffer;
     private readonly LiteNetLibClient _client = new LiteNetLibClient();
@@ -53,19 +55,29 @@ public class RTSNetworkedSimulation : MonoBehaviour
     }
 
     private void StartSimulation(Init data)
-    {
-
-        LocalPlayerId = data.ActorID;
+    {                             
+        PlayerId = data.ActorID;
+        AllActorIds = data.AllActors;
         Debug.Log($"Starting simulation. Total actors: {data.AllActors.Length}. Local ActorID: {data.ActorID}");
         Simulation.Initialize(data);  
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
     }
 
+
     public void DumpInputContext()
     {
-        LogManager.Register("log", LocalPlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value, false, true);
-        LogManager.Log("log", JsonConvert.SerializeObject(Systems.DebugHelper.Buffer));   
+        var serializer = new Serializer();
+        serializer.Put(Contexts.sharedInstance.gameState.hashCode.value);
+        serializer.Put(Contexts.sharedInstance.gameState.tick.value);
+        serializer.Put(PlayerId);
+        serializer.PutBytesWithLength(AllActorIds);
+        IFormatter formatter = new BinaryFormatter();
+
+        Stream stream = new FileStream(@"C:\Log\"+ Contexts.sharedInstance.gameState.hashCode.value+".txt", FileMode.Create, FileAccess.Write);
+        stream.Write(serializer.Data, 0, serializer.Length);
+        formatter.Serialize(stream, Systems.DebugHelper);
+        stream.Close();   
     }
 
 

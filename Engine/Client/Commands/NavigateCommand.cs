@@ -1,9 +1,11 @@
-﻿using BEPUutilities;     
-using Lockstep.Client.Interfaces;   
+﻿using System;
+using BEPUutilities;
+using Lockstep.Client.Interfaces;
 using Lockstep.Network.Utils;
 
-namespace Lockstep.Commands
+namespace Lockstep.Client.Commands
 {
+    [Serializable]
     public class NavigateCommand : ISerializableCommand
     {
         public ushort Tag => 1;
