@@ -1,11 +1,15 @@
 ﻿using System;                       
 using System.IO;
+using System.Linq;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lockstep.Client;
+using Lockstep.Client.Commands;
 using Lockstep.Client.Implementations;
-using Lockstep.Core;            
+using Lockstep.Core;
+using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;     
 using Shouldly;
@@ -27,13 +31,13 @@ namespace Test
         [Fact]                      
         public void TestDump1()
         {                      
-            TestDump("26_-266265856664_log");
+            TestDump("38_-846947712050_log");
         }
           
         [Fact]
         public void TestDump2()
         {
-            TestDump("27_-274104847162_log");
+            TestDump("37_-546443594864_log");
         }
 
         private void TestDump(string fileName)
@@ -76,15 +80,64 @@ namespace Test
                                 if (actorId == localActorId)
                                 {
                                     _output.WriteLine("Local: " + commands.Count + " commands");
-                                }
 
-                                commandBuffer.Insert(tickId, actorId, commands.ToArray());
+                                    systems.AddInput(tickId, actorId, commands);
+                                }
+                                else
+                                {
+                                    commandBuffer.Insert(tickId, actorId, commands.ToArray());
+                                } 
                             }
                         }
                     }
                 }
 
                 sim.Update(1);
+            }
+
+            contexts.gameState.hashCode.value.ShouldBe(hashCode);
+            commandBuffer.Buffer.ShouldBeEmpty();
+
+            foreach (var (occurTickId, tickCommands) in log.Log)
+            {
+                foreach (var (tickId, allCommands) in tickCommands)
+                {
+                    foreach (var (actorId, commands) in allCommands)
+                    {
+                        if (commands.Any(command => command is NavigateCommand))
+                        {
+                            var x = occurTickId;
+                        }
+                        if (actorId == localActorId)
+                        {
+                            _output.WriteLine("Local: " + commands.Count + " commands");
+
+                            systems.AddInput(tickId, actorId, commands);
+                        }
+                        else
+                        {
+                            commandBuffer.Insert(tickId, actorId, commands.ToArray());
+                        }
+                    }
+                }
+            }   
+
+            contexts.Reset();
+            var debug = systems.Services.Get<IDebugService>();
+            systems = new World(contexts, new TestLogger(_output)); 
+            var debug2 = systems.Services.Get<IDebugService>();
+            debug.ShouldNotBeSameAs(debug2);
+
+            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            sim.Initialize(new Init { TargetFPS = 1000, AllActors = allActors, ActorID = localActorId });
+
+            for (uint i = 0; i < tick; i++)
+            {
+                sim.Update(1);
+                if (debug.HasHash(systems.CurrentTick))
+                {
+                    debug.GetHash(systems.CurrentTick).ShouldBe(contexts.gameState.hashCode.value);
+                }
             }
 
             contexts.gameState.hashCode.value.ShouldBe(hashCode);

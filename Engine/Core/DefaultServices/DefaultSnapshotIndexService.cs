@@ -13,9 +13,17 @@ namespace Lockstep.Core.DefaultServices
             _snapShotIndices.Add(value);
         }
 
+        public void RemoveIndex(uint value)
+        {
+            if (_snapShotIndices.Contains(value))
+            {         
+                _snapShotIndices.Remove(value);
+            }
+        }
+
         public uint GetFirstIndexBefore(uint value)
         {
-            return _snapShotIndices.Where(index => index <= value).Max();
+            return _snapShotIndices.Where(index => index < value).Max();
         }
     }
 }

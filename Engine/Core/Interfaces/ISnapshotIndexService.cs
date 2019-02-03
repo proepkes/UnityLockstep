@@ -7,6 +7,8 @@
     {
         void AddIndex(uint value);
 
+        void RemoveIndex(uint value);
+
         uint GetFirstIndexBefore(uint value);
     }
 }

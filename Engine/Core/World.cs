@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Entitas;                            
 using Lockstep.Core.Features;
@@ -146,6 +147,7 @@ namespace Lockstep.Core
                     backedUpActor.GetComponentIndices().Except(new []{ ActorComponentsLookup.Backup }).ToArray()); //Copy everything except the backup-component
             }
 
+
             /*
             * ====================== Revert game-entities ======================      
             */
@@ -162,12 +164,24 @@ namespace Lockstep.Core
                 _view.DeleteView(invalidEntity.localId.value);
                 invalidEntity.Destroy();
             }
+                                                       
+            foreach (var invalidBackupEntity in _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick > resultTick))
+            {
+                Services.Get<ISnapshotIndexService>().RemoveIndex(invalidBackupEntity.backup.tick);
+                invalidBackupEntity.Destroy();
+            }
 
             //Copy old state to the entity                                      
             foreach (var backupEntity in backupEntities)
             {    
                 var target = _gameContext.GetEntityWithLocalId(backupEntity.backup.localEntityId);
                 backupEntity.CopyTo(target, true, backupEntity.GetComponentIndices().Except(new []{GameComponentsLookup.Backup}).ToArray());
+
+
+                if (!Services.Get<IDebugService>().Validate(resultTick, backupEntity.backup.localEntityId, target.position.value))
+                {
+                   throw new Exception();
+                }  
             }
 
             //TODO: restore locally destroyed entities      
@@ -175,10 +189,12 @@ namespace Lockstep.Core
 
             Contexts.gameState.ReplaceTick(resultTick); 
 
-            while (Contexts.gameState.tick.value < tick)
+            while (Contexts.gameState.tick.value <= tick)
             {
                 Simulate();
+                Services.Get<IDebugService>().Register(Contexts.gameState.tick.value, Contexts.gameState.hashCode.value);
             }
+
         }
     }   
 }

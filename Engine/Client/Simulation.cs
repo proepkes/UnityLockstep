@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading;  
+using System.Threading;
+using Lockstep.Client.Interfaces;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
+using Lockstep.Network.Utils;
 
 namespace Lockstep.Client
 {                    
@@ -48,6 +50,13 @@ namespace Lockstep.Client
             if (!Running)
             {
                 return;
+            }
+
+            if (command is ISerializableCommand s)
+            {
+                var er = new Serializer();
+                s.Serialize(er);
+                s.Deserialize(new Deserializer(er.Data));
             }
 
             lock (_commandCache)
@@ -128,6 +137,8 @@ namespace Lockstep.Client
                     {   
                         _world.Predict();      
                     }
+
+                    _world.Services.Get<ILogService>().Trace(">>>Done: now at " + _world.CurrentTick);
                 }                                          
             }   
         }

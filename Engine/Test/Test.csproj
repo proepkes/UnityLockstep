@@ -35,10 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Dumps\26_-266265856664_log.txt">
+    <None Update="Dumps\38_-846947712050_log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Dumps\27_-274104847162_log.txt">
+    <None Update="Dumps\39_-852368809142_log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

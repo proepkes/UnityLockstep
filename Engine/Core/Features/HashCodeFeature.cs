@@ -7,7 +7,7 @@ namespace Lockstep.Core.Features
     {
         public HashCodeFeature(Contexts contexts, Services services)
         {
-            Add(new CalculateHashCode(contexts, services.Get<IHashService>()));
+            Add(new CalculateHashCode(contexts, services));
         }
     }
 }

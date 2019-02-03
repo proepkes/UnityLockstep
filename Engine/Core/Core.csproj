@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandBuffer.cs" />
+    <Compile Include="DefaultServices\DefaultIDebugService.cs" />
     <Compile Include="GameLog.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <Compile Include="Components\Game\BackupComponent.cs" />
     <Compile Include="Interfaces\ICommandBuffer.cs" />
+    <Compile Include="Interfaces\IDebugService.cs" />
     <Compile Include="Interfaces\ISnapshotIndexService.cs" />
     <Compile Include="Systems\Debugging\VerifySelectionIdExists.cs" />
     <Compile Include="Systems\OnNewPredictionCreateBackup.cs" />
