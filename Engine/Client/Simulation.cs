@@ -101,7 +101,10 @@ namespace Lockstep.Client
             if (commands.Count > 0)
             {                                                                                                                       
                 //We guess everything was predicted correctly (except the last received frame)
-                var firstMispredictedFrame = commands.Keys.Min() - 1;
+                var firstMispredictedFrame = commands.Keys.Min();
+
+
+                _world.Services.Get<ILogService>().Trace(">>>Input at " + firstMispredictedFrame);
 
                 foreach (var tick in commands.Keys)
                 {

@@ -14,8 +14,7 @@ using Lockstep.Client.Interfaces;
 using Lockstep.Core;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
-using Lockstep.Network.Utils;
-using Newtonsoft.Json;
+using Lockstep.Network.Utils;         
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
