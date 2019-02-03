@@ -6,7 +6,6 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Entitas;
-using FastFileLog;
 using Lockstep.Client;
 using Lockstep.Client.Commands;
 using Lockstep.Client.Implementations;
