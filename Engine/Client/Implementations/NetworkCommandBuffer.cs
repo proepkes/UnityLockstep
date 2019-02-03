@@ -11,8 +11,8 @@ namespace Lockstep.Client.Implementations
 {
     public sealed class NetworkCommandBuffer : CommandBuffer
     {
-        //TODO: refactor: don't receive meta information through commandbuffer
-        public event Action<Init> InitReceived;
+        //TODO: refactor: don't do meta stuff through commandbuffer just because it has INetwork
+        public event Action<Init> InitReceived;   
 
         private readonly INetwork _network;   
         private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
@@ -28,7 +28,7 @@ namespace Lockstep.Client.Implementations
             var tag = commandFactory.Invoke().Tag;
             if (_commandFactories.ContainsKey(tag))
             {
-                throw new InvalidDataException("The command tag " + tag + " is already registered. Every command tag must be unique.");
+                throw new InvalidDataException($"The command tag {tag} is already registered. Every command tag must be unique.");
             }
             _commandFactories.Add(tag, commandFactory);
         }         
@@ -51,7 +51,8 @@ namespace Lockstep.Client.Implementations
             }
 
             _network.Send(Compressor.Compress(writer));
-        }      
+        }
+
 
         private void OnDataReceived(byte[] data)
         {

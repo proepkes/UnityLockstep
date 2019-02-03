@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;   
+﻿using System.Collections.Generic;
+using Lockstep.Client.Implementations;
 
 namespace Lockstep.Core.Interfaces
 {
     public interface IWorld
     {
+        CommandBuffer DebugHelper { get; }
+
         Services Services { get; }
 
         int EntitiesInCurrentTick { get; }

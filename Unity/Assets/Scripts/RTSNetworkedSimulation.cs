@@ -1,4 +1,9 @@
-﻿using System.Collections;           
+﻿using System;                    
+using System.Collections;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using FastFileLog;
 using Lockstep.Client;
 using Lockstep.Client.Implementations;
 using Lockstep.Client.Interfaces;
@@ -6,6 +11,7 @@ using Lockstep.Commands;
 using Lockstep.Core;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
+using Newtonsoft.Json;
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
@@ -48,11 +54,18 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     private void StartSimulation(Init data)
     {
+
         LocalPlayerId = data.ActorID;
         Debug.Log($"Starting simulation. Total actors: {data.AllActors.Length}. Local ActorID: {data.ActorID}");
         Simulation.Initialize(data);  
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
+    }
+
+    public void DumpInputContext()
+    {
+        LogManager.Register("log", LocalPlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value, false, true);
+        LogManager.Log("log", JsonConvert.SerializeObject(Systems.DebugHelper.Buffer));   
     }
 
 
@@ -89,4 +102,4 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         yield return null;
     }
-}
+}     

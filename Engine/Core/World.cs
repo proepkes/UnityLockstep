@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Entitas;
+using Lockstep.Client.Implementations;
 using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
@@ -13,6 +14,7 @@ namespace Lockstep.Core
     {
         private Contexts Contexts { get; }
 
+        public CommandBuffer DebugHelper { get; } = new CommandBuffer();
         public Services Services { get; }
 
         public uint CurrentTick => Contexts.gameState.tick.value;
@@ -23,6 +25,7 @@ namespace Lockstep.Core
         private readonly GameContext _gameContext;
         private readonly INavigationService _navigation;      
         private readonly ActorContext _actorContext;
+                                                                           
 
         public World(Contexts contexts, params IService[] additionalServices)
         {
@@ -77,6 +80,7 @@ namespace Lockstep.Core
 
         public void AddInput(uint tickId, byte actor, List<ICommand> input)
         {
+            DebugHelper.Insert(tickId, actor, input.ToArray());
             foreach (var command in input)
             {
                 var inputEntity = Contexts.input.CreateEntity();

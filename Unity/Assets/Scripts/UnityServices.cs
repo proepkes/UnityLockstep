@@ -76,6 +76,6 @@ public class UnityLogger : ILogService
 
     public void Trace(object message)
     {
-        Debug.Log(message);
+        //Debug.Log(message);
     }
 }

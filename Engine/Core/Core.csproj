@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandBuffer.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\BackupComponent.cs" />
+    <Compile Include="Interfaces\ICommandBuffer.cs" />
     <Compile Include="Interfaces\ISnapshotIndexService.cs" />
     <Compile Include="Systems\Debugging\VerifySelectionIdExists.cs" />
     <Compile Include="Systems\OnNewPredictionCreateBackup.cs" />
