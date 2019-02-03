@@ -111,9 +111,10 @@ namespace Lockstep.Client
             {                                                                                                                       
                 //We guess everything was predicted correctly (except the last received frame)
                 var firstMispredictedFrame = commands.Keys.Min();
+                var lastInputFrame = commands.Keys.Max();
 
 
-                _world.Services.Get<ILogService>().Trace(">>>Input at " + firstMispredictedFrame);
+                _world.Services.Get<ILogService>().Trace(">>>Input from " + firstMispredictedFrame + " to " + lastInputFrame);
 
                 foreach (var tick in commands.Keys)
                 {
@@ -130,7 +131,11 @@ namespace Lockstep.Client
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
 
-                    //Restore last local state
+                    //Restore last local state       
+                    while (_world.CurrentTick <= lastInputFrame)
+                    {
+                        _world.Simulate();
+                    }
 
                     _world.Services.Get<ILogService>().Trace(">>>Predicting up to " + targetTick);
                     while (_world.CurrentTick < targetTick)

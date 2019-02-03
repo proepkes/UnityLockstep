@@ -32,8 +32,38 @@ namespace Test
         public void TestDump1()
         {                      
             TestDump("38_-846947712050_log");
+
+            /*
+             * Trace: Simulate 72
+                 Trace: 39 -> 53
+                 Trace: 39 -> 54
+                 Warn: 0: 447589908480
+
+                Trace: >>>Predicting up to 237
+                Trace: Predict 73
+                Trace: 39 -> 55
+                Trace: 39 -> 56
+                Warn: 0: 447589908480
+
+                Trace: Predict 74
+                Trace: 39 -> 57
+                Trace: 39 -> 58
+                Warn: 0: 478367868193
+
+                ....
+
+                Trace: Predict 244
+                Warn: 0: -362455312328
+
+                Trace: >>>Input at 80
+                Trace: Rollback to 80
+                Trace: Simulate 73
+                Trace: 39 -> 55
+                Trace: 39 -> 56
+                Warn: 0: 478367868193
+             */
         }
-          
+
         [Fact]
         public void TestDump2()
         {

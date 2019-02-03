@@ -116,10 +116,12 @@ namespace Lockstep.Core
                 Contexts.gameState.isPredicting = false;
             }
 
-            Services.Get<ILogService>().Trace("Simulate " + CurrentTick);
+            Services.Get<ILogService>().Trace("Simulate " + CurrentTick); 
 
             Execute();
             Cleanup();
+
+            Services.Get<IDebugService>().Register(Contexts.gameState.tick.value, Contexts.gameState.hashCode.value);
         }     
 
         /// <summary>
@@ -184,17 +186,9 @@ namespace Lockstep.Core
                 }  
             }
 
-            //TODO: restore locally destroyed entities      
-
+            //TODO: restore locally destroyed entities   
 
             Contexts.gameState.ReplaceTick(resultTick); 
-
-            while (Contexts.gameState.tick.value <= tick)
-            {
-                Simulate();
-                Services.Get<IDebugService>().Register(Contexts.gameState.tick.value, Contexts.gameState.hashCode.value);
-            }
-
         }
     }   
 }
