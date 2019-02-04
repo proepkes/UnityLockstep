@@ -70,7 +70,12 @@ public class UnityGameService : IViewService
 public class UnityLogger : ILogService
 {
     public void Warn(object message)
-    {
+    {                 
         Debug.LogWarning(message);
+    }
+
+    public void Trace(object message)
+    {
+        //Debug.Log(message);
     }
 }

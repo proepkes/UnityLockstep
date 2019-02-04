@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using Entitas;
+using Entitas;                            
 using Lockstep.Core.Features;
 using Lockstep.Core.Interfaces;
 using Lockstep.Core.Systems;
@@ -13,6 +14,8 @@ namespace Lockstep.Core
     {
         private Contexts Contexts { get; }
 
+        public GameLog GameLog { get; } = new GameLog();
+
         public Services Services { get; }
 
         public uint CurrentTick => Contexts.gameState.tick.value;
@@ -23,6 +26,7 @@ namespace Lockstep.Core
         private readonly GameContext _gameContext;
         private readonly INavigationService _navigation;      
         private readonly ActorContext _actorContext;
+                                                                           
 
         public World(Contexts contexts, params IService[] additionalServices)
         {
@@ -45,15 +49,19 @@ namespace Lockstep.Core
 
         private void AddFeatures(Contexts contexts)
         {
+            Add(new CalculateHashCode(contexts, Services));
+
             Add(new OnNewPredictionCreateBackup(contexts, Services));    
 
             Add(new InputFeature(contexts, Services));
+
+            Add(new VerifySelectionIdExists(contexts, Services));
 
             Add(new NavigationFeature(contexts, Services));
 
             Add(new GameEventSystems(contexts));
 
-            Add(new HashCodeFeature(contexts, Services));   
+            Add(new CalculateHashCode(contexts, Services));
 
             Add(new RemoveNewFlag(contexts));
 
@@ -75,6 +83,8 @@ namespace Lockstep.Core
 
         public void AddInput(uint tickId, byte actor, List<ICommand> input)
         {
+            GameLog.Add(CurrentTick, tickId, actor, input.ToArray());
+
             foreach (var command in input)
             {
                 var inputEntity = Contexts.input.CreateEntity();
@@ -83,6 +93,10 @@ namespace Lockstep.Core
                 inputEntity.AddTick(tickId);
                 inputEntity.AddActorId(actor);
             }
+
+            //TODO: after adding input, order input by timestamp => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered
+            //ordering by timestamp requires loopback functionality because we have to wait for server-response; at the moment commands get distributed to all clients except oneself
+            //if a command comes back from server and it was our own command, the local command has to be overwritten instead of just adding it (as it is at the moment)
         }
 
         public void Predict()
@@ -92,6 +106,7 @@ namespace Lockstep.Core
                 Contexts.gameState.isPredicting = true;
             }                                                        
 
+            Services.Get<ILogService>().Trace("Predict " + CurrentTick);
             Execute();
             Cleanup();
         }
@@ -101,10 +116,15 @@ namespace Lockstep.Core
             if (Contexts.gameState.isPredicting)
             {
                 Contexts.gameState.isPredicting = false;
-            }          
+            }
+
+            Services.Get<ILogService>().Trace("Simulate " + CurrentTick);
 
             Execute();
             Cleanup();
+
+            Services.Get<IDebugService>().Register(Contexts.gameState.tick.value, Contexts.gameState.hashCode.value);
+
         }     
 
         /// <summary>
@@ -112,7 +132,9 @@ namespace Lockstep.Core
         /// </summary>
         /// <param name="tick"></param>
         public void RevertToTick(uint tick)
-        {       
+        {
+
+            Services.Get<ILogService>().Trace("Rollback to " + tick);
             //Get the actual tick that we have a snapshot for
             var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);  
 
@@ -125,66 +147,62 @@ namespace Lockstep.Core
             foreach (var backedUpActor in backedUpActors)
             {                          
                 backedUpActor.CopyTo(
-                    _actorContext.GetEntityWithId(backedUpActor.backup.actorId), //Current Actor
-                    true, //Replace components
+                    _actorContext.GetEntityWithId(backedUpActor.backup.actorId),                                   //Current Actor
+                    true,                                                                             //Replace components
                     backedUpActor.GetComponentIndices().Except(new []{ ActorComponentsLookup.Backup }).ToArray()); //Copy everything except the backup-component
             }
+
 
             /*
             * ====================== Revert game-entities ======================      
             */
 
             var currentEntities = _gameContext.GetEntities(GameMatcher.LocalId);
-            var backedUpEntities = _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick == resultTick).Select(entity => entity.backup.localEntityId).ToList();
-
-            //Entities that were created in the prediction have to be destroyed              
-            var invalidEntities = currentEntities.Where(entity => !backedUpEntities.Contains(entity.localId.value)); 
+            var backupEntities = _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick == resultTick).ToList();
+            var backupEntityIds = backupEntities.Select(entity => entity.backup.localEntityId);
+                                                           
+            //Entities that were created in the prediction have to be destroyed  
+            var invalidEntities = currentEntities.Where(entity => !backupEntityIds.Contains(entity.localId.value)).ToList();
             foreach (var invalidEntity in invalidEntities)
             {
                 //Here we have the actual entities, we can safely refer to them via the internal id
                 _view.DeleteView(invalidEntity.localId.value);
-                _gameContext.GetEntityWithLocalId(invalidEntity.localId.value).Destroy();
+                invalidEntity.Destroy();
+            }
+                                                       
+            foreach (var invalidBackupEntity in _gameContext.GetEntities(GameMatcher.Backup).Where(e => e.backup.tick > resultTick))
+            {
+                Services.Get<ISnapshotIndexService>().RemoveIndex(invalidBackupEntity.backup.tick);
+                invalidBackupEntity.Destroy();
             }
 
+            //Copy old state to the entity                                      
+            foreach (var backupEntity in backupEntities)
+            {    
+                var target = _gameContext.GetEntityWithLocalId(backupEntity.backup.localEntityId);
+                var additionalComponentIndices = target.GetComponentIndices().Except(
+                        backupEntity
+                            .GetComponentIndices()
+                            .Except(new[] {GameComponentsLookup.Backup})
+                            .Concat(new[] {GameComponentsLookup.Id, GameComponentsLookup.ActorId, GameComponentsLookup.LocalId}))
+                    ;
+                foreach (var index in additionalComponentIndices)
+                {
+                    target.RemoveComponent(index);
+                }
+
+                backupEntity.CopyTo(target, true, backupEntity.GetComponentIndices().Except(new []{GameComponentsLookup.Backup}).ToArray());
 
 
+                if (!Services.Get<IDebugService>().Validate(resultTick, backupEntity.backup.localEntityId, target.position.value))
+                {
+                   throw new Exception();
+                }  
+            }
 
-            //Apply old values to the components
-            //foreach (var shadow in shadows.Except(spawnedShadows))
-            //{                                                                                                                
-            //    var referencedEntity = currentEntities.FirstOrDefault(e => e.hasId && e.hasOwnerId && e.id.value == shadow.id.value && e.ownerId.value == shadow.ownerId.value);
+            //TODO: restore locally destroyed entities   
 
-            //    //Check if the entity got destroyed locally
-            //    if (referencedEntity == null)
-            //    {
-            //        //TODO: restore locally destroyed entities
-            //    }
-            //    else
-            //    {
-            //        //Entity is in the game locally, revert to old state
-            //        var currentComponents = referencedEntity.GetComponentIndices();
-            //        var previousComponents = shadow.GetComponentIndices().Except(new[] { GameComponentsLookup.Shadow, GameComponentsLookup.Tick }).ToArray();
-
-            //        var sameComponents = previousComponents.Intersect(currentComponents);
-            //        var missingComponents = previousComponents.Except(currentComponents).ToArray();
-            //        var onlyLocalComponents = currentComponents.Except(new[] { GameComponentsLookup.LocalId }).Except(previousComponents); 
-
-            //        shadow.CopyTo(referencedEntity, true, sameComponents.ToArray());
-
-            //        //CopyTo with 0 params would copy all...
-            //        if (missingComponents.Length > 0)
-            //        {   
-            //            shadow.CopyTo(referencedEntity, false, missingComponents);
-            //        }
-
-            //        foreach (var index in onlyLocalComponents)
-            //        {
-            //            referencedEntity.RemoveComponent(index);
-            //        }            
-            //    }
-            //}           
-
-            Contexts.gameState.ReplaceTick(resultTick);
+            Contexts.gameState.ReplaceTick(resultTick); 
         }
     }   
 }

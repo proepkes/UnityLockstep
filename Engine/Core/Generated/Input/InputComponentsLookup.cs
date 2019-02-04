@@ -12,7 +12,7 @@ public static class InputComponentsLookup {
     public const int Coordinate = 1;
     public const int EntityConfigId = 2;
     public const int Selection = 3;
-    public const int TargetPlayerId = 4;
+    public const int TargetActorId = 4;
     public const int Tick = 5;
 
     public const int TotalComponents = 6;
@@ -22,7 +22,7 @@ public static class InputComponentsLookup {
         "Coordinate",
         "EntityConfigId",
         "Selection",
-        "TargetPlayerId",
+        "TargetActorId",
         "Tick"
     };
 
@@ -31,7 +31,7 @@ public static class InputComponentsLookup {
         typeof(Lockstep.Core.Components.Input.CoordinateComponent),
         typeof(Lockstep.Core.Components.Input.EntityConfigIdComponent),
         typeof(Lockstep.Core.Components.Input.SelectionComponent),
-        typeof(Lockstep.Core.Components.Input.TargetPlayerIdComponent),
+        typeof(Lockstep.Core.Components.Input.TargetActorIdComponent),
         typeof(Lockstep.Core.Components.Input.TickComponent)
     };
 }

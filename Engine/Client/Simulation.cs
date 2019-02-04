@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
-using Lockstep.Client.Interfaces;     
+using Lockstep.Client.Interfaces;
 using Lockstep.Core.Interfaces;
 using Lockstep.Network.Messages;
+using Lockstep.Network.Utils;
 
 namespace Lockstep.Client
 {                    
@@ -20,8 +22,7 @@ namespace Lockstep.Client
         public byte LocalPlayerId { get; private set; } 
 
         private float _tickDt;
-        private float _accumulatedTime;
-        private uint _lastValidatedFrame;
+        private float _accumulatedTime;    
 
         private readonly IWorld _world;
         private readonly ICommandBuffer _remoteCommandBuffer;                         
@@ -49,6 +50,13 @@ namespace Lockstep.Client
             if (!Running)
             {
                 return;
+            }
+
+            if (command is ISerializableCommand s)
+            {
+                var er = new Serializer();
+                s.Serialize(er);
+                s.Deserialize(new Deserializer(er.Data));
             }
 
             lock (_commandCache)
@@ -97,35 +105,24 @@ namespace Lockstep.Client
 
         private void SyncCommandBuffer()
         {
-            var currentRemoteFrame = _remoteCommandBuffer.LastInsertedFrame;
+            var commands = _remoteCommandBuffer.GetChanges();
   
-            if (_lastValidatedFrame < currentRemoteFrame)
+            if (commands.Count > 0)
             {                                                                                                                       
                 //We guess everything was predicted correctly (except the last received frame)
-                var firstMispredictedFrame = currentRemoteFrame; 
-                                                                        
-                for (var remoteFrame = _lastValidatedFrame + 1; remoteFrame <= currentRemoteFrame; remoteFrame++)
+                var firstMispredictedFrame = commands.Keys.Min();
+                var lastInputFrame = commands.Keys.Max();
+
+
+                _world.Services.Get<ILogService>().Trace(">>>Input from " + firstMispredictedFrame + " to " + lastInputFrame);
+
+                foreach (var tick in commands.Keys)
                 {
-                    //All frames that have no commands were predicted correctly => increase remote frame
-                    var allPlayerCommands = _remoteCommandBuffer.Get(remoteFrame);
-                    if (allPlayerCommands.Count == 0)
+                    foreach (var actorId in commands[tick].Keys)
                     {
-                        continue;
+                        _world.AddInput(tick, actorId, commands[tick][actorId]);
                     }
-
-                    if (firstMispredictedFrame > remoteFrame)
-                    {
-                        //Set the first mispredicted frame to the first frame which contains commands
-                        firstMispredictedFrame = remoteFrame;
-                    }
-
-                    //TODO: if command contains entity-ids (which can be predicted) and due to rollback->fast-forward we generated local ids, the command's entity-ids have to be adjusted
-                    //https://github.com/proepkes/UnityLockstep/wiki/Rollback-devlog
-                    foreach (var playerCommands in allPlayerCommands)
-                    {
-                        _world.AddInput(remoteFrame, playerCommands.Key, playerCommands.Value);
-                    }
-                }
+                }           
 
                 //Only rollback if the mispredicted frame was in the past (the frame can be in the future due to high lag compensation)
                 if (firstMispredictedFrame <= _world.CurrentTick)
@@ -134,19 +131,20 @@ namespace Lockstep.Client
                                                                                                                                                                      
                     _world.RevertToTick(firstMispredictedFrame);
 
-                    while (_world.CurrentTick < firstMispredictedFrame)
+                    //Restore last local state       
+                    while (_world.CurrentTick <= lastInputFrame)
                     {
                         _world.Simulate();
                     }
-
-                    //Restore last local state
+                                            
+                    _world.Services.Get<ILogService>().Trace(">>>Predicting up to " + targetTick);
                     while (_world.CurrentTick < targetTick)
                     {   
                         _world.Predict();      
                     }
-                }
 
-                _lastValidatedFrame = currentRemoteFrame;
+                    _world.Services.Get<ILogService>().Trace(">>>Done: now at " + _world.CurrentTick);
+                }                                          
             }   
         }
 

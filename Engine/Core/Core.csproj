@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -56,6 +56,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandBuffer.cs" />
+    <Compile Include="DefaultServices\DefaultIDebugService.cs" />
+    <Compile Include="GameLog.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
@@ -78,7 +81,7 @@
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameHashableComponent.cs" />
-    <Compile Include="Generated\Input\Components\InputTargetPlayerIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputTargetActorIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
@@ -152,7 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\Game\BackupComponent.cs" />
+    <Compile Include="Interfaces\ICommandBuffer.cs" />
+    <Compile Include="Interfaces\IDebugService.cs" />
     <Compile Include="Interfaces\ISnapshotIndexService.cs" />
+    <Compile Include="Systems\Debugging\VerifySelectionIdExists.cs" />
     <Compile Include="Systems\OnNewPredictionCreateBackup.cs" />
     <Compile Include="Systems\Debugging\VerifyNoDuplicateBackups.cs" />
     <Compile Include="World.cs" />
@@ -191,7 +197,6 @@
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
     <Compile Include="Interfaces\IService.cs" />
-    <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />
     <Compile Include="Features\NavigationFeature.cs" />
     <Compile Include="Interfaces\IViewService.cs" />
@@ -207,10 +212,10 @@
     <Compile Include="Systems\RemoveNewFlag.cs" />
     <Compile Include="Systems\GameState\IncrementTick.cs" />
     <Compile Include="Systems\Input\CleanupInput.cs" />
-    <Compile Include="Systems\Input\OnSpawnInputCreateEntity.cs" />
+    <Compile Include="Systems\Input\ExecuteSpawnInput.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
-    <Compile Include="Systems\Navigation\OnNavigationInputDoSetDestination.cs" />
+    <Compile Include="Systems\Navigation\ExecuteNavigationInput.cs" />
     <Compile Include="Systems\Navigation\SyncAgentVelocity.cs" />
     <Compile Include="Systems\Navigation\UpdateAgentPosition.cs" />
     <Compile Include="Util.cs" />

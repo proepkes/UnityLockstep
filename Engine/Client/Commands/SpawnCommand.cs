@@ -1,9 +1,11 @@
-﻿using BEPUutilities;
+﻿using System;
+using BEPUutilities;
 using Lockstep.Client.Interfaces;
 using Lockstep.Network.Utils;
 
-namespace Lockstep.Commands
+namespace Lockstep.Client.Commands
 {
+    [Serializable]
     public class SpawnCommand  : ISerializableCommand
     {
         public ushort Tag => 2;

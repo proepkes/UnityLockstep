@@ -68,7 +68,9 @@ namespace Lockstep.Core.Systems
             foreach (var e in gameEnts)
             {
                 var shadowEntity = _gameContext.CreateEntity();
-                                                                                     
+                         
+                _services.Get<IDebugService>().Register(currentTick, e.localId.value, e.position.value);
+
                 //LocalId is primary index => don't copy; id+actorId should be readonly and stay the same throughout the game
                 foreach (var index in e.GetComponentIndices().Except(new[] { GameComponentsLookup.LocalId, GameComponentsLookup.Id, GameComponentsLookup.ActorId }))
                 {
@@ -80,8 +82,7 @@ namespace Lockstep.Core.Systems
 
                 shadowEntity.AddBackup(e.localId.value, currentTick);    
             }
-
-
+                     
             _services.Get<ILogService>().Warn("New backup for " + currentTick + "(" + actors.Length + " actors, " + gameEnts.Length + " entities)");
         }
     }

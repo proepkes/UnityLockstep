@@ -17,6 +17,7 @@ namespace Lockstep.Core
             RegisterDefault(new DefaultViewService());
             RegisterDefault(new DefaultNavigationService());         
             RegisterDefault(new DefaultSnapshotIndexService());
+            RegisterDefault(new DefaultIDebugService());
         }
 
         public void Register(IService instance)

@@ -37,5 +37,10 @@ namespace Test
         {
             _outputHelper.WriteLine($"Warn: {message}");
         }
+
+        public void Trace(object message)
+        {
+            _outputHelper.WriteLine($"Trace: {message}");
+        }
     }
 }

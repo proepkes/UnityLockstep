@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;   
+﻿using System.Collections.Generic;
+using Lockstep.Client.Implementations;
 
 namespace Lockstep.Core.Interfaces
 {
     public interface IWorld
     {
+        GameLog GameLog { get; }
+
         Services Services { get; }
 
         int EntitiesInCurrentTick { get; }
