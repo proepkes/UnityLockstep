@@ -4,9 +4,7 @@
 
 Initial commit was targeting the following protocol: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/. It turned out that bad network conditions made the game unplayable. The project has shifted to an architecture you see below. 
 
-Currently the rollback of adding new entities should be stable. If you spawn entities in multiple instances, all simulations will have  a synced state no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
-
-Rollback for entity-changes (e.g. position-change) is currently in progress. Using the navigation-feature in combination with rollback will lead to desync or game crashes.
+Currently the rollback of adding new and changing entities should be stable. If you spawn or navigate entities in multiple gamne-instances, all simulations will have a synced state no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
 
 ![Overview](/Docs/Overview.svg "Overview")
 
@@ -26,6 +24,10 @@ Rollback for entity-changes (e.g. position-change) is currently in progress. Usi
 3. Hit play in Unity so you should now have two instances of the game running
 4. Wait until both players are connected to the server. The server will display a message when the simulation has started.
 5. For controls, same as above
+
+## Work in progress
+1. Performance spikes are currently by design. In case of an input from the very past, a rollback of many (speak: thousands of) ticks at once occur. Adding constraints like max. input-offset and adjusting framerates for slow clients will help improving everyones performance. The target-frame for rollback is also not optimized, this can save lots of performance too.
+1. Rollback for despawned (e.g. killed) entities is not implemented yet, but will arrive in the next releases.
 
 ## Dependencies
 
