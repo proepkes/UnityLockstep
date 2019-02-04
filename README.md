@@ -4,7 +4,7 @@
 
 Initial commit was targeting the following protocol: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/. It turned out that bad network conditions made the game unplayable. The project has shifted to an architecture you see below. 
 
-Currently the rollback of adding new and changing entities should be stable. If you spawn or navigate entities in multiple gamne-instances, all simulations will have a synced state no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
+Currently the rollback of adding new and changing entities should be stable. If you spawn or navigate entities in multiple game-instances, all simulations will have a synced state no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
 
 ![Overview](/Docs/Overview.svg "Overview")
 
