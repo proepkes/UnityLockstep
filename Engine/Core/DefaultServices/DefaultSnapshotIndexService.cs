@@ -23,7 +23,7 @@ namespace Lockstep.Core.DefaultServices
 
         public uint GetFirstIndexBefore(uint value)
         {
-            return _snapShotIndices.Where(index => index < value).Max();
+            return _snapShotIndices.Any() ? _snapShotIndices.Where(index => index <= value).Max() : 0;
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Lockstep.Core.Systems
 
         public void Execute()
         {  
-            _gameStateContext.ReplaceHashCode(_hashService.CalculateHashCode(_hashableEntities.GetEntities()));
+            _gameStateContext.ReplaceHashCode(_hashService.CalculateHashCode(_hashableEntities.GetEntities(), _gameStateContext, _services.Get<ILogService>()));
         }
     }
 }

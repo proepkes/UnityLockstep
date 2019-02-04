@@ -31,37 +31,7 @@ namespace Test
         [Fact]                      
         public void TestDump1()
         {                      
-            TestDump("38_-846947712050_log");
-
-            /*
-             * Trace: Simulate 72
-                 Trace: 39 -> 53
-                 Trace: 39 -> 54
-                 Warn: 0: 447589908480
-
-                Trace: >>>Predicting up to 237
-                Trace: Predict 73
-                Trace: 39 -> 55
-                Trace: 39 -> 56
-                Warn: 0: 447589908480
-
-                Trace: Predict 74
-                Trace: 39 -> 57
-                Trace: 39 -> 58
-                Warn: 0: 478367868193
-
-                ....
-
-                Trace: Predict 244
-                Warn: 0: -362455312328
-
-                Trace: >>>Input at 80
-                Trace: Rollback to 80
-                Trace: Simulate 73
-                Trace: 39 -> 55
-                Trace: 39 -> 56
-                Warn: 0: 478367868193
-             */
+            TestDump("2_-535026177646_log");  
         }
 
         [Fact]
@@ -128,6 +98,13 @@ namespace Test
             contexts.gameState.hashCode.value.ShouldBe(hashCode);
             commandBuffer.Buffer.ShouldBeEmpty();
 
+
+            contexts.Reset();
+            var debug = systems.Services.Get<IDebugService>();
+            systems = new World(contexts, new TestLogger(_output));
+            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            sim.Initialize(new Init { TargetFPS = 1000, AllActors = allActors, ActorID = localActorId });
+
             foreach (var (occurTickId, tickCommands) in log.Log)
             {
                 foreach (var (tickId, allCommands) in tickCommands)
@@ -135,8 +112,7 @@ namespace Test
                     foreach (var (actorId, commands) in allCommands)
                     {
                         if (commands.Any(command => command is NavigateCommand))
-                        {
-                            var x = occurTickId;
+                        {                        
                         }
                         if (actorId == localActorId)
                         {
@@ -152,14 +128,8 @@ namespace Test
                 }
             }   
 
-            contexts.Reset();
-            var debug = systems.Services.Get<IDebugService>();
-            systems = new World(contexts, new TestLogger(_output)); 
             var debug2 = systems.Services.Get<IDebugService>();
-            debug.ShouldNotBeSameAs(debug2);
-
-            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
-            sim.Initialize(new Init { TargetFPS = 1000, AllActors = allActors, ActorID = localActorId });
+            debug.ShouldNotBeSameAs(debug2);                                                              
 
             for (uint i = 0; i < tick; i++)
             {

@@ -40,10 +40,8 @@ namespace Test
 
             sim.Update(1000); //0          
             systems.CurrentTick.ShouldBe((uint)1);
-            for (int i = 0; i < 1; i++)
-            {
-                sim.Execute(new Spawn());
-            }
+
+            sim.Execute(new Spawn()); 
 
             sim.Update(1000); //1            
             systems.CurrentTick.ShouldBe((uint)2);
@@ -60,62 +58,48 @@ namespace Test
             sim.Update(1000); //3                
             systems.CurrentTick.ShouldBe((uint)4);
             ExpectEntityCount(contexts, 1);
-            ExpectBackupCount(contexts, 0);   
+            ExpectBackupCount(contexts, 1);         
 
-
-            commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game, 1) });
-
+            commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game, 1) }); 
 
             sim.Update(1000); //4                
             systems.CurrentTick.ShouldBe((uint)5);
             ExpectEntityCount(contexts, 1);
-            ExpectBackupCount(contexts, 1);
+            ExpectBackupCount(contexts, 2);
 
-            for (int i = 0; i < 1; i++)
-            {
-                sim.Execute(new Spawn());
-            }
+            sim.Execute(new Spawn());         
 
             sim.Update(1000); //5        
             systems.CurrentTick.ShouldBe((uint)6);
 
             ExpectEntityCount(contexts, 2);
-            ExpectBackupCount(contexts, 1);
+            ExpectBackupCount(contexts, 2); 
 
-
-            for (int i = 0; i < 1; i++)
-            {
-                sim.Execute(new Spawn());
-            }
+            sim.Execute(new Spawn());     
 
             sim.Update(1000); //6
             ExpectEntityCount(contexts, 3);
-            ExpectBackupCount(contexts, 1);
+            ExpectBackupCount(contexts, 2);
                                                   
             commandBuffer.Insert(3, 1, new ICommand[] { }); //Revert to 3
 
             sim.Update(1000);
             ExpectEntityCount(contexts, 3);
-            ExpectBackupCount(contexts, 2); 
+            ExpectBackupCount(contexts, 3); 
                                                                                                
             sim.Update(1000);
             commandBuffer.Insert(4, 1, new ICommand[] { });
-            for (int i = 0; i < 1; i++)
-            {
-                sim.Execute(new Spawn());
-            }
+            sim.Execute(new Spawn());    
+
             sim.Update(1000);
             ExpectEntityCount(contexts, 4);
-            ExpectBackupCount(contexts, 3);
+            ExpectBackupCount(contexts, 4);
 
             sim.Update(1000);
             sim.Update(1000);
-            for (int i = 0; i < 1; i++)
-            {
-                commandBuffer.Insert(5, 1, new ICommand[] { new Spawn() });
-            }
-            sim.Update(1000);
+            commandBuffer.Insert(5, 1, new ICommand[] { new Spawn() });
 
+            sim.Update(1000);    
 
             ExpectEntityCount(contexts, 5);
         }
@@ -266,7 +250,7 @@ namespace Test
             sim.Update(1000); //7                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 2);
-            ExpectBackupCount(contexts, 2);
+            ExpectBackupCount(contexts, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 1);
 
@@ -275,7 +259,7 @@ namespace Test
             sim.Update(1000); //8                          
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 3);
-            ExpectBackupCount(contexts, 4);
+            ExpectBackupCount(contexts, 6);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 2);
 
@@ -284,7 +268,7 @@ namespace Test
             sim.Update(1000);                           
             systems.CurrentTick.ShouldBe(frameCounter++);
             ExpectEntityCount(contexts, 9);
-            ExpectBackupCount(contexts, 7);
+            ExpectBackupCount(contexts, 15);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
@@ -300,7 +284,7 @@ namespace Test
 
             sim.Update(1000);
             ExpectEntityCount(contexts, 10);
-            ExpectBackupCount(contexts, 16); 
+            ExpectBackupCount(contexts, 24); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 2);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
@@ -309,12 +293,115 @@ namespace Test
             sim.Update(1000);
 
             ExpectEntityCount(contexts, 11);
-            ExpectBackupCount(contexts, 25); 
+            ExpectBackupCount(contexts, 33); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
         }
-
         [Fact]
+        public void TestGameLogReplay()
+        {
+            var contexts = new Contexts();
+
+            var systems = new World(contexts, new TestLogger(_output));
+            var commandBuffer = new CommandBuffer();
+
+            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+
+            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });     
+
+            sim.Update(1000); //0                          
+
+            sim.Execute(new Spawn());
+
+            sim.Update(1000); //1     
+            sim.Update(1000); //2    
+            sim.Update(1000); //3                                                   
+
+            commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game, 1) });
+
+            sim.Update(1000); //4   
+            sim.Update(1000); //5                         
+
+            sim.Execute(new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
+
+            sim.Update(1000); //6                                                    
+
+            commandBuffer.Insert(3, 1, new ICommand[] { new Spawn() }); //Revert to 3
+
+            sim.Update(1000); //7                                                     
+
+            commandBuffer.Insert(4, 1, new ICommand[] { new Spawn() }); //Revert to 4
+
+            sim.Update(1000); //8                                                    
+
+            commandBuffer.Insert(5, 1, new ICommand[] { new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn() }); //Revert to 5
+
+            sim.Update(1000);        
+            sim.Update(1000);                            
+            sim.Update(1000);                              
+            sim.Update(1000);
+
+            sim.Execute(new Spawn());
+            sim.Execute(new MoveAll(contexts.game, 0));
+            commandBuffer.Insert(6, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1, Vector2.Zero) });
+
+            sim.Update(1000);                                                        
+
+            sim.Execute(new Spawn());
+            commandBuffer.Insert(11, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1, new Vector2(3, 4)) });
+            sim.Update(1000);
+
+            _output.WriteLine("========================================");
+
+            var input = systems.GameLog.Log;
+            var finalTick = systems.CurrentTick;
+            var finalHash = contexts.gameState.hashCode.value;
+
+            commandBuffer.Buffer.ShouldBeEmpty();
+            var debug = systems.Services.Get<IDebugService>();
+
+            contexts.Reset();
+            systems = new World(contexts, new TestLogger(_output));
+            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
+
+            foreach (var (occurTickId, tickCommands) in input)
+            {
+                foreach (var (tickId, allCommands) in tickCommands)
+                {
+                    foreach (var (actorId, commands) in allCommands)
+                    {          
+                        if (actorId == 0)
+                        {
+                            _output.WriteLine("Local: " + commands.Count + " commands");
+
+                            systems.AddInput(tickId, actorId, commands);
+                        }
+                        else
+                        {
+                            commandBuffer.Insert(tickId, actorId, commands.ToArray());
+                        }
+                    }
+                }
+            }
+
+            var debug2 = systems.Services.Get<IDebugService>();
+            debug.ShouldNotBeSameAs(debug2);
+
+
+            while (systems.CurrentTick < finalTick)
+            {
+                sim.Update(1);
+                if (debug.HasHash(systems.CurrentTick))
+                {
+                    debug.GetHash(systems.CurrentTick).ShouldBe(contexts.gameState.hashCode.value);
+                }
+            }
+
+            contexts.gameState.hashCode.value.ShouldBe(finalHash);
+        }
+        [Fact]
+        //This test requires a navigation-service that just sets the position to destination: entity.ReplacePosition(entity.destination.value);
         public void TestCommandUsesCorrectEntityIds()
         {
             var contexts = new Contexts();
@@ -460,16 +547,19 @@ namespace Test
         {
             private readonly GameContext _contexts;
             private readonly byte _actorId;
+            private uint[] selection;
 
             public MoveAll(GameContext contexts, byte actorId)
             {
                 _contexts = contexts;
                 _actorId = actorId;
+                selection = _contexts.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == _actorId)
+                    .Select(entity => entity.id.value).ToArray();
             }
 
             public void Execute(InputEntity e)
             {
-                e.AddSelection(_contexts.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == _actorId).Select(entity => entity.id.value).ToArray());
+                e.AddSelection(selection);
                 e.AddCoordinate(new Vector2(2, 2)); 
             }
         }
@@ -480,17 +570,20 @@ namespace Test
             private readonly GameContext _contexts;
             private readonly byte _actorId;
             private readonly Vector2 _dest;
+            private uint[] selection;
 
             public MoveEntitesOfSpecificActor(GameContext contexts, byte actorId, Vector2 dest)
             {
                 _contexts = contexts;
                 _actorId = actorId;
                 _dest = dest;
+
+                selection = _contexts.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == _actorId).Select(entity => entity.id.value).ToArray();
             }
 
             public void Execute(InputEntity e)
             {
-                e.AddSelection(_contexts.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == _actorId).Select(entity => entity.id.value).ToArray());
+                e.AddSelection(selection);
                 e.AddCoordinate(_dest);
                 e.AddTargetActorId(_actorId); 
                 

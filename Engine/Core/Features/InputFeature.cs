@@ -8,7 +8,7 @@ namespace Lockstep.Core.Features
         {
             //TODO: Add InputValidationSystem
             
-            Add(new OnSpawnInputCreateEntity(contexts, services));
+            Add(new ExecuteSpawnInput(contexts, services));
 
 
             //TODO: Add CleanupInput that removes input of validated frames (no rollback required => can be removed)

@@ -83,7 +83,7 @@ namespace Lockstep.Core.Systems
                 shadowEntity.AddBackup(e.localId.value, currentTick);    
             }
                      
-            //_services.Get<ILogService>().Warn("New backup for " + currentTick + "(" + actors.Length + " actors, " + gameEnts.Length + " entities)");
+            _services.Get<ILogService>().Warn("New backup for " + currentTick + "(" + actors.Length + " actors, " + gameEnts.Length + " entities)");
         }
     }
 }

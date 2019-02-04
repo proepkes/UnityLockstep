@@ -213,7 +213,7 @@
     <Compile Include="Systems\RemoveNewFlag.cs" />
     <Compile Include="Systems\GameState\IncrementTick.cs" />
     <Compile Include="Systems\Input\CleanupInput.cs" />
-    <Compile Include="Systems\Input\OnSpawnInputCreateEntity.cs" />
+    <Compile Include="Systems\Input\ExecuteSpawnInput.cs" />
     <Compile Include="Systems\Navigation\NavigationTick.cs" />
     <Compile Include="Systems\Navigation\OnNavigableDoRegisterAgent.cs" />
     <Compile Include="Systems\Navigation\ExecuteNavigationInput.cs" />

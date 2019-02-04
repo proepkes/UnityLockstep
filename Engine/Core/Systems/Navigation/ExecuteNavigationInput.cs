@@ -40,6 +40,9 @@ namespace Lockstep.Core.Systems.Navigation
                         input.selection.entityIds.Contains(entity.id.value) &&
                         entity.actorId.value == targetActorId);
 
+
+                _services.Get<ILogService>().Trace(targetActorId + " moving " + string.Join(", ", selectedEntities.Select(entity => entity.localId.value)));
+
                 foreach (var entity in selectedEntities)
                 {
                     entity.ReplaceDestination(destination);

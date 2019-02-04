@@ -5,7 +5,7 @@ using Lockstep.Core.Interfaces;
 
 namespace Lockstep.Core.Systems.Input
 {
-    public class OnSpawnInputCreateEntity : IExecuteSystem
+    public class ExecuteSpawnInput : IExecuteSystem
     {
         private readonly Services _services;
         private readonly IViewService _viewService;
@@ -16,7 +16,7 @@ namespace Lockstep.Core.Systems.Input
         private uint _localIdCounter;
         private readonly ActorContext _actorContext;
 
-        public OnSpawnInputCreateEntity(Contexts contexts, Services services)
+        public ExecuteSpawnInput(Contexts contexts, Services services)
         {
             _services = services;
             _viewService = services.Get<IViewService>();              

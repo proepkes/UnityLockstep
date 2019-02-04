@@ -119,8 +119,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     private void OnDestroy()
     {
         _client.Stop();   
-    }
-
+    }             
 
     void Update()
     {
