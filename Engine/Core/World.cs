@@ -180,6 +180,17 @@ namespace Lockstep.Core
             foreach (var backupEntity in backupEntities)
             {    
                 var target = _gameContext.GetEntityWithLocalId(backupEntity.backup.localEntityId);
+                var additionalComponentIndices = target.GetComponentIndices().Except(
+                        backupEntity
+                            .GetComponentIndices()
+                            .Except(new[] {GameComponentsLookup.Backup})
+                            .Concat(new[] {GameComponentsLookup.Id, GameComponentsLookup.ActorId, GameComponentsLookup.LocalId}))
+                    ;
+                foreach (var index in additionalComponentIndices)
+                {
+                    target.RemoveComponent(index);
+                }
+
                 backupEntity.CopyTo(target, true, backupEntity.GetComponentIndices().Except(new []{GameComponentsLookup.Backup}).ToArray());
 
 
