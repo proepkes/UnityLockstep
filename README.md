@@ -18,7 +18,7 @@ Currently the rollback of adding new and changing entities should be stable. If 
 4. Hit play and wait until connection to server is established
 5. Holding right mouse button will continously spawn new agents, press 'X' to navigate all agents to your current mouse position
    
-### Getting Multipla
+### Getting started (multiplayer)
 1. Build and run the Unityproject
 2. Start the server. The roomsize will default to 2 after a few seconds of no input
 3. Hit play in Unity so you should now have two instances of the game running
