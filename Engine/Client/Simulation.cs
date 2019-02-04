@@ -136,7 +136,7 @@ namespace Lockstep.Client
                     {
                         _world.Simulate();
                     }
-
+                                            
                     _world.Services.Get<ILogService>().Trace(">>>Predicting up to " + targetTick);
                     while (_world.CurrentTick < targetTick)
                     {   

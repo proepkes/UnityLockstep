@@ -296,6 +296,51 @@ namespace Test
             ExpectBackupCount(contexts, 33); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
+
+            _output.WriteLine("========================================");
+
+            var input = systems.GameLog.Log;
+            var finalTick = systems.CurrentTick;
+            var finalHash = contexts.gameState.hashCode.value;
+
+            commandBuffer.Buffer.ShouldBeEmpty();
+            var debug = systems.Services.Get<IDebugService>();
+
+            contexts.Reset();
+            systems = new World(contexts, new TestLogger(_output));
+            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
+
+            foreach (var (occurTickId, tickCommands) in input)
+            {
+                foreach (var (tickId, allCommands) in tickCommands)
+                {
+                    foreach (var (actorId, commands) in allCommands)
+                    {
+                        if (actorId == 0)
+                        {
+                            _output.WriteLine("Local: " + commands.Count + " commands");
+
+                            systems.AddInput(tickId, actorId, commands);
+                        }
+                        else
+                        {
+                            commandBuffer.Insert(tickId, actorId, commands.ToArray());
+                        }
+                    }
+                }
+            }
+                                               
+            while (systems.CurrentTick < finalTick)
+            {
+                sim.Update(1);
+                if (debug.HasHash(systems.CurrentTick))
+                {
+                    debug.GetHash(systems.CurrentTick).ShouldBe(contexts.gameState.hashCode.value);
+                }
+            }
+
+            contexts.gameState.hashCode.value.ShouldBe(finalHash);
         }
         [Fact]
         public void TestGameLogReplay()
@@ -383,11 +428,7 @@ namespace Test
                         }
                     }
                 }
-            }
-
-            var debug2 = systems.Services.Get<IDebugService>();
-            debug.ShouldNotBeSameAs(debug2);
-
+            }                                 
 
             while (systems.CurrentTick < finalTick)
             {
@@ -431,7 +472,7 @@ namespace Test
             sim.Execute(new Spawn());
             sim.Update(1000);    
 
-            var selection = new uint[] { 0, 1, 3, 13, 18 };
+            var selection = new uint[] { 0, 1, 3, 13 };
             var destination = new Vector2(14 , 15);
 
             commandBuffer.Insert(1, 1, new ICommand[] {

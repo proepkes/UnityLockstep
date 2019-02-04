@@ -197,7 +197,6 @@
     <Compile Include="DefaultServices\Navigation\Agent.cs" />
     <Compile Include="DefaultServices\Navigation\DefaultNavigationService.cs" />
     <Compile Include="Interfaces\IService.cs" />
-    <Compile Include="Features\HashCodeFeature.cs" />
     <Compile Include="Features\InputFeature.cs" />
     <Compile Include="Features\NavigationFeature.cs" />
     <Compile Include="Interfaces\IViewService.cs" />

@@ -41,7 +41,7 @@ namespace Lockstep.Core.Systems.Navigation
                         entity.actorId.value == targetActorId);
 
 
-                _services.Get<ILogService>().Trace(targetActorId + " moving " + string.Join(", ", selectedEntities.Select(entity => entity.localId.value)));
+                _services.Get<ILogService>().Trace(targetActorId + " moving " + string.Join(", ", selectedEntities.Select(entity => entity.id.value)));
 
                 foreach (var entity in selectedEntities)
                 {

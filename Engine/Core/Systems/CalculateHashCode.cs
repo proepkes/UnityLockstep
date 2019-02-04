@@ -23,7 +23,7 @@ namespace Lockstep.Core.Systems
 
         public void Initialize()
         {
-            _gameStateContext.SetHashCode(0);
+            _gameStateContext.ReplaceHashCode(0);
         }
 
         public void Execute()

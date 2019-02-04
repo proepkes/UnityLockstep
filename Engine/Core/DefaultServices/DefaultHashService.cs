@@ -12,9 +12,10 @@ namespace Lockstep.Core.DefaultServices
             foreach (var entity in hashableEntities.OrderBy(entity => entity.localId.value))
             {
                 hashCode ^= CalculateHashCode(entity);         
-                if (context.tick.value > 60 && context.tick.value < 90 && entity.localId.value == 81)
+                if (context.tick.value > 170 && context.tick.value < 175 && entity.actorId.value == 2 && entity.id.value  == 89)
+                //if (context.tick.value == 38)
                 {
-                    logger.Warn(entity.localId.value + ": " + hashCode);
+                    logger.Warn(entity.actorId.value + "/" + entity.id.value + ": (" + entity.position.value + ")");
                 }
             }
             return hashCode;

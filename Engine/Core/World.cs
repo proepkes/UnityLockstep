@@ -49,6 +49,8 @@ namespace Lockstep.Core
 
         private void AddFeatures(Contexts contexts)
         {
+            Add(new CalculateHashCode(contexts, Services));
+
             Add(new OnNewPredictionCreateBackup(contexts, Services));    
 
             Add(new InputFeature(contexts, Services));
@@ -59,7 +61,7 @@ namespace Lockstep.Core
 
             Add(new GameEventSystems(contexts));
 
-            Add(new HashCodeFeature(contexts, Services));   
+            Add(new CalculateHashCode(contexts, Services));
 
             Add(new RemoveNewFlag(contexts));
 
@@ -116,12 +118,13 @@ namespace Lockstep.Core
                 Contexts.gameState.isPredicting = false;
             }
 
-            Services.Get<ILogService>().Trace("Simulate " + CurrentTick); 
+            Services.Get<ILogService>().Trace("Simulate " + CurrentTick);
 
             Execute();
             Cleanup();
 
             Services.Get<IDebugService>().Register(Contexts.gameState.tick.value, Contexts.gameState.hashCode.value);
+
         }     
 
         /// <summary>
