@@ -1,7 +1,7 @@
 ﻿using System;
+using Game.UrhoSharp.Desktop.Scenes;
 using Urho;
 using Urho.Desktop;
-using Urho.Samples;
 
 namespace Game.UrhoSharp.Desktop
 {

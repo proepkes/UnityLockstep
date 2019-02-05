@@ -22,9 +22,10 @@
 //
 
 using System.Diagnostics;
-using Urho.Resources;       
+using Urho;
+using Urho.Resources;
 
-namespace Urho.Samples
+namespace Game.UrhoSharp.Desktop
 {
 	public class Game : Application
 	{
@@ -86,14 +87,14 @@ namespace Urho.Samples
 
 			if (Input.GetKeyDown(Key.PageUp))
 			{
-				Camera camera = CameraNode.GetComponent<Camera>();
-				camera.Zoom = camera.Zoom * 1.01f;
+				var camera = CameraNode.GetComponent<Camera>();
+				camera.Zoom *= 1.01f;
 			}
 
 			if (Input.GetKeyDown(Key.PageDown))
 			{
-				Camera camera = CameraNode.GetComponent<Camera>();
-				camera.Zoom = camera.Zoom * 0.99f;
+				var camera = CameraNode.GetComponent<Camera>();
+				camera.Zoom *= 0.99f;
 			}
 		}
 

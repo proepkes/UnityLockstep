@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Lockstep.Game.Commands;
 
 namespace Lockstep.Game
@@ -29,9 +32,16 @@ namespace Lockstep.Game
             Log[tickId][targetTickId][actorId].AddRange(commands);
         }
 
-        public List<KeyValuePair<uint, Dictionary<uint, Dictionary<byte, List<ICommand>>>>> GetAllCommandsForFrame(uint frame)
-        {                       
-            return Log.Reverse().Where(pair => pair.Key == frame).ToList();
+        public void WriteTo(Stream stream)
+        {
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(stream, this);
+        }
+
+        public static GameLog ReadFrom(Stream stream)
+        {                    
+            IFormatter formatter = new BinaryFormatter();
+            return (GameLog)formatter.Deserialize(stream);  
         }
     }
 }

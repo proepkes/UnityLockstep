@@ -464,7 +464,7 @@ namespace Test
                 gameEntityCount.ShouldBe((int)contexts.actor.GetEntities(ActorMatcher.Id).First(actor => actor.id.value == actorId).entityCount.value);
         }
 
-
+        [Serializable]
         public class Spawn : ICommand
         {                             
             public int EntityConfigId;

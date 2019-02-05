@@ -55,8 +55,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\NavigateCommand.cs" />
-    <Compile Include="Commands\SpawnCommand.cs" />
     <Compile Include="Coupling\Listeners.cs" />
     <Compile Include="LiteNetLibClient.cs" />
     <Compile Include="Program.cs" />
@@ -74,13 +72,13 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Core.Components\Core.Components.csproj">
+      <Project>{1c6e099d-c9f1-4e53-a535-5188b438faf2}</Project>
+      <Name>Core.Components</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{8586273e-5386-4d3a-b31b-5404a2a27d62}</Project>
       <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Game.Components\Game.Components.csproj">
-      <Project>{1c6e099d-c9f1-4e53-a535-5188b438faf2}</Project>
-      <Name>Game.Components</Name>
     </ProjectReference>
     <ProjectReference Include="..\Game\Game.csproj">
       <Project>{2d997b51-90d4-4724-9c37-686ceaa171cb}</Project>

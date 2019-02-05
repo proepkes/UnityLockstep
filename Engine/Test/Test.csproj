@@ -18,6 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core.Components\Core.Components.csproj" />
+    <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
     <ProjectReference Include="..\Network\Network.csproj" />
   </ItemGroup>
@@ -35,10 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Dumps\2_-535026177646_log.txt">
+    <None Update="Dumps\0_3398952201_log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Dumps\3_-533374750893_log.txt">
+    <None Update="Dumps\10_831208879191_log.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

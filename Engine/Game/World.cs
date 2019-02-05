@@ -255,7 +255,7 @@ namespace Lockstep.Game
             //TODO: restore locally destroyed entities   
 
             Contexts.gameState.ReplaceTick(resultTick);
-        }
+        }  
 
         private void Predict()
         {

@@ -9,7 +9,6 @@
     ".NETStandard,Version=v2.0/": {
       "Lockstep.Game/1.0.0": {
         "dependencies": {
-          "Game.Components": "1.0.0",
           "Lockstep.Core": "1.0.0",
           "Lockstep.Network": "1.0.0",
           "NETStandard.Library": "2.0.3",
@@ -29,17 +28,23 @@
           "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
-      "Game.Components/1.0.0": {
+      "Core.Components/1.0.0": {
         "runtime": {
-          "Lockstep.Game.Components.dll": {}
+          "Lockstep.Core.Components.dll": {}
         }
       },
       "Lockstep.Core/1.0.0": {
+        "dependencies": {
+          "Core.Components": "1.0.0"
+        },
         "runtime": {
           "Lockstep.Core.dll": {}
         }
       },
       "Lockstep.Network/1.0.0": {
+        "dependencies": {
+          "Lockstep.Core": "1.0.0"
+        },
         "runtime": {
           "Lockstep.Network.dll": {}
         }
@@ -106,7 +111,7 @@
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
-    "Game.Components/1.0.0": {
+    "Core.Components/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

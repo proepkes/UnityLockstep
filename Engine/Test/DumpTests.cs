@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lockstep.Core.Services;
 using Lockstep.Game;
+using Lockstep.Game.Commands;
 using Lockstep.Game.Services;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;     
@@ -27,7 +28,7 @@ namespace Test
         [Fact]                      
         public void TestDump()
         {
-            TestFileDump("2_-535026177646_log");  
+            TestFileDump("0_3398952201_log");  
         }
 
         private void TestFileDump(string fileName)
@@ -45,12 +46,11 @@ namespace Test
             var tick = deserializer.GetUInt();
             var localActorId = deserializer.GetByte();
             var allActors = deserializer.GetBytesWithLength();
-
-            IFormatter formatter = new BinaryFormatter();
+                                                           
             GameLog log;
             using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
             {
-                log = (GameLog) formatter.Deserialize(stream);
+                log = GameLog.ReadFrom(stream);
             }
 
             var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
@@ -90,6 +90,53 @@ namespace Test
                 world.Services.Get<IDebugService>(), _output);
         }
 
+
+        [Fact]
+        public void TestSerializeGameLog()
+        {
+            var log = new GameLog();
+            log.Add(2, 5, 0, new ICommand[]{ new InputParseTest.Spawn() });
+
+            //using (var stream = new MemoryStream())
+            //{
+            //    var serializer = new Serializer();
+            //    serializer.Put((long)112341);
+            //    serializer.Put((uint)12513);
+            //    serializer.Put((byte)1);
+            //    serializer.PutBytesWithLength(new byte[]{1});
+            //    stream.Write(serializer.Data, 0, serializer.Length);
+            //    log.WriteTo(stream);
+
+            //    stream.Position = 0;
+            //    var deserializer = new Deserializer(stream.GetBuffer());
+            //    var hashCode = deserializer.GetLong();
+            //    var tick = deserializer.GetUInt();
+            //    var localActorId = deserializer.GetByte();
+            //    var allActors = deserializer.GetBytesWithLength();
+
+            //    using (var stream2 = new MemoryStream(deserializer.GetRemainingBytes()))
+            //    {
+            //        var result = GameLog.ReadFrom(stream2).Log;
+            //        result.ShouldContainKey(2u);
+            //    }
+            //}
+
+            var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+            var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
+            var dirPath = Path.GetDirectoryName(codeBasePath);
+
+            var data = ReadFile($@"{dirPath}\Dumps\0_3398952201_log.txt");                 
+            var deserializer = new Deserializer(data);
+            var hashCode = deserializer.GetLong();
+            var tick = deserializer.GetUInt();
+            var localActorId = deserializer.GetByte();
+            var allActors = deserializer.GetBytesWithLength();
+
+            using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
+            {
+                var result = GameLog.ReadFrom(stream).Log;      
+            }     
+        }   
 
         public static byte[] ReadFile(string filePath)
         {

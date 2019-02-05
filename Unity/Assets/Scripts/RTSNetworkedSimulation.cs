@@ -1,14 +1,8 @@
 ﻿            
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using Entitas;                  
+using System.Collections;              
+using System.IO;                
 using Lockstep.Game;
-using Lockstep.Game.Commands;
-using Lockstep.Game.Core.Commands;
+using Lockstep.Game.Commands;          
 using Lockstep.Game.Networking;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;         
@@ -45,12 +39,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         };  
                                                                        
 
-        _remoteCommandBuffer.InitReceived += StartSimulation;   
-
-        //Simulation.Ticked += id =>
-        //{
-        //    _dataReceiver.Receive(MessageTag.HashCode, new HashCode {FrameNumber = id, Value = _systems.HashCode});
-        //};
+        _remoteCommandBuffer.InitReceived += StartSimulation;  
     }
 
     private void StartSimulation(Init data)
@@ -66,40 +55,17 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public void DumpInputContext()
     {
+        Stream stream = new FileStream(@"C:\Log\" + PlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_log.txt", FileMode.Create, FileAccess.Write);
         var serializer = new Serializer();
         serializer.Put(Contexts.sharedInstance.gameState.hashCode.value);
         serializer.Put(Contexts.sharedInstance.gameState.tick.value);
         serializer.Put(PlayerId);
         serializer.PutBytesWithLength(AllActorIds);
-        IFormatter formatter = new BinaryFormatter();
-                                                          
-        Stream stream = new FileStream(@"C:\Log\"+ PlayerId + "_"+ Contexts.sharedInstance.gameState.hashCode.value+"_log.txt", FileMode.Create, FileAccess.Write);
         stream.Write(serializer.Data, 0, serializer.Length);
-        formatter.Serialize(stream, Systems.GameLog);
-        stream.Close();
 
-                                                                           
-        var data = new List<string>();
-        foreach (var entity in Contexts.sharedInstance.game.GetEntities(GameMatcher.AllOf(GameMatcher.Id, GameMatcher.ActorId)).OrderBy(entity => entity.actorId.value).ThenBy(entity => entity.id.value))
-        {   
-            data.Add(entity.actorId.value.ToString());
-            data.Add(entity.id.value.ToString());
-            data.Add(entity.position.value.ToString());
-            data.Add("----------");
-        }
-        File.WriteAllLines(@"C:\Log\" + PlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_Ents.txt", data);
+        Systems.GameLog.WriteTo(stream);
 
-
-        data = new List<string>();
-        foreach (var entity in Contexts.sharedInstance.input.GetEntities())
-        {
-            data.Add(entity.actorId.value.ToString());
-            data.Add(entity.tick.value.ToString());
-            data.Add(entity.hasCoordinate.ToString());
-            data.Add(entity.hasSelection.ToString());
-            data.Add("----------");
-        }
-        File.WriteAllLines(@"C:\Log\" + PlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_Input.txt", data);
+        stream.Close();                    
     }
 
 

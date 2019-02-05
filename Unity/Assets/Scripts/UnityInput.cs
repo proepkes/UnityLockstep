@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Entitas;
 using FixMath.NET;
-using Lockstep.Game.Core.Commands;
+using Lockstep.Game.Commands;          
 using UnityEngine;                      
 
 public class UnityInput : MonoBehaviour
@@ -32,9 +32,7 @@ public class UnityInput : MonoBehaviour
                     GameMatcher.Id, 
                     GameMatcher.ActorId))
                 .Where(entity => entity.actorId.value == RTSNetworkedSimulation.Instance.PlayerId)
-                .Select(entity => entity.id.value).ToArray();
-
-            //Debug.Log("Navigating: " + string.Join(", ", e));
+                .Select(entity => entity.id.value).ToArray();      
 
             RTSNetworkedSimulation.Instance.Execute(new NavigateCommand
             {

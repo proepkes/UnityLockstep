@@ -1,9 +1,8 @@
 ﻿using System;
 using BEPUutilities;
-using Lockstep.Game.Commands;
 using Lockstep.Network.Utils;
 
-namespace Lockstep.Game.Core.Commands
+namespace Lockstep.Game.Commands
 {
     [Serializable]
     public class SpawnCommand  : ISerializableCommand

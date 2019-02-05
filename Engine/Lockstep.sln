@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.271
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28527.54
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Network", "Network\Network.csproj", "{A20292E3-E987-4227-A0D4-8B617B9BF2DF}"
 EndProject
@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.UrhoSharp.Desktop", "Game.UrhoSharp.Desktop\Game.UrhoSharp.Desktop.csproj", "{A6352E5F-003C-4FD0-807B-3324E7D3B609}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network.Server", "Network.Server\Network.Server.csproj", "{56FC42D8-5FBE-4295-912B-73F2179A391F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Network.Server", "Network.Server\Network.Server.csproj", "{56FC42D8-5FBE-4295-912B-73F2179A391F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game", "Game\Game.csproj", "{2D997B51-90D4-4724-9C37-686CEAA171CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game", "Game\Game.csproj", "{2D997B51-90D4-4724-9C37-686CEAA171CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{8586273E-5386-4D3A-B31B-5404A2A27D62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{8586273E-5386-4D3A-B31B-5404A2A27D62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.Components", "Game.Components\Game.Components.csproj", "{1C6E099D-C9F1-4E53-A535-5188B438FAF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Components", "Core.Components\Core.Components.csproj", "{1C6E099D-C9F1-4E53-A535-5188B438FAF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -25,15 +25,16 @@ using System;
 using System.Linq;
 using Entitas;
 using FixMath.NET;
-using Game.UrhoSharp.Desktop;
+using Game.UrhoSharp.Desktop.Coupling;
 using Lockstep.Game;
-using Lockstep.Game.Core.Commands;
+using Lockstep.Game.Commands;
 using Lockstep.Game.Networking;
+using Urho;
 using Urho.Gui;
 using Urho.Navigation;
 using Urho.Resources;
 
-namespace Urho.Samples
+namespace Game.UrhoSharp.Desktop.Scenes
 {
 	public class StaticScene : Game
 	{
@@ -61,6 +62,9 @@ namespace Urho.Samples
         {
             client = new LiteNetLibClient();
             var network = new NetworkCommandBuffer(client);
+
+            network.RegisterCommand(() => new SpawnCommand());
+            network.RegisterCommand(() => new NavigateCommand());
             world = new World(Contexts.sharedInstance, network, new ViewService(ResourceCache, scene.GetChild("Jacks")));
 
             network.InitReceived += init => world.Initialize(init);
