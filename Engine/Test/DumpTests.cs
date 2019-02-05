@@ -1,15 +1,11 @@
 ﻿using System;                       
 using System.IO;
-using System.Linq;
-using System.Net.WebSockets;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Lockstep.Client;
-using Lockstep.Client.Commands;
-using Lockstep.Client.Implementations;
-using Lockstep.Core;
-using Lockstep.Core.Interfaces;
+using Lockstep.Core.Services;
+using Lockstep.Game;
+using Lockstep.Game.Services;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;     
 using Shouldly;
@@ -18,32 +14,25 @@ using Xunit.Abstractions;
 
 namespace Test
 {    
-    public class GettingSerious 
+    public class DumpTests
     {
         private readonly ITestOutputHelper _output;
 
-        public GettingSerious(ITestOutputHelper output)
+        public DumpTests(ITestOutputHelper output)
         {
             _output = output;
             Console.SetOut(new Converter(output));
         }      
                                                                                                                                                    
         [Fact]                      
-        public void TestDump1()
-        {                      
-            TestDump("2_-535026177646_log");  
-        }
-
-        [Fact]
-        public void TestDump2()
+        public void TestDump()
         {
-            TestDump("37_-546443594864_log");
+            TestFileDump("2_-535026177646_log");  
         }
 
-        private void TestDump(string fileName)
+        private void TestFileDump(string fileName)
         {
             var contexts = new Contexts();   
-            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
 
             var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
@@ -64,8 +53,8 @@ namespace Test
                 log = (GameLog) formatter.Deserialize(stream);
             }
 
-            var sim = new Simulation(systems, commandBuffer) {LagCompensation = 0, SendCommandsToBuffer = false};
-            sim.Initialize(new Init {TargetFPS = 1000, AllActors = allActors, ActorID = localActorId});
+            var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Initialize(new Init {TargetFPS = 1000, AllActors = allActors, ActorID = localActorId});
 
             for (uint i = 0; i < tick; i++)
             {
@@ -81,7 +70,7 @@ namespace Test
                                 {
                                     _output.WriteLine("Local: " + commands.Count + " commands");
 
-                                    systems.AddInput(tickId, actorId, commands);
+                                    world.AddInput(tickId, actorId, commands);
                                 }
                                 else
                                 {
@@ -92,55 +81,13 @@ namespace Test
                     }
                 }
 
-                sim.Update(1);
+                world.Update(1);
             }
 
             contexts.gameState.hashCode.value.ShouldBe(hashCode);
-            commandBuffer.Buffer.ShouldBeEmpty();
 
-
-            contexts.Reset();
-            var debug = systems.Services.Get<IDebugService>();
-            systems = new World(contexts, new TestLogger(_output));
-            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
-            sim.Initialize(new Init { TargetFPS = 1000, AllActors = allActors, ActorID = localActorId });
-
-            foreach (var (occurTickId, tickCommands) in log.Log)
-            {
-                foreach (var (tickId, allCommands) in tickCommands)
-                {
-                    foreach (var (actorId, commands) in allCommands)
-                    {
-                        if (commands.Any(command => command is NavigateCommand))
-                        {                        
-                        }
-                        if (actorId == localActorId)
-                        {
-                            _output.WriteLine("Local: " + commands.Count + " commands");
-
-                            systems.AddInput(tickId, actorId, commands);
-                        }
-                        else
-                        {
-                            commandBuffer.Insert(tickId, actorId, commands.ToArray());
-                        }
-                    }
-                }
-            }   
-
-            var debug2 = systems.Services.Get<IDebugService>();
-            debug.ShouldNotBeSameAs(debug2);                                                              
-
-            for (uint i = 0; i < tick; i++)
-            {
-                sim.Update(1);
-                if (debug.HasHash(systems.CurrentTick))
-                {
-                    debug.GetHash(systems.CurrentTick).ShouldBe(contexts.gameState.hashCode.value);
-                }
-            }
-
-            contexts.gameState.hashCode.value.ShouldBe(hashCode);
+            TestUtil.TestReplayMatchesHashCode(world.GameLog, world.CurrentTick, hashCode,
+                world.Services.Get<IDebugService>(), _output);
         }
 
 

@@ -1,8 +1,8 @@
 ﻿using System;    
-using LiteNetLib;       
-using Lockstep.Client.Interfaces;
+using LiteNetLib;                  
+using Lockstep.Game.Networking;
 
-public class LiteNetLibClient : INetwork
+public class LiteNetLibClient : IClient
 {
     private readonly EventBasedNetListener _listener = new EventBasedNetListener();
                                           

@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
-using Entitas;
+using UnityEngine;       
 using Entitas.Unity;
-using Entitas.VisualDebugging.Unity;
-using Lockstep.Core.Interfaces;          
+using Entitas.VisualDebugging.Unity;    
+using Lockstep.Game.Services;
 
 public interface IEventListener
 {

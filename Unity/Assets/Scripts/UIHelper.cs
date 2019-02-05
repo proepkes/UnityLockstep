@@ -12,7 +12,7 @@ public class UIHelper : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (RTSNetworkedSimulation.Instance.Simulation.Running)
+        if (RTSNetworkedSimulation.Instance.Systems.Running)
         {
             HashCodeText.text = "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
             CurrentTickText.text = "CurrentTick: " + (uint)RTSNetworkedSimulation.Instance.Systems.CurrentTick;

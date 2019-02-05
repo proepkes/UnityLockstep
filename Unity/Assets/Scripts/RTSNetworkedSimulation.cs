@@ -5,13 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Entitas;
-using Lockstep.Client;
-using Lockstep.Client.Commands;
-using Lockstep.Client.Implementations;
-using Lockstep.Client.Interfaces;
-using Lockstep.Core;
-using Lockstep.Core.Interfaces;
+using Entitas;                  
+using Lockstep.Game;
+using Lockstep.Game.Commands;
+using Lockstep.Game.Core.Commands;
+using Lockstep.Game.Networking;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;         
 using UnityEngine;           
@@ -23,8 +21,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
 
-    public IWorld Systems;
-    public Simulation Simulation;
+    public World Systems;           
     public RTSEntityDatabase EntityDatabase;
 
     public bool Connected => _client.Connected;
@@ -39,13 +36,14 @@ public class RTSNetworkedSimulation : MonoBehaviour
     {                                
         Instance = this;
 
-        Systems = new World(Contexts.sharedInstance, new UnityGameService(EntityDatabase), new UnityLogger());
-
         _remoteCommandBuffer = new NetworkCommandBuffer(_client);
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
-
-        Simulation = new Simulation(Systems, _remoteCommandBuffer) { LagCompensation = 3 };
+        Systems = new World(Contexts.sharedInstance, _remoteCommandBuffer, new UnityGameService(EntityDatabase), new UnityLogger())
+        {
+            LagCompensation = 3
+        };  
+                                                                       
 
         _remoteCommandBuffer.InitReceived += StartSimulation;   
 
@@ -60,7 +58,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         PlayerId = data.ActorID;
         AllActorIds = data.AllActors;
         Debug.Log($"Starting simulation. Total actors: {data.AllActors.Length}. Local ActorID: {data.ActorID}");
-        Simulation.Initialize(data);  
+        Systems.Initialize(data);  
 
         _remoteCommandBuffer.InitReceived -= StartSimulation;
     }
@@ -107,7 +105,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public void Execute(ISerializableCommand command)
     {
-        Simulation.Execute(command);
+        Systems.Execute(command);
     }
 
     private void Start()
@@ -124,7 +122,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     void Update()
     {
         _client.Update();
-        Simulation.Update(Time.deltaTime * 1000);
+        Systems.Update(Time.deltaTime * 1000);
     }            
 
     public IEnumerator AutoConnect()

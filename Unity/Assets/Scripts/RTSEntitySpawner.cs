@@ -1,4 +1,4 @@
-﻿using Lockstep.Client.Commands;
+﻿using Lockstep.Game.Core.Commands;
 using UnityEngine;
 using Vector2 = BEPUutilities.Vector2;
 

@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading;
 using BEPUutilities;
 using Entitas;
-using Lockstep.Client;
-using Lockstep.Client.Implementations; 
-using Lockstep.Core;                  
-using Lockstep.Core.Interfaces;    
+using Lockstep.Core.Services;
+using Lockstep.Game;
+using Lockstep.Game.Commands;
+using Lockstep.Game.Services;
 using Lockstep.Network.Messages;  
 using Shouldly;
 using Xunit;
@@ -27,163 +27,167 @@ namespace Test
         [Fact]
         public void TestCreateEntityRollbackLocal()
         {                      
-            var contexts = new Contexts();   
+            var contexts = new Contexts();
 
-            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
+            var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
 
-            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
 
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
+            world.CurrentTick.ShouldBe((uint)0);
 
-            systems.CurrentTick.ShouldBe((uint)0);
+            world.Update(1000); //0          
+            world.CurrentTick.ShouldBe((uint)1);
 
-            sim.Update(1000); //0          
-            systems.CurrentTick.ShouldBe((uint)1);
+            world.Execute(new Spawn());
 
-            sim.Execute(new Spawn()); 
-
-            sim.Update(1000); //1            
-            systems.CurrentTick.ShouldBe((uint)2);
+            world.Update(1000); //1            
+            world.CurrentTick.ShouldBe((uint)2);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
-            sim.Update(1000); //2             
-            systems.CurrentTick.ShouldBe((uint)3);
+            world.Update(1000); //2             
+            world.CurrentTick.ShouldBe((uint)3);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
             commandBuffer.Insert(1, 1, new ICommand[] { });
-                                                                 
-            sim.Update(1000); //3                
-            systems.CurrentTick.ShouldBe((uint)4);
+
+            world.Update(1000); //3                
+            world.CurrentTick.ShouldBe((uint)4);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);         
 
-            commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game, 1) }); 
+            commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game, 1) });
 
-            sim.Update(1000); //4                
-            systems.CurrentTick.ShouldBe((uint)5);
+            world.Update(1000); //4                
+            world.CurrentTick.ShouldBe((uint)5);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 2);
 
-            sim.Execute(new Spawn());         
+            world.Execute(new Spawn());
 
-            sim.Update(1000); //5        
-            systems.CurrentTick.ShouldBe((uint)6);
+            world.Update(1000); //5        
+            world.CurrentTick.ShouldBe((uint)6);
 
             ExpectEntityCount(contexts, 2);
-            ExpectBackupCount(contexts, 2); 
+            ExpectBackupCount(contexts, 2);
 
-            sim.Execute(new Spawn());     
+            world.Execute(new Spawn());
 
-            sim.Update(1000); //6
+            world.Update(1000); //6
             ExpectEntityCount(contexts, 3);
             ExpectBackupCount(contexts, 2);
                                                   
             commandBuffer.Insert(3, 1, new ICommand[] { }); //Revert to 3
 
-            sim.Update(1000);
+            world.Update(1000);
             ExpectEntityCount(contexts, 3);
-            ExpectBackupCount(contexts, 3); 
-                                                                                               
-            sim.Update(1000);
-            commandBuffer.Insert(4, 1, new ICommand[] { });
-            sim.Execute(new Spawn());    
+            ExpectBackupCount(contexts, 3);
 
-            sim.Update(1000);
+            world.Update(1000);
+            commandBuffer.Insert(4, 1, new ICommand[] { });
+            world.Execute(new Spawn());
+
+            world.Update(1000);
             ExpectEntityCount(contexts, 4);
             ExpectBackupCount(contexts, 4);
 
-            sim.Update(1000);
-            sim.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
             commandBuffer.Insert(5, 1, new ICommand[] { new Spawn() });
 
-            sim.Update(1000);    
+            world.Update(1000);    
 
             ExpectEntityCount(contexts, 5);
+
+            TestUtil.TestReplayMatchesHashCode(world.GameLog, world.CurrentTick, contexts.gameState.hashCode.value,
+                world.Services.Get<IDebugService>(), _output);
         }
 
         [Fact]
         public void TestCreateEntityRollbackRemote()
-        {                 
+        {
+            var randomPosition = new Random();
+
             var contexts = new Contexts();
 
-            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
+            var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
 
-            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
 
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
-
-            sim.Update(1000);
+            world.Update(1000);
             for (int i = 0; i < 10; i++)
             {
-                sim.Execute(new Spawn());
+                world.Execute(new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200))});
             }
-            sim.Update(1000); 
-            sim.Update(1000);
-            sim.Update(1000);      
-            sim.Update(1000);   
+            world.Update(1000); 
+            world.Update(1000);
+            world.Update(1000);      
+            world.Update(1000);   
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(2, 1, new ICommand[] { new Spawn() });
+                commandBuffer.Insert(2, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) } });
             }              
 
-            sim.Update(1000);                     
+            world.Update(1000);                     
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(4, 1, new ICommand[] { new Spawn() });
+                commandBuffer.Insert(4, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) } });
             }
 
                                        
             for (int i = 0; i < 100; i++)
             {
-                sim.Update(1000);
+                world.Update(1000);
             }                          
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(5, 1, new ICommand[] { new Spawn() });
+                commandBuffer.Insert(5, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) } });
             }
 
-            sim.Update(1000);    
-            sim.Update(1000);
-            sim.Update(1000);
+            world.Update(1000);    
+            world.Update(1000);
+            world.Update(1000);
 
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(7, 1, new ICommand[] { new Spawn() });
+                commandBuffer.Insert(7, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) } });
             }
-            sim.Update(1000);
+            world.Update(1000);
 
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
                                                                   
             _output.WriteLine("Revert to 3");
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Insert(8, 1, new ICommand[] { new Spawn() });
+                commandBuffer.Insert(8, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) } });
             }
 
-            sim.Update(1000);                                   
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
-            for (int i = 0; i < 10; i++)
+            world.Update(1000);                                   
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            for (int i = 0; i < 5; i++)
             {
-                commandBuffer.Insert(9, 1, new ICommand[] { new Spawn() });
+                commandBuffer.Insert(9, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0,100), randomPosition.Next(100,200))} });
             }
-            sim.Update(1000);
+            world.Update(1000);
 
-            ExpectEntityCount(contexts, 70);
+            ExpectEntityCount(contexts, 65);
+
+            TestUtil.TestReplayMatchesHashCode(world.GameLog, world.CurrentTick, contexts.gameState.hashCode.value,
+                world.Services.Get<IDebugService>(), _output);
         }        
 
         [Fact]
@@ -191,32 +195,21 @@ namespace Test
         {
             var contexts = new Contexts();
 
-            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
+            var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
 
-            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Update(1000); //0    
 
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
+            world.Execute(new Spawn());
 
-            uint frameCounter = 0;
-
-            systems.CurrentTick.ShouldBe(frameCounter++);
-
-            sim.Update(1000); //0                           
-            systems.CurrentTick.ShouldBe(frameCounter++);
-
-            sim.Execute(new Spawn());
-
-            sim.Update(1000); //1                           
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000); //1    
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
-            sim.Update(1000); //2                             
-            systems.CurrentTick.ShouldBe(frameCounter++); 
+            world.Update(1000); //2    
 
-            sim.Update(1000); //3                            
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000); //3       
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
@@ -225,21 +218,18 @@ namespace Test
 
             commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game, 1) });       
 
-            sim.Update(1000); //4                           
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000); //4     
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);       
            
-            sim.Update(1000); //5                           
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000); //5    
 
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);
 
-            sim.Execute(new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
+            world.Execute(new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
 
-            sim.Update(1000); //6                          
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000); //6    
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
@@ -247,8 +237,7 @@ namespace Test
 
             commandBuffer.Insert(3, 1, new ICommand[] { new Spawn() }); //Revert to 3
 
-            sim.Update(1000); //7                          
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000); //7    
             ExpectEntityCount(contexts, 2);
             ExpectBackupCount(contexts, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
@@ -256,8 +245,7 @@ namespace Test
 
             commandBuffer.Insert(4, 1, new ICommand[] { new Spawn() }); //Revert to 4
 
-            sim.Update(1000); //8                          
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000); //8      
             ExpectEntityCount(contexts, 3);
             ExpectBackupCount(contexts, 6);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
@@ -265,181 +253,91 @@ namespace Test
 
             commandBuffer.Insert(5, 1, new ICommand[] { new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn() }); //Revert to 5
 
-            sim.Update(1000);                           
-            systems.CurrentTick.ShouldBe(frameCounter++);
+            world.Update(1000);        
             ExpectEntityCount(contexts, 9);
             ExpectBackupCount(contexts, 15);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
-            sim.Update(1000);
-            systems.CurrentTick.ShouldBe(frameCounter++);
-            sim.Update(1000);
-            systems.CurrentTick.ShouldBe(frameCounter++);
-            sim.Update(1000);
-            systems.CurrentTick.ShouldBe(frameCounter++);   
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);  
 
-            sim.Execute(new Spawn());
+            world.Execute(new Spawn());
             commandBuffer.Insert(6, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1, Vector2.Zero)  }); 
 
-            sim.Update(1000);
+            world.Update(1000);
             ExpectEntityCount(contexts, 10);
             ExpectBackupCount(contexts, 24); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 2);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
-            sim.Execute(new Spawn());
+            world.Execute(new Spawn());
             commandBuffer.Insert(11, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1, new Vector2(3,4)) });
-            sim.Update(1000);
+            world.Update(1000);
 
             ExpectEntityCount(contexts, 11);
             ExpectBackupCount(contexts, 33); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
-            _output.WriteLine("========================================");
-
-            var input = systems.GameLog.Log;
-            var finalTick = systems.CurrentTick;
-            var finalHash = contexts.gameState.hashCode.value;
-
-            commandBuffer.Buffer.ShouldBeEmpty();
-            var debug = systems.Services.Get<IDebugService>();
-
-            contexts.Reset();
-            systems = new World(contexts, new TestLogger(_output));
-            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
-
-            foreach (var (occurTickId, tickCommands) in input)
-            {
-                foreach (var (tickId, allCommands) in tickCommands)
-                {
-                    foreach (var (actorId, commands) in allCommands)
-                    {
-                        if (actorId == 0)
-                        {
-                            _output.WriteLine("Local: " + commands.Count + " commands");
-
-                            systems.AddInput(tickId, actorId, commands);
-                        }
-                        else
-                        {
-                            commandBuffer.Insert(tickId, actorId, commands.ToArray());
-                        }
-                    }
-                }
-            }
-                                               
-            while (systems.CurrentTick < finalTick)
-            {
-                sim.Update(1);
-                if (debug.HasHash(systems.CurrentTick))
-                {
-                    debug.GetHash(systems.CurrentTick).ShouldBe(contexts.gameState.hashCode.value);
-                }
-            }
-
-            contexts.gameState.hashCode.value.ShouldBe(finalHash);
+            TestUtil.TestReplayMatchesHashCode(world.GameLog, world.CurrentTick, contexts.gameState.hashCode.value,
+                world.Services.Get<IDebugService>(), _output);
         }
+
         [Fact]
         public void TestGameLogReplay()
         {
             var contexts = new Contexts();
 
-            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
+            var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });     
 
-            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Update(1000); //0                          
 
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });     
+            world.Execute(new Spawn());
 
-            sim.Update(1000); //0                          
-
-            sim.Execute(new Spawn());
-
-            sim.Update(1000); //1     
-            sim.Update(1000); //2    
-            sim.Update(1000); //3                                                   
+            world.Update(1000); //1     
+            world.Update(1000); //2    
+            world.Update(1000); //3                                                   
 
             commandBuffer.Insert(2, 1, new ICommand[] { new MoveAll(contexts.game, 1) });
 
-            sim.Update(1000); //4   
-            sim.Update(1000); //5                         
+            world.Update(1000); //4   
+            world.Update(1000); //5                         
 
-            sim.Execute(new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
+            world.Execute(new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
 
-            sim.Update(1000); //6                                                    
+            world.Update(1000); //6                                                    
 
             commandBuffer.Insert(3, 1, new ICommand[] { new Spawn() }); //Revert to 3
 
-            sim.Update(1000); //7                                                     
+            world.Update(1000); //7                                                     
 
             commandBuffer.Insert(4, 1, new ICommand[] { new Spawn() }); //Revert to 4
 
-            sim.Update(1000); //8                                                    
+            world.Update(1000); //8                                                    
 
             commandBuffer.Insert(5, 1, new ICommand[] { new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn() }); //Revert to 5
 
-            sim.Update(1000);        
-            sim.Update(1000);                            
-            sim.Update(1000);                              
-            sim.Update(1000);
+            world.Update(1000);        
+            world.Update(1000);                            
+            world.Update(1000);                              
+            world.Update(1000);
 
-            sim.Execute(new Spawn());
-            sim.Execute(new MoveAll(contexts.game, 0));
+            world.Execute(new Spawn());
+            world.Execute(new MoveAll(contexts.game, 0));
             commandBuffer.Insert(6, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1, Vector2.Zero) });
 
-            sim.Update(1000);                                                        
+            world.Update(1000);                                                        
 
-            sim.Execute(new Spawn());
+            world.Execute(new Spawn());
             commandBuffer.Insert(11, 1, new ICommand[] { new MoveEntitesOfSpecificActor(contexts.game, 1, new Vector2(3, 4)) });
-            sim.Update(1000);
+            world.Update(1000);
 
-            _output.WriteLine("========================================");
-
-            var input = systems.GameLog.Log;
-            var finalTick = systems.CurrentTick;
-            var finalHash = contexts.gameState.hashCode.value;
-
-            commandBuffer.Buffer.ShouldBeEmpty();
-            var debug = systems.Services.Get<IDebugService>();
-
-            contexts.Reset();
-            systems = new World(contexts, new TestLogger(_output));
-            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
-
-            foreach (var (occurTickId, tickCommands) in input)
-            {
-                foreach (var (tickId, allCommands) in tickCommands)
-                {
-                    foreach (var (actorId, commands) in allCommands)
-                    {          
-                        if (actorId == 0)
-                        {
-                            _output.WriteLine("Local: " + commands.Count + " commands");
-
-                            systems.AddInput(tickId, actorId, commands);
-                        }
-                        else
-                        {
-                            commandBuffer.Insert(tickId, actorId, commands.ToArray());
-                        }
-                    }
-                }
-            }                                 
-
-            while (systems.CurrentTick < finalTick)
-            {
-                sim.Update(1);
-                if (debug.HasHash(systems.CurrentTick))
-                {
-                    debug.GetHash(systems.CurrentTick).ShouldBe(contexts.gameState.hashCode.value);
-                }
-            }
-
-            contexts.gameState.hashCode.value.ShouldBe(finalHash);
+            TestUtil.TestReplayMatchesHashCode(world.GameLog, world.CurrentTick, contexts.gameState.hashCode.value,
+                world.Services.Get<IDebugService>(), _output);
         }
         [Fact]
         //This test requires a navigation-service that just sets the position to destination: entity.ReplacePosition(entity.destination.value);
@@ -447,30 +345,26 @@ namespace Test
         {
             var contexts = new Contexts();
 
-            var systems = new World(contexts, new TestLogger(_output));
             var commandBuffer = new CommandBuffer();
+            var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
+            world.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
 
-            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
-
-            sim.Initialize(new Init { TargetFPS = 1, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
-                                 
-
-            sim.Update(1000);   
-            sim.Update(1000);
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Update(1000);
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Update(1000);    
+            world.Update(1000);   
+            world.Update(1000);
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Update(1000);
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Update(1000);    
 
             var selection = new uint[] { 0, 1, 3, 13 };
             var destination = new Vector2(14 , 15);
@@ -501,22 +395,22 @@ namespace Test
                 new MoveSelection(selection, destination)                       
             });
 
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Execute(new Spawn());
-            sim.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Execute(new Spawn());
+            world.Update(1000);
 
-            sim.Execute(new MoveSelection(new uint[]{1,4,2,8,3}, destination));
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
-            sim.Update(1000);
+            world.Execute(new MoveSelection(new uint[]{1,4,2,8,3}, destination));
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
+            world.Update(1000);
             contexts.game.GetEntities(GameMatcher.Id).Where(entity => entity.actorId.value == 1).Select(entity => entity.id.value).ShouldBeUnique();
             contexts.game.GetEntities(GameMatcher.Id)
                 .Where(entity => entity.actorId.value == 1 && selection.Contains(entity.id.value))
@@ -528,30 +422,30 @@ namespace Test
                 new MoveSelection(selection, destination)
             });
 
-            sim.Update(1000);
+            world.Update(1000);
             contexts.game.GetEntities(GameMatcher.Id).Where(entity => entity.actorId.value == 1).Select(entity => entity.id.value).ShouldBeUnique();
             contexts.game.GetEntities(GameMatcher.Id)
                 .Where(entity => entity.actorId.value == 1 && selection.Contains(entity.id.value))
-                .Select(entity => entity.position.value).ShouldAllBe(vector2 => vector2.X == destination.X && vector2.Y == destination.Y);                              
+                .Select(entity => entity.position.value).ShouldAllBe(vector2 => vector2.X == destination.X && vector2.Y == destination.Y);
+
+            TestUtil.TestReplayMatchesHashCode(world.GameLog, world.CurrentTick, contexts.gameState.hashCode.value,
+                world.Services.Get<IDebugService>(), _output);
         }
 
-        [Fact]
-        public void TestThread()
-        {
-            var contexts = new Contexts();
+        //[Fact]
+        //public void TestThread()
+        //{
+        //    var contexts = new Contexts();
 
-            var systems = new World(contexts, new TestLogger(_output));
-            var commandBuffer = new CommandBuffer();
+        //    var commandBuffer = new CommandBuffer();
+        //    var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
+        //    world.Initialize(new Init { TargetFPS = 10, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
+        //    world.StartAsThread();
 
-            var sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
+        //    Thread.Sleep(1000);
 
-            sim.Initialize(new Init { TargetFPS = 10, AllActors = new byte[] { 0, 1 }, ActorID = 0 });
-            sim.StartAsThread();
-
-            Thread.Sleep(1000);
-
-            systems.CurrentTick.ShouldBeInRange(9u, 11u);
-        }
+        //    world.CurrentTick.ShouldBeInRange(9u, 11u);
+        //}
 
         private void ExpectEntityCount(Contexts contexts, int value)
         {

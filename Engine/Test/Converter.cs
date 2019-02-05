@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text;
-using Lockstep.Core.Interfaces;
+using Lockstep.Core.Services;
+using Lockstep.Game.Services;
 using Xunit.Abstractions;
 
 namespace Test
