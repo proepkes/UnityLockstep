@@ -72,12 +72,7 @@ namespace Lockstep.Core.World
             AddFeatures();
 
             base.Initialize();
-        }
-
-        public void Tick(bool createSnapshot = false)
-        {
-            throw new System.NotImplementedException();
-        }
+        }      
 
         public InputEntity CreateInputEntity()
         {
