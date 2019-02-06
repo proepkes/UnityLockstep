@@ -1,4 +1,4 @@
-﻿namespace Lockstep.Game.Commands
+﻿namespace Lockstep.Core.Commands
 {
     public interface ICommand
     {

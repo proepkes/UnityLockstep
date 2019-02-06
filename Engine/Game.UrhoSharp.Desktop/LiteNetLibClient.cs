@@ -1,10 +1,12 @@
 ﻿using System;
 using LiteNetLib;
 using Lockstep.Game.Networking;
+using Lockstep.Network;
+using Lockstep.Network.Utils;
 
 namespace Game.UrhoSharp.Desktop
 {
-    public class LiteNetLibClient : IClient
+    public class LiteNetLibNetwork : INetwork
     {
         private readonly EventBasedNetListener _listener = new EventBasedNetListener();
 
@@ -17,7 +19,7 @@ namespace Game.UrhoSharp.Desktop
         public void Start()
         {
             _listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
-            {
+            {                               
                 DataReceived?.Invoke(dataReader.GetRemainingBytes());
                 dataReader.Recycle();
             };

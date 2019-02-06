@@ -25,7 +25,7 @@ using System;
 using System.Linq;
 using Entitas;
 using FixMath.NET;
-using Game.UrhoSharp.Desktop.Coupling;
+using Game.UrhoSharp.Desktop.Coupling;        
 using Lockstep.Game;
 using Lockstep.Game.Commands;
 using Lockstep.Game.Networking;
@@ -43,8 +43,9 @@ namespace Game.UrhoSharp.Desktop.Scenes
         CrowdManager crowdManager;
 
         private Text worldInfoText;
-        private World world;
-        private LiteNetLibClient client;
+        private Simulation simulation;
+        private LiteNetLibNetwork network;
+        private NetworkCommandBuffer commandBuffer;
 
         public StaticScene(ApplicationOptions options = null) : base(options) { }
 
@@ -60,17 +61,15 @@ namespace Game.UrhoSharp.Desktop.Scenes
 
         private void CreateWorld()
         {
-            client = new LiteNetLibClient();
-            var network = new NetworkCommandBuffer(client);
+            network = new LiteNetLibNetwork();
+            commandBuffer = new NetworkCommandBuffer(network);
+            commandBuffer.RegisterCommand(() => new SpawnCommand());
+            commandBuffer.RegisterCommand(() => new NavigateCommand());
+            
+            simulation = new Simulation(Contexts.sharedInstance, network, commandBuffer, new ViewService(ResourceCache, scene.GetChild("Jacks")));
 
-            network.RegisterCommand(() => new SpawnCommand());
-            network.RegisterCommand(() => new NavigateCommand());
-            world = new World(Contexts.sharedInstance, network, new ViewService(ResourceCache, scene.GetChild("Jacks")));
-
-            network.InitReceived += init => world.Initialize(init);
-
-            client.Start();
-            client.Connect("127.0.0.1", 9050);
+            network.Start();
+            network.Connect("127.0.0.1", 9050);
         }
 
         void CreateUI()
@@ -114,7 +113,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
 			light.LightType = LightType.Directional;
 
 			var rand = new Random();
-			for (int i = 0; i < 200; i++)
+			for (int i = 0; i < 100; i++)
 			{
 				var mushroom = scene.CreateChild ("Mushroom");
 				mushroom.Position = new Vector3 (rand.Next (90)-45, 0, rand.Next (90)-45);
@@ -162,7 +161,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
 
             worldInfoText = new Text
             {
-                Value = "",
+                Value = "Waiting for all players to join...",
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -181,7 +180,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
 		{
 			base.OnUpdate(timeStep);
 
-            client.Update();
+            network.Update();
 
             SimpleMoveCamera3D(timeStep);
 
@@ -191,31 +190,29 @@ namespace Game.UrhoSharp.Desktop.Scenes
             if (Input.GetMouseButtonPress(MouseButton.Left))
                 SetPathPoint(Input.GetQualifierDown(qualShift));
 
-            world.Update(timeStep * 1000);
+            simulation.Update(timeStep * 1000);
 
-            if (world.Running)
+            if (simulation.Running)
             {
-                worldInfoText.Value = world.CurrentTick + " / " + world.Contexts.gameState.hashCode.value;
+                worldInfoText.Value = simulation.CurrentTick + " / " + Contexts.sharedInstance.gameState.hashCode.value;
             }
         }
 
         void SetPathPoint(bool spawning)
         {
-            Vector3 hitPos;
-            Drawable hitDrawable;
-
-            if (Raycast(250.0f, out hitPos, out hitDrawable))
+            if (Raycast(250.0f, out var hitPos, out _))
             {
-                DynamicNavigationMesh navMesh = scene.GetComponent<DynamicNavigationMesh>();
-                Vector3 pathPos = navMesh.FindNearestPoint(hitPos, new Vector3(1.0f, 1.0f, 1.0f));
+                var navMesh = scene.GetComponent<DynamicNavigationMesh>();
+                var pathPos = navMesh.FindNearestPoint(hitPos, new Vector3(1.0f, 1.0f, 1.0f));
                 var compatiblePos = new BEPUutilities.Vector2((Fix64)pathPos.X, (Fix64)pathPos.Z);
-            if (spawning)
+                if (spawning)
                     // Spawn a jack at the target position
-                    world.Execute(new SpawnCommand { Position = compatiblePos });
+                    simulation.Execute( new SpawnCommand { Position = compatiblePos });
                 else
                     // Set crowd agents target position
-                    world.Execute(new NavigateCommand { 
-                        Destination = compatiblePos, 
+                    simulation.Execute(new NavigateCommand
+                    {
+                        Destination = compatiblePos,
                         Selection = Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Select(entity => entity.id.value).ToArray()
                     });
             }
@@ -229,7 +226,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
             UI ui = UI;
             IntVector2 pos = ui.CursorPosition;
             // Check the cursor is visible and there is no UI element in front of the cursor
-            if (!ui.Cursor.Visible || ui.GetElementAt(pos, true) != null)
+            if (!ui.Cursor.Visible || ui.GetElementAt(pos) != null)
                 return false;
 
             var graphics = Graphics;

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;       
 using Entitas.Unity;
-using Entitas.VisualDebugging.Unity;    
+using Entitas.VisualDebugging.Unity;
+using Lockstep.Core.Services;
 using Lockstep.Game.Services;
+using Object = UnityEngine.Object;
 
 public interface IEventListener
 {
@@ -67,14 +70,13 @@ public class UnityGameService : IViewService
 }
 
 public class UnityLogger : ILogService
-{
-    public void Warn(object message)
-    {                 
-        Debug.LogWarning(message);
+{          
+    public void Warn(Func<string> message)
+    {
+        Debug.LogWarning(message.Invoke());
     }
 
-    public void Trace(object message)
-    {
-        //Debug.Log(message);
+    public void Trace(Func<string> message)
+    {                                               
     }
 }

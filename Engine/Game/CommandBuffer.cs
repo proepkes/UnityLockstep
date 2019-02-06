@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Lockstep.Core.Commands;
 using Lockstep.Game.Commands;
 
 namespace Lockstep.Game
 {              
-    [Serializable]
     public class CommandBuffer : ICommandBuffer
     {                                   
         /// <summary>
@@ -13,7 +12,7 @@ namespace Lockstep.Game
         /// </summary>    
         public Dictionary<uint, Dictionary<byte, List<ICommand>>> Buffer { get; } = new Dictionary<uint, Dictionary<byte, List<ICommand>>>(5000); 
 
-        public virtual void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
+        public virtual void Insert(uint frameNumber, byte commanderId, params ICommand[] commands)
         {
             lock (Buffer)
             {        

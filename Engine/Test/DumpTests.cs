@@ -1,12 +1,15 @@
 ﻿using System;                       
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Lockstep.Core;
+using Lockstep.Core.Commands;
 using Lockstep.Core.Services;
+using Lockstep.Core.World;
 using Lockstep.Game;
 using Lockstep.Game.Commands;
-using Lockstep.Game.Services;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;     
 using Shouldly;
@@ -53,8 +56,8 @@ namespace Test
                 log = GameLog.ReadFrom(stream);
             }
 
-            var world = new World(contexts, commandBuffer, new TestLogger(_output)) { LagCompensation = 0, SendCommandsToBuffer = false };
-            world.Initialize(new Init {TargetFPS = 1000, AllActors = allActors, ActorID = localActorId});
+            var simulation = new Simulation(contexts, commandBuffer, new TestLogger(_output));
+            simulation.Start(new Init { TargetFPS = 1000, ActorID = localActorId, AllActors = allActors});
 
             for (uint i = 0; i < tick; i++)
             {
@@ -66,28 +69,19 @@ namespace Test
                         {
                             foreach (var (actorId, commands) in allCommands)
                             {
-                                if (actorId == localActorId)
-                                {
-                                    _output.WriteLine("Local: " + commands.Count + " commands");
-
-                                    world.AddInput(tickId, actorId, commands);
-                                }
-                                else
-                                {
-                                    commandBuffer.Insert(tickId, actorId, commands.ToArray());
-                                } 
+                                commandBuffer.Insert(tickId, actorId, commands.ToArray());
                             }
                         }
                     }
                 }
 
-                world.Update(1);
+                simulation.Update(1);
             }
 
             contexts.gameState.hashCode.value.ShouldBe(hashCode);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, world.CurrentTick, hashCode,
-                world.Services.Get<IDebugService>(), _output);
+            TestUtil.TestReplayMatchesHashCode(simulation.GameLog, simulation.CurrentTick, hashCode,
+                simulation.Services.Get<IDebugService>(), _output);
         }
 
 
@@ -97,45 +91,29 @@ namespace Test
             var log = new GameLog();
             log.Add(2, 5, 0, new ICommand[]{ new InputParseTest.Spawn() });
 
-            //using (var stream = new MemoryStream())
-            //{
-            //    var serializer = new Serializer();
-            //    serializer.Put((long)112341);
-            //    serializer.Put((uint)12513);
-            //    serializer.Put((byte)1);
-            //    serializer.PutBytesWithLength(new byte[]{1});
-            //    stream.Write(serializer.Data, 0, serializer.Length);
-            //    log.WriteTo(stream);
-
-            //    stream.Position = 0;
-            //    var deserializer = new Deserializer(stream.GetBuffer());
-            //    var hashCode = deserializer.GetLong();
-            //    var tick = deserializer.GetUInt();
-            //    var localActorId = deserializer.GetByte();
-            //    var allActors = deserializer.GetBytesWithLength();
-
-            //    using (var stream2 = new MemoryStream(deserializer.GetRemainingBytes()))
-            //    {
-            //        var result = GameLog.ReadFrom(stream2).Log;
-            //        result.ShouldContainKey(2u);
-            //    }
-            //}
-
-            var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-            var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
-            var dirPath = Path.GetDirectoryName(codeBasePath);
-
-            var data = ReadFile($@"{dirPath}\Dumps\0_3398952201_log.txt");                 
-            var deserializer = new Deserializer(data);
-            var hashCode = deserializer.GetLong();
-            var tick = deserializer.GetUInt();
-            var localActorId = deserializer.GetByte();
-            var allActors = deserializer.GetBytesWithLength();
-
-            using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
+            using (var stream = new MemoryStream())
             {
-                var result = GameLog.ReadFrom(stream).Log;      
-            }     
+                var serializer = new Serializer();
+                serializer.Put((long)112341);
+                serializer.Put((uint)12513);
+                serializer.Put((byte)1);
+                serializer.PutBytesWithLength(new byte[] { 1 });
+                stream.Write(serializer.Data, 0, serializer.Length);
+                log.WriteTo(stream);
+
+                stream.Position = 0;
+                var deserializer = new Deserializer(stream.GetBuffer());
+                var hashCode = deserializer.GetLong();
+                var tick = deserializer.GetUInt();
+                var localActorId = deserializer.GetByte();
+                var allActors = deserializer.GetBytesWithLength();
+
+                using (var stream2 = new MemoryStream(deserializer.GetRemainingBytes()))
+                {
+                    var result = GameLog.ReadFrom(stream2).Log;
+                    result.Keys.Any(u => u != 2).ShouldBeFalse();
+                }
+            }
         }   
 
         public static byte[] ReadFile(string filePath)

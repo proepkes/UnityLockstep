@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Lockstep.Game.Commands;
+using Lockstep.Core.Commands;
 using Lockstep.Network;
-using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Game.Networking
 {
-    public sealed class NetworkCommandBuffer : CommandBuffer
+    public sealed class NetworkCommandBuffer : CommandBuffer, IMessageHandler
     {
-        //TODO: refactor: don't do meta stuff through commandbuffer just because it has IClient
-        public event Action<Init> InitReceived;   
+        /// <summary>
+        /// Amount of additional ticks until a command gets executed
+        /// </summary>
+        public uint LagCompensation { get; set; }
 
-        private readonly IClient _client;   
+        private readonly INetwork _network;   
         private readonly IDictionary<ushort, Func<ISerializableCommand>> _commandFactories = new Dictionary<ushort, Func<ISerializableCommand>>();
 
-        public NetworkCommandBuffer(IClient client)
+        public NetworkCommandBuffer(INetwork network)
         {                        
-            _client = client;     
-            _client.DataReceived += OnDataReceived;
+            _network = network;     
         }
                   
         public void RegisterCommand(Func<ISerializableCommand> commandFactory)
@@ -32,13 +32,15 @@ namespace Lockstep.Game.Networking
             _commandFactories.Add(tag, commandFactory);
         }         
 
-        public override void Insert(uint frameNumber, byte commanderId, ICommand[] commands)
-        {                                                     
+        public override void Insert(uint frameNumber, byte commanderId, params ICommand[] commands)
+        {                                  
+            base.Insert(frameNumber + LagCompensation, commanderId, commands);
+
             //Tell the server
             var writer = new Serializer();
             writer.Put((byte)MessageTag.Input);
             writer.Put(commanderId);
-            writer.Put(frameNumber);
+            writer.Put(frameNumber + LagCompensation);
             writer.Put(commands.Length);
             foreach (var command in commands)
             {
@@ -49,23 +51,14 @@ namespace Lockstep.Game.Networking
                 }
             }
 
-            _client.Send(Compressor.Compress(writer));
+            _network.Send(Compressor.Compress(writer));
         }
 
-
-        private void OnDataReceived(byte[] data)
+        public void Handle(MessageTag messageTag, byte[] data)
         {
-            data = Compressor.Decompress(data);
-
             var reader = new Deserializer(data);
-            var messageTag = (MessageTag)reader.GetByte();
             switch (messageTag)
-            {                  
-                case MessageTag.Init:
-                    var init = new Init();
-                    init.Deserialize(reader);
-                    InitReceived?.Invoke(init);
-                    break;
+            {
                 case MessageTag.Input:
                     var commanderId = reader.GetByte();
                     var frameNumber = reader.GetUInt();
@@ -74,18 +67,19 @@ namespace Lockstep.Game.Networking
                     for (var i = 0; i < countCommands; i++)
                     {
                         var tag = reader.GetUShort();
-
-                        if (_commandFactories.ContainsKey(tag))
+                        if (!_commandFactories.ContainsKey(tag))
                         {
-                            var newCommand = _commandFactories[tag].Invoke();
-                            newCommand.Deserialize(reader);
-                            commands[i] = newCommand;
+                            continue;
                         }
+
+                        var newCommand = _commandFactories[tag].Invoke();
+                        newCommand.Deserialize(reader);
+                        commands[i] = newCommand;
                     }
 
-                    base.Insert(frameNumber, commanderId, commands); 
+                    base.Insert(frameNumber, commanderId, commands);
                     break;
             }
-        }    
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Lockstep.Game.Services;
+using Lockstep.Core.Services;
 using Urho;
 using Urho.Resources;
 

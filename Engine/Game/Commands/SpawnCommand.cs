@@ -1,5 +1,6 @@
 ﻿using System;
 using BEPUutilities;
+using Lockstep.Game.Networking;
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Game.Commands
@@ -32,6 +33,5 @@ namespace Lockstep.Game.Commands
             Position.X.RawValue = reader.GetLong();
             Position.Y.RawValue = reader.GetLong();
         }
-
     }
 }

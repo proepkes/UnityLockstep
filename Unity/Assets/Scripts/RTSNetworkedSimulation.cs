@@ -15,7 +15,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public string ServerIp = "127.0.0.1";
     public int ServerPort = 9050;
 
-    public World Systems;           
+    public Simulation Simulation;           
     public RTSEntityDatabase EntityDatabase;
 
     public bool Connected => _client.Connected;
@@ -33,24 +33,13 @@ public class RTSNetworkedSimulation : MonoBehaviour
         _remoteCommandBuffer = new NetworkCommandBuffer(_client);
         _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
         _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
-        Systems = new World(Contexts.sharedInstance, _remoteCommandBuffer, new UnityGameService(EntityDatabase), new UnityLogger())
+
+        Simulation = new Bootstrapper(_client, 3, new UnityGameService(EntityDatabase), new UnityLogger()).Simulation;
+        Simulation.Started += (sender, args) =>
         {
-            LagCompensation = 3
-        };  
-                                                                       
-
-        _remoteCommandBuffer.InitReceived += StartSimulation;  
-    }
-
-    private void StartSimulation(Init data)
-    {                             
-        PlayerId = data.ActorID;
-        AllActorIds = data.AllActors;
-        Debug.Log($"Starting simulation. Total actors: {data.AllActors.Length}. Local ActorID: {data.ActorID}");
-        Systems.Initialize(data);  
-
-        _remoteCommandBuffer.InitReceived -= StartSimulation;
-    }
+            Debug.Log($"Starting simulation. Total actors: {Simulation.AllActorIds.Length}. Local ActorID: {Simulation.LocalActorId}"); 
+        };        
+    }             
 
 
     public void DumpInputContext()
@@ -63,7 +52,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         serializer.PutBytesWithLength(AllActorIds);
         stream.Write(serializer.Data, 0, serializer.Length);
 
-        Systems.GameLog.WriteTo(stream);
+        Simulation.GameLog.WriteTo(stream);
 
         stream.Close();                    
     }
@@ -71,7 +60,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public void Execute(ISerializableCommand command)
     {
-        Systems.Execute(command);
+        Simulation.Execute(command);
     }
 
     private void Start()
@@ -88,7 +77,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     void Update()
     {
         _client.Update();
-        Systems.Update(Time.deltaTime * 1000);
+        Simulation.Update(Time.deltaTime * 1000);
     }            
 
     public IEnumerator AutoConnect()

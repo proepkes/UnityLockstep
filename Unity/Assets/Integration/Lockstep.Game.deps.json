@@ -42,9 +42,6 @@
         }
       },
       "Lockstep.Network/1.0.0": {
-        "dependencies": {
-          "Lockstep.Core": "1.0.0"
-        },
         "runtime": {
           "Lockstep.Network.dll": {}
         }

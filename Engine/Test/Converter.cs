@@ -1,6 +1,7 @@
+using System;
 using System.IO;
 using System.Text;
-using Lockstep.Game.Services;
+using Lockstep.Core.Services;
 using Xunit.Abstractions;
 
 namespace Test
@@ -33,14 +34,15 @@ namespace Test
         {
             _outputHelper = outputHelper;
         }
-        public void Warn(object message)
+
+        public void Warn(Func<string> message)
         {
-            _outputHelper.WriteLine($"Warn: {message}");
+            _outputHelper.WriteLine($"Trace: {message.Invoke()}");
         }
 
-        public void Trace(object message)
+        public void Trace(Func<string> message)
         {
-            _outputHelper.WriteLine($"Trace: {message}");
+            _outputHelper.WriteLine($"Trace: {message.Invoke()}");
         }
     }
 }
