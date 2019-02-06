@@ -28,7 +28,7 @@ using FixMath.NET;
 using Game.UrhoSharp.Desktop.Coupling;        
 using Lockstep.Game;
 using Lockstep.Game.Commands;
-using Lockstep.Game.Networking;
+using Lockstep.Game.Network;
 using Urho;
 using Urho.Gui;
 using Urho.Navigation;
@@ -66,7 +66,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
             commandBuffer.RegisterCommand(() => new SpawnCommand());
             commandBuffer.RegisterCommand(() => new NavigateCommand());
             
-            simulation = new Simulation(Contexts.sharedInstance, network, commandBuffer, new ViewService(ResourceCache, scene.GetChild("Jacks")));
+            simulation = new Bootstrapper(Contexts.sharedInstance, commandBuffer, new ViewService(ResourceCache, scene.GetChild("Jacks"))).Simulation;
 
             network.Start();
             network.Connect("127.0.0.1", 9050);

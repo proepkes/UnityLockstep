@@ -3,7 +3,7 @@ using System.Collections;
 using System.IO;                
 using Lockstep.Game;
 using Lockstep.Game.Commands;          
-using Lockstep.Game.Networking;
+using Lockstep.Game.Network;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;         
 using UnityEngine;           

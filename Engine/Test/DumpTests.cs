@@ -57,7 +57,7 @@ namespace Test
             }
 
             var simulation = new Simulation(contexts, commandBuffer, new TestLogger(_output));
-            simulation.Start(new Init { TargetFPS = 1000, ActorID = localActorId, AllActors = allActors});
+            simulation.Start(1000, localActorId, allActors);
 
             for (uint i = 0; i < tick; i++)
             {

@@ -1,6 +1,6 @@
 ﻿using System;
 using BEPUutilities;
-using Lockstep.Game.Networking;
+using Lockstep.Game.Network;
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Game.Commands

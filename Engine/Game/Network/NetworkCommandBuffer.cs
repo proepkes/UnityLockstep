@@ -5,7 +5,7 @@ using Lockstep.Core.Commands;
 using Lockstep.Network;
 using Lockstep.Network.Utils;
 
-namespace Lockstep.Game.Networking
+namespace Lockstep.Game.Network
 {
     public sealed class NetworkCommandBuffer : CommandBuffer, IMessageHandler
     {

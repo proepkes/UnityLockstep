@@ -17,7 +17,7 @@ namespace Test
 
             var contexts = new Contexts();
             var commandBuffer = new CommandBuffer();
-            var world = new Simulation(contexts, null, commandBuffer, new TestLogger(output));
+            var world = new Simulation(contexts, commandBuffer, new TestLogger(output));
 
             world.Start(1, 0, new byte[] { 0, 1 });
 

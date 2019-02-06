@@ -1,6 +1,6 @@
-﻿using System;              
+﻿using System;
 
-namespace Lockstep.Game.Networking
+namespace Lockstep.Game.Network
 {
     public interface INetwork
     {                           

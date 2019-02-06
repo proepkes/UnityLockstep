@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Lockstep.Network;
 using Lockstep.Network.Utils;
 
-namespace Lockstep.Game.Networking
+namespace Lockstep.Game.Network
 {
     public class Client
     {

@@ -1,7 +1,7 @@
 ﻿using Lockstep.Core.Commands;
 using Lockstep.Core.Services;
 using Lockstep.Game.Commands;
-using Lockstep.Game.Networking;
+using Lockstep.Game.Network;
 using Lockstep.Network;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
