@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Lockstep.Core.Commands;
 
-namespace Lockstep.Game
+namespace Lockstep.Game.Simulation
 {
     [Serializable]
     public class GameLog

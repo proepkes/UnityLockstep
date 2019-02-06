@@ -5,11 +5,12 @@ using System.Threading;
 using Lockstep.Core;
 using Lockstep.Core.Commands;
 using Lockstep.Core.Services;
-using Lockstep.Core.World;         
+using Lockstep.Core.World;
 using Lockstep.Game.Services;
-using Lockstep.Game.Services.Navigation;            
+using Lockstep.Game.Services.Navigation;
+using Timer = Lockstep.Game.Utility.Timer;
 
-namespace Lockstep.Game
+namespace Lockstep.Game.Simulation
 {
     public class Simulation
     {

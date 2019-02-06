@@ -7,6 +7,7 @@ using Lockstep.Core.Commands;
 using Lockstep.Core.Services;
 using Lockstep.Core.World;
 using Lockstep.Game;
+using Lockstep.Game.Simulation;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;

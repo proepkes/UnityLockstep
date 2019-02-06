@@ -2,6 +2,7 @@
 using Lockstep.Core.Services;
 using Lockstep.Game.Commands;
 using Lockstep.Game.Network;
+using Lockstep.Game.Simulation;
 using Lockstep.Network;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;
@@ -12,7 +13,7 @@ namespace Lockstep.Game
     {
         private readonly Client _client;
 
-        public Simulation Simulation { get; }
+        public Simulation.Simulation Simulation { get; }
 
         public Bootstrapper(params IService[] additionalServices) : this(Contexts.sharedInstance, additionalServices)
         {                                                                                                   
@@ -24,7 +25,7 @@ namespace Lockstep.Game
 
         public Bootstrapper(Contexts contexts, ICommandBuffer commandBuffer, params IService[] additionalServices)
         {
-            Simulation = new Simulation(contexts, commandBuffer, additionalServices);
+            Simulation = new Simulation.Simulation(contexts, commandBuffer, additionalServices);
         }
 
         public Bootstrapper(INetwork network, uint lagCompensation, params IService[] additionalServices)
@@ -40,7 +41,7 @@ namespace Lockstep.Game
             _client.AddHandler(this, MessageTag.Init);
             _client.AddHandler(commandBuffer, MessageTag.Input);
 
-            Simulation = new Simulation(Contexts.sharedInstance, commandBuffer, additionalServices);
+            Simulation = new Simulation.Simulation(Contexts.sharedInstance, commandBuffer, additionalServices);
         }
 
         public void Handle(MessageTag tag, byte[] data)

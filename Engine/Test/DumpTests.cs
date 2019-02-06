@@ -10,6 +10,7 @@ using Lockstep.Core.Services;
 using Lockstep.Core.World;
 using Lockstep.Game;
 using Lockstep.Game.Commands;
+using Lockstep.Game.Simulation;
 using Lockstep.Network.Messages;
 using Lockstep.Network.Utils;     
 using Shouldly;

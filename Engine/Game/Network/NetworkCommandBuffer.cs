@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Lockstep.Core.Commands;
+using Lockstep.Game.Simulation;
 using Lockstep.Network;
 using Lockstep.Network.Utils;
 

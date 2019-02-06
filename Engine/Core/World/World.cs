@@ -84,10 +84,11 @@ namespace Lockstep.Core.World
         /// </summary>
         public void RevertToTick(uint tick)
         {
-            _logger.Trace(() => "Rollback to " + tick);
 
             //Get the actual tick that we have a snapshot for
             var resultTick = Services.Get<ISnapshotIndexService>().GetFirstIndexBefore(tick);
+
+            _logger.Warn(() => "Rolling back from " + resultTick + " to " + CurrentTick);
 
             /*
              * ====================== Revert actors ======================

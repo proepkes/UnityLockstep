@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Lockstep.Core.Commands;
-using Lockstep.Game.Commands;
 
-namespace Lockstep.Game
+namespace Lockstep.Game.Simulation
 {              
     public class CommandBuffer : ICommandBuffer
     {                                   

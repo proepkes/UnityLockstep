@@ -4,7 +4,7 @@ using System.IO;
 using Lockstep.Game;
 using Lockstep.Game.Commands;          
 using Lockstep.Game.Network;
-using Lockstep.Network.Messages;
+using Lockstep.Game.Simulation;
 using Lockstep.Network.Utils;         
 using UnityEngine;           
                               
@@ -18,9 +18,8 @@ public class RTSNetworkedSimulation : MonoBehaviour
     public Simulation Simulation;           
     public RTSEntityDatabase EntityDatabase;
 
-    public bool Connected => _client.Connected;
+    public bool Connected => _client.Connected;       
 
-    public byte PlayerId { get; private set; }
     public byte[] AllActorIds { get; private set; }
 
     private NetworkCommandBuffer _remoteCommandBuffer;
@@ -44,11 +43,11 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public void DumpInputContext()
     {
-        Stream stream = new FileStream(@"C:\Log\" + PlayerId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_log.txt", FileMode.Create, FileAccess.Write);
+        Stream stream = new FileStream(@"C:\Log\" + Simulation.LocalActorId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_log.txt", FileMode.Create, FileAccess.Write);
         var serializer = new Serializer();
         serializer.Put(Contexts.sharedInstance.gameState.hashCode.value);
         serializer.Put(Contexts.sharedInstance.gameState.tick.value);
-        serializer.Put(PlayerId);
+        serializer.Put(Simulation.LocalActorId);
         serializer.PutBytesWithLength(AllActorIds);
         stream.Write(serializer.Data, 0, serializer.Length);
 

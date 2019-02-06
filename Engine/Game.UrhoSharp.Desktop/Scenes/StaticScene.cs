@@ -29,6 +29,7 @@ using Game.UrhoSharp.Desktop.Coupling;
 using Lockstep.Game;
 using Lockstep.Game.Commands;
 using Lockstep.Game.Network;
+using Lockstep.Game.Simulation;
 using Urho;
 using Urho.Gui;
 using Urho.Navigation;
