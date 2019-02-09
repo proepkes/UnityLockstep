@@ -1,1 +1,0 @@
-..\Jenny\Jenny.exe gen
