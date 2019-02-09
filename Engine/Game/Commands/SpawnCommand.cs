@@ -1,24 +1,24 @@
 ﻿using System;
 using BEPUutilities;
-using Lockstep.Game.Network;
+using Lockstep.Game.Interfaces;      
 using Lockstep.Network.Utils;
 
 namespace Lockstep.Game.Commands
 {
     [Serializable]
-    public class SpawnCommand  : ISerializableCommand
+    public class SpawnCommand : ICommand
     {
         public ushort Tag => 2;
 
         public int EntityConfigId;
 
-        public Vector2 Position;        
+        public Vector2 Position;
 
         public void Execute(InputEntity e)
-        {                                    
+        {
             e.AddCoordinate(Position);
-            e.AddEntityConfigId(EntityConfigId);     
-        }  
+            e.AddEntityConfigId(EntityConfigId);
+        }
 
         public void Serialize(Serializer writer)
         {

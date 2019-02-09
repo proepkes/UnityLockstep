@@ -5,6 +5,7 @@
         Init,
         Frame,
         Input,
-        HashCode
+        HashCode,
+        Pulse
     }
 }

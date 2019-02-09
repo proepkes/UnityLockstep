@@ -18,8 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core.Components\Core.Components.csproj" />
-    <ProjectReference Include="..\Core\Core.csproj" />
+    <ProjectReference Include="..\Core\CoreBackup.csproj" />
     <ProjectReference Include="..\Game\Game.csproj" />
     <ProjectReference Include="..\Network\Network.csproj" />
   </ItemGroup>

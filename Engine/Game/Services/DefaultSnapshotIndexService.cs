@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Lockstep.Core.Services;
+using Simulation.Behaviour.Services;
 
 namespace Lockstep.Game.Services
 {

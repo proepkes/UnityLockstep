@@ -6,4 +6,8 @@
     <RootNamespace>Lockstep.Network</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Shell\Shell.csproj" />
+  </ItemGroup>
+
 </Project>

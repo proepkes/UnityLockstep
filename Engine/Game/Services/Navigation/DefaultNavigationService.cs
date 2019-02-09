@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BEPUutilities;
 using Lockstep.Core.Services;
+using Simulation.Behaviour.Services;
 
 namespace Lockstep.Game.Services.Navigation
 {                                   

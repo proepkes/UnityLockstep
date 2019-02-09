@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A7873FD1-D7C3-4631-B346-15CF704585F0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Simulation.State</RootNamespace>
+    <AssemblyName>Simulation.State</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BEPUutilities">
+      <HintPath>..\Dependencies\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Entitas">
+      <HintPath>..\Dependencies\Entitas.dll</HintPath>
+    </Reference>
+    <Reference Include="Entitas.CodeGeneration.Attributes">
+      <HintPath>..\Dependencies\Entitas.CodeGeneration.Attributes.dll</HintPath>
+    </Reference>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
+    <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorBackupComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorEntityCountComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameActorIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameBackupComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameControllableComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameHashableComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameHealthComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameLocalIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameMaxSpeedComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameNavigableComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameNewComponent.cs" />
+    <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputActorIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputSelectionComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputTargetActorIdComponent.cs" />
+    <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
+    <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
+    <Compile Include="Generated\Actor\ActorComponentsLookup.cs" />
+    <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
+    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\Input\InputComponentsLookup.cs" />
+    <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
+    <Compile Include="Generated\Game\GameAttribute.cs" />
+    <Compile Include="Generated\Actor\ActorAttribute.cs" />
+    <Compile Include="Generated\Input\InputAttribute.cs" />
+    <Compile Include="Generated\GameState\GameStateAttribute.cs" />
+    <Compile Include="Generated\Config\ConfigAttribute.cs" />
+    <Compile Include="Generated\Game\GameContext.cs" />
+    <Compile Include="Generated\Actor\ActorContext.cs" />
+    <Compile Include="Generated\Input\InputContext.cs" />
+    <Compile Include="Generated\GameState\GameStateContext.cs" />
+    <Compile Include="Generated\Config\ConfigContext.cs" />
+    <Compile Include="Generated\Game\GameMatcher.cs" />
+    <Compile Include="Generated\Actor\ActorMatcher.cs" />
+    <Compile Include="Generated\Input\InputMatcher.cs" />
+    <Compile Include="Generated\GameState\GameStateMatcher.cs" />
+    <Compile Include="Generated\Config\ConfigMatcher.cs" />
+    <Compile Include="Generated\Contexts.cs" />
+    <Compile Include="Generated\Game\GameEntity.cs" />
+    <Compile Include="Generated\Actor\ActorEntity.cs" />
+    <Compile Include="Generated\Input\InputEntity.cs" />
+    <Compile Include="Generated\GameState\GameStateEntity.cs" />
+    <Compile Include="Generated\Config\ConfigEntity.cs" />
+    <Compile Include="Generated\Events\Components\DestinationListenerComponent.cs" />
+    <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
+    <Compile Include="Generated\Events\Interfaces\IDestinationListener.cs" />
+    <Compile Include="Generated\Events\Interfaces\IPositionListener.cs" />
+    <Compile Include="Generated\Events\Systems\DestinationEventSystem.cs" />
+    <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
+    <Compile Include="Generated\Events\GameEventSystems.cs" />
+    <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actor\BackupComponent.cs" />
+    <Compile Include="Actor\EntityCountComponent.cs" />
+    <Compile Include="Actor\IdComponent.cs" />
+    <Compile Include="GameState\HashCodeComponent.cs" />
+    <Compile Include="GameState\PausedComponent.cs" />
+    <Compile Include="GameState\PredictingComponent.cs" />
+    <Compile Include="GameState\TickComponent.cs" />
+    <Compile Include="Game\ActorIdComponent.cs" />
+    <Compile Include="Game\AssetComponent.cs" />
+    <Compile Include="Game\BackupComponent.cs" />
+    <Compile Include="Game\ControllableComponent.cs" />
+    <Compile Include="Game\DestinationComponent.cs" />
+    <Compile Include="Game\HashableComponent.cs" />
+    <Compile Include="Game\HealthComponent.cs" />
+    <Compile Include="Game\IdComponent.cs" />
+    <Compile Include="Game\LocalIdComponent.cs" />
+    <Compile Include="Game\MaxSpeedComponent.cs" />
+    <Compile Include="Game\NavigableComponent.cs" />
+    <Compile Include="Game\NewComponent.cs" />
+    <Compile Include="Game\PositionComponent.cs" />
+    <Compile Include="Game\TeamComponent.cs" />
+    <Compile Include="Game\VelocityComponent.cs" />
+    <Compile Include="Input\ActorIdComponent.cs" />
+    <Compile Include="Input\CoordinateComponent.cs" />
+    <Compile Include="Input\EntityConfigIdComponent.cs" />
+    <Compile Include="Input\SelectionComponent.cs" />
+    <Compile Include="Input\TargetPlayerIdComponent.cs" />
+    <Compile Include="Input\TickComponent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.md" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

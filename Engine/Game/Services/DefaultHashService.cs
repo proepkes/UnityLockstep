@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Lockstep.Core.Services;
+﻿using System.Collections.Generic;    
+using Simulation.Behaviour.Services;
 
 namespace Lockstep.Game.Services
 {

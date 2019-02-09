@@ -22,72 +22,9 @@
           "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
-      "Core.Components/1.0.0": {
-        "dependencies": {
-          "Entitas.CodeGeneration.Attributes": "0.0.0.0",
-          "Entitas": "0.0.0.0",
-          "BEPUutilities": "1.5.0.0",
-          "FixMath.NET": "1.0.0.0",
-          "DesperateDevs.Utils": "0.0.0.0"
-        },
-        "runtime": {
-          "Lockstep.Core.Components.dll": {}
-        }
-      },
-      "Lockstep.Core/1.0.0": {
-        "dependencies": {
-          "Core.Components": "1.0.0"
-        },
-        "runtime": {
-          "Lockstep.Core.dll": {}
-        }
-      },
       "Lockstep.Network/1.0.0": {
-        "dependencies": {
-          "Lockstep.Core": "1.0.0"
-        },
         "runtime": {
           "Lockstep.Network.dll": {}
-        }
-      },
-      "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
-        "runtime": {
-          "Entitas.CodeGeneration.Attributes.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "Entitas.Reference/0.0.0.0": {
-        "runtime": {
-          "Entitas.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "BEPUutilities.Reference/1.5.0.0": {
-        "runtime": {
-          "BEPUutilities.dll": {
-            "assemblyVersion": "1.5.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "FixMath.NET.Reference/1.0.0.0": {
-        "runtime": {
-          "FixMath.NET.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
-      "DesperateDevs.Utils.Reference/0.0.0.0": {
-        "runtime": {
-          "DesperateDevs.Utils.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
         }
       }
     }
@@ -112,43 +49,8 @@
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
-    "Core.Components/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Lockstep.Core/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
     "Lockstep.Network/1.0.0": {
       "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Entitas.Reference/0.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "BEPUutilities.Reference/1.5.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "FixMath.NET.Reference/1.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "DesperateDevs.Utils.Reference/0.0.0.0": {
-      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }
