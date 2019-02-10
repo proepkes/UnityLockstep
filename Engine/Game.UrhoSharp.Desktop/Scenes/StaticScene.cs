@@ -28,8 +28,7 @@ using FixMath.NET;
 using Game.UrhoSharp.Desktop.Coupling;        
 using Lockstep.Game;
 using Lockstep.Game.Commands;
-using Lockstep.Game.Network;
-using Lockstep.Game.Simulation;
+using Lockstep.Network.Client;
 using Urho;
 using Urho.Gui;
 using Urho.Navigation;
@@ -46,7 +45,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
         private Text worldInfoText;
         private Simulation simulation;
         private LiteNetLibNetwork network;
-        private NetworkCommandBuffer commandBuffer;
+        private NetworkCommandQueue networkCommandQueue;
 
         public StaticScene(ApplicationOptions options = null) : base(options) { }
 
@@ -63,11 +62,11 @@ namespace Game.UrhoSharp.Desktop.Scenes
         private void CreateWorld()
         {
             network = new LiteNetLibNetwork();
-            commandBuffer = new NetworkCommandBuffer(network);
-            commandBuffer.RegisterCommand(() => new SpawnCommand());
-            commandBuffer.RegisterCommand(() => new NavigateCommand());
-            
-            simulation = new Bootstrapper(Contexts.sharedInstance, commandBuffer, new ViewService(ResourceCache, scene.GetChild("Jacks"))).Simulation;
+            networkCommandQueue = new NetworkCommandQueue(network);
+            networkCommandQueue.InitReceived +=
+                (sender, init) => simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
+
+            simulation = new Simulation(Contexts.sharedInstance, networkCommandQueue, new ViewService(ResourceCache, scene.GetChild("Jacks")));
 
             network.Start();
             network.Connect("127.0.0.1", 9050);
@@ -195,7 +194,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
 
             if (simulation.Running)
             {
-                worldInfoText.Value = simulation.CurrentTick + " / " + Contexts.sharedInstance.gameState.hashCode.value;
+                worldInfoText.Value = Contexts.sharedInstance.gameState.tick.value + " / " + Contexts.sharedInstance.gameState.hashCode.value;
             }
         }
 

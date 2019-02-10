@@ -1,8 +1,6 @@
 ﻿using System;
-using LiteNetLib;
-using Lockstep.Game.Network;
-using Lockstep.Network;
-using Lockstep.Network.Utils;
+using LiteNetLib;              
+using Lockstep.Network.Client;   
 
 namespace Game.UrhoSharp.Desktop
 {
