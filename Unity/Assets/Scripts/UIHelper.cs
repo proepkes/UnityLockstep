@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Entitas;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIHelper : MonoBehaviour
@@ -15,10 +16,10 @@ public class UIHelper : MonoBehaviour
         if (RTSNetworkedSimulation.Instance.Simulation.Running)
         {
             HashCodeText.text = "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
-            CurrentTickText.text = "CurrentTick: " + (uint)RTSNetworkedSimulation.Instance.Systems.CurrentTick;
+            CurrentTickText.text = "CurrentTick: " + Contexts.sharedInstance.gameState.tick.value;
+            AgentCountText.text = "Agents: " + Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Length;
         }
 
-        AgentCountText.text = "Agents: " + RTSNetworkedSimulation.Instance.Systems.EntitiesInCurrentTick;
 
         ConnectedText.text = "Connected: " + RTSNetworkedSimulation.Instance.Connected;
     }

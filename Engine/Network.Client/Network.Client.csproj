@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Lockstep.Network.Client</AssemblyName>
+    <RootNamespace>Lockstep.Network.Client</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Logic\Core.Logic.csproj" />
+    <ProjectReference Include="..\Game\Game.csproj" />
+    <ProjectReference Include="..\Network\Network.csproj" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /d /y  &quot;$(TargetDir)Lockstep.*.dll&quot; &quot;$(SolutionDir)..\Unity\Assets\Integration\&quot;&#xD;&#xA;xcopy /d /y  &quot;$(TargetDir)Lockstep.*.pdb&quot; &quot;$(SolutionDir)..\Unity\Assets\Integration\&quot;&#xD;&#xA;xcopy /d /y  &quot;$(TargetDir)Lockstep.*.json&quot; &quot;$(SolutionDir)..\Unity\Assets\Integration\&quot;" />
+  </Target>
+
+</Project>

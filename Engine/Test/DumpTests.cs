@@ -1,50 +1,38 @@
 ﻿using System;                       
 using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using Lockstep.Client;
-using Lockstep.Client.Commands;
-using Lockstep.Client.Implementations;
-using Lockstep.Core;
-using Lockstep.Core.Interfaces;
-using Lockstep.Network.Messages;
-using Lockstep.Network.Utils;     
+using System.Reflection;      
+using Lockstep.Core.Logic;
+using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic.Serialization.Utils;       
+using Lockstep.Game; 
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace Test
 {    
-    public class GettingSerious 
+    public class DumpTests
     {
         private readonly ITestOutputHelper _output;
 
-        public GettingSerious(ITestOutputHelper output)
+        public DumpTests(ITestOutputHelper output)
         {
+
             _output = output;
             Console.SetOut(new Converter(output));
         }      
                                                                                                                                                    
         [Fact]                      
-        public void TestDump1()
-        {                      
-            TestDump("2_-535026177646_log");  
-        }
-
-        [Fact]
-        public void TestDump2()
+        public void TestDump()
         {
-            TestDump("37_-546443594864_log");
+            TestFileDump("0_3398952201_log");  
         }
 
-        private void TestDump(string fileName)
+        private void TestFileDump(string fileName)
         {
             var contexts = new Contexts();   
-            var systems = new World(contexts, new TestLogger(_output));
-            var commandBuffer = new CommandBuffer();
+            var commandBuffer = new CommandQueue();
 
             var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
             var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
@@ -56,16 +44,15 @@ namespace Test
             var tick = deserializer.GetUInt();
             var localActorId = deserializer.GetByte();
             var allActors = deserializer.GetBytesWithLength();
-
-            IFormatter formatter = new BinaryFormatter();
+                                                           
             GameLog log;
             using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
             {
-                log = (GameLog) formatter.Deserialize(stream);
+                log = GameLog.ReadFrom(stream);
             }
 
-            var sim = new Simulation(systems, commandBuffer) {LagCompensation = 0, SendCommandsToBuffer = false};
-            sim.Initialize(new Init {TargetFPS = 1000, AllActors = allActors, ActorID = localActorId});
+            var simulation = new Simulation(contexts, commandBuffer);
+            simulation.Start(1000, localActorId, allActors);
 
             for (uint i = 0; i < tick; i++)
             {
@@ -77,72 +64,51 @@ namespace Test
                         {
                             foreach (var (actorId, commands) in allCommands)
                             {
-                                if (actorId == localActorId)
-                                {
-                                    _output.WriteLine("Local: " + commands.Count + " commands");
-
-                                    systems.AddInput(tickId, actorId, commands);
-                                }
-                                else
-                                {
-                                    commandBuffer.Insert(tickId, actorId, commands.ToArray());
-                                } 
+                                commandBuffer.Enqueue(new Input(tickId, actorId, commands.ToArray()));
                             }
                         }
                     }
                 }
 
-                sim.Update(1);
+                simulation.Update(1);
             }
 
             contexts.gameState.hashCode.value.ShouldBe(hashCode);
-            commandBuffer.Buffer.ShouldBeEmpty();
 
-
-            contexts.Reset();
-            var debug = systems.Services.Get<IDebugService>();
-            systems = new World(contexts, new TestLogger(_output));
-            sim = new Simulation(systems, commandBuffer) { LagCompensation = 0, SendCommandsToBuffer = false };
-            sim.Initialize(new Init { TargetFPS = 1000, AllActors = allActors, ActorID = localActorId });
-
-            foreach (var (occurTickId, tickCommands) in log.Log)
-            {
-                foreach (var (tickId, allCommands) in tickCommands)
-                {
-                    foreach (var (actorId, commands) in allCommands)
-                    {
-                        if (commands.Any(command => command is NavigateCommand))
-                        {                        
-                        }
-                        if (actorId == localActorId)
-                        {
-                            _output.WriteLine("Local: " + commands.Count + " commands");
-
-                            systems.AddInput(tickId, actorId, commands);
-                        }
-                        else
-                        {
-                            commandBuffer.Insert(tickId, actorId, commands.ToArray());
-                        }
-                    }
-                }
-            }   
-
-            var debug2 = systems.Services.Get<IDebugService>();
-            debug.ShouldNotBeSameAs(debug2);                                                              
-
-            for (uint i = 0; i < tick; i++)
-            {
-                sim.Update(1);
-                if (debug.HasHash(systems.CurrentTick))
-                {
-                    debug.GetHash(systems.CurrentTick).ShouldBe(contexts.gameState.hashCode.value);
-                }
-            }
-
-            contexts.gameState.hashCode.value.ShouldBe(hashCode);
+            TestUtil.TestReplayMatchesHashCode(simulation.GameLog, contexts.gameState.tick.value, hashCode, _output);
         }
 
+
+        [Fact]
+        public void TestSerializeGameLog()
+        {
+            var log = new GameLog();
+            log.Add(2, 5, 0, new ICommand[]{ new InputParseTest.Spawn() });
+
+            using (var stream = new MemoryStream())
+            {
+                var serializer = new Serializer();
+                serializer.Put((long)112341);
+                serializer.Put((uint)12513);
+                serializer.Put((byte)1);
+                serializer.PutBytesWithLength(new byte[] { 1 });
+                stream.Write(serializer.Data, 0, serializer.Length);
+                log.WriteTo(stream);
+
+                stream.Position = 0;
+                var deserializer = new Deserializer(stream.GetBuffer());
+                var hashCode = deserializer.GetLong();
+                var tick = deserializer.GetUInt();
+                var localActorId = deserializer.GetByte();
+                var allActors = deserializer.GetBytesWithLength();
+
+                using (var stream2 = new MemoryStream(deserializer.GetRemainingBytes()))
+                {
+                    var result = GameLog.ReadFrom(stream2).Log;
+                    result.Keys.Any(u => u != 2).ShouldBeFalse();
+                }
+            }
+        }   
 
         public static byte[] ReadFile(string filePath)
         {

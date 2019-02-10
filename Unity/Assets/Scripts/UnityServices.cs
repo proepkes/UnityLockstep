@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using Entitas;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;       
 using Entitas.Unity;
 using Entitas.VisualDebugging.Unity;
-using Lockstep.Core.Interfaces;          
+using Lockstep.Core.Logic.Interfaces.Services;   
 
 public interface IEventListener
 {
@@ -30,7 +30,7 @@ public class UnityGameService : IViewService
     public void LoadView(GameEntity entity, int configId)
     {
         //TODO: pooling    
-        var viewGo = Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
+        var viewGo = UnityEngine.Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
         if (viewGo != null)
         {
             viewGo.Link(entity);
@@ -39,7 +39,7 @@ public class UnityGameService : IViewService
             foreach (var componentSetter in componentSetters)
             {
                 componentSetter.SetComponent(entity);
-                Object.Destroy((MonoBehaviour)componentSetter);
+                UnityEngine.Object.Destroy((MonoBehaviour)componentSetter);
             }
 
             var eventListeners = viewGo.GetComponents<IEventListener>();
@@ -65,17 +65,4 @@ public class UnityGameService : IViewService
         linkedEntities[entityId].DestroyGameObject();
         linkedEntities.Remove(entityId);      
     }
-}
-
-public class UnityLogger : ILogService
-{
-    public void Warn(object message)
-    {                 
-        Debug.LogWarning(message);
-    }
-
-    public void Trace(object message)
-    {
-        //Debug.Log(message);
-    }
-}
+}         

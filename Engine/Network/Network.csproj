@@ -6,4 +6,8 @@
     <RootNamespace>Lockstep.Network</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Logic\Core.Logic.csproj" />
+  </ItemGroup>
+
 </Project>

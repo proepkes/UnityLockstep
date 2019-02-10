@@ -1,7 +1,7 @@
-﻿using System.Linq;
+﻿using System.Linq;       
 using Entitas;
 using FixMath.NET;
-using Lockstep.Client.Commands;
+using Lockstep.Game.Commands;          
 using UnityEngine;                      
 
 public class UnityInput : MonoBehaviour
@@ -28,13 +28,9 @@ public class UnityInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             var e = Contexts.sharedInstance.game
-                .GetEntities(GameMatcher.AllOf(
-                    GameMatcher.Id, 
-                    GameMatcher.ActorId))
-                .Where(entity => entity.actorId.value == RTSNetworkedSimulation.Instance.PlayerId)
-                .Select(entity => entity.id.value).ToArray();
-
-            //Debug.Log("Navigating: " + string.Join(", ", e));
+                .GetEntities(GameMatcher.LocalId)
+                .Where(entity => entity.actorId.value == RTSNetworkedSimulation.Instance.Simulation.LocalActorId)
+                .Select(entity => entity.id.value).ToArray();      
 
             RTSNetworkedSimulation.Instance.Execute(new NavigateCommand
             {

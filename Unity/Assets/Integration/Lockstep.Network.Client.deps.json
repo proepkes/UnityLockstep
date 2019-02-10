@@ -1,0 +1,183 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.0/",
+    "signature": "cfe1dc2a80602aef150a12815387068463a61a0d"
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.0": {},
+    ".NETStandard,Version=v2.0/": {
+      "Lockstep.Network.Client/1.0.0": {
+        "dependencies": {
+          "Lockstep.Core.Logic": "1.0.0",
+          "Lockstep.Game": "1.0.0",
+          "Lockstep.Network": "1.0.0",
+          "NETStandard.Library": "2.0.3"
+        },
+        "runtime": {
+          "Lockstep.Network.Client.dll": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/1.1.0": {},
+      "NETStandard.Library/2.0.3": {
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0"
+        }
+      },
+      "Core.State/1.0.0": {
+        "dependencies": {
+          "Entitas.CodeGeneration.Attributes": "0.0.0.0"
+        },
+        "runtime": {
+          "Lockstep.Core.State.dll": {}
+        }
+      },
+      "Lockstep.Common/1.0.0": {
+        "runtime": {
+          "Lockstep.Common.dll": {}
+        }
+      },
+      "Lockstep.Core.Logic/1.0.0": {
+        "dependencies": {
+          "Core.State": "1.0.0",
+          "Lockstep.Common": "1.0.0",
+          "Entitas": "0.0.0.0",
+          "BEPUutilities": "1.5.0.0",
+          "FixMath.NET": "1.0.0.0",
+          "DesperateDevs.Utils": "0.0.0.0"
+        },
+        "runtime": {
+          "Lockstep.Core.Logic.dll": {}
+        }
+      },
+      "Lockstep.Game/1.0.0": {
+        "dependencies": {
+          "Lockstep.Common": "1.0.0",
+          "Lockstep.Core.Logic": "1.0.0"
+        },
+        "runtime": {
+          "Lockstep.Game.dll": {}
+        }
+      },
+      "Lockstep.Network/1.0.0": {
+        "dependencies": {
+          "Lockstep.Core.Logic": "1.0.0"
+        },
+        "runtime": {
+          "Lockstep.Network.dll": {}
+        }
+      },
+      "Entitas.Reference/0.0.0.0": {
+        "runtime": {
+          "Entitas.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "BEPUutilities.Reference/1.5.0.0": {
+        "runtime": {
+          "BEPUutilities.dll": {
+            "assemblyVersion": "1.5.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "FixMath.NET.Reference/1.0.0.0": {
+        "runtime": {
+          "FixMath.NET.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "DesperateDevs.Utils.Reference/0.0.0.0": {
+        "runtime": {
+          "DesperateDevs.Utils.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
+        "runtime": {
+          "Entitas.CodeGeneration.Attributes.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Lockstep.Network.Client/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.NETCore.Platforms/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
+      "path": "microsoft.netcore.platforms/1.1.0",
+      "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
+    },
+    "NETStandard.Library/2.0.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
+      "path": "netstandard.library/2.0.3",
+      "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "Core.State/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Lockstep.Common/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Lockstep.Core.Logic/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Lockstep.Game/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Lockstep.Network/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Entitas.Reference/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "BEPUutilities.Reference/1.5.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "FixMath.NET.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DesperateDevs.Utils.Reference/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A6352E5F-003C-4FD0-807B-3324E7D3B609}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Game.UrhoSharp.Desktop</RootNamespace>
+    <AssemblyName>Game.UrhoSharp.Desktop</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BEPUutilities">
+      <HintPath>..\Dependencies\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Entitas">
+      <HintPath>..\Dependencies\Entitas.dll</HintPath>
+    </Reference>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteNetLib">
+      <HintPath>..\Dependencies\LiteNetLib.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Coupling\Listeners.cs" />
+    <Compile Include="LiteNetLibClient.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Scenes\StaticScene.cs" />
+    <Compile Include="Coupling\Services.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="UrhoSharp">
+      <Version>1.8.93</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Logic\Core.Logic.csproj">
+      <Project>{E22E232B-30B3-4DA4-BD04-8218CE113C01}</Project>
+      <Name>Core.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core.State\Core.State.csproj">
+      <Project>{353B2C4C-7F73-4DDD-B4A4-21200CD5BCDE}</Project>
+      <Name>Core.State</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Game\Game.csproj">
+      <Project>{2d997b51-90d4-4724-9c37-686ceaa171cb}</Project>
+      <Name>Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Network.Client\Network.Client.csproj">
+      <Project>{FFE215BE-0A56-48B8-B3FD-2166280F4105}</Project>
+      <Name>Network.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Network\Network.csproj">
+      <Project>{a20292e3-e987-4227-a0d4-8b617b9bf2df}</Project>
+      <Name>Network</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
