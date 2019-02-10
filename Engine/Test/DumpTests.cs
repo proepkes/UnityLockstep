@@ -5,7 +5,8 @@ using System.Reflection;
 using Lockstep.Core.Logic;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;       
-using Lockstep.Game; 
+using Lockstep.Game;
+using Lockstep.Game.Services;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,7 +27,7 @@ namespace Test
         [Fact]                      
         public void TestDump()
         {
-            TestFileDump("0_3398952201_log");  
+            TestFileDump("3_-337951620314_log");  
         }
 
         private void TestFileDump(string fileName)
@@ -41,9 +42,7 @@ namespace Test
             var data = ReadFile($@"{dirPath}\Dumps\{fileName}.txt");
             var deserializer = new Deserializer(data);
             var hashCode = deserializer.GetLong();
-            var tick = deserializer.GetUInt();
-            var localActorId = deserializer.GetByte();
-            var allActors = deserializer.GetBytesWithLength();
+            var tick = deserializer.GetUInt();                  
                                                            
             GameLog log;
             using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
@@ -51,14 +50,14 @@ namespace Test
                 log = GameLog.ReadFrom(stream);
             }
 
-            var simulation = new Simulation(contexts, commandBuffer);
-            simulation.Start(1000, localActorId, allActors);
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            simulation.Start(1000, log.LocalActorId, log.AllActorIds);
 
             for (uint i = 0; i < tick; i++)
             {
-                if (log.Log.ContainsKey(i))
+                if (log.InputLog.ContainsKey(i))
                 {
-                    var tickCommands = log.Log[i];
+                    var tickCommands = log.InputLog[i];
                     {
                         foreach (var (tickId, allCommands) in tickCommands)
                         {
@@ -104,7 +103,7 @@ namespace Test
 
                 using (var stream2 = new MemoryStream(deserializer.GetRemainingBytes()))
                 {
-                    var result = GameLog.ReadFrom(stream2).Log;
+                    var result = GameLog.ReadFrom(stream2).InputLog;
                     result.Keys.Any(u => u != 2).ShouldBeFalse();
                 }
             }

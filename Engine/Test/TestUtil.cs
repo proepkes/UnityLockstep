@@ -11,13 +11,13 @@ namespace Test
         {
             output.WriteLine("========================================");
 
-            var input = gamelog.Log;
+            var input = gamelog.InputLog;
 
             var contexts = new Contexts();
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService()); 
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
-            world.Start(1, 0, new byte[] { 0, 1 });
+            world.Start(1, gamelog.LocalActorId, gamelog.AllActorIds);
 
             foreach (var (_, tickCommands) in input)
             {

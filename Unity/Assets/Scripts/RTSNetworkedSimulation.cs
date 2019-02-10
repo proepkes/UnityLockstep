@@ -31,6 +31,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         _commandQueue = new NetworkCommandQueue(_client);
         _commandQueue.InitReceived += (sender, init) =>
         {
+            AllActorIds = init.AllActors;
             Debug.Log($"Starting simulation. Total actors: {init.AllActors.Length}. Local ActorID: {init.ActorID}");
             Simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
         };
@@ -39,14 +40,12 @@ public class RTSNetworkedSimulation : MonoBehaviour
     }             
 
 
-    public void DumpInputContext()
+    public void DumpGameLog()
     {
         Stream stream = new FileStream(@"C:\Log\" + Simulation.LocalActorId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_log.txt", FileMode.Create, FileAccess.Write);
         var serializer = new Serializer();
         serializer.Put(Contexts.sharedInstance.gameState.hashCode.value);
-        serializer.Put(Contexts.sharedInstance.gameState.tick.value);
-        serializer.Put(Simulation.LocalActorId);
-        serializer.PutBytesWithLength(AllActorIds);
+        serializer.Put(Contexts.sharedInstance.gameState.tick.value);      
         stream.Write(serializer.Data, 0, serializer.Length);
 
         Simulation.GameLog.WriteTo(stream);

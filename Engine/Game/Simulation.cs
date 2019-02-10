@@ -43,7 +43,10 @@ namespace Lockstep.Game
 
 
         public void Start(int targetFps, byte localActorId, byte[] allActors)
-        {                             
+        {
+            GameLog.LocalActorId = localActorId;
+            GameLog.AllActorIds = allActors;
+
             LocalActorId = localActorId;     
 
             _tickDt = 1000f / targetFps;
@@ -76,6 +79,11 @@ namespace Lockstep.Game
 
         public void Execute(ICommand command)
         {
+            if (!Running)
+            {
+                return;
+            }
+
             _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, new[] {command}));
         }
 

@@ -146,6 +146,11 @@ namespace Lockstep.Core.Logic.Systems
             //TODO: restore locally destroyed entities   
 
             Contexts.gameState.ReplaceTick(resultTick);
+
+            while (Tick <= tick)
+            {
+                Simulate();
+            }
         }      
     }
 }
