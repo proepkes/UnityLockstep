@@ -12,7 +12,7 @@ Currently the rollback of adding new and changing entities should be stable. If 
 
 ## Getting started
 
-1. Open Engine/Lockstep.sln
+1. Open Server.LiteNetLib/Server.LiteNetLib.sln
 2. Run Server-project, enter "1" when asked for room-size
 3. Open SampleScene in Unity
 4. Hit play and wait until connection to server is established
