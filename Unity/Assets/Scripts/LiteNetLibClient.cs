@@ -1,6 +1,6 @@
 ﻿using System;    
-using LiteNetLib;
-using Lockstep.Game.Network;      
+using LiteNetLib;               
+using Lockstep.Network.Client;
 
 public class LiteNetLibClient : INetwork
 {

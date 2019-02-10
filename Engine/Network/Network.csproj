@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shell\Shell.csproj" />
+    <ProjectReference Include="..\Core.Logic\Core.Logic.csproj" />
   </ItemGroup>
 
 </Project>

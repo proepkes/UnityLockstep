@@ -1,11 +1,10 @@
 ﻿            
 using System.Collections;              
 using System.IO;                
+using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic.Serialization.Utils;
 using Lockstep.Game;
-using Lockstep.Game.Commands;          
-using Lockstep.Game.Network;
-using Lockstep.Game.Simulation;
-using Lockstep.Network.Utils;         
+using Lockstep.Network.Client;
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
@@ -22,22 +21,21 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public byte[] AllActorIds { get; private set; }
 
-    private NetworkCommandBuffer _remoteCommandBuffer;
+    private NetworkCommandQueue _commandQueue;
     private readonly LiteNetLibClient _client = new LiteNetLibClient();
 
     private void Awake()
     {                                
         Instance = this;
 
-        _remoteCommandBuffer = new NetworkCommandBuffer(_client);
-        _remoteCommandBuffer.RegisterCommand(() => new SpawnCommand());
-        _remoteCommandBuffer.RegisterCommand(() => new NavigateCommand());
-
-        Simulation = new Bootstrapper(_client, 3, new UnityGameService(EntityDatabase), new UnityLogger()).Simulation;
-        Simulation.Started += (sender, args) =>
+        _commandQueue = new NetworkCommandQueue(_client);
+        _commandQueue.InitReceived += (sender, init) =>
         {
-            Debug.Log($"Starting simulation. Total actors: {Simulation.AllActorIds.Length}. Local ActorID: {Simulation.LocalActorId}"); 
-        };        
+            Debug.Log($"Starting simulation. Total actors: {init.AllActors.Length}. Local ActorID: {init.ActorID}");
+            Simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
+        };
+
+        Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase));      
     }             
 
 
@@ -57,7 +55,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
     }
 
 
-    public void Execute(ISerializableCommand command)
+    public void Execute(ICommand command)
     {
         Simulation.Execute(command);
     }

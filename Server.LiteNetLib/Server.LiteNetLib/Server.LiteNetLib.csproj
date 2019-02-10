@@ -12,8 +12,8 @@
     <Reference Include="Lockstep.Network">
       <HintPath>..\Integration\Lockstep.Network.dll</HintPath>
     </Reference>
-    <Reference Include="Server">
-      <HintPath>..\Integration\Server.dll</HintPath>
+    <Reference Include="Lockstep.Network.Server">
+      <HintPath>..\Integration\Lockstep.Network.Server.dll</HintPath>
     </Reference>
   </ItemGroup>
 

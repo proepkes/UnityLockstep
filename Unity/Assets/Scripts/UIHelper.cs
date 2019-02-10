@@ -16,7 +16,7 @@ public class UIHelper : MonoBehaviour
         if (RTSNetworkedSimulation.Instance.Simulation.Running)
         {
             HashCodeText.text = "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
-            CurrentTickText.text = "CurrentTick: " + RTSNetworkedSimulation.Instance.Simulation.CurrentTick;
+            CurrentTickText.text = "CurrentTick: " + Contexts.sharedInstance.gameState.tick.value;
             AgentCountText.text = "Agents: " + Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Length;
         }
 

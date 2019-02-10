@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lockstep.Game.Network
+namespace Lockstep.Network.Client
 {
     public interface INetwork
     {                           

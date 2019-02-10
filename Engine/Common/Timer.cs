@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Lockstep.Game.Utility
+namespace Lockstep.Common
 {
     public class Timer
     {

@@ -1,5 +1,4 @@
-﻿using Lockstep.Core.Services;
-using Simulation.Behaviour.Services;
+﻿using Lockstep.Core.Logic.Interfaces.Services;
 
 namespace Lockstep.Game.Services
 {

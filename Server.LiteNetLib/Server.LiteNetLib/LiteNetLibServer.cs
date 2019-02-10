@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using LiteNetLib;
+using Lockstep.Network.Server.Interfaces;
 
 namespace Server.LiteNetLib
 {

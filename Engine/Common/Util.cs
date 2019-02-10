@@ -1,7 +1,7 @@
 ﻿using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Game.Utility
+namespace Lockstep.Common
 {
     internal static class Util
     {                 

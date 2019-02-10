@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Lockstep.Core.Logic</AssemblyName>
+    <RootNamespace>Lockstep.Core.Logic</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\Core.State\Core.State.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BEPUutilities">
+      <HintPath>..\Dependencies\BEPUutilities.dll</HintPath>
+    </Reference>
+    <Reference Include="DesperateDevs.Utils">
+      <HintPath>..\Dependencies\DesperateDevs.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Entitas">
+      <HintPath>..\Dependencies\Entitas.dll</HintPath>
+    </Reference>
+    <Reference Include="FixMath.NET">
+      <HintPath>..\Dependencies\FixMath.NET.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

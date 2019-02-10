@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lockstep.Network.Server
+namespace Lockstep.Network.Server.Interfaces
 {
     public interface IServer
     {

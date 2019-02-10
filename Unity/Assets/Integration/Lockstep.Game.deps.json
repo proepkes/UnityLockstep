@@ -9,12 +9,10 @@
     ".NETStandard,Version=v2.0/": {
       "Lockstep.Game/1.0.0": {
         "dependencies": {
-          "Lockstep.Core": "1.0.0",
-          "Lockstep.Network": "1.0.0",
+          "Lockstep.Common": "1.0.0",
+          "Lockstep.Core.Logic": "1.0.0",
           "NETStandard.Library": "2.0.3",
           "BEPUutilities": "1.5.0.0",
-          "DesperateDevs.Utils": "0.0.0.0",
-          "Entitas.CodeGeneration.Attributes": "0.0.0.0",
           "Entitas": "0.0.0.0",
           "FixMath.NET": "1.0.0.0"
         },
@@ -28,44 +26,33 @@
           "Microsoft.NETCore.Platforms": "1.1.0"
         }
       },
-      "Core.Components/1.0.0": {
-        "runtime": {
-          "Lockstep.Core.Components.dll": {}
-        }
-      },
-      "Lockstep.Core/1.0.0": {
+      "Core.State/1.0.0": {
         "dependencies": {
-          "Core.Components": "1.0.0"
+          "Entitas.CodeGeneration.Attributes": "0.0.0.0"
         },
         "runtime": {
-          "Lockstep.Core.dll": {}
+          "Lockstep.Core.State.dll": {}
         }
       },
-      "Lockstep.Network/1.0.0": {
+      "Lockstep.Common/1.0.0": {
         "runtime": {
-          "Lockstep.Network.dll": {}
+          "Lockstep.Common.dll": {}
+        }
+      },
+      "Lockstep.Core.Logic/1.0.0": {
+        "dependencies": {
+          "Core.State": "1.0.0",
+          "Lockstep.Common": "1.0.0",
+          "DesperateDevs.Utils": "0.0.0.0"
+        },
+        "runtime": {
+          "Lockstep.Core.Logic.dll": {}
         }
       },
       "BEPUutilities/1.5.0.0": {
         "runtime": {
           "BEPUutilities.dll": {
             "assemblyVersion": "1.5.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "DesperateDevs.Utils/0.0.0.0": {
-        "runtime": {
-          "DesperateDevs.Utils.dll": {
-            "assemblyVersion": "0.0.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
-      "Entitas.CodeGeneration.Attributes/0.0.0.0": {
-        "runtime": {
-          "Entitas.CodeGeneration.Attributes.dll": {
-            "assemblyVersion": "0.0.0.0",
             "fileVersion": "0.0.0.0"
           }
         }
@@ -83,6 +70,22 @@
           "FixMath.NET.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "DesperateDevs.Utils.Reference/0.0.0.0": {
+        "runtime": {
+          "DesperateDevs.Utils.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
+        "runtime": {
+          "Entitas.CodeGeneration.Attributes.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
           }
         }
       }
@@ -108,32 +111,22 @@
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
     },
-    "Core.Components/1.0.0": {
+    "Core.State/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Lockstep.Core/1.0.0": {
+    "Lockstep.Common/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Lockstep.Network/1.0.0": {
+    "Lockstep.Core.Logic/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
     "BEPUutilities/1.5.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "DesperateDevs.Utils/0.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Entitas.CodeGeneration.Attributes/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
@@ -144,6 +137,16 @@
       "sha512": ""
     },
     "FixMath.NET/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DesperateDevs.Utils.Reference/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Entitas.CodeGeneration.Attributes.Reference/0.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

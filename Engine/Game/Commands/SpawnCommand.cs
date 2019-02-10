@@ -1,7 +1,7 @@
 ﻿using System;
 using BEPUutilities;
-using Lockstep.Game.Interfaces;      
-using Lockstep.Network.Utils;
+using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic.Serialization.Utils;
 
 namespace Lockstep.Game.Commands
 {

@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
-using Lockstep.Core.Services;
+using Lockstep.Common.Logging;      
 using Xunit.Abstractions;
 
 namespace Test
@@ -12,6 +12,8 @@ namespace Test
         public Converter(ITestOutputHelper output)
         {
             _output = output;
+
+            Log.OnMessage += (sender, args) => _output.WriteLine(args.Message);
         }
 
         public override Encoding Encoding => Encoding.Default;
@@ -24,25 +26,5 @@ namespace Test
         {
             _output.WriteLine(format, args);
         }
-    }
-
-    class TestLogger : ILogService
-    {
-        private readonly ITestOutputHelper _outputHelper;
-
-        public TestLogger(ITestOutputHelper outputHelper)
-        {
-            _outputHelper = outputHelper;
-        }
-
-        public void Warn(Func<string> message)
-        {
-            _outputHelper.WriteLine($"Trace: {message.Invoke()}");
-        }
-
-        public void Trace(Func<string> message)
-        {
-            _outputHelper.WriteLine($"Trace: {message.Invoke()}");
-        }
-    }
+    }  
 }

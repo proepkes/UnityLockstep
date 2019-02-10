@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Lockstep.Core
+namespace Lockstep.Common
 {
     public static class KvpExtensions
     {

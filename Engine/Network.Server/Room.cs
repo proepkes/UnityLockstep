@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Lockstep.Core.Logic.Serialization;
+using Lockstep.Core.Logic.Serialization.Utils;
 using Lockstep.Network.Messages;
-using Lockstep.Network.Utils;
+using Lockstep.Network.Server.Interfaces;
 
 namespace Lockstep.Network.Server
 {

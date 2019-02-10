@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Lockstep.Common</AssemblyName>
+    <RootNamespace>Lockstep.Common</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

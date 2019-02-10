@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\Shell\Shell.csproj" />
-    <ProjectReference Include="..\Simulation.Behaviour\Simulation.Behaviour.csproj" />
-    <ProjectReference Include="..\Simulation.State\Simulation.State.csproj" />
+    <ProjectReference Include="..\Core.Logic\Core.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using Lockstep.Network.Utils;
+﻿using Lockstep.Core.Logic.Serialization;
+using Lockstep.Core.Logic.Serialization.Utils;
 
 namespace Lockstep.Network.Messages
 {

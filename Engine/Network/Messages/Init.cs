@@ -1,4 +1,5 @@
-﻿using Lockstep.Network.Utils;
+﻿using Lockstep.Core.Logic.Serialization;
+using Lockstep.Core.Logic.Serialization.Utils;
 
 namespace Lockstep.Network.Messages
 {
@@ -11,7 +12,7 @@ namespace Lockstep.Network.Messages
         public byte[] AllActors { get; set; }
 
         public int TargetFPS { get; set; } 
-
+                                              
         public void Serialize(Serializer writer)
         {
             writer.Put(Seed);

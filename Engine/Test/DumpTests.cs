@@ -1,18 +1,11 @@
 ﻿using System;                       
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using Lockstep.Core;
-using Lockstep.Core.Commands;
-using Lockstep.Core.Services;
-using Lockstep.Core.World;
-using Lockstep.Game;
-using Lockstep.Game.Commands;
-using Lockstep.Game.Simulation;
-using Lockstep.Network.Messages;
-using Lockstep.Network.Utils;     
+using System.Reflection;      
+using Lockstep.Core.Logic;
+using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic.Serialization.Utils;       
+using Lockstep.Game; 
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,6 +18,7 @@ namespace Test
 
         public DumpTests(ITestOutputHelper output)
         {
+
             _output = output;
             Console.SetOut(new Converter(output));
         }      
@@ -38,7 +32,7 @@ namespace Test
         private void TestFileDump(string fileName)
         {
             var contexts = new Contexts();   
-            var commandBuffer = new CommandBuffer();
+            var commandBuffer = new CommandQueue();
 
             var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
             var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
@@ -57,7 +51,7 @@ namespace Test
                 log = GameLog.ReadFrom(stream);
             }
 
-            var simulation = new Simulation(contexts, commandBuffer, new TestLogger(_output));
+            var simulation = new Simulation(contexts, commandBuffer);
             simulation.Start(1000, localActorId, allActors);
 
             for (uint i = 0; i < tick; i++)
@@ -70,7 +64,7 @@ namespace Test
                         {
                             foreach (var (actorId, commands) in allCommands)
                             {
-                                commandBuffer.Insert(tickId, actorId, commands.ToArray());
+                                commandBuffer.Enqueue(new Input(tickId, actorId, commands.ToArray()));
                             }
                         }
                     }
@@ -81,8 +75,7 @@ namespace Test
 
             contexts.gameState.hashCode.value.ShouldBe(hashCode);
 
-            TestUtil.TestReplayMatchesHashCode(simulation.GameLog, simulation.CurrentTick, hashCode,
-                simulation.Services.Get<IDebugService>(), _output);
+            TestUtil.TestReplayMatchesHashCode(simulation.GameLog, contexts.gameState.tick.value, hashCode, _output);
         }
 
 

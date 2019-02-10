@@ -1,7 +1,7 @@
 ﻿using System;        
 using BEPUutilities;
-using Lockstep.Core.Services;
-using Lockstep.Core.Systems.Navigation;
+using Lockstep.Core.Logic.Interfaces.Services;
+using Lockstep.Core.Logic.Systems.Game.Navigation;    
 using Moq;           
 using Xunit;
 using Xunit.Abstractions;
