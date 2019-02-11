@@ -9,10 +9,10 @@ namespace Lockstep.Core.Logic.Systems.Game.Navigation
         private readonly Contexts _contexts;
         private readonly INavigationService _navigationService;
 
-        public NavigationTick(Contexts contexts, INavigationService navigationService)
+        public NavigationTick(Contexts contexts, ServiceContainer services)
         {
             _contexts = contexts;
-            _navigationService = navigationService;
+            _navigationService = services.Get<INavigationService>();
         }
 
         public void Execute()

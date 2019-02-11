@@ -30,6 +30,10 @@ namespace Lockstep.Core.Logic.Systems
 
             Add(new VerifyNoDuplicateBackups(contexts, services));
 
+            Add(new RemoveDestroyedEntitiesFromServices(contexts, services));
+
+            Add(new DestroyDestroyedGameSystem(contexts));
+
         }      
     }
 }

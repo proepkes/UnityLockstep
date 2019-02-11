@@ -14,19 +14,20 @@ public static class GameComponentsLookup {
     public const int Backup = 3;
     public const int Controllable = 4;
     public const int Destination = 5;
-    public const int Hashable = 6;
-    public const int Health = 7;
-    public const int Id = 8;
-    public const int LocalId = 9;
-    public const int MaxSpeed = 10;
-    public const int Navigable = 11;
-    public const int New = 12;
-    public const int Position = 13;
-    public const int Team = 14;
-    public const int Velocity = 15;
-    public const int PositionListener = 16;
+    public const int Destroyed = 6;
+    public const int Hashable = 7;
+    public const int Health = 8;
+    public const int Id = 9;
+    public const int LocalId = 10;
+    public const int MaxSpeed = 11;
+    public const int Navigable = 12;
+    public const int New = 13;
+    public const int Position = 14;
+    public const int Team = 15;
+    public const int Velocity = 16;
+    public const int PositionListener = 17;
 
-    public const int TotalComponents = 17;
+    public const int TotalComponents = 18;
 
     public static readonly string[] componentNames = {
         "DestinationListener",
@@ -35,6 +36,7 @@ public static class GameComponentsLookup {
         "Backup",
         "Controllable",
         "Destination",
+        "Destroyed",
         "Hashable",
         "Health",
         "Id",
@@ -55,6 +57,7 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.State.Game.BackupComponent),
         typeof(Lockstep.Core.State.Game.ControllableComponent),
         typeof(Lockstep.Core.State.Game.DestinationComponent),
+        typeof(Lockstep.Core.State.Game.DestroyedComponent),
         typeof(Lockstep.Core.State.Game.HashableComponent),
         typeof(Lockstep.Core.State.Game.HealthComponent),
         typeof(Lockstep.Core.State.Game.IdComponent),

@@ -57,11 +57,7 @@
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
-    <Compile Include="Generated\Snapshot\Components\SnapshotHashCodeComponent.cs" />
-    <Compile Include="Generated\Snapshot\Components\SnapshotTickComponent.cs" />
-    <Compile Include="Generated\Actor\Components\ActorBackupComponent.cs" />
-    <Compile Include="Generated\Actor\Components\ActorEntityCountComponent.cs" />
-    <Compile Include="Generated\Actor\Components\ActorIdComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameDestroyedComponent.cs" />
     <Compile Include="Generated\Game\Components\GameActorIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
     <Compile Include="Generated\Game\Components\GameBackupComponent.cs" />
@@ -77,6 +73,12 @@
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
+    <Compile Include="Generated\Debug\Components\DebugHashCodeComponent.cs" />
+    <Compile Include="Generated\Debug\Components\DebugTickComponent.cs" />
+    <Compile Include="Generated\Snapshot\Components\SnapshotTickComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorBackupComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorEntityCountComponent.cs" />
+    <Compile Include="Generated\Actor\Components\ActorIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputActorIdComponent.cs" />
     <Compile Include="Generated\Input\Components\InputCoordinateComponent.cs" />
     <Compile Include="Generated\Input\Components\InputEntityConfigIdComponent.cs" />
@@ -85,10 +87,11 @@
     <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
+    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
+    <Compile Include="Generated\Debug\DebugComponentsLookup.cs" />
     <Compile Include="Generated\Snapshot\SnapshotComponentsLookup.cs" />
     <Compile Include="Generated\Actor\ActorComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
-    <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
     <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
@@ -96,18 +99,21 @@
     <Compile Include="Generated\Input\InputAttribute.cs" />
     <Compile Include="Generated\GameState\GameStateAttribute.cs" />
     <Compile Include="Generated\Snapshot\SnapshotAttribute.cs" />
+    <Compile Include="Generated\Debug\DebugAttribute.cs" />
     <Compile Include="Generated\Config\ConfigAttribute.cs" />
     <Compile Include="Generated\Game\GameContext.cs" />
     <Compile Include="Generated\Actor\ActorContext.cs" />
     <Compile Include="Generated\Input\InputContext.cs" />
     <Compile Include="Generated\GameState\GameStateContext.cs" />
     <Compile Include="Generated\Snapshot\SnapshotContext.cs" />
+    <Compile Include="Generated\Debug\DebugContext.cs" />
     <Compile Include="Generated\Config\ConfigContext.cs" />
     <Compile Include="Generated\Game\GameMatcher.cs" />
     <Compile Include="Generated\Actor\ActorMatcher.cs" />
     <Compile Include="Generated\Input\InputMatcher.cs" />
     <Compile Include="Generated\GameState\GameStateMatcher.cs" />
     <Compile Include="Generated\Snapshot\SnapshotMatcher.cs" />
+    <Compile Include="Generated\Debug\DebugMatcher.cs" />
     <Compile Include="Generated\Config\ConfigMatcher.cs" />
     <Compile Include="Generated\Contexts.cs" />
     <Compile Include="Generated\Game\GameEntity.cs" />
@@ -115,6 +121,7 @@
     <Compile Include="Generated\Input\InputEntity.cs" />
     <Compile Include="Generated\GameState\GameStateEntity.cs" />
     <Compile Include="Generated\Snapshot\SnapshotEntity.cs" />
+    <Compile Include="Generated\Debug\DebugEntity.cs" />
     <Compile Include="Generated\Config\ConfigEntity.cs" />
     <Compile Include="Generated\Events\Components\DestinationListenerComponent.cs" />
     <Compile Include="Generated\Events\Components\PositionListenerComponent.cs" />
@@ -123,10 +130,18 @@
     <Compile Include="Generated\Events\Systems\DestinationEventSystem.cs" />
     <Compile Include="Generated\Events\Systems\PositionEventSystem.cs" />
     <Compile Include="Generated\Events\GameEventSystems.cs" />
+    <Compile Include="Generated\Game\Systems\DestroyDestroyedGameSystem.cs" />
+    <Compile Include="Generated\Game\GameCleanupSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Snapshot\HashCodeComponent.cs" />
+    <Compile Include="Game\DestroyedComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Debug\HashCodeComponent.cs" />
+    <Compile Include="Debug\TickComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Snapshot\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;          
 using Lockstep.Game;
 using Lockstep.Game.Services;
+using Lockstep.Game.Services.Navigation;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,7 +29,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
 
             world.Start(1, 0, new byte[] { 0, 1 });
 
@@ -89,7 +90,7 @@ namespace Test
 
             world.Update(1000);
             ExpectEntityCount(contexts, 4);
-            ExpectBackupCount(contexts, 6);
+            ExpectBackupCount(contexts, 5);
 
             world.Update(1000);
             world.Update(1000);
@@ -99,7 +100,7 @@ namespace Test
 
             ExpectEntityCount(contexts, 5);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, world.GameLog, _output);
         }
 
         [Fact]
@@ -110,7 +111,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
 
             world.Start(1, 0, new byte[] { 0, 1 });
             
@@ -184,7 +185,7 @@ namespace Test
 
             ExpectEntityCount(contexts, 65);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, world.GameLog, _output);
         }        
 
         [Fact]
@@ -193,7 +194,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
 
             world.Start(1, 0, new byte[] { 0, 1 });
 
@@ -275,11 +276,11 @@ namespace Test
             world.Update(1000);
 
             ExpectEntityCount(contexts, 11);
-            ExpectBackupCount(contexts, 25); 
+            ExpectBackupCount(contexts, 33); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, world.GameLog, _output);
         }
 
         [Fact]
@@ -288,7 +289,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
 
             world.Start(1, 0, new byte[] { 0, 1 });
 
@@ -334,16 +335,18 @@ namespace Test
             commandBuffer.Enqueue(11, 1, new MoveEntitesOfSpecificActor(contexts.game, 1, new Vector2(3, 4)));
             world.Update(1000);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            ExpectEntityCount(contexts, 12);
+
+            TestUtil.TestReplayMatchesHashCode(contexts, world.GameLog, _output);
         }
+
         [Fact]
-        //This test requires a navigation-service that just sets the position to destination: entity.ReplacePosition(entity.destination.value);
         public void TestCommandUsesCorrectEntityIds()
         {
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
 
             world.Start(1, 0, new byte[] { 0, 1 });
 
@@ -408,7 +411,7 @@ namespace Test
                 .Where(entity => entity.actorId.value == 1 && selection.Contains(entity.id.value))
                 .Select(entity => entity.destination.value).ShouldAllBe(vector2 => vector2.X == destination.X && vector2.Y == destination.Y);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, world.GameLog, _output);
         }
 
         //[Fact]

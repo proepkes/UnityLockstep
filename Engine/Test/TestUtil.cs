@@ -1,4 +1,5 @@
-﻿using Lockstep.Game;
+﻿using System.Linq;
+using Lockstep.Game;
 using Lockstep.Game.Services;
 using Shouldly;
 using Xunit.Abstractions;
@@ -7,12 +8,15 @@ namespace Test
 {
     public static class TestUtil
     {
-        public static void TestReplayMatchesHashCode(GameLog gamelog, uint targetTick, long expectedHashCode, ITestOutputHelper output)
+        public static void TestReplayMatchesHashCode(Contexts origin, GameLog gamelog, ITestOutputHelper output)
         {
             output.WriteLine("========================================");
 
-            var input = gamelog.InputLog;
+            uint targetTick = origin.gameState.tick.value;
+            long expectedHashCode = origin.gameState.hashCode.value;
 
+
+            var input = gamelog.InputLog;
             var contexts = new Contexts();
             var commandBuffer = new CommandQueue();
             var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
@@ -32,9 +36,13 @@ namespace Test
 
             while (contexts.gameState.tick.value < targetTick)
             {
-                contexts.snapshot.GetEntityWithTick(contexts.gameState.tick.value)?.hashCode.value.ShouldBe(contexts.gameState.hashCode.value);
+                var debugEntity = origin.debug.GetEntities().FirstOrDefault(entity => entity.tick.value == contexts.gameState.tick.value);
+                if (debugEntity != null)
+                {
+                    debugEntity.hashCode.value.ShouldBe(contexts.gameState.hashCode.value);
+                }
 
-                world.Update(1);
+                world.Update(1000);
             }
 
             output.WriteLine("Checking hashcode: " + expectedHashCode);

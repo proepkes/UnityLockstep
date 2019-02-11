@@ -64,14 +64,17 @@ namespace Lockstep.Game
             {
                 return;
             }
-
-            ProcessInputQueue();
-
+            
             _accumulatedTime += elapsedMilliseconds;
 
             while (_accumulatedTime >= _tickDt)
             {
-                _world.Predict();
+                lock (_commandQueue)
+                {
+                    ProcessInputQueue();
+
+                    _world.Predict();
+                }
 
                 _accumulatedTime -= _tickDt;
             }
@@ -84,71 +87,64 @@ namespace Lockstep.Game
                 return;
             }
 
-            _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, new[] {command}));
-        }
-
-        private void CreateEntityFromInput(Input input)
-        {                  
-            GameLog.Add(_world.Tick, input);
-
-            foreach (var command in input.Commands)
+            lock (_commandQueue)
             {
-                Log.Trace(this, input.ActorId + " >> " + input.Tick + ": " + input.Commands.Count());
-
-
-                var inputEntity = Contexts.input.CreateEntity();
-                command.Execute(inputEntity);
-
-                inputEntity.AddTick(input.Tick);
-                inputEntity.AddActorId(input.ActorId);
+                _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, new[] { command }));
             }
-
-            //TODO: after adding input, order the commands by timestamp => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered
-            //ordering by timestamp requires loopback functionality because we have to wait for server-response; at the moment commands get distributed to all clients except oneself
-            //if a command comes back from server and it was our own command, the local command has to be overwritten instead of just adding it (like it is at the moment)
         }
-
+        
         private void ProcessInputQueue()
         {
             var inputs = _commandQueue.Dequeue();
 
             if (inputs.Any())
             {
-                var lastInputFrame = inputs.Max(input => input.Tick);
-
-                //We guess everything was predicted correctly (except the last received frame)
-                var firstMispredictedFrame = lastInputFrame;
-
                 //Store new input
                 foreach (var input in inputs)
                 {
+                    GameLog.Add(_world.Tick, input);
 
-                    CreateEntityFromInput(input);
-
-                    if (input.Tick < firstMispredictedFrame && input.ActorId != LocalActorId)
+                    foreach (var command in input.Commands)
                     {
-                        firstMispredictedFrame = input.Tick;
-                    }          
+                        Log.Trace(this, input.ActorId + " >> " + input.Tick + ": " + input.Commands.Count());
+
+                        var inputEntity = Contexts.input.CreateEntity();
+                        command.Execute(inputEntity);
+
+                        inputEntity.AddTick(input.Tick);
+                        inputEntity.AddActorId(input.ActorId);
+
+                        //TODO: after adding input, order the commands by timestamp => if commands intersect, the first one should win, timestamp should be added by server, RTT has to be considered
+                        //ordering by timestamp requires loopback functionality because we have to wait for server-response; at the moment commands get distributed to all clients except oneself
+                        //if a command comes back from server and it was our own command, the local command has to be overwritten instead of just adding it (like it is at the moment)
+                    }
                 }
 
-                Log.Trace(this, ">>>Input from " + firstMispredictedFrame + " to " + lastInputFrame);
-
-                //Only rollback if the mispredicted frame was in the past (the frame can be in the future due to high lag compensation)
-                if (firstMispredictedFrame < _world.Tick)
+                var otherActorsInput = inputs.Where(input => input.ActorId != LocalActorId).ToList();
+                if (otherActorsInput.Any())
                 {
-                    var targetTick = _world.Tick;
+                    var firstRemoteInputTick = otherActorsInput.Min(input => input.Tick);
+                    var lastRemoteInputTick = otherActorsInput.Max(input => input.Tick);
 
-                    _world.RevertToTick(firstMispredictedFrame);
+                    Log.Trace(this, ">>>Input from " + firstRemoteInputTick + " to " + lastRemoteInputTick);
 
-                    //Restore last local state       
-                    while (_world.Tick <= lastInputFrame && _world.Tick < targetTick)
+                    //Only rollback if the mispredicted frame was in the past (the frame can be in the future e.g. due to high lag compensation)
+                    if (firstRemoteInputTick < _world.Tick)
                     {
-                        _world.Simulate();
-                    }
+                        var targetTick = _world.Tick;
 
-                    while (_world.Tick < targetTick)
-                    {
-                        _world.Predict();
+                        _world.RevertToTick(firstRemoteInputTick);
+
+                        //Restore last local state       
+                        while (_world.Tick <= lastRemoteInputTick && _world.Tick < targetTick)
+                        {
+                            _world.Simulate();
+                        }
+
+                        while (_world.Tick < targetTick)
+                        {
+                            _world.Predict();
+                        }
                     }
                 }
             }

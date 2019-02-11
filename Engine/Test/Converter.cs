@@ -13,7 +13,8 @@ namespace Test
         {
             _output = output;
 
-            Log.OnMessage += (sender, args) => _output.WriteLine(args.Message);
+            Log.LogSeverityLevel = Log.AllLogSeverities;
+            Log.OnMessage += (sender, args) => _output.WriteLine(args.LogSeverity + ": " + args.Message);
         }
 
         public override Encoding Encoding => Encoding.Default;

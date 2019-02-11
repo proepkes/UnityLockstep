@@ -6,13 +6,11 @@ namespace Lockstep.Core.Logic.Systems.Features
 {
     public sealed class NavigationFeature : Feature
     {
-        public NavigationFeature(Contexts contexts, ServiceContainer serviceContainer)
+        public NavigationFeature(Contexts contexts, ServiceContainer services)
         {
-            var navigationService = serviceContainer.Get<INavigationService>();
-
-            //Add(new OnNavigableDoRegisterAgent(contexts, navigationService));
-            Add(new ExecuteNavigationInput(contexts, serviceContainer));
-            Add(new NavigationTick(contexts, navigationService));
+            Add(new OnNavigableDoRegisterAgent(contexts, services));
+            Add(new ExecuteNavigationInput(contexts, services));
+            Add(new NavigationTick(contexts, services));
             //Add(new SyncAgentVelocity(contexts, navigationService)); 
             //Add(new UpdateAgentPosition(contexts, navigationService));
         }

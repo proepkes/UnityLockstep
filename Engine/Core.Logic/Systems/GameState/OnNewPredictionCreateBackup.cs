@@ -44,9 +44,7 @@ namespace Lockstep.Core.Logic.Systems.GameState
             var currentTick = _gameStateContext.tick.value;
 
             //Register the tick for which a snapshot is created
-            var snapshotEntity = _snapshotContext.CreateEntity();
-            snapshotEntity.AddTick(currentTick);     
-            snapshotEntity.AddHashCode(_gameStateContext.hashCode.value);
+            _snapshotContext.CreateEntity().AddTick(currentTick);     
 
             foreach (var e in _activeEntities)
             {

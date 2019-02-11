@@ -23,16 +23,18 @@ public partial class Contexts : Entitas.IContexts {
 
     public ActorContext actor { get; set; }
     public ConfigContext config { get; set; }
+    public DebugContext debug { get; set; }
     public GameContext game { get; set; }
     public GameStateContext gameState { get; set; }
     public InputContext input { get; set; }
     public SnapshotContext snapshot { get; set; }
 
-    public Entitas.IContext[] allContexts { get { return new Entitas.IContext [] { actor, config, game, gameState, input, snapshot }; } }
+    public Entitas.IContext[] allContexts { get { return new Entitas.IContext [] { actor, config, debug, game, gameState, input, snapshot }; } }
 
     public Contexts() {
         actor = new ActorContext();
         config = new ConfigContext();
+        debug = new DebugContext();
         game = new GameContext();
         gameState = new GameStateContext();
         input = new InputContext();
@@ -120,6 +122,7 @@ public partial class Contexts {
         try {
             CreateContextObserver(actor);
             CreateContextObserver(config);
+            CreateContextObserver(debug);
             CreateContextObserver(game);
             CreateContextObserver(gameState);
             CreateContextObserver(input);

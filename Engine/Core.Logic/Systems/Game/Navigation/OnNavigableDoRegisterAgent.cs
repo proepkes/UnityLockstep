@@ -8,14 +8,14 @@ namespace Lockstep.Core.Logic.Systems.Game.Navigation
     {
         private readonly INavigationService _navigationService;
 
-        public OnNavigableDoRegisterAgent(Contexts contexts, INavigationService navigationService) : base(contexts.game)
+        public OnNavigableDoRegisterAgent(Contexts contexts, ServiceContainer services) : base(contexts.game)
         {
-            _navigationService = navigationService;
+            _navigationService = services.Get<INavigationService>();
         }
 
         protected override ICollector<GameEntity> GetTrigger(IContext<GameEntity> context)
         {
-            return context.CreateCollector(GameMatcher.Navigable.Added());
+            return context.CreateCollector(GameMatcher.AllOf(GameMatcher.New, GameMatcher.Navigable));
         }
 
         protected override bool Filter(GameEntity entity)

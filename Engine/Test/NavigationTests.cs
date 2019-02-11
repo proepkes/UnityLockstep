@@ -1,5 +1,6 @@
 ﻿using System;        
 using BEPUutilities;
+using Lockstep.Core.Logic;
 using Lockstep.Core.Logic.Interfaces.Services;
 using Lockstep.Core.Logic.Systems.Game.Navigation;    
 using Moq;           
@@ -22,13 +23,16 @@ namespace Test
         public void TestNavigableEntityGetsAddedToNavigationService()
         {
             var service = new Mock<INavigationService>();
-            var contexts = new Contexts();       
+            var contexts = new Contexts();
 
+
+            var services = new ServiceContainer();
+            services.Register(service.Object);
 
             var e = contexts.game.CreateEntity();
             e.AddPosition(Vector2.Zero);
 
-            var system = new OnNavigableDoRegisterAgent(contexts, service.Object);
+            var system = new OnNavigableDoRegisterAgent(contexts, services);
 
             system.Execute();
 

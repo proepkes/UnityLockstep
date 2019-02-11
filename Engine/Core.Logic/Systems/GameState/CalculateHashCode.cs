@@ -27,6 +27,16 @@ namespace Lockstep.Core.Logic.Systems.GameState
             {
                 hashCode ^= entity.position.value.X.RawValue;
                 hashCode ^= entity.position.value.Y.RawValue;
+                if (entity.hasVelocity)
+                {
+                    hashCode ^= entity.velocity.value.X.RawValue;
+                    hashCode ^= entity.velocity.value.Y.RawValue;
+                }
+                if (entity.hasDestination)
+                {
+                    hashCode ^= entity.destination.value.X.RawValue;
+                    hashCode ^= entity.destination.value.Y.RawValue;
+                }
             }                   
 
             _gameStateContext.ReplaceHashCode(hashCode);
