@@ -6,9 +6,9 @@ using Lockstep.Core.Logic.Systems.GameState;
 
 namespace Lockstep.Core.Logic.Systems
 {
-    public sealed class SimulationSystems : Feature
+    public sealed class WorldSystems : Feature
     {
-        public SimulationSystems(Contexts contexts, ServiceContainer services)
+        public WorldSystems(Contexts contexts, ServiceContainer services)
         {
             Add(new InitializeEntityCount(contexts));
 

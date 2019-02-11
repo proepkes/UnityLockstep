@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lockstep.Common.Logging;
 using Lockstep.Core.Logic;
-using Lockstep.Core.Logic.Interfaces;
-using Lockstep.Core.Logic.Systems;
+using Lockstep.Core.Logic.Interfaces;        
 
 namespace Lockstep.Game
 {

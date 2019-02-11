@@ -12,7 +12,7 @@ namespace Lockstep.Core.Logic
         
         public uint Tick => Contexts.gameState.tick.value;
                                                          
-        private readonly SimulationSystems _systems;  
+        private readonly WorldSystems _systems;  
 
         public World(Contexts contexts, ServiceContainer services, IEnumerable<byte> actorIds)
         {
@@ -23,7 +23,7 @@ namespace Lockstep.Core.Logic
                 Contexts.actor.CreateEntity().AddId(id);
             }
 
-            _systems = new SimulationSystems(Contexts, services);
+            _systems = new WorldSystems(Contexts, services);
             _systems.Initialize();
         }
 

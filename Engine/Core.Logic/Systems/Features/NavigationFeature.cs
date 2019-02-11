@@ -11,7 +11,7 @@ namespace Lockstep.Core.Logic.Systems.Features
             Add(new OnNavigableDoRegisterAgent(contexts, services));
             Add(new ExecuteNavigationInput(contexts, services));
             Add(new NavigationTick(contexts, services));
-            //Add(new SyncAgentVelocity(contexts, navigationService)); 
+            Add(new SyncAgentVelocity(contexts, services)); 
             //Add(new UpdateAgentPosition(contexts, navigationService));
         }
     }

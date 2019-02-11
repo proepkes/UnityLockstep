@@ -30,10 +30,7 @@ namespace Lockstep.Core.Logic.Systems.Game.Navigation
 
                 if ((entity.destination.value - entity.position.value).LengthSquared() > 1)
                 {
-                    entity.ReplacePosition(entity.position.value + velocity);
-                    
-                    //For Testing purposes:
-                    //entity.ReplacePosition(entity.destination.value);
+                    entity.ReplacePosition(entity.position.value + velocity);        
                 }
             }
         }
