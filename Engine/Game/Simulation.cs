@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Lockstep.Common.Logging;
 using Lockstep.Core.Logic;
@@ -25,7 +26,9 @@ namespace Lockstep.Game
         private float _accumulatedTime;
 
         private World _world;
-        private readonly ICommandQueue _commandQueue;    
+        private readonly ICommandQueue _commandQueue;  
+        
+        private readonly List<ICommand> _localCommandBuffer = new List<ICommand>();
                                                                                                        
         public Simulation(Contexts contexts, ICommandQueue commandQueue, params IService[] services)
         {
@@ -69,8 +72,14 @@ namespace Lockstep.Game
 
             while (_accumulatedTime >= _tickDt)
             {
-                lock (_commandQueue)
+                lock (_localCommandBuffer)
                 {
+                    if (_localCommandBuffer.Any())
+                    {          
+                        _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, _localCommandBuffer.ToArray()));
+                        _localCommandBuffer.Clear();
+                    }
+
                     ProcessInputQueue();
 
                     _world.Predict();
@@ -87,9 +96,9 @@ namespace Lockstep.Game
                 return;
             }
 
-            lock (_commandQueue)
+            lock (_localCommandBuffer)
             {
-                _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, new[] { command }));
+                _localCommandBuffer.Add(command);
             }
         }
         

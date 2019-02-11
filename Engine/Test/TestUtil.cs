@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Lockstep.Game;
 using Lockstep.Game.Services;
+using Lockstep.Game.Services.Navigation;
 using Shouldly;
 using Xunit.Abstractions;
 
@@ -19,7 +20,7 @@ namespace Test
             var input = gamelog.InputLog;
             var contexts = new Contexts();
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
 
             world.Start(1, gamelog.LocalActorId, gamelog.AllActorIds);
 
@@ -39,7 +40,7 @@ namespace Test
                 var debugEntity = origin.debug.GetEntities().FirstOrDefault(entity => entity.tick.value == contexts.gameState.tick.value);
                 if (debugEntity != null)
                 {
-                    debugEntity.hashCode.value.ShouldBe(contexts.gameState.hashCode.value);
+                   debugEntity.hashCode.value.ShouldBe(contexts.gameState.hashCode.value);
                 }
 
                 world.Update(1000);

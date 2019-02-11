@@ -1,4 +1,5 @@
 ﻿            
+using System;
 using System.Collections;              
 using System.IO;                
 using Lockstep.Core.Logic.Interfaces;
@@ -43,7 +44,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public void DumpGameLog()
     {
-        Stream stream = new FileStream(@"C:\Log\" + Simulation.LocalActorId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_log.txt", FileMode.Create, FileAccess.Write);
+        Stream stream = new FileStream(@"C:\Log\" + Math.Abs(Contexts.sharedInstance.gameState.hashCode.value) + ".bin", FileMode.Create, FileAccess.Write);
         var serializer = new Serializer();
         serializer.Put(Contexts.sharedInstance.gameState.hashCode.value);
         serializer.Put(Contexts.sharedInstance.gameState.tick.value);      

@@ -2,11 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;      
-using Lockstep.Core.Logic;
-using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic;               
 using Lockstep.Core.Logic.Serialization.Utils;       
 using Lockstep.Game;
 using Lockstep.Game.Services;
+using Lockstep.Game.Services.Navigation;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -27,7 +27,7 @@ namespace Test
         [Fact]                      
         public void TestDump()
         {
-            TestFileDump("3_-337951620314_log");  
+            TestFileDump("-240158465629");  
         }
 
         private void TestFileDump(string fileName)
@@ -39,7 +39,7 @@ namespace Test
             var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
             var dirPath = Path.GetDirectoryName(codeBasePath);
 
-            var data = ReadFile($@"{dirPath}\Dumps\{fileName}.txt");
+            var data = ReadFile($@"{dirPath}\Dumps\{fileName}.bin");
             var deserializer = new Deserializer(data);
             var hashCode = deserializer.GetLong();
             var tick = deserializer.GetUInt();                  
@@ -50,7 +50,7 @@ namespace Test
                 log = GameLog.ReadFrom(stream);
             }
 
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
             simulation.Start(1, log.LocalActorId, log.AllActorIds);
 
             for (uint i = 0; i < tick; i++)
@@ -72,7 +72,7 @@ namespace Test
                 simulation.Update(1000);
             }
 
-            //contexts.gameState.hashCode.value.ShouldBe(hashCode);
+            contexts.gameState.hashCode.value.ShouldBe(hashCode);
 
             TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }
