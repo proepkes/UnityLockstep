@@ -28,6 +28,7 @@ namespace Test
         {
             TestFileDump("-240158465629");
             TestFileDump("58013408818");
+            TestFileDump("179464547357");
         }
 
         /// <summary>

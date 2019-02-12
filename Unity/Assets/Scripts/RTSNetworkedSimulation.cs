@@ -4,8 +4,7 @@ using System.Collections;
 using System.IO;                
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;
-using Lockstep.Game;
-using Lockstep.Game.Services.Navigation;
+using Lockstep.Game;                      
 using Lockstep.Network.Client;
 using UnityEngine;           
                               
@@ -38,7 +37,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
             Simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
         };
 
-        Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase), new DefaultNavigationService());      
+        Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase));      
     }             
 
 
