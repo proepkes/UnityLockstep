@@ -31,6 +31,8 @@ namespace Test
 
             var e = contexts.game.CreateEntity();
             e.AddPosition(Vector2.Zero);
+            e.AddLocalId(0);
+            e.isNew = true;
 
             var system = new OnNavigableDoRegisterAgent(contexts, services);
 
@@ -38,7 +40,12 @@ namespace Test
 
             service.Verify(s => s.AddAgent(It.IsAny<uint>(), It.IsAny<Vector2>()), Times.Never);
 
-            e.isNavigable = true;
+            var e2 = contexts.game.CreateEntity();
+            e2.AddPosition(Vector2.Zero);
+            e2.AddLocalId(1);
+            e2.isNavigable = true;
+            e2.isNew = true;
+
             system.Execute();
 
             service.Verify(s => s.AddAgent(It.IsAny<uint>(), It.IsAny<Vector2>()), Times.Once);

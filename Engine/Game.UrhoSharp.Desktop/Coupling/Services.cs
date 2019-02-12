@@ -21,7 +21,9 @@ namespace Game.UrhoSharp.Desktop.Coupling
         {
             var node = Spawn(new Vector3(new Vector3((float) entity.position.value.X, 0,
                 (float) entity.position.value.Y)));
-            node.GetComponent<PositionListener>().RegisterListeners(entity);    
+            node.GetComponent<PositionListener>().RegisterListeners(entity);
+
+            entity.isNavigable = true;
 
             _linkedEntities.Add(entity.localId.value, node);   
         }

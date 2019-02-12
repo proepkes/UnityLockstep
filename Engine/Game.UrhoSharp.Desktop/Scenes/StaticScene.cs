@@ -163,8 +163,8 @@ namespace Game.UrhoSharp.Desktop.Scenes
             worldInfoText = new Text
             {
                 Value = "Waiting for all players to join...",
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
             };
             worldInfoText.SetFont(ResourceCache.GetFont("Fonts/Anonymous Pro.ttf"), 15);
             UI.Root.AddChild(worldInfoText);
@@ -195,7 +195,9 @@ namespace Game.UrhoSharp.Desktop.Scenes
 
             if (simulation.Running)
             {
-                worldInfoText.Value = Contexts.sharedInstance.gameState.tick.value + " / " + Contexts.sharedInstance.gameState.hashCode.value;
+                worldInfoText.Value = "ActorId: " + simulation.LocalActorId + Environment.NewLine +
+                                      "Tick: " + Contexts.sharedInstance.gameState.tick.value + Environment.NewLine + 
+                                      "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
             }
         }
 
@@ -214,7 +216,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
                     simulation.Execute(new NavigateCommand
                     {
                         Destination = compatiblePos,
-                        Selection = Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Select(entity => entity.id.value).ToArray()
+                        Selection = Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == simulation.LocalActorId).Select(entity => entity.id.value).ToArray()
                     });
             }
         }

@@ -13,7 +13,7 @@ namespace Test
         {
             _output = output;
 
-            Log.LogSeverityLevel = Log.AllLogSeverities;
+            Log.SetLogAllSeverities();
             Log.OnMessage += (sender, args) => _output.WriteLine(args.LogSeverity + ": " + args.Message);
         }
 

@@ -27,7 +27,8 @@ namespace Test
         [Fact]                      
         public void TestDump()
         {
-            TestFileDump("-240158465629");  
+            //TestFileDump("-240158465629");    
+            TestFileDump("58013408818");
         }
 
         private void TestFileDump(string fileName)
