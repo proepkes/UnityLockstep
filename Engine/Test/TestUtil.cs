@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Lockstep.Game;
-using Lockstep.Game.Services;
-using Lockstep.Game.Services.Navigation;
+using Lockstep.Game.Services;              
 using Shouldly;
 using Xunit.Abstractions;
 
@@ -20,7 +19,7 @@ namespace Test
             var input = gamelog.InputLog;
             var contexts = new Contexts();
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
+            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
             world.Start(1, gamelog.LocalActorId, gamelog.AllActorIds);
 

@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BEPUutilities;
-using Lockstep.Core.Logic.Interfaces.Services;
+using BEPUutilities;                                
 using Lockstep.Services.RVONavigation.RVO;
 
 namespace Lockstep.Services.RVONavigation
 {
-    public class RVONavigationService : INavigationService  
+    public class RVONavigationService 
     {                                                                                        
         public RVONavigationService()
         {

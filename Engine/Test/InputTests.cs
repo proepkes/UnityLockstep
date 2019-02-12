@@ -5,8 +5,7 @@ using Entitas;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;          
 using Lockstep.Game;
-using Lockstep.Game.Services;
-using Lockstep.Game.Services.Navigation;
+using Lockstep.Game.Services;                
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -29,7 +28,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
             simulation.Start(1, 0, new byte[] { 0, 1 });
 
@@ -111,7 +110,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
             simulation.Start(1, 0, new byte[] { 0, 1 });
             
@@ -194,7 +193,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
             simulation.Start(1, 0, new byte[] { 0, 1 });
 
@@ -289,7 +288,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
             simulation.Start(1, 0, new byte[] { 0, 1 });
 
@@ -346,7 +345,7 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
             simulation.Start(1, 0, new byte[] { 0, 1 });
 

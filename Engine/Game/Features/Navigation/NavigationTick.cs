@@ -1,25 +1,21 @@
 ﻿using Entitas;
 using FixMath.NET;
-using Lockstep.Core.Logic.Interfaces.Services;
+using Lockstep.Core.Logic;
 
-namespace Lockstep.Core.Logic.Systems.Game.Navigation
+namespace Lockstep.Game.Features.Navigation
 {
     public class NavigationTick : IExecuteSystem
     {
-        private readonly Contexts _contexts;
-        private readonly INavigationService _navigationService;
+        private readonly Contexts _contexts;                      
 
         public NavigationTick(Contexts contexts, ServiceContainer services)
         {
-            _contexts = contexts;
-            _navigationService = services.Get<INavigationService>();
+            _contexts = contexts;                                        
         }
 
         public void Execute()
-        {
-            //_navigationService.Tick();  
-
-            //All registered (navigable) entities have to be updated, because avoidance could move other entities aside
+        {                                 
+            //All registered (navigable) entities have to be updated (even those without a destination), because avoidance could move them aside
             foreach (var entity in _contexts.game.GetEntities(GameMatcher.AllOf(GameMatcher.LocalId, GameMatcher.Destination)))
             {
                 var velocity = entity.destination.value - entity.position.value;

@@ -1,4 +1,6 @@
-﻿namespace Lockstep.Core.Logic.Interfaces.Services
+﻿using Lockstep.Core.Logic.Interfaces;
+
+namespace Lockstep.Game.Interfaces
 {
     public interface IViewService : IService
     {                                                        

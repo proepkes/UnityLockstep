@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Lockstep.Common.Logging;
 using Lockstep.Core.Logic;
-using Lockstep.Core.Logic.Interfaces;        
+using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic.Systems.Debugging;
+using Lockstep.Game.Features.Cleanup;
+using Lockstep.Game.Features.Input;
+using Lockstep.Game.Features.Navigation;
 
 namespace Lockstep.Game
 {
@@ -37,8 +41,7 @@ namespace Lockstep.Game
             Services = new ServiceContainer();                    
 
             foreach (var service in services)
-            {
-
+            {                         
                 Services.Register(service);
             }                                          
         }
@@ -52,7 +55,7 @@ namespace Lockstep.Game
             LocalActorId = localActorId;     
 
             _tickDt = 1000f / targetFps;
-            _world = new World(Contexts, Services, allActors);
+            _world = new World(Contexts, Services, allActors, CreateFeatures());
 
             Running = true;
 
@@ -100,6 +103,26 @@ namespace Lockstep.Game
                 _localCommandBuffer.Add(command);
             }
         }
+
+        private Feature[] CreateFeatures()
+        {
+            var input = new Feature("Input");
+            //TODO: Add InputValidationSystem  
+            input.Add(new ExecuteSpawnInput(Contexts, Services));
+            input.Add(new VerifySelectionIdExists(Contexts, Services));
+            input.Add(new ExecuteNavigationInput(Contexts, Services));
+            //TODO: Add CleanupInput that removes input of validated frames (no rollback required => can be removed)
+
+
+            var navigation = new Feature("Navigation");                      
+            navigation.Add(new NavigationTick(Contexts, Services));         
+
+            var cleanup = new Feature("Cleanup");
+            cleanup.Add(new RemoveDestroyedEntitiesFromView(Contexts, Services));
+
+            return new[] {input, navigation, cleanup};
+        }
+
         
         private void ProcessInputQueue()
         {

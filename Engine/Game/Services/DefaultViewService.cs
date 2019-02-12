@@ -1,4 +1,4 @@
-﻿using Lockstep.Core.Logic.Interfaces.Services;
+﻿using Lockstep.Game.Interfaces;
 
 namespace Lockstep.Game.Services
 {

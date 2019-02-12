@@ -5,8 +5,7 @@ using System.Reflection;
 using Lockstep.Core.Logic;               
 using Lockstep.Core.Logic.Serialization.Utils;       
 using Lockstep.Game;
-using Lockstep.Game.Services;
-using Lockstep.Game.Services.Navigation;
+using Lockstep.Game.Services;                       
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -51,7 +50,7 @@ namespace Test
                 log = GameLog.ReadFrom(stream);
             }
 
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService(), new DefaultNavigationService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
             simulation.Start(1, log.LocalActorId, log.AllActorIds);
 
             for (uint i = 0; i < tick; i++)

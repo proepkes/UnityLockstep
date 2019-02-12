@@ -21,13 +21,12 @@ public static class GameComponentsLookup {
     public const int LocalId = 10;
     public const int MaxSpeed = 11;
     public const int Navigable = 12;
-    public const int New = 13;
-    public const int Position = 14;
-    public const int Team = 15;
-    public const int Velocity = 16;
-    public const int PositionListener = 17;
+    public const int Position = 13;
+    public const int Team = 14;
+    public const int Velocity = 15;
+    public const int PositionListener = 16;
 
-    public const int TotalComponents = 18;
+    public const int TotalComponents = 17;
 
     public static readonly string[] componentNames = {
         "DestinationListener",
@@ -43,7 +42,6 @@ public static class GameComponentsLookup {
         "LocalId",
         "MaxSpeed",
         "Navigable",
-        "New",
         "Position",
         "Team",
         "Velocity",
@@ -64,7 +62,6 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.State.Game.LocalIdComponent),
         typeof(Lockstep.Core.State.Game.MaxSpeedComponent),
         typeof(Lockstep.Core.State.Game.NavigableComponent),
-        typeof(Lockstep.Core.State.Game.NewComponent),
         typeof(Lockstep.Core.State.Game.PositionComponent),
         typeof(Lockstep.Core.State.Game.TeamComponent),
         typeof(Lockstep.Core.State.Game.VelocityComponent),

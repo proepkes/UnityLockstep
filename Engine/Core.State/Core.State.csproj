@@ -69,7 +69,6 @@
     <Compile Include="Generated\Game\Components\GameLocalIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameMaxSpeedComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNavigableComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameNewComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionComponent.cs" />
     <Compile Include="Generated\Game\Components\GameTeamComponent.cs" />
     <Compile Include="Generated\Game\Components\GameVelocityComponent.cs" />
@@ -163,7 +162,6 @@
     <Compile Include="Game\LocalIdComponent.cs" />
     <Compile Include="Game\MaxSpeedComponent.cs" />
     <Compile Include="Game\NavigableComponent.cs" />
-    <Compile Include="Game\NewComponent.cs" />
     <Compile Include="Game\PositionComponent.cs" />
     <Compile Include="Game\TeamComponent.cs" />
     <Compile Include="Game\VelocityComponent.cs" />

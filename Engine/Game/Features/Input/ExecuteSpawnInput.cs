@@ -2,9 +2,10 @@
 using BEPUutilities;
 using Entitas;
 using Lockstep.Common.Logging;
-using Lockstep.Core.Logic.Interfaces.Services;
+using Lockstep.Core.Logic;
+using Lockstep.Game.Interfaces;
 
-namespace Lockstep.Core.Logic.Systems.Input
+namespace Lockstep.Game.Features.Input
 {
     public class ExecuteSpawnInput : IExecuteSystem
     {                                              
@@ -38,9 +39,8 @@ namespace Lockstep.Core.Logic.Systems.Input
                 var actor = _actorContext.GetEntityWithId(input.actorId.value);
                 var nextEntityId = actor.entityCount.value;
 
-                var e = _gameContext.CreateEntity();
+                var e = _gameContext.CreateEntity();        
 
-                e.isNew = true;
                 Log.Trace(this, actor.id.value + " -> " + nextEntityId);
 
                 //composite primary key

@@ -14,7 +14,7 @@ namespace Lockstep.Core.Logic
                                                          
         private readonly WorldSystems _systems;  
 
-        public World(Contexts contexts, ServiceContainer services, IEnumerable<byte> actorIds)
+        public World(Contexts contexts, ServiceContainer services, IEnumerable<byte> actorIds, params Feature[] features)
         {
             Contexts = contexts;                  
 
@@ -23,7 +23,7 @@ namespace Lockstep.Core.Logic
                 Contexts.actor.CreateEntity().AddId(id);
             }
 
-            _systems = new WorldSystems(Contexts, services);
+            _systems = new WorldSystems(Contexts, services, features);
             _systems.Initialize();
         }
 

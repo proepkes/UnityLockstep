@@ -1,6 +1,7 @@
 ﻿using BEPUutilities;
+using Lockstep.Core.Logic.Interfaces;
 
-namespace Lockstep.Core.Logic.Interfaces.Services
+namespace Lockstep.Game.Interfaces
 {
     public interface IGridService : IService
     {
