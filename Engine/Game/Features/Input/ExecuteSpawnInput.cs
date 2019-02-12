@@ -2,7 +2,6 @@
 using BEPUutilities;
 using Entitas;
 using Lockstep.Common.Logging;
-using Lockstep.Core.Logic;
 using Lockstep.Game.Interfaces;
 
 namespace Lockstep.Game.Features.Input

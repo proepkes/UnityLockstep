@@ -1,8 +1,4 @@
-﻿using System;        
-using BEPUutilities;
-using Lockstep.Core.Logic;
-using Moq;           
-using Xunit;
+﻿using System;
 using Xunit.Abstractions;
 
 namespace Test

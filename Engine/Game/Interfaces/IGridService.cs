@@ -1,5 +1,4 @@
 ﻿using BEPUutilities;
-using Lockstep.Core.Logic.Interfaces;
 
 namespace Lockstep.Game.Interfaces
 {

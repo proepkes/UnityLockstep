@@ -1,5 +1,4 @@
-﻿using Entitas;
-using Lockstep.Core.Logic.Systems.Actor;
+﻿using Lockstep.Core.Logic.Systems.Actor;
 using Lockstep.Core.Logic.Systems.Debugging;      
 using Lockstep.Core.Logic.Systems.GameState;            
 

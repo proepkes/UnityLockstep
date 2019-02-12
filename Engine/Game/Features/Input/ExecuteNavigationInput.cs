@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Entitas;
 using Lockstep.Common.Logging;
-using Lockstep.Core.Logic;
 
 namespace Lockstep.Game.Features.Input
 {

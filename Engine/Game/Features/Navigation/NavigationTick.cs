@@ -1,6 +1,5 @@
 ﻿using Entitas;
 using FixMath.NET;
-using Lockstep.Core.Logic;
 
 namespace Lockstep.Game.Features.Navigation
 {

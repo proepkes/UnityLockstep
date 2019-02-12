@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Entitas;
-using Lockstep.Core.Logic;
 using Lockstep.Game.Interfaces;
 
 namespace Lockstep.Game.Features.Cleanup
