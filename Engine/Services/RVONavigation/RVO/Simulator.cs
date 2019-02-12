@@ -71,13 +71,13 @@ namespace Lockstep.Services.RVONavigation.RVO
             Agent agent = new Agent
             {             
                 maxNeighbors_ = defaultAgent_.maxNeighbors_,
-                maxSpeed_ = defaultAgent_.maxSpeed_,
+                MaxSpeed = defaultAgent_.MaxSpeed,
                 neighborDist_ = defaultAgent_.neighborDist_,
-                position_ = position,
+                Position = position,
                 radius_ = defaultAgent_.radius_,
                 timeHorizon_ = defaultAgent_.timeHorizon_,
                 timeHorizonObst_ = defaultAgent_.timeHorizonObst_,
-                velocity_ = defaultAgent_.velocity_
+                Velocity = defaultAgent_.Velocity
             };
             agents_.Add(id, agent);  
         }
@@ -309,12 +309,12 @@ namespace Lockstep.Services.RVONavigation.RVO
             }
 
             defaultAgent_.maxNeighbors_ = maxNeighbors;
-            defaultAgent_.maxSpeed_ = maxSpeed;
+            defaultAgent_.MaxSpeed = maxSpeed;
             defaultAgent_.neighborDist_ = neighborDist;
             defaultAgent_.radius_ = radius;
             defaultAgent_.timeHorizon_ = timeHorizon;
             defaultAgent_.timeHorizonObst_ = timeHorizonObst;
-            defaultAgent_.velocity_ = velocity;
+            defaultAgent_.Velocity = velocity;
         }
 
         /**

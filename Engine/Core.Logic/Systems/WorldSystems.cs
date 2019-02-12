@@ -7,11 +7,11 @@ namespace Lockstep.Core.Logic.Systems
 {
     public sealed class WorldSystems : Feature
     {
-        public WorldSystems(Contexts contexts, ServiceContainer services, params Feature[] features)
+        public WorldSystems(Contexts contexts, params Feature[] features)
         {
             Add(new InitializeEntityCount(contexts));
 
-            Add(new OnNewPredictionCreateBackup(contexts, services));
+            Add(new OnNewPredictionCreateBackup(contexts));
 
             foreach (var feature in features)
             {
@@ -20,14 +20,13 @@ namespace Lockstep.Core.Logic.Systems
 
             Add(new GameEventSystems(contexts));
 
-            Add(new CalculateHashCode(contexts, services));     
+            Add(new CalculateHashCode(contexts));   
 
-            Add(new IncrementTick(contexts));
-
-            Add(new VerifyNoDuplicateBackups(contexts, services));              
+            Add(new VerifyNoDuplicateBackups(contexts));              
 
             Add(new DestroyDestroyedGameSystem(contexts));
 
+            Add(new IncrementTick(contexts));
         }      
     }
 }

@@ -41,15 +41,15 @@ namespace Lockstep.Services.RVONavigation.RVO
      */
     internal class Agent
     {
-        internal IList<KeyValuePair<Fix64, Agent>> agentNeighbors_ = new List<KeyValuePair<Fix64, Agent>>();
-        internal IList<KeyValuePair<Fix64, Obstacle>> obstacleNeighbors_ = new List<KeyValuePair<Fix64, Obstacle>>();
-        internal IList<Line> orcaLines_ = new List<Line>();
-        internal Vector2 position_;
-        internal Vector2 prefVelocity_;
+        internal readonly IList<KeyValuePair<Fix64, Agent>> AgentNeighbors = new List<KeyValuePair<Fix64, Agent>>();
+        internal readonly IList<KeyValuePair<Fix64, Obstacle>> ObstacleNeighbors = new List<KeyValuePair<Fix64, Obstacle>>();
+        internal readonly IList<Line> OrcaLines = new List<Line>();
+        internal Vector2 Position;
+        internal Vector2 PrefVelocity;
         internal Vector2 Destination;
-        internal Vector2 velocity_;
+        internal Vector2 Velocity;
         internal int maxNeighbors_ = 0;
-        internal Fix64 maxSpeed_ = Fix64.Zero;
+        internal Fix64 MaxSpeed = Fix64.Zero;
         internal Fix64 neighborDist_ = Fix64.Zero;
         internal Fix64 radius_ = Fix64.Zero;
         internal Fix64 timeHorizon_ = Fix64.Zero;
@@ -59,14 +59,14 @@ namespace Lockstep.Services.RVONavigation.RVO
 
         internal void CalculatePrefVelocity()
         {           
-            var goalVector = Destination - position_;
+            var goalVector = Destination - Position;
 
             if (RVOMath.absSq(goalVector) > Fix64.One)
             {
                 goalVector = RVOMath.normalize(goalVector);
             }
 
-            prefVelocity_ = goalVector;     
+            PrefVelocity = goalVector;     
         }
 
         /**
@@ -74,11 +74,11 @@ namespace Lockstep.Services.RVONavigation.RVO
          */
         internal void computeNeighbors()
         {
-            obstacleNeighbors_.Clear();
-            Fix64 rangeSq = RVOMath.sqr(timeHorizonObst_ * maxSpeed_ + radius_);
+            ObstacleNeighbors.Clear();
+            Fix64 rangeSq = RVOMath.sqr(timeHorizonObst_ * MaxSpeed + radius_);
             Simulator.Instance.kdTree_.computeObstacleNeighbors(this, rangeSq);
 
-            agentNeighbors_.Clear();
+            AgentNeighbors.Clear();
 
             if (maxNeighbors_ > 0)
             {
@@ -92,19 +92,19 @@ namespace Lockstep.Services.RVONavigation.RVO
          */
         internal void computeNewVelocity()
         {
-            orcaLines_.Clear();
+            OrcaLines.Clear();
 
             Fix64 invTimeHorizonObst = Fix64.One / timeHorizonObst_;
 
             /* Create obstacle ORCA lines. */
-            for (int i = 0; i < obstacleNeighbors_.Count; ++i)
+            for (int i = 0; i < ObstacleNeighbors.Count; ++i)
             {
 
-                Obstacle obstacle1 = obstacleNeighbors_[i].Value;
+                Obstacle obstacle1 = ObstacleNeighbors[i].Value;
                 Obstacle obstacle2 = obstacle1.next_;
 
-                Vector2 relativePosition1 = obstacle1.point_ - position_;
-                Vector2 relativePosition2 = obstacle2.point_ - position_;
+                Vector2 relativePosition1 = obstacle1.point_ - Position;
+                Vector2 relativePosition2 = obstacle2.point_ - Position;
 
                 /*
                  * Check if velocity obstacle of obstacle is already taken care
@@ -112,9 +112,9 @@ namespace Lockstep.Services.RVONavigation.RVO
                  */
                 bool alreadyCovered = false;
 
-                for (int j = 0; j < orcaLines_.Count; ++j)
+                for (int j = 0; j < OrcaLines.Count; ++j)
                 {
-                    if (RVOMath.det(invTimeHorizonObst * relativePosition1 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_ >= -RVOMath.RVO_EPSILON && RVOMath.det(invTimeHorizonObst * relativePosition2 - orcaLines_[j].point, orcaLines_[j].direction) - invTimeHorizonObst * radius_ >= -RVOMath.RVO_EPSILON)
+                    if (RVOMath.det(invTimeHorizonObst * relativePosition1 - OrcaLines[j].point, OrcaLines[j].direction) - invTimeHorizonObst * radius_ >= -RVOMath.RVO_EPSILON && RVOMath.det(invTimeHorizonObst * relativePosition2 - OrcaLines[j].point, OrcaLines[j].direction) - invTimeHorizonObst * radius_ >= -RVOMath.RVO_EPSILON)
                     {
                         alreadyCovered = true;
 
@@ -146,7 +146,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     {
                         line.point = new Vector2(Fix64.Zero, Fix64.Zero);
                         line.direction = RVOMath.normalize(new Vector2(-relativePosition1.Y, relativePosition1.X));
-                        orcaLines_.Add(line);
+                        OrcaLines.Add(line);
                     }
 
                     continue;
@@ -161,7 +161,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     {
                         line.point = new Vector2(Fix64.Zero, Fix64.Zero);
                         line.direction = RVOMath.normalize(new Vector2(-relativePosition2.Y, relativePosition2.X));
-                        orcaLines_.Add(line);
+                        OrcaLines.Add(line);
                     }
 
                     continue;
@@ -171,7 +171,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     /* Collision with obstacle segment. */
                     line.point = new Vector2(Fix64.Zero, Fix64.Zero);
                     line.direction = -obstacle1.direction_;
-                    orcaLines_.Add(line);
+                    OrcaLines.Add(line);
 
                     continue;
                 }
@@ -272,36 +272,36 @@ namespace Lockstep.Services.RVONavigation.RVO
                 }
 
                 /* Compute cut-off centers. */
-                Vector2 leftCutOff = invTimeHorizonObst * (obstacle1.point_ - position_);
-                Vector2 rightCutOff = invTimeHorizonObst * (obstacle2.point_ - position_);
+                Vector2 leftCutOff = invTimeHorizonObst * (obstacle1.point_ - Position);
+                Vector2 rightCutOff = invTimeHorizonObst * (obstacle2.point_ - Position);
                 Vector2 cutOffVector = rightCutOff - leftCutOff;
 
                 /* Project current velocity on velocity obstacle. */
 
                 /* Check if current velocity is projected on cutoff circles. */
-                Fix64 t = obstacle1 == obstacle2 ? 0.5m : Vector2.Dot((velocity_ - leftCutOff), cutOffVector) / RVOMath.absSq(cutOffVector);
-                Fix64 tLeft = Vector2.Dot((velocity_ - leftCutOff), leftLegDirection);
-                Fix64 tRight = Vector2.Dot((velocity_ - rightCutOff), rightLegDirection);
+                Fix64 t = obstacle1 == obstacle2 ? 0.5m : Vector2.Dot((Velocity - leftCutOff), cutOffVector) / RVOMath.absSq(cutOffVector);
+                Fix64 tLeft = Vector2.Dot((Velocity - leftCutOff), leftLegDirection);
+                Fix64 tRight = Vector2.Dot((Velocity - rightCutOff), rightLegDirection);
 
                 if ((t < Fix64.Zero && tLeft < Fix64.Zero) || (obstacle1 == obstacle2 && tLeft < Fix64.Zero && tRight < Fix64.Zero))
                 {
                     /* Project on left cut-off circle. */
-                    Vector2 unitW = RVOMath.normalize(velocity_ - leftCutOff);
+                    Vector2 unitW = RVOMath.normalize(Velocity - leftCutOff);
 
                     line.direction = new Vector2(unitW.Y, -unitW.X);
                     line.point = leftCutOff + radius_ * invTimeHorizonObst * unitW;
-                    orcaLines_.Add(line);
+                    OrcaLines.Add(line);
 
                     continue;
                 }
                 else if (t > Fix64.One && tRight < Fix64.Zero)
                 {
                     /* Project on right cut-off circle. */
-                    Vector2 unitW = RVOMath.normalize(velocity_ - rightCutOff);
+                    Vector2 unitW = RVOMath.normalize(Velocity - rightCutOff);
 
                     line.direction = new Vector2(unitW.Y, -unitW.X);
                     line.point = rightCutOff + radius_ * invTimeHorizonObst * unitW;
-                    orcaLines_.Add(line);
+                    OrcaLines.Add(line);
 
                     continue;
                 }
@@ -310,16 +310,16 @@ namespace Lockstep.Services.RVONavigation.RVO
                  * Project on left leg, right leg, or cut-off line, whichever is
                  * closest to velocity.
                  */
-                Fix64 distSqCutoff = (t < Fix64.Zero || t > Fix64.One || obstacle1 == obstacle2) ? Fix64.MaxValue : RVOMath.absSq(velocity_ - (leftCutOff + t * cutOffVector));
-                Fix64 distSqLeft = tLeft < Fix64.Zero ? Fix64.MaxValue : RVOMath.absSq(velocity_ - (leftCutOff + tLeft * leftLegDirection));
-                Fix64 distSqRight = tRight < Fix64.Zero ? Fix64.MaxValue : RVOMath.absSq(velocity_ - (rightCutOff + tRight * rightLegDirection));
+                Fix64 distSqCutoff = (t < Fix64.Zero || t > Fix64.One || obstacle1 == obstacle2) ? Fix64.MaxValue : RVOMath.absSq(Velocity - (leftCutOff + t * cutOffVector));
+                Fix64 distSqLeft = tLeft < Fix64.Zero ? Fix64.MaxValue : RVOMath.absSq(Velocity - (leftCutOff + tLeft * leftLegDirection));
+                Fix64 distSqRight = tRight < Fix64.Zero ? Fix64.MaxValue : RVOMath.absSq(Velocity - (rightCutOff + tRight * rightLegDirection));
 
                 if (distSqCutoff <= distSqLeft && distSqCutoff <= distSqRight)
                 {
                     /* Project on cut-off line. */
                     line.direction = -obstacle1.direction_;
                     line.point = leftCutOff + radius_ * invTimeHorizonObst * new Vector2(-line.direction.Y, line.direction.X);
-                    orcaLines_.Add(line);
+                    OrcaLines.Add(line);
 
                     continue;
                 }
@@ -334,7 +334,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                     line.direction = leftLegDirection;
                     line.point = leftCutOff + radius_ * invTimeHorizonObst * new Vector2(-line.direction.Y, line.direction.X);
-                    orcaLines_.Add(line);
+                    OrcaLines.Add(line);
 
                     continue;
                 }
@@ -347,20 +347,20 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                 line.direction = -rightLegDirection;
                 line.point = rightCutOff + radius_ * invTimeHorizonObst * new Vector2(-line.direction.Y, line.direction.X);
-                orcaLines_.Add(line);
+                OrcaLines.Add(line);
             }
 
-            int numObstLines = orcaLines_.Count;
+            int numObstLines = OrcaLines.Count;
 
             Fix64 invTimeHorizon = Fix64.One / timeHorizon_;
 
             /* Create agent ORCA lines. */
-            for (int i = 0; i < agentNeighbors_.Count; ++i)
+            for (int i = 0; i < AgentNeighbors.Count; ++i)
             {
-                Agent other = agentNeighbors_[i].Value;
+                Agent other = AgentNeighbors[i].Value;
 
-                Vector2 relativePosition = other.position_ - position_;
-                Vector2 relativeVelocity = velocity_ - other.velocity_;
+                Vector2 relativePosition = other.Position - Position;
+                Vector2 relativeVelocity = Velocity - other.Velocity;
                 Fix64 distSq = RVOMath.absSq(relativePosition);
                 Fix64 combinedRadius = radius_ + other.radius_;
                 Fix64 combinedRadiusSq = RVOMath.sqr(combinedRadius);
@@ -421,15 +421,15 @@ namespace Lockstep.Services.RVONavigation.RVO
                     u = (combinedRadius * invTimeStep - wLength) * unitW;
                 }
 
-                line.point = velocity_ + 0.5m * u;
-                orcaLines_.Add(line);
+                line.point = Velocity + 0.5m * u;
+                OrcaLines.Add(line);
             }
 
-            int lineFail = linearProgram2(orcaLines_, maxSpeed_, prefVelocity_, false, ref newVelocity_);
+            int lineFail = linearProgram2(OrcaLines, MaxSpeed, PrefVelocity, false, ref newVelocity_);
 
-            if (lineFail < orcaLines_.Count)
+            if (lineFail < OrcaLines.Count)
             {
-                linearProgram3(orcaLines_, numObstLines, lineFail, maxSpeed_, ref newVelocity_);
+                linearProgram3(OrcaLines, numObstLines, lineFail, MaxSpeed, ref newVelocity_);
             }
         }
 
@@ -444,28 +444,28 @@ namespace Lockstep.Services.RVONavigation.RVO
         {
             if (this != agent)
             {
-                Fix64 distSq = RVOMath.absSq(position_ - agent.position_);
+                Fix64 distSq = RVOMath.absSq(Position - agent.Position);
 
                 if (distSq < rangeSq)
                 {
-                    if (agentNeighbors_.Count < maxNeighbors_)
+                    if (AgentNeighbors.Count < maxNeighbors_)
                     {
-                        agentNeighbors_.Add(new KeyValuePair<Fix64, Agent>(distSq, agent));
+                        AgentNeighbors.Add(new KeyValuePair<Fix64, Agent>(distSq, agent));
                     }
 
-                    int i = agentNeighbors_.Count - 1;
+                    int i = AgentNeighbors.Count - 1;
 
-                    while (i != 0 && distSq < agentNeighbors_[i - 1].Key)
+                    while (i != 0 && distSq < AgentNeighbors[i - 1].Key)
                     {
-                        agentNeighbors_[i] = agentNeighbors_[i - 1];
+                        AgentNeighbors[i] = AgentNeighbors[i - 1];
                         --i;
                     }
 
-                    agentNeighbors_[i] = new KeyValuePair<Fix64, Agent>(distSq, agent);
+                    AgentNeighbors[i] = new KeyValuePair<Fix64, Agent>(distSq, agent);
 
-                    if (agentNeighbors_.Count == maxNeighbors_)
+                    if (AgentNeighbors.Count == maxNeighbors_)
                     {
-                        rangeSq = agentNeighbors_[agentNeighbors_.Count - 1].Key;
+                        rangeSq = AgentNeighbors[AgentNeighbors.Count - 1].Key;
                     }
                 }
             }
@@ -483,20 +483,20 @@ namespace Lockstep.Services.RVONavigation.RVO
         {
             Obstacle nextObstacle = obstacle.next_;
 
-            Fix64 distSq = RVOMath.distSqPointLineSegment(obstacle.point_, nextObstacle.point_, position_);
+            Fix64 distSq = RVOMath.distSqPointLineSegment(obstacle.point_, nextObstacle.point_, Position);
 
             if (distSq < rangeSq)
             {
-                obstacleNeighbors_.Add(new KeyValuePair<Fix64, Obstacle>(distSq, obstacle));
+                ObstacleNeighbors.Add(new KeyValuePair<Fix64, Obstacle>(distSq, obstacle));
 
-                int i = obstacleNeighbors_.Count - 1;
+                int i = ObstacleNeighbors.Count - 1;
 
-                while (i != 0 && distSq < obstacleNeighbors_[i - 1].Key)
+                while (i != 0 && distSq < ObstacleNeighbors[i - 1].Key)
                 {
-                    obstacleNeighbors_[i] = obstacleNeighbors_[i - 1];
+                    ObstacleNeighbors[i] = ObstacleNeighbors[i - 1];
                     --i;
                 }
-                obstacleNeighbors_[i] = new KeyValuePair<Fix64, Obstacle>(distSq, obstacle);
+                ObstacleNeighbors[i] = new KeyValuePair<Fix64, Obstacle>(distSq, obstacle);
             }
         }
 
@@ -506,7 +506,7 @@ namespace Lockstep.Services.RVONavigation.RVO
          */
         internal void update()
         {
-            velocity_ = newVelocity_;
+            Velocity = newVelocity_;
             //position_ += velocity_ * Simulator.Instance.timeStep_;
         }
 

@@ -17,7 +17,7 @@ namespace Lockstep.Core.Logic.Systems.GameState
         private readonly IGroup<ActorEntity> _activeActors;
         private readonly IGroup<GameEntity> _activeEntities;
 
-        public OnNewPredictionCreateBackup(Contexts contexts, ServiceContainer serviceContainer) : base(contexts.gameState)
+        public OnNewPredictionCreateBackup(Contexts contexts) : base(contexts.gameState)
         {
             _gameContext = contexts.game;
             _actorContext = contexts.actor;

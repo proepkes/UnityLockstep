@@ -33,7 +33,7 @@ namespace Lockstep.Services.RVONavigation
         {
             foreach (var agentId in positions.Keys)
             {
-                Simulator.Instance.agents_[agentId].position_ = positions[agentId];
+                Simulator.Instance.agents_[agentId].Position = positions[agentId];
             }
         }
 
@@ -49,7 +49,7 @@ namespace Lockstep.Services.RVONavigation
 
         public Dictionary<uint, Vector2> GetAgentVelocities()
         {
-            return Simulator.Instance.agents_.ToDictionary(pair => pair.Key, pair => pair.Value.velocity_);
+            return Simulator.Instance.agents_.ToDictionary(pair => pair.Key, pair => pair.Value.Velocity);
         }
     }
 }

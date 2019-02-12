@@ -2,18 +2,16 @@
 using Entitas;
 using Lockstep.Common.Logging;
 
-namespace Lockstep.Core.Logic.Systems.Debugging
+namespace Lockstep.Game.Features.Input
 {
     public class VerifySelectionIdExists : IExecuteSystem
-    {
-        private readonly ServiceContainer serviceContainer;                        
+    {                       
         private readonly GameContext _gameContext;
         private readonly InputContext _inputContext;
         private readonly GameStateContext _gameStateContext;
 
-        public VerifySelectionIdExists(Contexts contexts, ServiceContainer serviceContainer) 
-        {
-            this.serviceContainer = serviceContainer;                                    
+        public VerifySelectionIdExists(Contexts contexts) 
+        {                                
             _gameContext = contexts.game;
             _inputContext = contexts.input;
             _gameStateContext = contexts.gameState;

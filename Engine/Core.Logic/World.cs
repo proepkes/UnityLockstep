@@ -14,7 +14,7 @@ namespace Lockstep.Core.Logic
                                                          
         private readonly WorldSystems _systems;  
 
-        public World(Contexts contexts, ServiceContainer services, IEnumerable<byte> actorIds, params Feature[] features)
+        public World(Contexts contexts, IEnumerable<byte> actorIds, params Feature[] features)
         {
             Contexts = contexts;                  
 
@@ -23,7 +23,7 @@ namespace Lockstep.Core.Logic
                 Contexts.actor.CreateEntity().AddId(id);
             }
 
-            _systems = new WorldSystems(Contexts, services, features);
+            _systems = new WorldSystems(Contexts, features);
             _systems.Initialize();
         }
 
@@ -137,7 +137,7 @@ namespace Lockstep.Core.Logic
 
             //TODO: restore locally destroyed entities   
             
-            //Cleanup game-entities that are marked as destroyed. Removes, inter alia, the game-entities from external services.
+            //Cleanup game-entities that are marked as destroyed
             _systems.Cleanup();
 
             Contexts.gameState.ReplaceTick(resultTick);

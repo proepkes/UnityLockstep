@@ -55,7 +55,7 @@ namespace Lockstep.Game
             LocalActorId = localActorId;     
 
             _tickDt = 1000f / targetFps;
-            _world = new World(Contexts, Services, allActors, CreateFeatures());
+            _world = new World(Contexts, allActors, CreateFeatures());
 
             Running = true;
 
@@ -109,7 +109,7 @@ namespace Lockstep.Game
             var input = new Feature("Input");
             //TODO: Add InputValidationSystem  
             input.Add(new ExecuteSpawnInput(Contexts, Services));
-            input.Add(new VerifySelectionIdExists(Contexts, Services));
+            input.Add(new VerifySelectionIdExists(Contexts));
             input.Add(new ExecuteNavigationInput(Contexts, Services));
             //TODO: Add CleanupInput that removes input of validated frames (no rollback required => can be removed)
 

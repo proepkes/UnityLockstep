@@ -26,10 +26,17 @@ namespace Test
         [Fact]                      
         public void TestDump()
         {
-            //TestFileDump("-240158465629");    
+            TestFileDump("-240158465629");
             TestFileDump("58013408818");
         }
 
+        /// <summary>
+        /// Runs the simulation twice:
+        /// First time including rollbacks as they appeared at runtime
+        /// Second time without rollbacks with a pre-filled command-queue
+        /// At the end the hashcode of both simulations have to match
+        /// </summary>
+        /// <param name="fileName"></param>
         private void TestFileDump(string fileName)
         {
             var contexts = new Contexts();   

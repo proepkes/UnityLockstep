@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Lockstep.Core.Logic.Interfaces;
 
-namespace Lockstep.Core.Logic
+namespace Lockstep.Game
 {
     public class ServiceContainer
     {

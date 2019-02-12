@@ -8,7 +8,7 @@ namespace Lockstep.Core.Logic.Systems.GameState
 
         private readonly GameStateContext _gameStateContext;
 
-        public CalculateHashCode(Contexts contexts, ServiceContainer serviceContainer)
+        public CalculateHashCode(Contexts contexts)
         {                                                                                 
             _gameStateContext = contexts.gameState;
 

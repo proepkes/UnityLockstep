@@ -5,13 +5,11 @@ using Lockstep.Common.Logging;
 namespace Lockstep.Core.Logic.Systems.Debugging
 {
     public class VerifyNoDuplicateBackups : IExecuteSystem
-    {
-        private readonly ServiceContainer serviceContainer;
+    {                                                       
         private readonly IGroup<GameEntity> _backups;
 
-        public VerifyNoDuplicateBackups(Contexts contexts, ServiceContainer serviceContainer)
-        {
-            this.serviceContainer = serviceContainer;
+        public VerifyNoDuplicateBackups(Contexts contexts)
+        {                                                 
             _backups = contexts.game.GetGroup(GameMatcher.Backup);
         }
         public void Execute()

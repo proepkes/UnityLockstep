@@ -264,15 +264,15 @@ namespace Lockstep.Services.RVONavigation.RVO
         {
             agentTree_[node].begin_ = begin;
             agentTree_[node].end_ = end;
-            agentTree_[node].minX_ = agentTree_[node].maxX_ = agents_[begin].position_.X;
-            agentTree_[node].minY_ = agentTree_[node].maxY_ = agents_[begin].position_.Y;
+            agentTree_[node].minX_ = agentTree_[node].maxX_ = agents_[begin].Position.X;
+            agentTree_[node].minY_ = agentTree_[node].maxY_ = agents_[begin].Position.Y;
 
             for (int i = begin + 1; i < end; ++i)
             {
-                agentTree_[node].maxX_ = RVOMath.Max(agentTree_[node].maxX_, agents_[i].position_.X);
-                agentTree_[node].minX_ = RVOMath.Min(agentTree_[node].minX_, agents_[i].position_.X);
-                agentTree_[node].maxY_ = RVOMath.Max(agentTree_[node].maxY_, agents_[i].position_.Y);
-                agentTree_[node].minY_ = RVOMath.Min(agentTree_[node].minY_, agents_[i].position_.Y);
+                agentTree_[node].maxX_ = RVOMath.Max(agentTree_[node].maxX_, agents_[i].Position.X);
+                agentTree_[node].minX_ = RVOMath.Min(agentTree_[node].minX_, agents_[i].Position.X);
+                agentTree_[node].maxY_ = RVOMath.Max(agentTree_[node].maxY_, agents_[i].Position.Y);
+                agentTree_[node].minY_ = RVOMath.Min(agentTree_[node].minY_, agents_[i].Position.Y);
             }
 
             if (end - begin > MAX_LEAF_SIZE)
@@ -286,12 +286,12 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                 while (left < right)
                 {
-                    while (left < right && (isVertical ? agents_[left].position_.X : agents_[left].position_.Y) < splitValue)
+                    while (left < right && (isVertical ? agents_[left].Position.X : agents_[left].Position.Y) < splitValue)
                     {
                         ++left;
                     }
 
-                    while (right > left && (isVertical ? agents_[right - 1].position_.X : agents_[right - 1].position_.Y) >= splitValue)
+                    while (right > left && (isVertical ? agents_[right - 1].Position.X : agents_[right - 1].Position.Y) >= splitValue)
                     {
                         --right;
                     }
@@ -500,8 +500,8 @@ namespace Lockstep.Services.RVONavigation.RVO
             }
             else
             {
-                Fix64 distSqLeft = RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].left_].minX_ - agent.position_.X)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position_.X - agentTree_[agentTree_[node].left_].maxX_)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].left_].minY_ - agent.position_.Y)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position_.Y - agentTree_[agentTree_[node].left_].maxY_));
-                Fix64 distSqRight = RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].right_].minX_ - agent.position_.X)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position_.X - agentTree_[agentTree_[node].right_].maxX_)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].right_].minY_ - agent.position_.Y)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position_.Y - agentTree_[agentTree_[node].right_].maxY_));
+                Fix64 distSqLeft = RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].left_].minX_ - agent.Position.X)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.Position.X - agentTree_[agentTree_[node].left_].maxX_)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].left_].minY_ - agent.Position.Y)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.Position.Y - agentTree_[agentTree_[node].left_].maxY_));
+                Fix64 distSqRight = RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].right_].minX_ - agent.Position.X)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.Position.X - agentTree_[agentTree_[node].right_].maxX_)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].right_].minY_ - agent.Position.Y)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.Position.Y - agentTree_[agentTree_[node].right_].maxY_));
 
                 if (distSqLeft < distSqRight)
                 {
@@ -547,7 +547,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                 Obstacle obstacle1 = node.obstacle_;
                 Obstacle obstacle2 = obstacle1.next_;
 
-                Fix64 agentLeftOfLine = RVOMath.leftOf(obstacle1.point_, obstacle2.point_, agent.position_);
+                Fix64 agentLeftOfLine = RVOMath.leftOf(obstacle1.point_, obstacle2.point_, agent.Position);
 
                 queryObstacleTreeRecursive(agent, rangeSq, agentLeftOfLine >= Fix64.Zero ? node.left_ : node.right_);
 
