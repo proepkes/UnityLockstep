@@ -35,6 +35,8 @@ namespace Lockstep.Network.Server
         /// </summary>
         private readonly Dictionary<ulong, long> _hashCodes = new Dictionary<ulong, long>();
 
+        private uint inputMessageCounter = 0;
+
         public Room(IServer server, int size)
         {
             _server = server;
@@ -73,9 +75,11 @@ namespace Lockstep.Network.Server
             switch (messageTag)
             {
                 case MessageTag.Input:
+                    ++inputMessageCounter;
+
                     var clientTick = reader.GetUInt();
                     var commandsCount = reader.GetInt();
-                    if (commandsCount > 0)
+                    if (commandsCount > 0 || inputMessageCounter % 8 == 0)
                     {
                         _server.Distribute(clientId, data);
                     } 

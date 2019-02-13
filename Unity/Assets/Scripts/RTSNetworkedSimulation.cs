@@ -32,7 +32,10 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         Log.OnMessage += (sender, args) => Debug.Log(args.Message);
 
-        _commandQueue = new NetworkCommandQueue(_client);
+        _commandQueue = new NetworkCommandQueue(_client)
+        {
+            LagCompensation = 3
+        };
         _commandQueue.InitReceived += (sender, init) =>
         {
             AllActorIds = init.AllActors;
@@ -46,15 +49,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     public void DumpGameLog()
     {
-        Stream stream = new FileStream(@"C:\Log\" + Math.Abs(Contexts.sharedInstance.gameState.hashCode.value) + ".bin", FileMode.Create, FileAccess.Write);
-        var serializer = new Serializer();
-        serializer.Put(Contexts.sharedInstance.gameState.hashCode.value);
-        serializer.Put(Contexts.sharedInstance.gameState.tick.value);      
-        stream.Write(serializer.Data, 0, serializer.Length);
-
-        Simulation.GameLog.WriteTo(stream);
-
-        stream.Close();                    
+        Simulation.DumpGameLog(new FileStream(@"C:\Log\" + Math.Abs(Contexts.sharedInstance.gameState.hashCode.value) + ".bin", FileMode.Create, FileAccess.Write));                   
     }
 
     public void Execute(ICommand command)
