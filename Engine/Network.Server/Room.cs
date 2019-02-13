@@ -13,7 +13,7 @@ namespace Lockstep.Network.Server
     /// </summary>
     public class Room
     {
-        private const int TargetFps = 30;
+        private const int TargetFps = 20;
 
         private byte _nextPlayerId;
         private readonly int _size;

@@ -34,7 +34,7 @@ namespace Lockstep.Core.Logic
                 Contexts.gameState.isPredicting = true;
             }
 
-            //Log.Trace(this, "Predict " + Contexts.gameState.tick.value);
+            Log.Trace(this, "Predict " + Contexts.gameState.tick.value);
 
             _systems.Execute();
             _systems.Cleanup();
@@ -47,7 +47,7 @@ namespace Lockstep.Core.Logic
                 Contexts.gameState.isPredicting = false;
             }
 
-            //Log.Trace(this, "Simulate " + Contexts.gameState.tick.value);
+            Log.Trace(this, "Simulate " + Contexts.gameState.tick.value);
 
             _systems.Execute();
             _systems.Cleanup();
@@ -65,7 +65,7 @@ namespace Lockstep.Core.Logic
             var snapshotIndices = Contexts.snapshot.GetEntities(SnapshotMatcher.Tick).Where(entity => entity.tick.value <= tick).Select(entity => entity.tick.value).ToList();
             var resultTick = snapshotIndices.Any() ? snapshotIndices.Max() : 0;
 
-            Log.Trace(this, "Rolling back from " + resultTick + " to " + Contexts.gameState.tick.value);
+            Log.Info(this, "Rolling back from " + resultTick + " to " + Contexts.gameState.tick.value);
 
             /*
              * ====================== Revert actors ======================

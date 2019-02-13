@@ -34,10 +34,8 @@ namespace Test
         [Fact]
         public void TestDumpRVO()
         {
-            TestFileDump(@"RVO\14576300390");
-            TestFileDump(@"RVO\41116227712");
-            TestFileDump(@"RVO\96216903678");
-            TestFileDump(@"RVO\96216904797");
+            TestFileDump(@"RVO\342696725855");
+            //TestFileDump(@"RVO\93654088888");   
         }
 
         /// <summary>
@@ -89,7 +87,7 @@ namespace Test
                 simulation.Update(1000);
             }
 
-            //contexts.gameState.hashCode.value.ShouldBe(hashCode);
+            contexts.gameState.hashCode.value.ShouldBe(hashCode);
 
             TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }

@@ -79,7 +79,7 @@ namespace Lockstep.Game
             {
                 lock (_localCommandBuffer)
                 {
-                    if (_localCommandBuffer.Any())
+                    //if (_localCommandBuffer.Any())
                     {          
                         _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, _localCommandBuffer.ToArray()));
                         _localCommandBuffer.Clear();

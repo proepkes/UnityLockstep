@@ -1,7 +1,8 @@
 ﻿            
 using System;
 using System.Collections;              
-using System.IO;                
+using System.IO;
+using Lockstep.Common.Logging;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;
 using Lockstep.Game;                      
@@ -28,6 +29,8 @@ public class RTSNetworkedSimulation : MonoBehaviour
     private void Awake()
     {                                
         Instance = this;
+
+        Log.OnMessage += (sender, args) => Debug.Log(args.Message);
 
         _commandQueue = new NetworkCommandQueue(_client);
         _commandQueue.InitReceived += (sender, init) =>
