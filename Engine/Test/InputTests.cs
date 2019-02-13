@@ -5,7 +5,7 @@ using Entitas;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;          
 using Lockstep.Game;
-using Lockstep.Game.Services;                
+using Lockstep.Game.DefaultServices;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;

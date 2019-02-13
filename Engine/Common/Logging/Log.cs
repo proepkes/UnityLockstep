@@ -4,7 +4,7 @@ namespace Lockstep.Common.Logging
 {
     public static class Log
     {                                                                                                                                 
-        public static LogSeverity LogSeverityLevel = 0;
+        public static LogSeverity LogSeverityLevel = LogSeverity.Info | LogSeverity.Warn | LogSeverity.Error | LogSeverity.Exception;
 
         public static event EventHandler<LogEventArgs> OnMessage;
 

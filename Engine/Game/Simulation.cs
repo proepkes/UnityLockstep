@@ -63,8 +63,7 @@ namespace Lockstep.Game
             Running = true;
 
             Started?.Invoke(this, EventArgs.Empty);
-        }
-
+        }   
 
         public void Update(float elapsedMilliseconds)
         {
@@ -78,12 +77,9 @@ namespace Lockstep.Game
             while (_accumulatedTime >= _tickDt)
             {
                 lock (_localCommandBuffer)
-                {
-                    //if (_localCommandBuffer.Any())
-                    {          
-                        _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, _localCommandBuffer.ToArray()));
-                        _localCommandBuffer.Clear();
-                    }
+                {            
+                    _commandQueue.Enqueue(new Input(_world.Tick, LocalActorId, _localCommandBuffer.ToArray()));
+                    _localCommandBuffer.Clear();    
 
                     ProcessInputQueue();
 
@@ -105,8 +101,7 @@ namespace Lockstep.Game
             {
                 _localCommandBuffer.Add(command);
             }
-        }
-
+        }          
 
         public void DumpGameLog(Stream outputStream, bool closeStream = true)
         {

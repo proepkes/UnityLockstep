@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Lockstep.Game;
-using Lockstep.Game.Services;              
+using Lockstep.Game.DefaultServices;
 using Shouldly;
 using Xunit.Abstractions;
 

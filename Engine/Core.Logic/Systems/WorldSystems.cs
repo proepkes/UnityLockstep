@@ -21,7 +21,8 @@ namespace Lockstep.Core.Logic.Systems
 
             Add(new CalculateHashCode(contexts));   
 
-            Add(new VerifyNoDuplicateBackups(contexts));              
+            //Performance-hit, only use for serious debugging
+            //Add(new VerifyNoDuplicateBackups(contexts));              
 
             Add(new DestroyDestroyedGameSystem(contexts));
 

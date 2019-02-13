@@ -80,7 +80,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
                         mushroomObject.SetMaterial(ResourceCache.GetMaterial("Materials/Mushroom.xml"));
                     }
 
-                    simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
+                    simulation.Start(init.SimulationSpeed, init.ActorID, init.AllActors);
                 };
 
             simulation = new Simulation(Contexts.sharedInstance, networkCommandQueue, new ViewService(ResourceCache, scene.GetChild("Jacks")));

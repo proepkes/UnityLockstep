@@ -46,9 +46,9 @@ namespace Lockstep.Network.Client
             //Tell the server
             var writer = new Serializer();
             writer.Put((byte)MessageTag.Input);
-            writer.Put(input.ActorId);
             writer.Put(input.Tick + LagCompensation);
             writer.Put(input.Commands.Count());
+            writer.Put(input.ActorId);
             foreach (var command in input.Commands)
             {
                 writer.Put(command.Tag);
@@ -73,9 +73,9 @@ namespace Lockstep.Network.Client
                     InitReceived?.Invoke(this, paket);
                     break;
                 case MessageTag.Input:
-                    var actorId = reader.GetByte();
                     var tick = reader.GetUInt();
                     var countCommands = reader.GetInt();
+                    var actorId = reader.GetByte();
                     var commands = new ICommand[countCommands];
                     for (var i = 0; i < countCommands; i++)
                     {

@@ -37,7 +37,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
         {
             AllActorIds = init.AllActors;
             Debug.Log($"Starting simulation. Total actors: {init.AllActors.Length}. Local ActorID: {init.ActorID}");
-            Simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
+            Simulation.Start(init.SimulationSpeed, init.ActorID, init.AllActors);
         };
 
         Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase));      
@@ -56,7 +56,6 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         stream.Close();                    
     }
-
 
     public void Execute(ICommand command)
     {

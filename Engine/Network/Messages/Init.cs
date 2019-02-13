@@ -11,14 +11,14 @@ namespace Lockstep.Network.Messages
 
         public byte[] AllActors { get; set; }
 
-        public int TargetFPS { get; set; } 
+        public int SimulationSpeed { get; set; } 
                                               
         public void Serialize(Serializer writer)
         {
             writer.Put(Seed);
             writer.Put(ActorID);
             writer.PutBytesWithLength(AllActors);
-            writer.Put(TargetFPS);
+            writer.Put(SimulationSpeed);
         }
 
         public void Deserialize(Deserializer reader)
@@ -26,7 +26,7 @@ namespace Lockstep.Network.Messages
             Seed = reader.GetInt();
             ActorID = reader.GetByte();
             AllActors = reader.GetBytesWithLength();
-            TargetFPS = reader.GetInt();
+            SimulationSpeed = reader.GetInt();
         }
     }
 }

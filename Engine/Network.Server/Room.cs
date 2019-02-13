@@ -13,7 +13,10 @@ namespace Lockstep.Network.Server
     /// </summary>
     public class Room
     {
-        private const int TargetFps = 20;
+        /// <summary>
+        /// Server determines the default speed of the simulation measured in FPS
+        /// </summary>
+        private const int SimulationSpeed = 20;
 
         private byte _nextPlayerId;
         private readonly int _size;
@@ -70,7 +73,12 @@ namespace Lockstep.Network.Server
             switch (messageTag)
             {
                 case MessageTag.Input:
-                    _server.Distribute(clientId, data);    
+                    var clientTick = reader.GetUInt();
+                    var commandsCount = reader.GetInt();
+                    if (commandsCount > 0)
+                    {
+                        _server.Distribute(clientId, data);
+                    } 
                     break;
 
                 case MessageTag.HashCode:                                 
@@ -111,7 +119,7 @@ namespace Lockstep.Network.Server
             var writer = new Serializer();
 
             //Create a new seed and send it with a start-message to all clients
-            //The message also contains the respective player-id and the servers' frame rate 
+            //The message also contains the respective player-id and the initial simulation speed
             var seed = new Random().Next(int.MinValue, int.MaxValue);
 
             foreach (var player in _playerIds)
@@ -123,7 +131,7 @@ namespace Lockstep.Network.Server
                     Seed = seed,
                     ActorID = player.Value,
                     AllActors = _playerIds.Values.ToArray(),
-                    TargetFPS = TargetFps
+                    SimulationSpeed = SimulationSpeed
                 }.Serialize(writer);
 
                 _server.Send(player.Key, Compressor.Compress(writer));

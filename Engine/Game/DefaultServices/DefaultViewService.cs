@@ -1,6 +1,6 @@
 ﻿using Lockstep.Game.Interfaces;
 
-namespace Lockstep.Game.Services
+namespace Lockstep.Game.DefaultServices
 {
     public class DefaultViewService : IViewService
     {           

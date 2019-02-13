@@ -7,7 +7,7 @@
             //TODO: Add InputValidationSystem  
             Add(new ExecuteSpawnInput(contexts, services));
 
-            //Massive performance-hit:
+            //Performance-hit, only use for serious debugging
             //Add(new VerifySelectionIdExists(contexts));
 
             Add(new ExecuteNavigationInput(contexts, services));
