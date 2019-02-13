@@ -35,7 +35,7 @@ using System.Collections.Generic;
 using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Services.RVONavigation.RVO
+namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
 {
     /**
      * <summary>Defines k-D trees for agents and static obstacles in the
@@ -165,7 +165,7 @@ namespace Lockstep.Services.RVONavigation.RVO
          */
         internal void buildAgentTree()
         {
-            if (agents_ == null || agents_.Length != Simulator.Instance.agents_.Count)
+            //if (agents_ == null || agents_.Length != Simulator.Instance.agents_.Count)
             {
                 agents_ = new Agent[Simulator.Instance.agents_.Count];
 
@@ -551,7 +551,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                 queryObstacleTreeRecursive(agent, rangeSq, agentLeftOfLine >= Fix64.Zero ? node.left_ : node.right_);
 
-                Fix64 distSqLine = RVOMath.sqr(agentLeftOfLine) / RVOMath.absSq(obstacle2.point_ - obstacle1.point_);
+                Fix64 distSqLine = RVOMath.sqr(agentLeftOfLine) / (obstacle2.point_ - obstacle1.point_).LengthSquared();
 
                 if (distSqLine < rangeSq)
                 {
@@ -597,7 +597,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
             Fix64 q1LeftOfI = RVOMath.leftOf(obstacle1.point_, obstacle2.point_, q1);
             Fix64 q2LeftOfI = RVOMath.leftOf(obstacle1.point_, obstacle2.point_, q2);
-            Fix64 invLengthI = Fix64.One / RVOMath.absSq(obstacle2.point_ - obstacle1.point_);
+            Fix64 invLengthI = Fix64.One / (obstacle2.point_ - obstacle1.point_).LengthSquared();
 
             if (q1LeftOfI >= Fix64.Zero && q2LeftOfI >= Fix64.Zero)
             {
@@ -617,7 +617,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
             Fix64 point1LeftOfQ = RVOMath.leftOf(q1, q2, obstacle1.point_);
             Fix64 point2LeftOfQ = RVOMath.leftOf(q1, q2, obstacle2.point_);
-            Fix64 invLengthQ = Fix64.One / RVOMath.absSq(q2 - q1);
+            Fix64 invLengthQ = Fix64.One / (q2 - q1).LengthSquared();
 
             return point1LeftOfQ * point2LeftOfQ >= Fix64.Zero && RVOMath.sqr(point1LeftOfQ) * invLengthQ > RVOMath.sqr(radius) && RVOMath.sqr(point2LeftOfQ) * invLengthQ > RVOMath.sqr(radius) && queryVisibilityRecursive(q1, q2, radius, node.left_) && queryVisibilityRecursive(q1, q2, radius, node.right_);
         }

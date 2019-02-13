@@ -23,6 +23,7 @@ namespace Lockstep.Core.Logic.Systems.GameState
         public void Execute()
         {
             long hashCode = 0;
+            hashCode ^= _hashableEntities.count;
             foreach (var entity in _hashableEntities)
             {
                 hashCode ^= entity.position.value.X.RawValue;

@@ -33,7 +33,7 @@
 using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Services.RVONavigation.RVO
+namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
 {
     /**
      * <summary>Contains functions and constants used in multiple classes.
@@ -45,47 +45,7 @@ namespace Lockstep.Services.RVONavigation.RVO
          * <summary>A sufficiently small positive number.</summary>
          */
         internal static readonly Fix64 RVO_EPSILON = 0.00001m;
-
-        /**
-         * <summary>Computes the length of a specified two-dimensional vector.
-         * </summary>
-         *
-         * <param name="vector">The two-dimensional vector whose length is to be
-         * computed.</param>
-         * <returns>The length of the two-dimensional vector.</returns>
-         */
-        internal static Fix64 abs(Vector2 vector)
-        {
-            return sqrt(absSq(vector));
-        }
-
-        /**
-         * <summary>Computes the squared length of a specified two-dimensional
-         * vector.</summary>
-         *
-         * <returns>The squared length of the two-dimensional vector.</returns>
-         *
-         * <param name="vector">The two-dimensional vector whose squared length
-         * is to be computed.</param>
-         */
-        internal static Fix64 absSq(Vector2 vector)
-        {
-            return vector.LengthSquared();
-        }
-
-        /**
-         * <summary>Computes the normalization of the specified two-dimensional
-         * vector.</summary>
-         *
-         * <returns>The normalization of the two-dimensional vector.</returns>
-         *
-         * <param name="vector">The two-dimensional vector whose normalization
-         * is to be computed.</param>
-         */
-        internal static Vector2 normalize(Vector2 vector)
-        {
-            return Vector2.Normalize(vector);
-        }
+        
 
         /**
          * <summary>Computes the determinant of a two-dimensional square matrix
@@ -118,35 +78,23 @@ namespace Lockstep.Services.RVONavigation.RVO
          * <param name="vector3">The point to which the squared distance is to
          * be calculated.</param>
          */
-        internal static Fix64 distSqPointLineSegment(Vector2 vector1, Vector2 vector2, Vector2 vector3)
+        internal static Fix64 DistSqPointLineSegment(Vector2 vector1, Vector2 vector2, Vector2 vector3)
         {
-            Fix64 r = Vector2.Dot((vector3 - vector1), (vector2 - vector1)) / absSq(vector2 - vector1);
+            Fix64 r = Vector2.Dot(vector3 - vector1, vector2 - vector1) / (vector2 - vector1).LengthSquared();
 
             if (r < Fix64.Zero)
             {
-                return absSq(vector3 - vector1);
+                return (vector3 - vector1).LengthSquared();
             }
 
             if (r > Fix64.One)
             {
-                return absSq(vector3 - vector2);
+                return (vector3 - vector2).LengthSquared();
             }
 
-            return absSq(vector3 - (vector1 + r * (vector2 - vector1)));
+            return (vector3 - (vector1 + r * (vector2 - vector1))).LengthSquared();
         }
 
-        /**
-         * <summary>Computes the absolute value of a Fix64.</summary>
-         *
-         * <returns>The absolute value of the Fix64.</returns>
-         *
-         * <param name="scalar">The Fix64 of which to compute the absolute
-         * value.</param>
-         */
-        internal static Fix64 fabs(Fix64 scalar)
-        {
-            return Fix64.Abs(scalar);
-        }
 
         /**
          * <summary>Computes the signed distance from a line connecting the
@@ -176,19 +124,7 @@ namespace Lockstep.Services.RVONavigation.RVO
         {
             return scalar * scalar;
         }
-
-        /**
-         * <summary>Computes the square root of a Fix64.</summary>
-         *
-         * <returns>The square root of the Fix64.</returns>
-         *
-         * <param name="scalar">The Fix64 of which to compute the square root.
-         * </param>
-         */
-        internal static Fix64 sqrt(Fix64 scalar)
-        {
-            return Fix64.Sqrt(scalar);
-        }
+        
 
         internal static Fix64 Min(Fix64 a, Fix64 b)
         {

@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BEPUutilities;
 using Entitas;
+using FixMath.NET;
 using Lockstep.Common.Logging;
 using Lockstep.Game.Interfaces;
 
@@ -52,8 +54,18 @@ namespace Lockstep.Game.Features.Input
                 //some default components that every game-entity must have
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);
+                e.AddDestination(input.coordinate.value);
 
                 _viewService.LoadView(e, input.entityConfigId.value);
+
+                if (e.isNavigable)
+                {
+                    //TODO: factory method to create entity? 
+                    //Default agent settings
+                    e.AddRadius(F64.C1);
+                    e.AddMaxSpeed(F64.C2);
+                    e.AddRvoAgentSettings(Vector2.Zero, 5, new List<KeyValuePair<Fix64, uint>>());
+                }
 
                 actor.ReplaceEntityCount(nextEntityId + 1);
                 _localIdCounter += 1;

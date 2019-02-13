@@ -19,8 +19,7 @@ namespace Game.UrhoSharp.Desktop.Coupling
         }
         public void LoadView(GameEntity entity, int configId)
         {
-            var node = Spawn(new Vector3(new Vector3((float) entity.position.value.X, 0,
-                (float) entity.position.value.Y)));
+            var node = Spawn(new Vector3((float) entity.position.value.X, 0, (float) entity.position.value.Y));
             node.GetComponent<PositionListener>().RegisterListeners(entity);
 
             entity.isNavigable = true;

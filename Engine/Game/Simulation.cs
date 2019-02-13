@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Lockstep.Common.Logging;
 using Lockstep.Core.Logic;
 using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic.Serialization.Utils;
 using Lockstep.Game.Features.Cleanup;
 using Lockstep.Game.Features.Input;
-using Lockstep.Game.Features.Navigation;
+using Lockstep.Game.Features.Navigation.RVO;
 
 namespace Lockstep.Game
 {
@@ -45,7 +47,6 @@ namespace Lockstep.Game
             }                                          
         }
 
-
         public void Start(int targetFps, byte localActorId, byte[] allActors)
         {
             GameLog.LocalActorId = localActorId;
@@ -54,7 +55,10 @@ namespace Lockstep.Game
             LocalActorId = localActorId;     
 
             _tickDt = 1000f / targetFps;
-            _world = new World(Contexts, allActors, CreateFeatures());
+            _world = new World(Contexts, allActors, 
+                new InputFeature(Contexts, Services), 
+                new RVONavigationFeature(Contexts, Services), 
+                new CleanupFeature(Contexts, Services));
 
             Running = true;
 
@@ -103,26 +107,22 @@ namespace Lockstep.Game
             }
         }
 
-        private Feature[] CreateFeatures()
+
+        public void DumpGameLog(Stream outputStream, bool closeStream = true)
         {
-            var input = new Feature("Input");
-            //TODO: Add InputValidationSystem  
-            input.Add(new ExecuteSpawnInput(Contexts, Services));
-            input.Add(new VerifySelectionIdExists(Contexts));
-            input.Add(new ExecuteNavigationInput(Contexts, Services));
-            //TODO: Add CleanupInput that removes input of validated frames (no rollback required => can be removed)
+            var serializer = new Serializer();
+            serializer.Put(Contexts.gameState.hashCode.value);
+            serializer.Put(Contexts.gameState.tick.value);
+            outputStream.Write(serializer.Data, 0, serializer.Length);
 
+            GameLog.WriteTo(outputStream);
 
-            var navigation = new Feature("Navigation");                      
-            navigation.Add(new NavigationTick(Contexts, Services));         
-
-            var cleanup = new Feature("Cleanup");
-            cleanup.Add(new RemoveDestroyedEntitiesFromView(Contexts, Services));
-
-            return new[] {input, navigation, cleanup};
+            if(closeStream)
+            {
+                outputStream.Close();
+            }
         }
 
-        
         private void ProcessInputQueue()
         {
             var inputs = _commandQueue.Dequeue();

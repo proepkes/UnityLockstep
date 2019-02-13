@@ -1,7 +1,7 @@
 ﻿using Entitas;
 using FixMath.NET;
 
-namespace Lockstep.Game.Features.Navigation
+namespace Lockstep.Game.Features.Navigation.Simple
 {
     public class NavigationTick : IExecuteSystem
     {
@@ -14,7 +14,6 @@ namespace Lockstep.Game.Features.Navigation
 
         public void Execute()
         {                                 
-            //All registered (navigable) entities have to be updated (even those without a destination), because avoidance could move them aside
             foreach (var entity in _contexts.game.GetEntities(GameMatcher.AllOf(GameMatcher.LocalId, GameMatcher.Destination)))
             {
                 var velocity = entity.destination.value - entity.position.value;
@@ -26,6 +25,11 @@ namespace Lockstep.Game.Features.Navigation
                 if ((entity.destination.value - entity.position.value).LengthSquared() > 1)
                 {
                     entity.ReplacePosition(entity.position.value + velocity);        
+                }
+
+                if ((entity.destination.value - entity.position.value).LengthSquared() <= 1)
+                {
+                    entity.RemoveDestination();
                 }
             }
         }

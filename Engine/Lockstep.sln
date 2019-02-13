@@ -21,10 +21,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.State", "Core.State\Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Logic", "Core.Logic\Core.Logic.csproj", "{E22E232B-30B3-4DA4-BD04-8218CE113C01}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{BF9A810F-DB2D-4E7D-830E-5C1FA478D2CB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RVONavigation", "Services\RVONavigation\RVONavigation.csproj", "{770DE54D-8117-438F-B760-45591BAE2306}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,16 +63,9 @@ Global
 		{E22E232B-30B3-4DA4-BD04-8218CE113C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E22E232B-30B3-4DA4-BD04-8218CE113C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E22E232B-30B3-4DA4-BD04-8218CE113C01}.Release|Any CPU.Build.0 = Release|Any CPU
-		{770DE54D-8117-438F-B760-45591BAE2306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{770DE54D-8117-438F-B760-45591BAE2306}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{770DE54D-8117-438F-B760-45591BAE2306}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{770DE54D-8117-438F-B760-45591BAE2306}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{770DE54D-8117-438F-B760-45591BAE2306} = {BF9A810F-DB2D-4E7D-830E-5C1FA478D2CB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {485648E2-7780-43AA-8B61-59002B6E6DB8}

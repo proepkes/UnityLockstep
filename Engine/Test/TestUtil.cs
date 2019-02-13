@@ -39,7 +39,7 @@ namespace Test
                 var debugEntity = origin.debug.GetEntities().FirstOrDefault(entity => entity.tick.value == contexts.gameState.tick.value);
                 if (debugEntity != null)
                 {
-                   debugEntity.hashCode.value.ShouldBe(contexts.gameState.hashCode.value);
+                    debugEntity.hashCode.value.ShouldBe(contexts.gameState.hashCode.value);
                 }
 
                 world.Update(1000);

@@ -35,7 +35,7 @@ using System.Threading.Tasks;
 using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Services.RVONavigation.RVO
+namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
 {
     /**
      * <summary>Defines the simulation.</summary>
@@ -61,7 +61,7 @@ namespace Lockstep.Services.RVONavigation.RVO
          * <param name="position">The two-dimensional starting position of this
          * agent.</param>
          */
-        internal void addAgent(uint id, Vector2 position)
+        internal void addAgent(uint id, Vector2 position, Vector2 destination)
         {
             if (defaultAgent_ == null)
             {
@@ -74,6 +74,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                 MaxSpeed = defaultAgent_.MaxSpeed,
                 neighborDist_ = defaultAgent_.neighborDist_,
                 Position = position,
+                Destination = destination,
                 radius_ = defaultAgent_.radius_,
                 timeHorizon_ = defaultAgent_.timeHorizon_,
                 timeHorizonObst_ = defaultAgent_.timeHorizonObst_,
@@ -126,7 +127,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     obstacle.next_.previous_ = obstacle;
                 }
 
-                obstacle.direction_ = RVOMath.normalize(vertices[(i == vertices.Count - 1 ? 0 : i + 1)] - vertices[i]);
+                obstacle.direction_ = Vector2.Normalize(vertices[(i == vertices.Count - 1 ? 0 : i + 1)] - vertices[i]);
 
                 if (vertices.Count == 2)
                 {
@@ -301,7 +302,7 @@ namespace Lockstep.Services.RVONavigation.RVO
          * <param name="velocity">The default initial two-dimensional linear
          * velocity of a new agent.</param>
          */
-        internal void setAgentDefaults(Fix64 neighborDist, int maxNeighbors, Fix64 timeHorizon, Fix64 timeHorizonObst, Fix64 radius, Fix64 maxSpeed, Vector2 velocity)
+        internal void setAgentDefaults(Fix64 neighborDist, int maxNeighbors, Fix64 timeHorizon, Fix64 timeHorizonObst, Fix64 radius, Fix64 maxSpeed)
         {
             if (defaultAgent_ == null)
             {
@@ -314,7 +315,6 @@ namespace Lockstep.Services.RVONavigation.RVO
             defaultAgent_.radius_ = radius;
             defaultAgent_.timeHorizon_ = timeHorizon;
             defaultAgent_.timeHorizonObst_ = timeHorizonObst;
-            defaultAgent_.Velocity = velocity;
         }
 
         /**

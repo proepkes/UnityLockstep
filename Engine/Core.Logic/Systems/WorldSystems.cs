@@ -10,7 +10,7 @@ namespace Lockstep.Core.Logic.Systems
         {
             Add(new InitializeEntityCount(contexts));
 
-            Add(new OnNewPredictionCreateBackup(contexts));
+            Add(new OnNewPredictionCreateSnapshot(contexts));
 
             foreach (var feature in features)
             {

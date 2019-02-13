@@ -57,6 +57,8 @@
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameRadiusComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameRvoAgentSettingsComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestroyedComponent.cs" />
     <Compile Include="Generated\Game\Components\GameActorIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
@@ -132,6 +134,12 @@
     <Compile Include="Generated\Game\Systems\DestroyDestroyedGameSystem.cs" />
     <Compile Include="Generated\Game\GameCleanupSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Game\RadiusComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Game\RvoAgentSettingsComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\DestroyedComponent.cs" />

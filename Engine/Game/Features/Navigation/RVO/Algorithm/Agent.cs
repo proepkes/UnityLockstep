@@ -34,7 +34,7 @@ using System.Collections.Generic;
 using BEPUutilities;
 using FixMath.NET;
 
-namespace Lockstep.Services.RVONavigation.RVO
+namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
 {
     /**
      * <summary>Defines an agent in the simulation.</summary>
@@ -61,9 +61,9 @@ namespace Lockstep.Services.RVONavigation.RVO
         {           
             var goalVector = Destination - Position;
 
-            if (RVOMath.absSq(goalVector) > Fix64.One)
+            if (goalVector.LengthSquared() > Fix64.One)
             {
-                goalVector = RVOMath.normalize(goalVector);
+                goalVector = Vector2.Normalize(goalVector);
             }
 
             PrefVelocity = goalVector;     
@@ -128,14 +128,14 @@ namespace Lockstep.Services.RVONavigation.RVO
                 }
 
                 /* Not yet covered. Check for collisions. */
-                Fix64 distSq1 = RVOMath.absSq(relativePosition1);
-                Fix64 distSq2 = RVOMath.absSq(relativePosition2);
+                Fix64 distSq1 = relativePosition1.LengthSquared();
+                Fix64 distSq2 = relativePosition2.LengthSquared();
 
                 Fix64 radiusSq = RVOMath.sqr(radius_);
 
                 Vector2 obstacleVector = obstacle2.point_ - obstacle1.point_;
-                Fix64 s = Vector2.Dot(-relativePosition1, obstacleVector) / RVOMath.absSq(obstacleVector);
-                Fix64 distSqLine = RVOMath.absSq(-relativePosition1 - s * obstacleVector);
+                Fix64 s = Vector2.Dot(-relativePosition1, obstacleVector) / obstacleVector.LengthSquared();
+                Fix64 distSqLine = (-relativePosition1 - s * obstacleVector).LengthSquared();
 
                 Line line;
 
@@ -145,7 +145,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     if (obstacle1.convex_)
                     {
                         line.point = new Vector2(Fix64.Zero, Fix64.Zero);
-                        line.direction = RVOMath.normalize(new Vector2(-relativePosition1.Y, relativePosition1.X));
+                        line.direction = Vector2.Normalize(new Vector2(-relativePosition1.Y, relativePosition1.X));
                         OrcaLines.Add(line);
                     }
 
@@ -160,7 +160,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     if (obstacle2.convex_ && RVOMath.det(relativePosition2, obstacle2.direction_) >= Fix64.Zero)
                     {
                         line.point = new Vector2(Fix64.Zero, Fix64.Zero);
-                        line.direction = RVOMath.normalize(new Vector2(-relativePosition2.Y, relativePosition2.X));
+                        line.direction = Vector2.Normalize(new Vector2(-relativePosition2.Y, relativePosition2.X));
                         OrcaLines.Add(line);
                     }
 
@@ -198,7 +198,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                     obstacle2 = obstacle1;
 
-                    Fix64 leg1 = RVOMath.sqrt(distSq1 - radiusSq);
+                    Fix64 leg1 = Fix64.Sqrt(distSq1 - radiusSq);
                     leftLegDirection = new Vector2(relativePosition1.X * leg1 - relativePosition1.Y * radius_, relativePosition1.X * radius_ + relativePosition1.Y * leg1) / distSq1;
                     rightLegDirection = new Vector2(relativePosition1.X * leg1 + relativePosition1.Y * radius_, -relativePosition1.X * radius_ + relativePosition1.Y * leg1) / distSq1;
                 }
@@ -216,7 +216,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                     obstacle1 = obstacle2;
 
-                    Fix64 leg2 = RVOMath.sqrt(distSq2 - radiusSq);
+                    Fix64 leg2 = Fix64.Sqrt(distSq2 - radiusSq);
                     leftLegDirection = new Vector2(relativePosition2.X * leg2 - relativePosition2.Y * radius_, relativePosition2.X * radius_ + relativePosition2.Y * leg2) / distSq2;
                     rightLegDirection = new Vector2(relativePosition2.X * leg2 + relativePosition2.Y * radius_, -relativePosition2.X * radius_ + relativePosition2.Y * leg2) / distSq2;
                 }
@@ -225,7 +225,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     /* Usual situation. */
                     if (obstacle1.convex_)
                     {
-                        Fix64 leg1 = RVOMath.sqrt(distSq1 - radiusSq);
+                        Fix64 leg1 = Fix64.Sqrt(distSq1 - radiusSq);
                         leftLegDirection = new Vector2(relativePosition1.X * leg1 - relativePosition1.Y * radius_, relativePosition1.X * radius_ + relativePosition1.Y * leg1) / distSq1;
                     }
                     else
@@ -236,7 +236,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                     if (obstacle2.convex_)
                     {
-                        Fix64 leg2 = RVOMath.sqrt(distSq2 - radiusSq);
+                        Fix64 leg2 = Fix64.Sqrt(distSq2 - radiusSq);
                         rightLegDirection = new Vector2(relativePosition2.X * leg2 + relativePosition2.Y * radius_, -relativePosition2.X * radius_ + relativePosition2.Y * leg2) / distSq2;
                     }
                     else
@@ -279,14 +279,14 @@ namespace Lockstep.Services.RVONavigation.RVO
                 /* Project current velocity on velocity obstacle. */
 
                 /* Check if current velocity is projected on cutoff circles. */
-                Fix64 t = obstacle1 == obstacle2 ? 0.5m : Vector2.Dot((Velocity - leftCutOff), cutOffVector) / RVOMath.absSq(cutOffVector);
+                Fix64 t = obstacle1 == obstacle2 ? 0.5m : Vector2.Dot((Velocity - leftCutOff), cutOffVector) / cutOffVector.LengthSquared();
                 Fix64 tLeft = Vector2.Dot((Velocity - leftCutOff), leftLegDirection);
                 Fix64 tRight = Vector2.Dot((Velocity - rightCutOff), rightLegDirection);
 
                 if ((t < Fix64.Zero && tLeft < Fix64.Zero) || (obstacle1 == obstacle2 && tLeft < Fix64.Zero && tRight < Fix64.Zero))
                 {
                     /* Project on left cut-off circle. */
-                    Vector2 unitW = RVOMath.normalize(Velocity - leftCutOff);
+                    Vector2 unitW = Vector2.Normalize(Velocity - leftCutOff);
 
                     line.direction = new Vector2(unitW.Y, -unitW.X);
                     line.point = leftCutOff + radius_ * invTimeHorizonObst * unitW;
@@ -297,7 +297,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                 else if (t > Fix64.One && tRight < Fix64.Zero)
                 {
                     /* Project on right cut-off circle. */
-                    Vector2 unitW = RVOMath.normalize(Velocity - rightCutOff);
+                    Vector2 unitW = Vector2.Normalize(Velocity - rightCutOff);
 
                     line.direction = new Vector2(unitW.Y, -unitW.X);
                     line.point = rightCutOff + radius_ * invTimeHorizonObst * unitW;
@@ -310,9 +310,9 @@ namespace Lockstep.Services.RVONavigation.RVO
                  * Project on left leg, right leg, or cut-off line, whichever is
                  * closest to velocity.
                  */
-                Fix64 distSqCutoff = (t < Fix64.Zero || t > Fix64.One || obstacle1 == obstacle2) ? Fix64.MaxValue : RVOMath.absSq(Velocity - (leftCutOff + t * cutOffVector));
-                Fix64 distSqLeft = tLeft < Fix64.Zero ? Fix64.MaxValue : RVOMath.absSq(Velocity - (leftCutOff + tLeft * leftLegDirection));
-                Fix64 distSqRight = tRight < Fix64.Zero ? Fix64.MaxValue : RVOMath.absSq(Velocity - (rightCutOff + tRight * rightLegDirection));
+                Fix64 distSqCutoff = (t < Fix64.Zero || t > Fix64.One || obstacle1 == obstacle2) ? Fix64.MaxValue : (Velocity - (leftCutOff + t * cutOffVector)).LengthSquared();
+                Fix64 distSqLeft = tLeft < Fix64.Zero ? Fix64.MaxValue : (Velocity - (leftCutOff + tLeft * leftLegDirection)).LengthSquared();
+                Fix64 distSqRight = tRight < Fix64.Zero ? Fix64.MaxValue : (Velocity - (rightCutOff + tRight * rightLegDirection)).LengthSquared();
 
                 if (distSqCutoff <= distSqLeft && distSqCutoff <= distSqRight)
                 {
@@ -361,7 +361,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                 Vector2 relativePosition = other.Position - Position;
                 Vector2 relativeVelocity = Velocity - other.Velocity;
-                Fix64 distSq = RVOMath.absSq(relativePosition);
+                Fix64 distSq = relativePosition.LengthSquared();
                 Fix64 combinedRadius = radius_ + other.radius_;
                 Fix64 combinedRadiusSq = RVOMath.sqr(combinedRadius);
 
@@ -374,13 +374,13 @@ namespace Lockstep.Services.RVONavigation.RVO
                     Vector2 w = relativeVelocity - invTimeHorizon * relativePosition;
 
                     /* Vector from cutoff center to relative velocity. */
-                    Fix64 wLengthSq = RVOMath.absSq(w);
+                    Fix64 wLengthSq = w.LengthSquared();
                     Fix64 dotProduct1 = Vector2.Dot(w, relativePosition);
 
                     if (dotProduct1 < Fix64.Zero && RVOMath.sqr(dotProduct1) > combinedRadiusSq * wLengthSq)
                     {
                         /* Project on cut-off circle. */
-                        Fix64 wLength = RVOMath.sqrt(wLengthSq);
+                        Fix64 wLength = Fix64.Sqrt(wLengthSq);
                         Vector2 unitW = w / wLength;
 
                         line.direction = new Vector2(unitW.Y, -unitW.X);
@@ -389,7 +389,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     else
                     {
                         /* Project on legs. */
-                        Fix64 leg = RVOMath.sqrt(distSq - combinedRadiusSq);
+                        Fix64 leg = Fix64.Sqrt(distSq - combinedRadiusSq);
 
                         if (RVOMath.det(relativePosition, w) > Fix64.Zero)
                         {
@@ -414,7 +414,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                     /* Vector from cutoff center to relative velocity. */
                     Vector2 w = relativeVelocity - invTimeStep * relativePosition;
 
-                    Fix64 wLength = RVOMath.abs(w);
+                    Fix64 wLength = w.Length();
                     Vector2 unitW = w / wLength;
 
                     line.direction = new Vector2(unitW.Y, -unitW.X);
@@ -444,7 +444,7 @@ namespace Lockstep.Services.RVONavigation.RVO
         {
             if (this != agent)
             {
-                Fix64 distSq = RVOMath.absSq(Position - agent.Position);
+                Fix64 distSq = (Position - agent.Position).LengthSquared();
 
                 if (distSq < rangeSq)
                 {
@@ -483,7 +483,7 @@ namespace Lockstep.Services.RVONavigation.RVO
         {
             Obstacle nextObstacle = obstacle.next_;
 
-            Fix64 distSq = RVOMath.distSqPointLineSegment(obstacle.point_, nextObstacle.point_, Position);
+            Fix64 distSq = RVOMath.DistSqPointLineSegment(obstacle.point_, nextObstacle.point_, Position);
 
             if (distSq < rangeSq)
             {
@@ -529,7 +529,7 @@ namespace Lockstep.Services.RVONavigation.RVO
         private bool linearProgram1(IList<Line> lines, int lineNo, Fix64 radius, Vector2 optVelocity, bool directionOpt, ref Vector2 result)
         {
             Fix64 dotProduct = Vector2.Dot(lines[lineNo].point, lines[lineNo].direction);
-            Fix64 discriminant = RVOMath.sqr(dotProduct) + RVOMath.sqr(radius) - RVOMath.absSq(lines[lineNo].point);
+            Fix64 discriminant = RVOMath.sqr(dotProduct) + RVOMath.sqr(radius) - lines[lineNo].point.LengthSquared();
 
             if (discriminant < Fix64.Zero)
             {
@@ -537,7 +537,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                 return false;
             }
 
-            Fix64 sqrtDiscriminant = RVOMath.sqrt(discriminant);
+            Fix64 sqrtDiscriminant = Fix64.Sqrt(discriminant);
             Fix64 tLeft = -dotProduct - sqrtDiscriminant;
             Fix64 tRight = -dotProduct + sqrtDiscriminant;
 
@@ -546,7 +546,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                 Fix64 denominator = RVOMath.det(lines[lineNo].direction, lines[i].direction);
                 Fix64 numerator = RVOMath.det(lines[i].direction, lines[lineNo].point - lines[i].point);
 
-                if (RVOMath.fabs(denominator) <= RVOMath.RVO_EPSILON)
+                if (Fix64.Abs(denominator) <= RVOMath.RVO_EPSILON)
                 {
                     /* Lines lineNo and i are (almost) parallel. */
                     if (numerator < Fix64.Zero)
@@ -637,10 +637,10 @@ namespace Lockstep.Services.RVONavigation.RVO
                  */
                 result = optVelocity * radius;
             }
-            else if (RVOMath.absSq(optVelocity) > RVOMath.sqr(radius))
+            else if (optVelocity.LengthSquared() > RVOMath.sqr(radius))
             {
                 /* Optimize closest point and outside circle. */
-                result = RVOMath.normalize(optVelocity) * radius;
+                result = Vector2.Normalize(optVelocity) * radius;
             }
             else
             {
@@ -699,7 +699,7 @@ namespace Lockstep.Services.RVONavigation.RVO
 
                         Fix64 determinant = RVOMath.det(lines[i].direction, lines[j].direction);
 
-                        if (RVOMath.fabs(determinant) <= RVOMath.RVO_EPSILON)
+                        if (Fix64.Abs(determinant) <= RVOMath.RVO_EPSILON)
                         {
                             /* Line i and line j are parallel. */
                             if (Vector2.Dot(lines[i].direction, lines[j].direction) > Fix64.Zero)
@@ -718,7 +718,7 @@ namespace Lockstep.Services.RVONavigation.RVO
                             line.point = lines[i].point + (RVOMath.det(lines[j].direction, lines[i].point - lines[j].point) / determinant) * lines[i].direction;
                         }
 
-                        line.direction = RVOMath.normalize(lines[j].direction - lines[i].direction);
+                        line.direction = Vector2.Normalize(lines[j].direction - lines[i].direction);
                         projLines.Add(line);
                     }
 

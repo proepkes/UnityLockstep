@@ -34,7 +34,7 @@ namespace Lockstep.Core.Logic
                 Contexts.gameState.isPredicting = true;
             }
 
-            Log.Trace(this, "Predict " + Contexts.gameState.tick.value);
+            //Log.Trace(this, "Predict " + Contexts.gameState.tick.value);
 
             _systems.Execute();
             _systems.Cleanup();
@@ -47,7 +47,7 @@ namespace Lockstep.Core.Logic
                 Contexts.gameState.isPredicting = false;
             }
 
-            Log.Trace(this, "Simulate " + Contexts.gameState.tick.value);
+            //Log.Trace(this, "Simulate " + Contexts.gameState.tick.value);
 
             _systems.Execute();
             _systems.Cleanup();

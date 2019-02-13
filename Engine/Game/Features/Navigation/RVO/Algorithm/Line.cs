@@ -1,5 +1,5 @@
 /*
- * Obstacle.cs
+ * Line.cs
  * RVO2 Library C#
  *
  * Copyright 2008 University of North Carolina at Chapel Hill
@@ -32,19 +32,14 @@
 
 using BEPUutilities;
 
-namespace Lockstep.Services.RVONavigation.RVO
+namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
 {
     /**
-     * <summary>Defines static obstacles in the simulation.</summary>
+     * <summary>Defines a directed line.</summary>
      */
-    internal class Obstacle
+    internal struct Line
     {
-
-        internal Obstacle next_;
-        internal Obstacle previous_;
-        internal Vector2 direction_;
-        internal Vector2 point_;
-        internal int id_;
-        internal bool convex_;
+        internal Vector2 direction;
+        internal Vector2 point;
     }
 }

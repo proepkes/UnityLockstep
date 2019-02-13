@@ -6,7 +6,7 @@ using Lockstep.Common.Logging;
 
 namespace Lockstep.Core.Logic.Systems.GameState
 {
-    public class OnNewPredictionCreateBackup : ReactiveSystem<GameStateEntity>
+    public class OnNewPredictionCreateSnapshot : ReactiveSystem<GameStateEntity>
     {
         private readonly GameContext _gameContext;
         private readonly ActorContext _actorContext;
@@ -17,7 +17,7 @@ namespace Lockstep.Core.Logic.Systems.GameState
         private readonly IGroup<ActorEntity> _activeActors;
         private readonly IGroup<GameEntity> _activeEntities;
 
-        public OnNewPredictionCreateBackup(Contexts contexts) : base(contexts.gameState)
+        public OnNewPredictionCreateSnapshot(Contexts contexts) : base(contexts.gameState)
         {
             _gameContext = contexts.game;
             _actorContext = contexts.actor;
