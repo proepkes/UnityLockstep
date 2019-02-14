@@ -2,7 +2,6 @@
 
 [![Discord](https://img.shields.io/discord/413156098993029120.svg)](https://discord.gg/F9hJhcX) 
 
-Initial commit was targeting the following protocol: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/. It turned out that bad network conditions made the game unplayable. The project has shifted to an architecture you see below. 
 
 Currently the rollback of adding and changing entities should be stable. If you spawn or navigate entities in multiple game-instances, all simulations will end up in a synced state, no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
 
@@ -13,7 +12,7 @@ Currently the rollback of adding and changing entities should be stable. If you 
 ## Getting started
 
 1. Open Server.LiteNetLib/Server.LiteNetLib.sln
-2. Run Server-project, enter "1" when asked for room-size
+2. Run Server-project (Console), enter "1" when asked for room-size
 3. Open SampleScene in Unity
 4. Hit play and wait until connection to server is established
 5. Holding right mouse button will continously spawn new agents, press 'X' to navigate all agents to your current mouse position
@@ -25,9 +24,10 @@ Currently the rollback of adding and changing entities should be stable. If you 
 4. Wait until both players are connected to the server. The server will display a message when the simulation has started.
 5. For controls, same as above
 
-## Work in progress
+## Work in progress (ordered by priority)
+1. Synchronizing framerate. If a client lags too much or lag compensation is too low, the delayed input will force every other client to constantly rollback the simulation. The project requires a solution to minimize the need of rollback for every client.
 1. Performance spikes are currently by design. In case of an input from the very past, a rollback of many (speak: thousands of) ticks at once occur. Adding constraints like max. input-offset and adjusting framerates for slow clients will help improving everyones performance. The target-frame for rollback is also not optimized, this can save lots of performance too.
-1. Rollback for despawned (e.g. killed) entities is not implemented yet, but will arrive in the next releases.
+1. Rollback for despawned (e.g. killed) entities is not implemented yet, it will arrive after navigation, combat/projectiles and health is working.
 
 ## Dependencies
 
@@ -50,6 +50,8 @@ Uses Entitas as ECS Framework:
 
 The project includes an implementation example using LiteNetLib:
 <https://github.com/RevenantX/LiteNetLib>
+
+Initial commit was targeting the following protocol: https://www.reddit.com/r/Unity3D/comments/aewepu/rts_networking_simulate_on_serverbeat/.  The project has shifted to an architecture you see above.
 
 ## Limitations
 
