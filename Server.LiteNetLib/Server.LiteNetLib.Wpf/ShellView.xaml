@@ -50,7 +50,7 @@
                 </lvc:Axis>
             </lvc:CartesianChart.AxisX>
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis  MinValue="0">
+                <lvc:Axis  MinValue="{Binding YAxisMin}" Unit="10">
                     <lvc:Axis.Sections>
                         <lvc:AxisSection Value="1" StrokeThickness="3" Stroke="#303030"></lvc:AxisSection>
                     </lvc:Axis.Sections>

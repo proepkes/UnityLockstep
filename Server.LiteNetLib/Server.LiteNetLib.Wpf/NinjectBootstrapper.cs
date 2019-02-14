@@ -8,30 +8,29 @@ namespace Server.LiteNetLib.Wpf
 {
     public class NinjectBootstrapper<TRootViewModel> : BootstrapperBase where TRootViewModel : class
     {
-        private IKernel kernel;
+        private IKernelConfiguration _kernelConfiguration;
+        private IReadOnlyKernel _kernel;
 
         private object _rootViewModel;
-        protected virtual object RootViewModel
-        {
-            get { return this._rootViewModel ?? (this._rootViewModel = this.GetInstance(typeof(TRootViewModel))); }
-        }
+        protected virtual object RootViewModel => _rootViewModel ?? (_rootViewModel = GetInstance(typeof(TRootViewModel)));
 
         protected override void ConfigureBootstrapper()
         {
-            this.kernel = new StandardKernel();
-            this.DefaultConfigureIoC(this.kernel);
-            this.ConfigureIoC(this.kernel);
+            _kernelConfiguration = new KernelConfiguration();
+            DefaultConfigureIoC(_kernelConfiguration);
+            ConfigureIoC(_kernelConfiguration);
+            _kernel = _kernelConfiguration.BuildReadonlyKernel();
         }
 
         /// <summary>
         /// Carries out default configuration of the IoC container. Override if you don't want to do this
         /// </summary>
-        protected virtual void DefaultConfigureIoC(IKernel kernel)
+        protected virtual void DefaultConfigureIoC(IKernelConfiguration kernel)
         {
             var viewManagerConfig = new ViewManagerConfig()
             {
-                ViewFactory = this.GetInstance,
-                ViewAssemblies = new List<Assembly>() { this.GetType().Assembly }
+                ViewFactory = GetInstance,
+                ViewAssemblies = new List<Assembly>() { GetType().Assembly }
             };
             kernel.Bind<IViewManager>().ToConstant(new ViewManager(viewManagerConfig));
 
@@ -44,24 +43,23 @@ namespace Server.LiteNetLib.Wpf
         /// <summary>
         /// Override to add your own types to the IoC container.
         /// </summary>
-        protected virtual void ConfigureIoC(IKernel kernel) { }
+        protected virtual void ConfigureIoC(IKernelConfiguration kernel) { }
 
         public override object GetInstance(Type type)
         {
-            return this.kernel.Get(type);
+            return _kernel.Get(type);
         }
 
         protected override void Launch()
         {
-            base.DisplayRootView(this.RootViewModel);
+            base.DisplayRootView(RootViewModel);
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            ScreenExtensions.TryDispose(this._rootViewModel);
-            if (this.kernel != null)
-                this.kernel.Dispose();
+            ScreenExtensions.TryDispose(_rootViewModel);
+            _kernel?.Dispose();
         }
     }
 }

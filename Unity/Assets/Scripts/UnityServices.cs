@@ -19,18 +19,20 @@ public interface IComponentSetter
 
 public class UnityGameService : IViewService
 {
+    private readonly Transform _entityContainer;
     private readonly RTSEntityDatabase _entityDatabase;
-    private Dictionary<uint, GameObject> linkedEntities = new Dictionary<uint, GameObject>();
+    private readonly Dictionary<uint, GameObject> _linkedEntities = new Dictionary<uint, GameObject>();
 
     public UnityGameService(RTSEntityDatabase entityDatabase)
     {
         _entityDatabase = entityDatabase;
+        _entityContainer = GameObject.Find("EntityContainer").transform;
     }
 
     public void LoadView(GameEntity entity, int configId)
     {
         //TODO: pooling    
-        var viewGo = UnityEngine.Object.Instantiate(_entityDatabase.Entities[configId]).gameObject;
+        var viewGo = UnityEngine.Object.Instantiate(_entityDatabase.Entities[configId], _entityContainer).gameObject;
         if (viewGo != null)
         {
             viewGo.Link(entity);
@@ -48,21 +50,21 @@ public class UnityGameService : IViewService
                 listener.RegisterListeners(entity);
             }
 
-            linkedEntities.Add(entity.localId.value, viewGo);
+            _linkedEntities.Add(entity.localId.value, viewGo);
         }      
     }
 
     public void DeleteView(uint entityId)
     {                                            
-        var viewGo = linkedEntities[entityId];
+        var viewGo = _linkedEntities[entityId];
         var eventListeners = viewGo.GetComponents<IEventListener>();
         foreach (var listener in eventListeners)
         {
             listener.UnregisterListeners();
         }
 
-        linkedEntities[entityId].Unlink();
-        linkedEntities[entityId].DestroyGameObject();
-        linkedEntities.Remove(entityId);      
+        _linkedEntities[entityId].Unlink();
+        _linkedEntities[entityId].DestroyGameObject();
+        _linkedEntities.Remove(entityId);      
     }
 }         

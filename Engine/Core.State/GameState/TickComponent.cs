@@ -7,6 +7,5 @@ namespace Lockstep.Core.State.GameState
     public class TickComponent : IComponent
     {                         
         public uint value;
-    }     
-    
+    }              
 }
