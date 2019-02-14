@@ -23,9 +23,9 @@ namespace Lockstep.Game.Features.Navigation.RVO
 
         public void Execute()
         {
-            var entities = _contexts.game.GetEntities(GameMatcher.AllOf(GameMatcher.LocalId, GameMatcher.RvoAgentSettings));
+            var entities = _contexts.game.GetEntities(GameMatcher.AllOf(GameMatcher.LocalId, GameMatcher.RvoAgentSettings, GameMatcher.Destination));
 
-            //TODO: highly inefficient and , but works for a start... rewrite should make use of entity-components (also no separate agent-class).
+            //TODO: highly inefficient, but works for a start... rewrite should make use of entity-components (also no separate agent-class).
             //ordering the entities is important! if there are more than <MAX_NEIGHBORS> neighbors, the tree must choose the same neighbors everytime. it could happen that the default ordering differs on the client due to rollback/prediction
             Simulator.Instance.agents_.Clear();
             foreach (var entity in entities.OrderBy(entity => entity.actorId.value).ThenBy(entity => entity.id.value))
@@ -42,6 +42,12 @@ namespace Lockstep.Game.Features.Navigation.RVO
             foreach (var (agentId, agent) in Simulator.Instance.agents_)
             {
                 var entity = _contexts.game.GetEntityWithLocalId(agentId);
+                var newPosition = entity.position.value + agent.Velocity;
+                if ((newPosition - entity.position.value).LengthSquared() < F64.C0p5)
+                {
+                    entity.RemoveDestination();
+                }
+
                 entity.ReplacePosition(entity.position.value + agent.Velocity);
             }
         }

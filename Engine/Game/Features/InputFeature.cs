@@ -1,4 +1,6 @@
-﻿namespace Lockstep.Game.Features.Input
+﻿using Lockstep.Game.Features.Input;
+
+namespace Lockstep.Game.Features
 {
     sealed class InputFeature : Feature
     {

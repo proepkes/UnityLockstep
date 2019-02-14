@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Lockstep.Game.Features.Navigation.Simple;
 
-namespace Lockstep.Game.Features.Navigation.Simple
+namespace Lockstep.Game.Features
 {
     sealed class SimpleNavigationFeature : Feature
     {

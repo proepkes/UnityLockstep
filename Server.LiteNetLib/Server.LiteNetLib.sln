@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28516.95
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.LiteNetLib", "Server.LiteNetLib\Server.LiteNetLib.csproj", "{CFE47EAA-1E40-4403-8A0B-40EBCE3049BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.LiteNetLib.Console", "Server.LiteNetLib.Console\Server.LiteNetLib.Console.csproj", "{CFE47EAA-1E40-4403-8A0B-40EBCE3049BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server.LiteNetLib.Wpf", "Server.LiteNetLib.Wpf\Server.LiteNetLib.Wpf.csproj", "{E33E986C-5851-475D-AEA9-60FC86F3FBAC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.LiteNetLib", "Server.LiteNetLib\Server.LiteNetLib.csproj", "{EF64A6B7-0958-4E6B-A3E2-102A51324BF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{CFE47EAA-1E40-4403-8A0B-40EBCE3049BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFE47EAA-1E40-4403-8A0B-40EBCE3049BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFE47EAA-1E40-4403-8A0B-40EBCE3049BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E33E986C-5851-475D-AEA9-60FC86F3FBAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E33E986C-5851-475D-AEA9-60FC86F3FBAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E33E986C-5851-475D-AEA9-60FC86F3FBAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E33E986C-5851-475D-AEA9-60FC86F3FBAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF64A6B7-0958-4E6B-A3E2-102A51324BF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF64A6B7-0958-4E6B-A3E2-102A51324BF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF64A6B7-0958-4E6B-A3E2-102A51324BF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF64A6B7-0958-4E6B-A3E2-102A51324BF6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

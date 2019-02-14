@@ -15,7 +15,7 @@ namespace Lockstep.Network.Client
     {
         public event EventHandler<Init> InitReceived;
 
-        public uint LagCompensation { get; set; }
+        public byte LagCompensation { get; set; }
 
         private readonly INetwork _network;
         private readonly Dictionary<ushort, Type> _commandFactories = new Dictionary<ushort, Type>();
@@ -46,7 +46,8 @@ namespace Lockstep.Network.Client
             //Tell the server
             var writer = new Serializer();
             writer.Put((byte)MessageTag.Input);
-            writer.Put(input.Tick + LagCompensation);
+            writer.Put(input.Tick);
+            writer.Put(LagCompensation);
             writer.Put(input.Commands.Count());
             writer.Put(input.ActorId);
             foreach (var command in input.Commands)
@@ -73,7 +74,7 @@ namespace Lockstep.Network.Client
                     InitReceived?.Invoke(this, paket);
                     break;
                 case MessageTag.Input:
-                    var tick = reader.GetUInt();
+                    var tick = reader.GetUInt() + reader.GetByte(); //Tick + LagCompensation
                     var countCommands = reader.GetInt();
                     var actorId = reader.GetByte();
                     var commands = new ICommand[countCommands];

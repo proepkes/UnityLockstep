@@ -54,7 +54,6 @@ namespace Lockstep.Game.Features.Input
                 //some default components that every game-entity must have
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);
-                e.AddDestination(input.coordinate.value);
 
                 _viewService.LoadView(e, input.entityConfigId.value);
 

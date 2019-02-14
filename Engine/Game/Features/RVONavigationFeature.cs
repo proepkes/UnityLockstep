@@ -1,6 +1,6 @@
-﻿using Entitas;
+﻿using Lockstep.Game.Features.Navigation.RVO;
 
-namespace Lockstep.Game.Features.Navigation.RVO
+namespace Lockstep.Game.Features
 {
     sealed class RVONavigationFeature : Feature
     {

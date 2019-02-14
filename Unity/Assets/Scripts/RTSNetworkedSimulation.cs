@@ -34,7 +34,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         _commandQueue = new NetworkCommandQueue(_client)
         {
-            LagCompensation = 3
+            LagCompensation = 10
         };
         _commandQueue.InitReceived += (sender, init) =>
         {

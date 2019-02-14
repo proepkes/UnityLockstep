@@ -6,6 +6,7 @@ using Lockstep.Common.Logging;
 using Lockstep.Core.Logic;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;
+using Lockstep.Game.Features;
 using Lockstep.Game.Features.Cleanup;
 using Lockstep.Game.Features.Input;
 using Lockstep.Game.Features.Navigation.RVO;
@@ -39,8 +40,8 @@ namespace Lockstep.Game
             _commandQueue = commandQueue;
 
             Contexts = contexts;
-            Services = new ServiceContainer();                    
 
+            Services = new ServiceContainer();                    
             foreach (var service in services)
             {                         
                 Services.Register(service);
