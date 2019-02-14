@@ -14,7 +14,10 @@ namespace Lockstep.Game
     [Serializable]
     public class GameLog
     {
-        public Dictionary<uint, Dictionary<uint, Dictionary<byte, List<ICommand>>>> Log { get; } = new Dictionary<uint, Dictionary<uint, Dictionary<byte, List<ICommand>>>>();
+        public byte LocalActorId { get; set; }
+        public byte[] AllActorIds { get; set; }
+
+        public Dictionary<uint, Dictionary<uint, Dictionary<byte, List<ICommand>>>> InputLog { get; } = new Dictionary<uint, Dictionary<uint, Dictionary<byte, List<ICommand>>>>();
 
         public void Add(uint tick, uint targetTick, byte actorId, params ICommand[] commands)
         {                                          
@@ -23,22 +26,22 @@ namespace Lockstep.Game
 
         public void Add(uint tick, Input input)
         {
-            if (!Log.ContainsKey(tick))
+            if (!InputLog.ContainsKey(tick))
             {
-                Log.Add(tick, new Dictionary<uint, Dictionary<byte, List<ICommand>>>());
+                InputLog.Add(tick, new Dictionary<uint, Dictionary<byte, List<ICommand>>>());
             }
 
-            if (!Log[tick].ContainsKey(input.Tick))
+            if (!InputLog[tick].ContainsKey(input.Tick))
             {
-                Log[tick].Add(input.Tick, new Dictionary<byte, List<ICommand>>());
+                InputLog[tick].Add(input.Tick, new Dictionary<byte, List<ICommand>>());
             }
 
-            if (!Log[tick][input.Tick].ContainsKey(input.ActorId))
+            if (!InputLog[tick][input.Tick].ContainsKey(input.ActorId))
             {
-                Log[tick][input.Tick].Add(input.ActorId, new List<ICommand>());
+                InputLog[tick][input.Tick].Add(input.ActorId, new List<ICommand>());
             }
 
-            Log[tick][input.Tick][input.ActorId].AddRange(input.Commands);
+            InputLog[tick][input.Tick][input.ActorId].AddRange(input.Commands);
         }
 
         public void WriteTo(Stream stream)

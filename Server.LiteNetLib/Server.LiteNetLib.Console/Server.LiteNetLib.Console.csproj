@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Server.LiteNetLib\Server.LiteNetLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="LiteNetLib">
+      <HintPath>..\Integration\LiteNetLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Lockstep.Network">
+      <HintPath>..\Integration\Lockstep.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Lockstep.Network.Server">
+      <HintPath>..\Integration\Lockstep.Network.Server.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

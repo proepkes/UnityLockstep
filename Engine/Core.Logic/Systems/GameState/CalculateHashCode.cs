@@ -8,7 +8,7 @@ namespace Lockstep.Core.Logic.Systems.GameState
 
         private readonly GameStateContext _gameStateContext;
 
-        public CalculateHashCode(Contexts contexts, ServiceContainer serviceContainer)
+        public CalculateHashCode(Contexts contexts)
         {                                                                                 
             _gameStateContext = contexts.gameState;
 
@@ -23,10 +23,21 @@ namespace Lockstep.Core.Logic.Systems.GameState
         public void Execute()
         {
             long hashCode = 0;
+            hashCode ^= _hashableEntities.count;
             foreach (var entity in _hashableEntities)
             {
                 hashCode ^= entity.position.value.X.RawValue;
                 hashCode ^= entity.position.value.Y.RawValue;
+                if (entity.hasVelocity)
+                {
+                    hashCode ^= entity.velocity.value.X.RawValue;
+                    hashCode ^= entity.velocity.value.Y.RawValue;
+                }
+                if (entity.hasDestination)
+                {
+                    hashCode ^= entity.destination.value.X.RawValue;
+                    hashCode ^= entity.destination.value.Y.RawValue;
+                }
             }                   
 
             _gameStateContext.ReplaceHashCode(hashCode);

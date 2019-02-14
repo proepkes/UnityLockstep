@@ -22,12 +22,13 @@
 //
 
 using System;
+using System.IO;
 using System.Linq;
 using Entitas;
 using FixMath.NET;
-using Game.UrhoSharp.Desktop.Coupling;        
+using Game.UrhoSharp.Desktop.Coupling;
 using Lockstep.Game;
-using Lockstep.Game.Commands;
+using Lockstep.Game.Commands;              
 using Lockstep.Network.Client;
 using Urho;
 using Urho.Gui;
@@ -41,6 +42,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
 		Camera camera;
 		Scene scene;
         CrowdManager crowdManager;
+        private Random rand;
 
         private Text worldInfoText;
         private Simulation simulation;
@@ -64,7 +66,22 @@ namespace Game.UrhoSharp.Desktop.Scenes
             network = new LiteNetLibNetwork();
             networkCommandQueue = new NetworkCommandQueue(network);
             networkCommandQueue.InitReceived +=
-                (sender, init) => simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
+                (sender, init) =>
+                {
+                    rand = new Random(init.Seed);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        var mushroom = scene.CreateChild("Mushroom");
+                        mushroom.Position = new Vector3(rand.Next(90) - 45, 0, rand.Next(90) - 45);
+                        mushroom.Rotation = new Quaternion(0, rand.Next(360), 0);
+                        mushroom.SetScale(0.5f + rand.Next(20000) / 10000.0f);
+                        var mushroomObject = mushroom.CreateComponent<StaticModel>();
+                        mushroomObject.Model = ResourceCache.GetModel("Models/Mushroom.mdl");
+                        mushroomObject.SetMaterial(ResourceCache.GetMaterial("Materials/Mushroom.xml"));
+                    }
+
+                    simulation.Start(init.SimulationSpeed, init.ActorID, init.AllActors);
+                };
 
             simulation = new Simulation(Contexts.sharedInstance, networkCommandQueue, new ViewService(ResourceCache, scene.GetChild("Jacks")));
 
@@ -112,17 +129,6 @@ namespace Game.UrhoSharp.Desktop.Scenes
 			var light = lightNode.CreateComponent<Light>();
 			light.LightType = LightType.Directional;
 
-			var rand = new Random();
-			for (int i = 0; i < 100; i++)
-			{
-				var mushroom = scene.CreateChild ("Mushroom");
-				mushroom.Position = new Vector3 (rand.Next (90)-45, 0, rand.Next (90)-45);
-				mushroom.Rotation = new Quaternion (0, rand.Next (360), 0);
-				mushroom.SetScale (0.5f+rand.Next (20000)/10000.0f);
-				var mushroomObject = mushroom.CreateComponent<StaticModel>();
-				mushroomObject.Model = cache.GetModel ("Models/Mushroom.mdl");
-				mushroomObject.SetMaterial (cache.GetMaterial ("Materials/Mushroom.xml"));
-			}
 
             // Create a DynamicNavigationMesh component to the scene root
             var navMesh = scene.CreateComponent<DynamicNavigationMesh>();
@@ -162,8 +168,8 @@ namespace Game.UrhoSharp.Desktop.Scenes
             worldInfoText = new Text
             {
                 Value = "Waiting for all players to join...",
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Top
             };
             worldInfoText.SetFont(ResourceCache.GetFont("Fonts/Anonymous Pro.ttf"), 15);
             UI.Root.AddChild(worldInfoText);
@@ -174,9 +180,9 @@ namespace Game.UrhoSharp.Desktop.Scenes
 		{
 			var renderer = Renderer;
 			renderer.SetViewport (0, new Viewport (Context, scene, camera));
-		}
+        }
 
-		protected override void OnUpdate(float timeStep)
+        protected override void OnUpdate(float timeStep)
 		{
 			base.OnUpdate(timeStep);
 
@@ -186,15 +192,24 @@ namespace Game.UrhoSharp.Desktop.Scenes
 
             const int qualShift = 1;
 
+            if (Input.GetKeyPress(Key.P))
+            {
+                simulation.DumpGameLog(new FileStream(@"C:\Log\" + Math.Abs(Contexts.sharedInstance.gameState.hashCode.value) + ".bin", FileMode.Create, FileAccess.Write));
+            }
+
             // Set destination or spawn a new jack with left mouse button
             if (Input.GetMouseButtonPress(MouseButton.Left))
+            {
                 SetPathPoint(Input.GetQualifierDown(qualShift));
+            }
 
             simulation.Update(timeStep * 1000);
 
             if (simulation.Running)
             {
-                worldInfoText.Value = Contexts.sharedInstance.gameState.tick.value + " / " + Contexts.sharedInstance.gameState.hashCode.value;
+                worldInfoText.Value = "ActorId: " + simulation.LocalActorId + Environment.NewLine +
+                                      "Tick: " + Contexts.sharedInstance.gameState.tick.value + Environment.NewLine + 
+                                      "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
             }
         }
 
@@ -213,7 +228,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
                     simulation.Execute(new NavigateCommand
                     {
                         Destination = compatiblePos,
-                        Selection = Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Select(entity => entity.id.value).ToArray()
+                        Selection = Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == simulation.LocalActorId).Select(entity => entity.id.value).ToArray()
                     });
             }
         }

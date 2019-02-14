@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Network.Client", "Network.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.State", "Core.State\Core.State.csproj", "{353B2C4C-7F73-4DDD-B4A4-21200CD5BCDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Logic", "Core.Logic\Core.Logic.csproj", "{E22E232B-30B3-4DA4-BD04-8218CE113C01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Logic", "Core.Logic\Core.Logic.csproj", "{E22E232B-30B3-4DA4-BD04-8218CE113C01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

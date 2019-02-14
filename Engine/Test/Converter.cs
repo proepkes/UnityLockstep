@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Text;
 using Lockstep.Common.Logging;      
@@ -13,7 +12,8 @@ namespace Test
         {
             _output = output;
 
-            Log.OnMessage += (sender, args) => _output.WriteLine(args.Message);
+            Log.SetLogAllSeverities();
+            Log.OnMessage += (sender, args) => _output.WriteLine(args.LogSeverity + ": " + args.Message);
         }
 
         public override Encoding Encoding => Encoding.Default;

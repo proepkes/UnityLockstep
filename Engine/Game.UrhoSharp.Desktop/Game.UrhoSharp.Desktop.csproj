@@ -67,11 +67,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="UrhoSharp">
-      <Version>1.8.93</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Core.Logic\Core.Logic.csproj">
       <Project>{E22E232B-30B3-4DA4-BD04-8218CE113C01}</Project>
       <Name>Core.Logic</Name>
@@ -92,6 +87,11 @@
       <Project>{a20292e3-e987-4227-a0d4-8b617b9bf2df}</Project>
       <Name>Network</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="UrhoSharp">
+      <Version>1.8.93</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

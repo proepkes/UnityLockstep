@@ -2,10 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;      
-using Lockstep.Core.Logic;
-using Lockstep.Core.Logic.Interfaces;
+using Lockstep.Core.Logic;               
 using Lockstep.Core.Logic.Serialization.Utils;       
-using Lockstep.Game; 
+using Lockstep.Game;
+using Lockstep.Game.DefaultServices;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -26,9 +26,25 @@ namespace Test
         [Fact]                      
         public void TestDump()
         {
-            TestFileDump("0_3398952201_log");  
+            TestFileDump("-240158465629");
+            TestFileDump("58013408818");
+            TestFileDump("179464547357");
         }
 
+        [Fact]
+        public void TestDumpRVO()
+        {
+            TestFileDump(@"RVO\445401195417");
+            TestFileDump(@"RVO\526795398181");
+        }
+
+        /// <summary>
+        /// Runs the simulation twice:
+        /// First time including rollbacks as they appeared at runtime
+        /// Second time without rollbacks with a pre-filled command-queue
+        /// At the end the hashcode of both simulations have to match
+        /// </summary>
+        /// <param name="fileName"></param>
         private void TestFileDump(string fileName)
         {
             var contexts = new Contexts();   
@@ -38,12 +54,10 @@ namespace Test
             var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
             var dirPath = Path.GetDirectoryName(codeBasePath);
 
-            var data = ReadFile($@"{dirPath}\Dumps\{fileName}.txt");
+            var data = ReadFile($@"{dirPath}\Dumps\{fileName}.bin");
             var deserializer = new Deserializer(data);
             var hashCode = deserializer.GetLong();
-            var tick = deserializer.GetUInt();
-            var localActorId = deserializer.GetByte();
-            var allActors = deserializer.GetBytesWithLength();
+            var tick = deserializer.GetUInt();                  
                                                            
             GameLog log;
             using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
@@ -51,14 +65,14 @@ namespace Test
                 log = GameLog.ReadFrom(stream);
             }
 
-            var simulation = new Simulation(contexts, commandBuffer);
-            simulation.Start(1000, localActorId, allActors);
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            simulation.Start(1, log.LocalActorId, log.AllActorIds);
 
             for (uint i = 0; i < tick; i++)
             {
-                if (log.Log.ContainsKey(i))
+                if (log.InputLog.ContainsKey(i))
                 {
-                    var tickCommands = log.Log[i];
+                    var tickCommands = log.InputLog[i];
                     {
                         foreach (var (tickId, allCommands) in tickCommands)
                         {
@@ -70,12 +84,12 @@ namespace Test
                     }
                 }
 
-                simulation.Update(1);
+                simulation.Update(1000);
             }
 
-            contexts.gameState.hashCode.value.ShouldBe(hashCode);
+//            contexts.gameState.hashCode.value.ShouldBe(hashCode);
 
-            TestUtil.TestReplayMatchesHashCode(simulation.GameLog, contexts.gameState.tick.value, hashCode, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }
 
 
@@ -83,28 +97,19 @@ namespace Test
         public void TestSerializeGameLog()
         {
             var log = new GameLog();
-            log.Add(2, 5, 0, new ICommand[]{ new InputParseTest.Spawn() });
+            log.Add(2, 5, 0, new InputParseTest.Spawn());
 
             using (var stream = new MemoryStream())
             {
                 var serializer = new Serializer();
-                serializer.Put((long)112341);
-                serializer.Put((uint)12513);
-                serializer.Put((byte)1);
-                serializer.PutBytesWithLength(new byte[] { 1 });
                 stream.Write(serializer.Data, 0, serializer.Length);
                 log.WriteTo(stream);
 
                 stream.Position = 0;
                 var deserializer = new Deserializer(stream.GetBuffer());
-                var hashCode = deserializer.GetLong();
-                var tick = deserializer.GetUInt();
-                var localActorId = deserializer.GetByte();
-                var allActors = deserializer.GetBytesWithLength();
-
                 using (var stream2 = new MemoryStream(deserializer.GetRemainingBytes()))
                 {
-                    var result = GameLog.ReadFrom(stream2).Log;
+                    var result = GameLog.ReadFrom(stream2).InputLog;
                     result.Keys.Any(u => u != 2).ShouldBeFalse();
                 }
             }

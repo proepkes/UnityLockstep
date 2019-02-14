@@ -5,7 +5,7 @@ using Entitas;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;          
 using Lockstep.Game;
-using Lockstep.Game.Services;
+using Lockstep.Game.DefaultServices;
 using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,78 +28,78 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
-            world.Start(1, 0, new byte[] { 0, 1 });
+            simulation.Start(1, 0, new byte[] { 0, 1 });
 
             contexts.gameState.tick.value.ShouldBe((uint)0);
 
-            world.Update(1000); //0          
+            simulation.Update(1000); //0          
             contexts.gameState.tick.value.ShouldBe((uint)1);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
 
-            world.Update(1000); //1            
+            simulation.Update(1000); //1            
             contexts.gameState.tick.value.ShouldBe((uint)2);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
-            world.Update(1000); //2             
+            simulation.Update(1000); //2             
             contexts.gameState.tick.value.ShouldBe((uint)3);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
             commandBuffer.Enqueue(1, 1);
 
-            world.Update(1000); //3                
+            simulation.Update(1000); //3                
             contexts.gameState.tick.value.ShouldBe((uint)4);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);         
 
             commandBuffer.Enqueue(2, 1, new MoveAll(contexts.game, 0));
 
-            world.Update(1000); //4                
+            simulation.Update(1000); //4                
             contexts.gameState.tick.value.ShouldBe((uint)5);
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 2);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
 
-            world.Update(1000); //5        
+            simulation.Update(1000); //5        
             contexts.gameState.tick.value.ShouldBe((uint)6);
 
             ExpectEntityCount(contexts, 2);
             ExpectBackupCount(contexts, 2);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
 
-            world.Update(1000); //6
+            simulation.Update(1000); //6
             ExpectEntityCount(contexts, 3);
             ExpectBackupCount(contexts, 2);
                                                   
             commandBuffer.Enqueue(4, 1); //Revert to 3
 
-            world.Update(1000);
+            simulation.Update(1000);
             ExpectEntityCount(contexts, 3);
             ExpectBackupCount(contexts, 3);
 
-            world.Update(1000);
+            simulation.Update(1000);
             commandBuffer.Enqueue(5, 1);
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
 
-            world.Update(1000);
+            simulation.Update(1000);
             ExpectEntityCount(contexts, 4);
-            ExpectBackupCount(contexts, 6);
+            ExpectBackupCount(contexts, 5);
 
-            world.Update(1000);
-            world.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
             commandBuffer.Enqueue(6, 1, new Spawn());
 
-            world.Update(1000);    
+            simulation.Update(1000);    
 
             ExpectEntityCount(contexts, 5);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }
 
         [Fact]
@@ -110,27 +110,27 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
-            world.Start(1, 0, new byte[] { 0, 1 });
+            simulation.Start(1, 0, new byte[] { 0, 1 });
             
 
-            world.Update(1000);
+            simulation.Update(1000);
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200))});
+                commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200))});
             }
-            world.Update(1000); 
-            world.Update(1000);
-            world.Update(1000);      
-            world.Update(1000);   
+            simulation.Update(1000); 
+            simulation.Update(1000);
+            simulation.Update(1000);      
+            simulation.Update(1000);   
 
             for (int i = 0; i < 10; i++)
             {
                 commandBuffer.Enqueue(2, 1, new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) });
             }              
 
-            world.Update(1000);                     
+            simulation.Update(1000);                     
 
             for (int i = 0; i < 10; i++)
             {
@@ -140,7 +140,7 @@ namespace Test
                                        
             for (int i = 0; i < 100; i++)
             {
-                world.Update(1000);
+                simulation.Update(1000);
             }                          
 
             for (int i = 0; i < 10; i++)
@@ -148,43 +148,43 @@ namespace Test
                 commandBuffer.Enqueue(5, 1, new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) });
             }
 
-            world.Update(1000);    
-            world.Update(1000);
-            world.Update(1000);
+            simulation.Update(1000);    
+            simulation.Update(1000);
+            simulation.Update(1000);
 
 
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Enqueue(7, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) } });
+                commandBuffer.Enqueue(7, 1, new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) });
             }
-            world.Update(1000);
+            simulation.Update(1000);
 
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
                                                                   
             _output.WriteLine("Revert to 3");
             for (int i = 0; i < 10; i++)
             {
-                commandBuffer.Enqueue(8, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) } });
+                commandBuffer.Enqueue(8, 1, new Spawn { Position = new Vector2(randomPosition.Next(0, 100), randomPosition.Next(100, 200)) });
             }
 
-            world.Update(1000);                                   
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
+            simulation.Update(1000);                                   
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
             for (int i = 0; i < 5; i++)
             {
-                commandBuffer.Enqueue(9, 1, new ICommand[] { new Spawn { Position = new Vector2(randomPosition.Next(0,100), randomPosition.Next(100,200))} });
+                commandBuffer.Enqueue(9, 1, new Spawn { Position = new Vector2(randomPosition.Next(0,100), randomPosition.Next(100,200))});
             }
-            world.Update(1000);
+            simulation.Update(1000);
 
             ExpectEntityCount(contexts, 65);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }        
 
         [Fact]
@@ -193,21 +193,21 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
-            world.Start(1, 0, new byte[] { 0, 1 });
+            simulation.Start(1, 0, new byte[] { 0, 1 });
 
-            world.Update(1000); //0    
+            simulation.Update(1000); //0    
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
 
-            world.Update(1000); //1    
+            simulation.Update(1000); //1    
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
-            world.Update(1000); //2    
+            simulation.Update(1000); //2    
 
-            world.Update(1000); //3       
+            simulation.Update(1000); //3       
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 0);
 
@@ -216,18 +216,18 @@ namespace Test
 
             commandBuffer.Enqueue(2, 1, new MoveAll(contexts.game, 1));       
 
-            world.Update(1000); //4     
+            simulation.Update(1000); //4     
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);       
            
-            world.Update(1000); //5    
+            simulation.Update(1000); //5    
 
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
 
-            world.Update(1000); //6    
+            simulation.Update(1000); //6    
             ExpectEntityCount(contexts, 1);
             ExpectBackupCount(contexts, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
@@ -235,7 +235,7 @@ namespace Test
 
             commandBuffer.Enqueue(3, 1, new ICommand[] { new Spawn() }); //Revert to 3
 
-            world.Update(1000); //7    
+            simulation.Update(1000); //7    
             ExpectEntityCount(contexts, 2);
             ExpectBackupCount(contexts, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
@@ -243,7 +243,7 @@ namespace Test
 
             commandBuffer.Enqueue(4, 1, new Spawn()); //Revert to 4
 
-            world.Update(1000); //8      
+            simulation.Update(1000); //8      
             ExpectEntityCount(contexts, 3);
             ExpectBackupCount(contexts, 6);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
@@ -251,35 +251,35 @@ namespace Test
 
             commandBuffer.Enqueue(5, 1, new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn()); //Revert to 5
 
-            world.Update(1000);        
+            simulation.Update(1000);        
             ExpectEntityCount(contexts, 9);
             ExpectBackupCount(contexts, 15);
             GameEntityCountMatchesActorEntityCount(contexts, 0, 1);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
             commandBuffer.Enqueue(6, 1, new MoveSelection(new uint[]{ 0, 3, 5 }, new Vector2(8,3))); 
 
-            world.Update(1000);
+            simulation.Update(1000);
             ExpectEntityCount(contexts, 10);
             ExpectBackupCount(contexts, 24); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 2);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
             commandBuffer.Enqueue(11, 1, new MoveEntitesOfSpecificActor(contexts.game, 1, new Vector2(3,4)));
-            world.Update(1000);
+            simulation.Update(1000);
 
             ExpectEntityCount(contexts, 11);
-            ExpectBackupCount(contexts, 25); 
+            ExpectBackupCount(contexts, 33); 
             GameEntityCountMatchesActorEntityCount(contexts, 0, 3);
             GameEntityCountMatchesActorEntityCount(contexts, 1, 8);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }
 
         [Fact]
@@ -288,81 +288,73 @@ namespace Test
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
-            world.Start(1, 0, new byte[] { 0, 1 });
+            simulation.Start(1, 0, new byte[] { 0, 1 });
 
-            world.Update(1000); //0                          
+            simulation.Update(1000); //0                          
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
 
-            world.Update(1000); //1     
-            world.Update(1000); //2    
-            world.Update(1000); //3                                                   
+            simulation.Update(1000); //1     
+            simulation.Update(1000); //2    
+            simulation.Update(1000); //3                                                   
 
             commandBuffer.Enqueue(2, 1, new MoveAll(contexts.game, 1));
 
-            world.Update(1000); //4   
-            world.Update(1000); //5                         
+            simulation.Update(1000); //4   
+            simulation.Update(1000); //5                         
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new MoveEntitesOfSpecificActor(contexts.game, 0, Vector2.Zero));
 
-            world.Update(1000); //6                                                    
+            simulation.Update(1000); //6                                                    
 
             commandBuffer.Enqueue(3, 1, new Spawn()); //Revert to 3
 
-            world.Update(1000); //7                                                     
+            simulation.Update(1000); //7                                                     
 
             commandBuffer.Enqueue(4, 1, new Spawn()); //Revert to 4
 
-            world.Update(1000); //8                                                    
+            simulation.Update(1000); //8                                                    
 
             commandBuffer.Enqueue(5, 1, new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn()); //Revert to 5
 
-            world.Update(1000);        
-            world.Update(1000);                            
-            world.Update(1000);                              
-            world.Update(1000);
+            simulation.Update(1000);        
+            simulation.Update(1000);                            
+            simulation.Update(1000);                              
+            simulation.Update(1000);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new MoveAll(contexts.game, 0));
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new MoveAll(contexts.game, 0));
             commandBuffer.Enqueue(6, 1, new MoveEntitesOfSpecificActor(contexts.game, 1, Vector2.Zero));
 
-            world.Update(1000);
+            simulation.Update(1000);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
             commandBuffer.Enqueue(11, 1, new MoveEntitesOfSpecificActor(contexts.game, 1, new Vector2(3, 4)));
-            world.Update(1000);
+            simulation.Update(1000);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            ExpectEntityCount(contexts, 12);
+
+            TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }
+
         [Fact]
-        //This test requires a navigation-service that just sets the position to destination: entity.ReplacePosition(entity.destination.value);
         public void TestCommandUsesCorrectEntityIds()
         {
             var contexts = new Contexts();
 
             var commandBuffer = new CommandQueue();
-            var world = new Simulation(contexts, commandBuffer, new DefaultViewService());
+            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
 
-            world.Start(1, 0, new byte[] { 0, 1 });
+            simulation.Start(1, 0, new byte[] { 0, 1 });
 
-            world.Update(1000);   
-            world.Update(1000);
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            world.Update(1000);
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            world.Update(1000);    
+            simulation.Update(1000);   
+            simulation.Update(1000);
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn());    
+            simulation.Update(1000);
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn(), new Spawn());  
+            simulation.Update(1000);    
 
             var selection = new uint[] { 0, 1, 3, 13 };
             var destination = new Vector2(14 , 15);
@@ -372,23 +364,23 @@ namespace Test
 
             commandBuffer.Enqueue(9, 1, new MoveSelection(selection, destination));
 
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new Spawn());
-            world.Update(1000);
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn());
+            simulation.Update(1000);
 
-            commandBuffer.Enqueue(contexts.gameState.tick.value, world.LocalActorId, new MoveSelection(new uint[]{1,4,2,8,3}, destination));
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
-            world.Update(1000);
+            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new MoveSelection(new uint[]{1,4,2,8,3}, destination));
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
+            simulation.Update(1000);
 
 
             contexts.game.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == 1).Select(entity => entity.id.value).ShouldBeSubsetOf(Enumerable.Range(0, 18).Select(i => (uint)i));
@@ -401,14 +393,14 @@ namespace Test
             destination = new Vector2(5, 15);
             commandBuffer.Enqueue(10, 1, new MoveSelection(selection, destination));
 
-            world.Update(1000);
+            simulation.Update(1000);
             contexts.game.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == 1).Select(entity => entity.id.value).ShouldBeSubsetOf(Enumerable.Range(0, 18).Select(i => (uint)i));
             contexts.game.GetEntities(GameMatcher.LocalId).Where(entity => entity.actorId.value == 1).Select(entity => entity.id.value).ShouldBeUnique();
             contexts.game.GetEntities(GameMatcher.LocalId)
                 .Where(entity => entity.actorId.value == 1 && selection.Contains(entity.id.value))
                 .Select(entity => entity.destination.value).ShouldAllBe(vector2 => vector2.X == destination.X && vector2.Y == destination.Y);
 
-            TestUtil.TestReplayMatchesHashCode(world.GameLog, contexts.gameState.tick.value, contexts.gameState.hashCode.value, _output);
+            TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
         }
 
         //[Fact]

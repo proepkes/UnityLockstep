@@ -37,10 +37,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Dumps\0_3398952201_log.txt">
+    <None Update="Dumps\-240158465629.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Dumps\10_831208879191_log.txt">
+    <None Update="Dumps\179464547357.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Dumps\58013408818.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Dumps\RVO\445401195417.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Dumps\RVO\4949504550.bin">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Dumps\RVO\526795398181.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

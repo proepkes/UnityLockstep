@@ -14,19 +14,21 @@ public static class GameComponentsLookup {
     public const int Backup = 3;
     public const int Controllable = 4;
     public const int Destination = 5;
-    public const int Hashable = 6;
-    public const int Health = 7;
-    public const int Id = 8;
-    public const int LocalId = 9;
-    public const int MaxSpeed = 10;
-    public const int Navigable = 11;
-    public const int New = 12;
+    public const int Destroyed = 6;
+    public const int Hashable = 7;
+    public const int Health = 8;
+    public const int Id = 9;
+    public const int LocalId = 10;
+    public const int MaxSpeed = 11;
+    public const int Navigable = 12;
     public const int Position = 13;
-    public const int Team = 14;
-    public const int Velocity = 15;
-    public const int PositionListener = 16;
+    public const int Radius = 14;
+    public const int RvoAgentSettings = 15;
+    public const int Team = 16;
+    public const int Velocity = 17;
+    public const int PositionListener = 18;
 
-    public const int TotalComponents = 17;
+    public const int TotalComponents = 19;
 
     public static readonly string[] componentNames = {
         "DestinationListener",
@@ -35,14 +37,16 @@ public static class GameComponentsLookup {
         "Backup",
         "Controllable",
         "Destination",
+        "Destroyed",
         "Hashable",
         "Health",
         "Id",
         "LocalId",
         "MaxSpeed",
         "Navigable",
-        "New",
         "Position",
+        "Radius",
+        "RvoAgentSettings",
         "Team",
         "Velocity",
         "PositionListener"
@@ -55,14 +59,16 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.State.Game.BackupComponent),
         typeof(Lockstep.Core.State.Game.ControllableComponent),
         typeof(Lockstep.Core.State.Game.DestinationComponent),
+        typeof(Lockstep.Core.State.Game.DestroyedComponent),
         typeof(Lockstep.Core.State.Game.HashableComponent),
         typeof(Lockstep.Core.State.Game.HealthComponent),
         typeof(Lockstep.Core.State.Game.IdComponent),
         typeof(Lockstep.Core.State.Game.LocalIdComponent),
         typeof(Lockstep.Core.State.Game.MaxSpeedComponent),
         typeof(Lockstep.Core.State.Game.NavigableComponent),
-        typeof(Lockstep.Core.State.Game.NewComponent),
         typeof(Lockstep.Core.State.Game.PositionComponent),
+        typeof(Lockstep.Core.State.Game.RadiusComponent),
+        typeof(Lockstep.Core.State.Game.RvoAgentSettingsComponent),
         typeof(Lockstep.Core.State.Game.TeamComponent),
         typeof(Lockstep.Core.State.Game.VelocityComponent),
         typeof(PositionListenerComponent)

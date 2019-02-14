@@ -1,9 +1,11 @@
 ﻿            
+using System;
 using System.Collections;              
-using System.IO;                
+using System.IO;
+using Lockstep.Common.Logging;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;
-using Lockstep.Game;
+using Lockstep.Game;                      
 using Lockstep.Network.Client;
 using UnityEngine;           
                               
@@ -28,32 +30,27 @@ public class RTSNetworkedSimulation : MonoBehaviour
     {                                
         Instance = this;
 
-        _commandQueue = new NetworkCommandQueue(_client);
+        Log.OnMessage += (sender, args) => Debug.Log(args.Message);
+
+        _commandQueue = new NetworkCommandQueue(_client)
+        {
+            LagCompensation = 10
+        };
         _commandQueue.InitReceived += (sender, init) =>
         {
+            AllActorIds = init.AllActors;
             Debug.Log($"Starting simulation. Total actors: {init.AllActors.Length}. Local ActorID: {init.ActorID}");
-            Simulation.Start(init.TargetFPS, init.ActorID, init.AllActors);
+            Simulation.Start(init.SimulationSpeed, init.ActorID, init.AllActors);
         };
 
         Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase));      
     }             
 
 
-    public void DumpInputContext()
+    public void DumpGameLog()
     {
-        Stream stream = new FileStream(@"C:\Log\" + Simulation.LocalActorId + "_" + Contexts.sharedInstance.gameState.hashCode.value + "_log.txt", FileMode.Create, FileAccess.Write);
-        var serializer = new Serializer();
-        serializer.Put(Contexts.sharedInstance.gameState.hashCode.value);
-        serializer.Put(Contexts.sharedInstance.gameState.tick.value);
-        serializer.Put(Simulation.LocalActorId);
-        serializer.PutBytesWithLength(AllActorIds);
-        stream.Write(serializer.Data, 0, serializer.Length);
-
-        Simulation.GameLog.WriteTo(stream);
-
-        stream.Close();                    
+        Simulation.DumpGameLog(new FileStream(@"C:\Log\" + Math.Abs(Contexts.sharedInstance.gameState.hashCode.value) + ".bin", FileMode.Create, FileAccess.Write));                   
     }
-
 
     public void Execute(ICommand command)
     {

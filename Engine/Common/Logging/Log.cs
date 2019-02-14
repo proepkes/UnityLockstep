@@ -3,11 +3,15 @@
 namespace Lockstep.Common.Logging
 {
     public static class Log
-    {                                                                                                  
-        public static LogSeverity LogSeverityLevel = 0;
+    {                                                                                                                                 
+        public static LogSeverity LogSeverityLevel = LogSeverity.Info | LogSeverity.Warn | LogSeverity.Error | LogSeverity.Exception;
 
         public static event EventHandler<LogEventArgs> OnMessage;
-     
+
+        public static void SetLogAllSeverities()
+        {
+            LogSeverityLevel = LogSeverity.Trace | LogSeverity.Info | LogSeverity.Warn | LogSeverity.Error | LogSeverity.Exception;
+        }
 
         public static void Warn(object sender, string message, params object[] args)
         {

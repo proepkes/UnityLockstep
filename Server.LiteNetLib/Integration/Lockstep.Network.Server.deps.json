@@ -25,8 +25,8 @@
       "Core.State/1.0.0": {
         "dependencies": {
           "Entitas": "0.0.0.0",
-          "BEPUutilities": "1.5.0.0",
           "FixMath.NET": "1.0.0.0",
+          "BEPUutilities": "1.5.0.0",
           "Entitas.CodeGeneration.Attributes": "0.0.0.0"
         },
         "runtime": {
@@ -64,19 +64,19 @@
           }
         }
       },
-      "BEPUutilities.Reference/1.5.0.0": {
-        "runtime": {
-          "BEPUutilities.dll": {
-            "assemblyVersion": "1.5.0.0",
-            "fileVersion": "0.0.0.0"
-          }
-        }
-      },
       "FixMath.NET.Reference/1.0.0.0": {
         "runtime": {
           "FixMath.NET.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "BEPUutilities.Reference/1.5.0.0": {
+        "runtime": {
+          "BEPUutilities.dll": {
+            "assemblyVersion": "1.5.0.0",
+            "fileVersion": "0.0.0.0"
           }
         }
       },
@@ -107,7 +107,7 @@
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
+      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
       "path": "microsoft.netcore.platforms/1.1.0",
       "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
     },
@@ -143,12 +143,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "BEPUutilities.Reference/1.5.0.0": {
+    "FixMath.NET.Reference/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "FixMath.NET.Reference/1.0.0.0": {
+    "BEPUutilities.Reference/1.5.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
