@@ -5,9 +5,13 @@
 
 Currently the rollback of adding and changing entities should be stable. If you spawn or navigate entities in multiple game-instances, all simulations will end up in a synced state, no matter how many packets drop or how high the lag is. Clientside prediction makes sure that local commands are executed under any condition.
 
+[![Video](http://img.youtube.com/vi/fDrSTzMjxbQ/0.jpg)](https://youtu.be/fDrSTzMjxbQ "UnityLockstep")
+
+### Architecture
 ![Overview](/Docs/Overview.svg "Overview")
 
-[![Video](http://img.youtube.com/vi/fDrSTzMjxbQ/0.jpg)](https://youtu.be/fDrSTzMjxbQ "UnityLockstep")
+### Server UI 
+![ServerUI](https://i.imgur.com/b7D7J2X.png)
 
 ## Getting started
 
