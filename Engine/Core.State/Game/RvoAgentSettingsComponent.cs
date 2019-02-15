@@ -8,7 +8,8 @@ namespace Lockstep.Core.State.Game
     public class RvoAgentSettingsComponent : IComponent
     {
         public Vector2 preferredVelocity;
-        public Fix64 timeHorizonObst;
-        public IList<KeyValuePair<Fix64, uint>> agentNeighbors;
+        public Fix64 neighborDist;
+        public int maxNeighbors;
+        public IList<KeyValuePair<Fix64, GameEntity>> agentNeighbors;
     }
 }

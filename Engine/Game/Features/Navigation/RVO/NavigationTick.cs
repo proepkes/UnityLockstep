@@ -50,6 +50,12 @@ namespace Lockstep.Game.Features.Navigation.RVO
 
                 entity.ReplacePosition(entity.position.value + agent.Velocity);
             }
+
+            foreach (var e in entities)
+            {
+                var rangeSq = RVOMath.sqr(e.rvoAgentSettings.neighborDist);
+
+            }
         }
     }
 }

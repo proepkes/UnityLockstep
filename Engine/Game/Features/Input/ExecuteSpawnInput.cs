@@ -64,7 +64,8 @@ namespace Lockstep.Game.Features.Input
                     //Default agent settings
                     e.AddRadius(F64.C1);
                     e.AddMaxSpeed(F64.C2);
-                    e.AddRvoAgentSettings(Vector2.Zero, 5, new List<KeyValuePair<Fix64, uint>>());
+                    e.AddRvoAgentSettings(Vector2.Zero, 15, 10, new List<KeyValuePair<Fix64, GameEntity>>());
+                    e.AddNeighbors(new uint[10]);
                 }
 
                 actor.ReplaceEntityCount(nextEntityId + 1);

@@ -58,6 +58,7 @@
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameNeighborsComponent.cs" />
     <Compile Include="Generated\Game\Components\GameRadiusComponent.cs" />
     <Compile Include="Generated\Game\Components\GameRvoAgentSettingsComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestroyedComponent.cs" />
@@ -135,6 +136,9 @@
     <Compile Include="Generated\Game\Systems\DestroyDestroyedGameSystem.cs" />
     <Compile Include="Generated\Game\GameCleanupSystems.cs" />
     <Compile Include="Generated\Feature.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Game\NeighborsComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgentTreeNode.cs" />

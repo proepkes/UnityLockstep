@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Lockstep.Common;
 using Lockstep.Core.Logic.Serialization;
 using Lockstep.Core.Logic.Serialization.Utils;
 using Lockstep.Network.Messages;
@@ -10,9 +11,9 @@ namespace Lockstep.Network.Server
 {
     public class StartedEventArgs : EventArgs
     {
-        public int SimulationSpeed { get; set; }
+        public int SimulationSpeed { get; }
 
-        public byte[] ActorIds { get; set; }
+        public byte[] ActorIds { get; }
 
         public StartedEventArgs(int simulationSpeed, byte[] actorIds)
         {
@@ -23,8 +24,8 @@ namespace Lockstep.Network.Server
 
     public class InputReceivedEventArgs : EventArgs
     {
-        public byte ActorId { get; set; }
-        public uint Tick { get; set; }
+        public byte ActorId { get; }
+        public uint Tick { get; }
 
         public InputReceivedEventArgs(byte actorId, uint tick)
         {
@@ -60,7 +61,7 @@ namespace Lockstep.Network.Server
         /// </summary>
         private readonly Dictionary<ulong, Dictionary<int, long>> _hashCodes = new Dictionary<ulong, Dictionary<int, long>>();
 
-        private uint inputMessageCounter = 0;
+        private uint _inputMessageCounter;
         private byte _nextPlayerId;
         private readonly int _size;
 
@@ -116,12 +117,12 @@ namespace Lockstep.Network.Server
             switch (messageTag)
             {
                 case MessageTag.Input:
-                    ++inputMessageCounter;
+                    ++_inputMessageCounter;
 
                     var clientTick = reader.GetUInt();
                     reader.GetByte(); //Client's lag-compensation
                     var commandsCount = reader.GetInt();
-                    if (commandsCount > 0 || inputMessageCounter % 8 == 0)
+                    if (commandsCount > 0 || _inputMessageCounter % 8 == 0)
                     {
                         _server.Distribute(clientId, data);
                     } 
@@ -170,24 +171,26 @@ namespace Lockstep.Network.Server
             //The message also contains the respective player-id and the initial simulation speed
             var seed = new Random().Next(int.MinValue, int.MaxValue);
 
+            var args = new StartedEventArgs(SimulationSpeed, _actorIds.Values.ToArray());
 
-            Starting?.Invoke(this, new StartedEventArgs(SimulationSpeed, _actorIds.Values.ToArray()));
-            foreach (var player in _actorIds)
+            Starting?.Invoke(this, args);
+
+            foreach (var (clientId, actorId) in _actorIds)
             {
                 writer.Reset();
                 writer.Put((byte)MessageTag.Init);
                 new Init
                 {
                     Seed = seed,
-                    ActorID = player.Value,
+                    ActorID = actorId,
                     AllActors = _actorIds.Values.ToArray(),
                     SimulationSpeed = SimulationSpeed
                 }.Serialize(writer);
 
-                _server.Send(player.Key, Compressor.Compress(writer));
+                _server.Send(clientId, Compressor.Compress(writer));
             }
 
-            Started?.Invoke(this, new StartedEventArgs(SimulationSpeed, _actorIds.Values.ToArray()));
+            Started?.Invoke(this, args);
         }
     }
 }

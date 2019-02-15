@@ -22,14 +22,15 @@ public static class GameComponentsLookup {
     public const int LocalId = 11;
     public const int MaxSpeed = 12;
     public const int Navigable = 13;
-    public const int Position = 14;
-    public const int Radius = 15;
-    public const int RvoAgentSettings = 16;
-    public const int Team = 17;
-    public const int Velocity = 18;
-    public const int PositionListener = 19;
+    public const int Neighbors = 14;
+    public const int Position = 15;
+    public const int Radius = 16;
+    public const int RvoAgentSettings = 17;
+    public const int Team = 18;
+    public const int Velocity = 19;
+    public const int PositionListener = 20;
 
-    public const int TotalComponents = 20;
+    public const int TotalComponents = 21;
 
     public static readonly string[] componentNames = {
         "DestinationListener",
@@ -46,6 +47,7 @@ public static class GameComponentsLookup {
         "LocalId",
         "MaxSpeed",
         "Navigable",
+        "Neighbors",
         "Position",
         "Radius",
         "RvoAgentSettings",
@@ -69,6 +71,7 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.State.Game.LocalIdComponent),
         typeof(Lockstep.Core.State.Game.MaxSpeedComponent),
         typeof(Lockstep.Core.State.Game.NavigableComponent),
+        typeof(Lockstep.Core.State.Game.NeighborsComponent),
         typeof(Lockstep.Core.State.Game.PositionComponent),
         typeof(Lockstep.Core.State.Game.RadiusComponent),
         typeof(Lockstep.Core.State.Game.RvoAgentSettingsComponent),

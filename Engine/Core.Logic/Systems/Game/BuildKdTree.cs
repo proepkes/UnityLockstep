@@ -1,52 +1,52 @@
-﻿using Entitas;
+﻿using System.Collections.Generic;
+using Entitas;
 using FixMath.NET;
-using Lockstep.Common.Logging;
 using Lockstep.Core.State;
 using Lockstep.Game.Features.Navigation.RVO.Algorithm;
 
 namespace Lockstep.Core.Logic.Systems.Game
 {
-    public class BuildKdTree : IInitializeSystem
+    public class BuildKdTree : IInitializeSystem, IExecuteSystem
     {
         private const int MAX_LEAF_SIZE = 10;
 
         private readonly GameContext _gameContext;
-        private readonly IGroup<GameEntity> _entities;
+        private GameEntity[] _entities;
 
         public BuildKdTree(Contexts contexts)
         {
             _gameContext = contexts.game;
-            _entities = _gameContext.GetGroup(GameMatcher.LocalId);
         }
 
         public void Initialize()
         {
             _gameContext.SetKdTree(true, new AgentTreeNode[0]);
-            _gameContext.OnEntityCreated += buildTree;
-            _gameContext.OnEntityWillBeDestroyed += buildTree;
         }
 
-        private void buildTree(IContext context, IEntity entity)
+        public void Execute()
         {
-            if (!((GameEntity)entity).hasLocalId)
-            {
-                return;
-            }
+            _entities = _gameContext.GetEntities(GameMatcher.LocalId);
 
             var kdTree = _gameContext.kdTree;
 
-            kdTree.AgentTree = new AgentTreeNode[2 * _entities.count];
+            kdTree.AgentTree = new AgentTreeNode[2 * _entities.Length];
 
             for (int i = 0; i < kdTree.AgentTree.Length; ++i)
             {
                 kdTree.AgentTree[i] = new AgentTreeNode();
             }
 
-            if (_entities.count > 0)
+            if (_entities.Length > 0)
             {
-                buildAgentTreeRecursive(ref kdTree.AgentTree, _entities.GetEntities(), 0, _entities.count, 0);
+                buildAgentTreeRecursive(ref kdTree.AgentTree, _entities, 0, _entities.Length, 0);
             }
-        }
+
+            foreach (var e in _entities)
+            {                   
+                var rangeSq = RVOMath.sqr(e.rvoAgentSettings.neighborDist);
+                queryAgentTreeRecursive(ref _gameContext.kdTree.AgentTree, e, ref rangeSq, 0);
+            }
+        }      
 
         private void buildAgentTreeRecursive(ref AgentTreeNode[] agentTree_, GameEntity[] agents_, int begin, int end, int node)
         {
@@ -108,6 +108,74 @@ namespace Lockstep.Core.Logic.Systems.Game
 
                 buildAgentTreeRecursive(ref agentTree_, agents_, begin, left, agentTree_[node].left_);
                 buildAgentTreeRecursive(ref agentTree_, agents_, left, end, agentTree_[node].right_);
+            }
+        }
+
+        private void queryAgentTreeRecursive(ref AgentTreeNode[] agentTree_, GameEntity agent, ref Fix64 rangeSq, int node)
+        {
+            if (agentTree_[node].end_ - agentTree_[node].begin_ <= MAX_LEAF_SIZE)
+            {
+                for (int i = agentTree_[node].begin_; i < agentTree_[node].end_; ++i)
+                {                                                         
+                    if (agent != _entities[i])
+                    {
+                        Fix64 distSq = (agent.position.value - _entities[i].position.value).LengthSquared();
+
+                        if (distSq < rangeSq)
+                        {
+                            if (agent.rvoAgentSettings.agentNeighbors.Count < agent.rvoAgentSettings.maxNeighbors)
+                            {
+                                agent.rvoAgentSettings.agentNeighbors.Add(new KeyValuePair<Fix64, GameEntity>(distSq, _entities[i]));
+                            }
+
+                            int j = agent.rvoAgentSettings.agentNeighbors.Count - 1;
+
+                            while (j != 0 && distSq < agent.rvoAgentSettings.agentNeighbors[j - 1].Key)
+                            {
+                                agent.rvoAgentSettings.agentNeighbors[j] = agent.rvoAgentSettings.agentNeighbors[j - 1];
+                                --j;
+                            }
+
+                            agent.rvoAgentSettings.agentNeighbors[j] = new KeyValuePair<Fix64, GameEntity>(distSq, _entities[i]);
+
+                            if (agent.rvoAgentSettings.agentNeighbors.Count == agent.rvoAgentSettings.maxNeighbors)
+                            {
+                                rangeSq = agent.rvoAgentSettings.agentNeighbors[agent.rvoAgentSettings.agentNeighbors.Count - 1].Key;
+                            }    
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Fix64 distSqLeft = RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].left_].minX_ - agent.position.value.X)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position.value.X - agentTree_[agentTree_[node].left_].maxX_)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].left_].minY_ - agent.position.value.Y)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position.value.Y - agentTree_[agentTree_[node].left_].maxY_));
+                Fix64 distSqRight = RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].right_].minX_ - agent.position.value.X)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position.value.X - agentTree_[agentTree_[node].right_].maxX_)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agentTree_[agentTree_[node].right_].minY_ - agent.position.value.Y)) + RVOMath.sqr(RVOMath.Max(Fix64.Zero, agent.position.value.Y - agentTree_[agentTree_[node].right_].maxY_));
+
+                if (distSqLeft < distSqRight)
+                {
+                    if (distSqLeft < rangeSq)
+                    {
+                        queryAgentTreeRecursive(ref agentTree_, agent, ref rangeSq, agentTree_[node].left_);
+
+                        if (distSqRight < rangeSq)
+                        {
+                            queryAgentTreeRecursive(ref agentTree_, agent, ref rangeSq, agentTree_[node].right_);
+                        }
+                    }
+                }
+                else
+                {
+                    if (distSqRight < rangeSq)
+                    {
+                        queryAgentTreeRecursive(ref agentTree_, agent, ref rangeSq, agentTree_[node].right_);
+
+                        if (distSqLeft < rangeSq)
+                        {
+                            queryAgentTreeRecursive(ref agentTree_, agent, ref rangeSq, agentTree_[node].left_);
+                        }
+                    }
+                }
+
             }
         }
     }
