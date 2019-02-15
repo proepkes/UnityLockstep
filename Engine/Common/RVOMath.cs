@@ -39,12 +39,12 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
      * <summary>Contains functions and constants used in multiple classes.
      * </summary>
      */
-    internal struct RVOMath
+    public struct RVOMath
     {
         /**
          * <summary>A sufficiently small positive number.</summary>
          */
-        internal static readonly Fix64 RVO_EPSILON = 0.00001m;
+        public static readonly Fix64 RVO_EPSILON = 0.00001m;
         
 
         /**
@@ -60,7 +60,7 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
          * <param name="vector2">The bottom row of the two-dimensional square
          * matrix.</param>
          */
-        internal static Fix64 det(Vector2 vector1, Vector2 vector2)
+        public static Fix64 det(Vector2 vector1, Vector2 vector2)
         {
             return vector1.X * vector2.Y - vector1.Y * vector2.X;
         }
@@ -78,7 +78,7 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
          * <param name="vector3">The point to which the squared distance is to
          * be calculated.</param>
          */
-        internal static Fix64 DistSqPointLineSegment(Vector2 vector1, Vector2 vector2, Vector2 vector3)
+        public static Fix64 DistSqPointLineSegment(Vector2 vector1, Vector2 vector2, Vector2 vector3)
         {
             Fix64 r = Vector2.Dot(vector3 - vector1, vector2 - vector1) / (vector2 - vector1).LengthSquared();
 
@@ -108,7 +108,7 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
          * <param name="c">The point to which the signed distance is to be
          * calculated.</param>
          */
-        internal static Fix64 leftOf(Vector2 a, Vector2 b, Vector2 c)
+        public static Fix64 leftOf(Vector2 a, Vector2 b, Vector2 c)
         {
             return det(a - c, b - a);
         }
@@ -120,17 +120,17 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
          *
          * <param name="scalar">The Fix64 to be squared.</param>
          */
-        internal static Fix64 sqr(Fix64 scalar)
+        public static Fix64 sqr(Fix64 scalar)
         {
             return scalar * scalar;
         }
         
 
-        internal static Fix64 Min(Fix64 a, Fix64 b)
+        public static Fix64 Min(Fix64 a, Fix64 b)
         {
             return a < b ? a : b;
         }
-        internal static Fix64 Max(Fix64 a, Fix64 b)
+        public static Fix64 Max(Fix64 a, Fix64 b)
         {
             return a > b ? a : b;
         }

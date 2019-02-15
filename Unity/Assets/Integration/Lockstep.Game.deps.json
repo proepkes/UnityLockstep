@@ -28,6 +28,7 @@
       },
       "Core.State/1.0.0": {
         "dependencies": {
+          "Lockstep.Common": "1.0.0",
           "Entitas.CodeGeneration.Attributes": "0.0.0.0"
         },
         "runtime": {

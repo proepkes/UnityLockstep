@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generated\Game\Components\GameKdTreeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePredictingComponent.cs" />
@@ -136,6 +137,12 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgentTreeNode.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Game\KdTreeComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Game\RadiusComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +190,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Readme.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{6887E8E6-09D5-4797-BA89-37439E28DB89}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

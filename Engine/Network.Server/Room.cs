@@ -56,9 +56,9 @@ namespace Lockstep.Network.Server
         private readonly Dictionary<int, byte> _actorIds = new Dictionary<int, byte>();
 
         /// <summary>
-        /// Mapping: Framenumber -> received hashcode
+        /// Mapping: Tick -> clientId -> received hashcode
         /// </summary>
-        private readonly Dictionary<ulong, long> _hashCodes = new Dictionary<ulong, long>();
+        private readonly Dictionary<ulong, Dictionary<int, long>> _hashCodes = new Dictionary<ulong, Dictionary<int, long>>();
 
         private uint inputMessageCounter = 0;
         private byte _nextPlayerId;
@@ -132,16 +132,16 @@ namespace Lockstep.Network.Server
                 case MessageTag.HashCode:                                 
                     var pkt = new HashCode();
                     pkt.Deserialize(reader);
-                    if (!_hashCodes.ContainsKey(pkt.FrameNumber))
+                    if (!_hashCodes.ContainsKey(pkt.Tick))
                     {
-                        _hashCodes[pkt.FrameNumber] = pkt.Value;
+                        _hashCodes[pkt.Tick] = new Dictionary<int, long> { [clientId] = pkt.Value };
                     }
                     else
                     {
-                        Console.WriteLine((_hashCodes[pkt.FrameNumber] == pkt.Value ? "HashCode valid" : "Desync") + ": " + pkt.Value);
+                        var valid = _hashCodes[pkt.Tick].Where(pair => pair.Key != clientId).Select(pair => pair.Value).All(hash => hash == pkt.Value);
+                        Console.WriteLine("[" + pkt.Tick + "] " +(valid ? "HashCode valid" : "Desync") + ": " + pkt.Value);
                     }
-                    break;
-
+                    break;    
                 default:
                     _server.Distribute(data);
                     break;

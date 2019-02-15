@@ -45,7 +45,7 @@ namespace Lockstep.Game.Features.Navigation.RVO
                 var newPosition = entity.position.value + agent.Velocity;
                 if ((newPosition - entity.position.value).LengthSquared() < F64.C0p5)
                 {
-                    entity.RemoveDestination();
+                    //entity.RemoveDestination();
                 }
 
                 entity.ReplacePosition(entity.position.value + agent.Velocity);

@@ -7,6 +7,7 @@ using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;
 using Lockstep.Game;                      
 using Lockstep.Network.Client;
+using Lockstep.Network.Messages;
 using UnityEngine;           
                               
 public class RTSNetworkedSimulation : MonoBehaviour
@@ -34,7 +35,7 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
         _commandQueue = new NetworkCommandQueue(_client)
         {
-            LagCompensation = 10
+            LagCompensation = 0
         };
         _commandQueue.InitReceived += (sender, init) =>
         {
@@ -43,7 +44,8 @@ public class RTSNetworkedSimulation : MonoBehaviour
             Simulation.Start(init.SimulationSpeed, init.ActorID, init.AllActors);
         };
 
-        Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase));      
+        Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase));
+        
     }             
 
 
@@ -70,6 +72,15 @@ public class RTSNetworkedSimulation : MonoBehaviour
 
     void Update()
     {
+        foreach (var e in Contexts.sharedInstance.debug.GetEntities())
+        {
+            _commandQueue.SendHashCode(new HashCode()
+            {
+                Tick = e.tick.value,
+                Value = e.hashCode.value
+            });
+            e.Destroy();
+        }
         _client.Update();
         Simulation.Update(Time.deltaTime * 1000);
     }            

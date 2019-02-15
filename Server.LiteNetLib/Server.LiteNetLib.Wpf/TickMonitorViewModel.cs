@@ -33,15 +33,13 @@ namespace Server.LiteNetLib.Wpf
         public double XAxisMin { get; set; }
         public double YAxisMax { get; set; }
         public double YAxisMin { get; set; }
-        
-        private float _tickDt;
-        private uint _currentTick = 1;
-        
+                                           
         private readonly Timer _tickTimer = new Timer();
         
         private DateTime _startTime = DateTime.Now;
 
         private readonly Dictionary<int, IChartValues> _tickDataPerClient = new Dictionary<int, IChartValues>();
+        private int _optimumFps;
 
         public TickMonitorViewModel()
         {
@@ -65,28 +63,19 @@ namespace Server.LiteNetLib.Wpf
             SetAxisLimits(DateTime.Now);
 
             Task.Factory.StartNew(() =>
-            {
-                float accumulatedTime = 0f;
-
+            {                                
                 while (true)
                 {
                     SetAxisLimits(DateTime.Now);
-
-                    accumulatedTime += _tickTimer.Tick();
-
-                    if (accumulatedTime >= _tickDt)
-                    {
-                        _currentTick++;
-
-                        accumulatedTime -= _tickDt;
-                    }
-                    Thread.Sleep(1);
+                    Thread.Sleep(15);
                 }
             }, TaskCreationOptions.LongRunning);
         }
 
         public void StartNew(int optimumFps, byte[] actorIds)
         {
+            _optimumFps = optimumFps;
+
             _tickDataPerClient.Clear();
 
             SeriesCollection.Clear();
@@ -103,15 +92,13 @@ namespace Server.LiteNetLib.Wpf
                 SeriesCollection.Add(lineSeries);
             }
 
-            _currentTick = 1;
             _startTime = DateTime.Now;
-            _tickDt = 1000f / optimumFps;
             _tickTimer.Start();
         }
         
         public void AddTick(byte actorId, uint value)
         {
-            _tickDataPerClient[actorId].Add(new TickModel(DateTime.Now, _currentTick - value));
+            _tickDataPerClient[actorId].Add(new TickModel(DateTime.Now, (uint) (_optimumFps*(DateTime.Now - _startTime).TotalSeconds - value)));
 
 
             if (_tickDataPerClient[actorId].Count > 250)

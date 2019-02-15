@@ -24,6 +24,7 @@
       },
       "Core.State/1.0.0": {
         "dependencies": {
+          "Lockstep.Common": "1.0.0",
           "Entitas": "0.0.0.0",
           "FixMath.NET": "1.0.0.0",
           "BEPUutilities": "1.5.0.0",
@@ -107,7 +108,7 @@
     "Microsoft.NETCore.Platforms/1.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A==",
+      "sha512": "sha512-a/iSwnRZb+LHFk49hQOyThh/ZNC3vsbZsF65XwQIb863qF6msmhdQtxGXFL28Ob2NsCz/drEj28BJd/YPpLRBg==",
       "path": "microsoft.netcore.platforms/1.1.0",
       "hashPath": "microsoft.netcore.platforms.1.1.0.nupkg.sha512"
     },

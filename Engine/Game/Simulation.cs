@@ -56,8 +56,8 @@ namespace Lockstep.Game
             _tickDt = 1000f / targetFps;
             _world = new World(Contexts, allActors, 
                 new InputFeature(Contexts, Services), 
-                //new RVONavigationFeature(Contexts, Services), 
-                new SimpleNavigationFeature(Contexts, Services),
+                new RVONavigationFeature(Contexts, Services), 
+                //new SimpleNavigationFeature(Contexts, Services),
                 new CleanupFeature(Contexts, Services));
 
             Running = true;

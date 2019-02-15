@@ -18,17 +18,18 @@ public static class GameComponentsLookup {
     public const int Hashable = 7;
     public const int Health = 8;
     public const int Id = 9;
-    public const int LocalId = 10;
-    public const int MaxSpeed = 11;
-    public const int Navigable = 12;
-    public const int Position = 13;
-    public const int Radius = 14;
-    public const int RvoAgentSettings = 15;
-    public const int Team = 16;
-    public const int Velocity = 17;
-    public const int PositionListener = 18;
+    public const int KdTree = 10;
+    public const int LocalId = 11;
+    public const int MaxSpeed = 12;
+    public const int Navigable = 13;
+    public const int Position = 14;
+    public const int Radius = 15;
+    public const int RvoAgentSettings = 16;
+    public const int Team = 17;
+    public const int Velocity = 18;
+    public const int PositionListener = 19;
 
-    public const int TotalComponents = 19;
+    public const int TotalComponents = 20;
 
     public static readonly string[] componentNames = {
         "DestinationListener",
@@ -41,6 +42,7 @@ public static class GameComponentsLookup {
         "Hashable",
         "Health",
         "Id",
+        "KdTree",
         "LocalId",
         "MaxSpeed",
         "Navigable",
@@ -63,6 +65,7 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.State.Game.HashableComponent),
         typeof(Lockstep.Core.State.Game.HealthComponent),
         typeof(Lockstep.Core.State.Game.IdComponent),
+        typeof(Lockstep.Core.State.Game.KdTreeComponent),
         typeof(Lockstep.Core.State.Game.LocalIdComponent),
         typeof(Lockstep.Core.State.Game.MaxSpeedComponent),
         typeof(Lockstep.Core.State.Game.NavigableComponent),

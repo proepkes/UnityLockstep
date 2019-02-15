@@ -39,6 +39,15 @@ namespace Lockstep.Network.Client
             _network.DataReceived += NetworkOnDataReceived;            
         }
 
+        public void SendHashCode(HashCode hashCode)
+        {                
+            var writer = new Serializer();
+            writer.Put((byte)MessageTag.HashCode);
+            hashCode.Serialize(writer);
+
+            _network.Send(Compressor.Compress(writer));
+        }
+
         public override void Enqueue(Input input)
         {
             base.Enqueue(input);
