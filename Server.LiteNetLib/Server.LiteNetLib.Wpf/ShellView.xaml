@@ -7,6 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:local="clr-namespace:Server.LiteNetLib.Wpf"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d" 
         d:DataContext="{d:DesignInstance local:ShellViewModel}"
         Height="500" 
@@ -14,55 +15,26 @@
     <Grid>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <lvc:CartesianChart Grid.Row="0" Series="{Binding SeriesCollection}" LegendLocation="Right" DisableAnimations="True" DataTooltip="{x:Null}" Hoverable="False">
-            <lvc:CartesianChart.Resources>
-                <Style TargetType="lvc:LineSeries">
-                    <Setter Property="StrokeThickness" Value="1"></Setter>
-                    <Setter Property="Fill" Value="#CC2196F3"></Setter>
-                    <Setter Property="LineSmoothness" Value="5"></Setter>
-                    <Setter Property="AreaLimit" Value="1"></Setter>
-                    <Setter Property="PointGeometrySize" Value="0"></Setter>
-                    <Setter Property="Fill" Value="Transparent"></Setter>
-                </Style>
-                <Style TargetType="lvc:Separator">
-                    <Setter Property="Stroke" Value="#DADADA"></Setter>
-                    <Setter Property="StrokeThickness" Value="2"></Setter>
-                    <Style.Triggers>
-                        <Trigger Property="AxisOrientation" Value="X">
-                            <Setter Property="IsEnabled" Value="False"></Setter>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-
-            </lvc:CartesianChart.Resources>
-            <lvc:CartesianChart.AxisX>
-                <lvc:Axis LabelFormatter="{Binding DateTimeFormatter}" 
-                          MaxValue="{Binding XAxisMax}" 
-                          MinValue="{Binding XAxisMin}"
-                          Unit="{Binding AxisUnit}">
-                    <lvc:Axis.Separator>
-                        <lvc:Separator Step="{Binding AxisStep}" />
-                    </lvc:Axis.Separator>
-                </lvc:Axis>
-            </lvc:CartesianChart.AxisX>
-            <lvc:CartesianChart.AxisY>
-                <lvc:Axis  MinValue="{Binding YAxisMin}" Unit="10">
-                    <lvc:Axis.Sections>
-                        <lvc:AxisSection Value="1" StrokeThickness="3" Stroke="#303030"></lvc:AxisSection>
-                    </lvc:Axis.Sections>
-                </lvc:Axis>
-            </lvc:CartesianChart.AxisY>
-        </lvc:CartesianChart>
-
-        <DockPanel Grid.Row="1">
+        <DockPanel Grid.Row="0">
             <Label>RoomSize:</Label>
-            <TextBox Width="50" TextAlignment="Center" Text="{Binding RoomSize}"/>
-            <Button Command="{xaml:Action StartServer}">Start Server</Button>
+            <TextBox Width="50" TextAlignment="Center" IsReadOnly="True" Text="{Binding RoomSize}"/>
+            <Button Width="30" Command="{xaml:Action IncrementRoomSize}">+</Button>
+            <Button Width="30" Command="{xaml:Action DecrementRoomSize}">-</Button>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Command="{xaml:Action StartServer}">Start Server</Button>
+                <Button Grid.Column="1" Command="{xaml:Action StopServer}">Stop Server</Button>
+            </Grid>
         </DockPanel>
+
+        <ContentControl Grid.Row="1" xaml:View.Model="{Binding TickMonitorViewModel}"/>
         
     </Grid>
 </mah:MetroWindow>

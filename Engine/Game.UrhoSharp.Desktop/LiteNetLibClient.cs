@@ -16,11 +16,7 @@ namespace Game.UrhoSharp.Desktop
 
         public void Start()
         {
-            _listener.NetworkReceiveEvent += (fromPeer, dataReader, deliveryMethod) =>
-            {                               
-                DataReceived?.Invoke(dataReader.GetRemainingBytes());
-                dataReader.Recycle();
-            };
+            _listener.NetworkReceiveEvent += OnNetworkReceive;
 
             _client = new NetManager(_listener)
             {
@@ -29,6 +25,13 @@ namespace Game.UrhoSharp.Desktop
             
             _client.Start();
         }
+
+        private void OnNetworkReceive(NetPeer fromPeer, NetPacketReader dataReader, DeliveryMethod deliveryMethod)
+        {
+            DataReceived?.Invoke(dataReader.GetRemainingBytes());
+            dataReader.Recycle();
+        }
+
         public void Connect(string serverIp, int port)
         {
             _client.Connect(serverIp, port, "SomeConnectionKey");
@@ -46,6 +49,7 @@ namespace Game.UrhoSharp.Desktop
 
         public void Stop()
         {
+            _listener.NetworkReceiveEvent -= OnNetworkReceive;
             _client.Stop();
         }
     }

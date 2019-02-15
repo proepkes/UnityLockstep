@@ -77,9 +77,14 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="ShellViewModel.cs" />
     <Compile Include="NinjectBootstrapper.cs" />
+    <Compile Include="TickMonitorViewModel.cs" />
     <Page Include="ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TickMonitorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +114,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit">
+      <Version>3.5.0</Version>
+    </PackageReference>
     <PackageReference Include="Fody">
       <Version>4.0.2</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

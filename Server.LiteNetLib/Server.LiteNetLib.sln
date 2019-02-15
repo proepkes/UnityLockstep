@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28516.95
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.LiteNetLib.Console", "Server.LiteNetLib.Console\Server.LiteNetLib.Console.csproj", "{CFE47EAA-1E40-4403-8A0B-40EBCE3049BE}"
 EndProject

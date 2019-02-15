@@ -33,6 +33,8 @@ namespace Lockstep.Network.Server.Interfaces
         /// Begins listening for client on a specific port
         /// </summary>
         /// <param name="port">The port to listen on</param>
-        void Run(int port);
+        void Start(int port);
+
+        void Stop();
     }
 }

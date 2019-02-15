@@ -40,29 +40,42 @@ namespace Server.LiteNetLib
             _server.ConnectedPeerList.First(peer => peer.Id == clientId).Send(data, DeliveryMethod.ReliableOrdered);
         }
 
-        public void Run(int port)
+        public void Start(int port)
         {
-            _listener.ConnectionRequestEvent += request =>
-            {       
-                request.AcceptIfKey(ClientKey);      
-            };
-
-            _listener.PeerConnectedEvent += peer =>
-            {
-                ClientConnected?.Invoke(peer.Id);
-            };
-
-            _listener.NetworkReceiveEvent += (peer, reader, method) =>
-            {
-                DataReceived?.Invoke(peer.Id, reader.GetRemainingBytes());
-            };
-
-            _listener.PeerDisconnectedEvent += (peer, info) =>
-            {
-                ClientDisconnected?.Invoke(peer.Id);
-            };
-
+            _listener.ConnectionRequestEvent += OnConnectionRequest;
+            _listener.PeerConnectedEvent += OnPeerConnected;
+            _listener.NetworkReceiveEvent += OnNetworkReceive;
+            _listener.PeerDisconnectedEvent += OnPeerDisconnected;
             _server.Start(port);
+        }
+
+        private void OnPeerDisconnected(NetPeer peer, DisconnectInfo info)
+        {
+            ClientDisconnected?.Invoke(peer.Id);
+        }
+
+        private void OnNetworkReceive(NetPeer peer, NetPacketReader reader, DeliveryMethod method)
+        {
+            DataReceived?.Invoke(peer.Id, reader.GetRemainingBytes());
+        }
+
+        private void OnConnectionRequest(ConnectionRequest request)
+        {
+            request.AcceptIfKey(ClientKey);
+        }
+
+        private void OnPeerConnected(NetPeer peer)
+        {
+            ClientConnected?.Invoke(peer.Id);
+        }
+
+        public void Stop()
+        {
+            _listener.ConnectionRequestEvent -= OnConnectionRequest;
+            _listener.PeerConnectedEvent -= OnPeerConnected;
+            _listener.NetworkReceiveEvent -= OnNetworkReceive;
+            _listener.PeerDisconnectedEvent -= OnPeerDisconnected;
+            _server.Stop();
         }
 
         public void PollEvents()

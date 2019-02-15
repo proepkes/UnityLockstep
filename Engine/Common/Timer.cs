@@ -11,7 +11,7 @@ namespace Lockstep.Common
         private readonly Stopwatch _sw = new Stopwatch();
         public void Start()
         {
-            _sw.Start();
+            _sw.Restart();
         }
 
         public long Tick()

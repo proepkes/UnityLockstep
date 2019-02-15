@@ -7,9 +7,7 @@ using Lockstep.Core.Logic;
 using Lockstep.Core.Logic.Interfaces;
 using Lockstep.Core.Logic.Serialization.Utils;
 using Lockstep.Game.Features;
-using Lockstep.Game.Features.Cleanup;
-using Lockstep.Game.Features.Input;
-using Lockstep.Game.Features.Navigation.RVO;
+using Lockstep.Game.Interfaces;
 
 namespace Lockstep.Game
 {
@@ -58,7 +56,8 @@ namespace Lockstep.Game
             _tickDt = 1000f / targetFps;
             _world = new World(Contexts, allActors, 
                 new InputFeature(Contexts, Services), 
-                new RVONavigationFeature(Contexts, Services), 
+                //new RVONavigationFeature(Contexts, Services), 
+                new SimpleNavigationFeature(Contexts, Services),
                 new CleanupFeature(Contexts, Services));
 
             Running = true;

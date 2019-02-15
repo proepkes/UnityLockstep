@@ -1,0 +1,1 @@
+﻿The game layer contains the systems that change the state of the simulation (these are called **features**).

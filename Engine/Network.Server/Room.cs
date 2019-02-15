@@ -33,7 +33,6 @@ namespace Lockstep.Network.Server
         }
     }
 
-
     /// <summary>
     /// Relays input
     /// </summary>
@@ -72,15 +71,27 @@ namespace Lockstep.Network.Server
             _server = server;
             _size = size;
         }    
+
         public void Open(int port)
         {
             _server.ClientConnected += OnClientConnected;
             _server.ClientDisconnected += OnClientDisconnected;
             _server.DataReceived += OnDataReceived;  
             
-            _server.Run(port);
+            _server.Start(port);
 
             Console.WriteLine("Server started. Waiting for " + _size + " players...");
+        }
+
+        public void Close()
+        {
+            _server.ClientConnected -= OnClientConnected;
+            _server.ClientDisconnected -= OnClientDisconnected;
+            _server.DataReceived -= OnDataReceived;
+
+            _server.Stop();
+            _actorIds.Clear();
+            _hashCodes.Clear();
         }
 
         private void OnClientConnected(int clientId)

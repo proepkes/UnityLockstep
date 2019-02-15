@@ -1,4 +1,4 @@
-﻿namespace Lockstep.Game
+﻿namespace Lockstep.Game.Interfaces
 {
     public interface IService
     {
