@@ -28,6 +28,8 @@ namespace Lockstep.Core.Logic.Systems.Game
                     tree.Add(new []{ e.position.value.X, e.position.value.Y }, e);
                 }
 
+                _gameContext.ReplaceKdTree(tree);
+
                 Parallel.ForEach(_entities, e =>
                 {
                     e.neighbors.neighborsECS = new GameEntity[10];
@@ -38,9 +40,7 @@ namespace Lockstep.Core.Logic.Systems.Game
                     {
                         e.neighbors.neighborsECS[k++] = neighbor.Value;
                     }             
-                });    
-
-                _gameContext.ReplaceKdTree(tree);
+                });         
             }
         }
     }
