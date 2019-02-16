@@ -1,4 +1,5 @@
-﻿using System;                       
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;      
@@ -34,9 +35,8 @@ namespace Test
         [Fact]
         public void TestDumpRVO()
         {
-            //TestFileDump(@"RVO\445401195417");
-            //TestFileDump(@"RVO\526795398181");
-            TestFileDump(@"RVO\395866683838");
+            TestFileDump(@"RVO\23859277584");
+            //TestFileDump(@"RVO\445401195417", 802);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Test
         /// At the end the hashcode of both simulations have to match
         /// </summary>
         /// <param name="fileName"></param>
-        private void TestFileDump(string fileName)
+        private void TestFileDump(string fileName, uint tickUntil = 0)
         {
             var contexts = new Contexts();   
             var commandBuffer = new CommandQueue();
@@ -64,6 +64,17 @@ namespace Test
             using (var stream = new MemoryStream(deserializer.GetRemainingBytes()))
             {
                 log = GameLog.ReadFrom(stream);
+            }
+
+            if (tickUntil > 0)
+            {
+                var maxTick = log.InputLog.Keys.Max();
+                for (uint i = tickUntil; i <= maxTick; i++)
+                {
+                    log.InputLog.Remove(i);
+                }
+
+                tick = tickUntil;
             }
 
             var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());

@@ -6,6 +6,14 @@
     <RootNamespace>Lockstep.Network.Server</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="xcopy /d /y  &quot;$(TargetDir)Lockstep.*.dll&quot; &quot;$(SolutionDir)..\Server.LiteNetLib\Integration\&quot;&#xD;&#xA;xcopy /d /y  &quot;$(TargetDir)Lockstep.*.pdb&quot; &quot;$(SolutionDir)..\Server.LiteNetLib\Integration\&quot;&#xD;&#xA;xcopy /d /y  &quot;$(TargetDir)Lockstep.*.json&quot; &quot;$(SolutionDir)..\Server.LiteNetLib\Integration\&quot;" />
   </Target>

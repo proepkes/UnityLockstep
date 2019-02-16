@@ -37,7 +37,7 @@ namespace Lockstep.Core.Logic
             Log.Trace(this, "Predict " + Contexts.gameState.tick.value);
 
             _systems.Execute();
-            _systems.Cleanup();
+            _systems.Cleanup(); 
         }
 
         public void Simulate()
@@ -65,7 +65,7 @@ namespace Lockstep.Core.Logic
             var snapshotIndices = Contexts.snapshot.GetEntities(SnapshotMatcher.Tick).Where(entity => entity.tick.value <= tick).Select(entity => entity.tick.value).ToList();
             var resultTick = snapshotIndices.Any() ? snapshotIndices.Max() : 0;
 
-            Log.Info(this, "Rolling back from " + resultTick + " to " + Contexts.gameState.tick.value);
+            Log.Info(this, "Rolling back from " + Contexts.gameState.tick.value + " to " + resultTick);
 
             /*
              * ====================== Revert actors ======================
@@ -137,8 +137,8 @@ namespace Lockstep.Core.Logic
 
             //TODO: restore locally destroyed entities   
             
-            //Cleanup game-entities that are marked as destroyed
-            _systems.Cleanup();
+            //Cleanup game-entities that were marked as destroyed
+            _systems.Cleanup(); 
 
             Contexts.gameState.ReplaceTick(resultTick);
 

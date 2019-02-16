@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BEPUutilities">
@@ -160,6 +162,16 @@
     <Compile Include="Debug\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="KdTree\HyperRect.cs" />
+    <Compile Include="KdTree\IKdTree.cs" />
+    <Compile Include="KdTree\IPriorityQueue.cs" />
+    <Compile Include="KdTree\KdTree.cs" />
+    <Compile Include="KdTree\KdTreeNode.cs" />
+    <Compile Include="KdTree\Math\Fix64Math.cs" />
+    <Compile Include="KdTree\Math\ITypeMath.cs" />
+    <Compile Include="KdTree\Math\TypeMath.cs" />
+    <Compile Include="KdTree\NearestNeighbourList.cs" />
+    <Compile Include="KdTree\PriorityQueue.cs" />
     <Compile Include="Snapshot\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>

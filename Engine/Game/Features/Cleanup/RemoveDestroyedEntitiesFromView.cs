@@ -13,7 +13,7 @@ namespace Lockstep.Game.Features.Cleanup
 
         public RemoveDestroyedEntitiesFromView(Contexts contexts, ServiceContainer services)
         {
-            _group = contexts.game.GetGroup(GameMatcher.Destroyed);
+            _group = contexts.game.GetGroup(GameMatcher.AllOf(GameMatcher.LocalId, GameMatcher.Destroyed));
 
             _viewService = services.Get<IViewService>();               
         }

@@ -1,4 +1,6 @@
-﻿using Entitas;                                  
+﻿using System.Linq;
+using Entitas;
+using Lockstep.Common.Logging;
 
 namespace Lockstep.Core.Logic.Systems.GameState
 {
@@ -37,6 +39,14 @@ namespace Lockstep.Core.Logic.Systems.GameState
                 {
                     hashCode ^= entity.destination.value.X.RawValue;
                     hashCode ^= entity.destination.value.Y.RawValue;
+                }
+                if (entity.hasNeighbors)
+                {
+                    foreach (var neighbor in entity.neighbors.neighborsECS.Where(e => e != null))
+                    {   
+                        hashCode ^= neighbor.actorId.value;
+                        hashCode ^= neighbor.id.value;
+                    }
                 }
             }                   
 
