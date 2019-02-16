@@ -1238,9 +1238,11 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: '1. Start server and wait for connection
 
-    2. Right click to send spawn-command (at mouse position)
+    2a. Right click to send spawn-command (at mouse position)
 
-    3. ''X'' to send move-command (to mouse position)'
+    2b. Select a unit to show its nearest neighbors
+
+    2c. ''X'' to send move-command (to mouse position)'
 --- !u!222 &1923207269
 CanvasRenderer:
   m_ObjectHideFlags: 0
