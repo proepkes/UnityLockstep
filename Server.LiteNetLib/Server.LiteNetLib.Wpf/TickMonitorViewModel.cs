@@ -6,7 +6,6 @@ using LiveCharts;
 using LiveCharts.Configurations;
 using LiveCharts.Wpf;
 using Stylet;
-using Timer = Lockstep.Common.Timer;
 
 namespace Server.LiteNetLib.Wpf
 {
@@ -32,9 +31,7 @@ namespace Server.LiteNetLib.Wpf
         public double XAxisMax { get; set; }
         public double XAxisMin { get; set; }
         public double YAxisMax { get; set; }
-        public double YAxisMin { get; set; }
-                                           
-        private readonly Timer _tickTimer = new Timer();
+        public double YAxisMin { get; set; }            
         
         private DateTime _startTime = DateTime.Now;
 
@@ -93,7 +90,6 @@ namespace Server.LiteNetLib.Wpf
             }
 
             _startTime = DateTime.Now;
-            _tickTimer.Start();
         }
         
         public void AddTick(byte actorId, uint value)

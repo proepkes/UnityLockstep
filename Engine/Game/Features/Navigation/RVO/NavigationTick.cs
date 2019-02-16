@@ -2,6 +2,7 @@
 using BEPUutilities;
 using Entitas;
 using Lockstep.Common;
+using Lockstep.Core.Logic.Systems.GameState;
 using Lockstep.Game.Features.Navigation.RVO.Algorithm;
 
 namespace Lockstep.Game.Features.Navigation.RVO
@@ -42,6 +43,13 @@ namespace Lockstep.Game.Features.Navigation.RVO
             foreach (var (agentId, agent) in Simulator.Instance.agents_)
             {
                 var entity = _contexts.game.GetEntityWithLocalId(agentId);
+
+                int i = 0;
+                foreach (var neighbor in agent.AgentNeighbors)
+                {
+                    entity.neighbors.neighborsDefault[i++] = neighbor.Value.id;
+                }
+
                 var newPosition = entity.position.value + agent.Velocity;
                 if ((newPosition - entity.position.value).LengthSquared() < F64.C0p5)
                 {
@@ -49,13 +57,7 @@ namespace Lockstep.Game.Features.Navigation.RVO
                 }
 
                 entity.ReplacePosition(entity.position.value + agent.Velocity);
-            }
-
-            foreach (var e in entities)
-            {
-                var rangeSq = RVOMath.sqr(e.rvoAgentSettings.neighborDist);
-
-            }
+            }        
         }
     }
 }

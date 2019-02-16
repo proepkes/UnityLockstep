@@ -145,6 +145,12 @@ namespace Lockstep.Core.Logic.Systems.Game
                         }
                     }
                 }
+
+                int k = 0;
+                foreach (var neighbor in agent.rvoAgentSettings.agentNeighbors)
+                {
+                    agent.neighbors.neighborsECS[k++] = neighbor.Value.localId.value;
+                }
             }
             else
             {

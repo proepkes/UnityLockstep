@@ -69,7 +69,8 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
             }
 
             Agent agent = new Agent
-            {             
+            {          
+                id = id,
                 maxNeighbors_ = defaultAgent_.maxNeighbors_,
                 MaxSpeed = defaultAgent_.MaxSpeed,
                 neighborDist_ = defaultAgent_.neighborDist_,

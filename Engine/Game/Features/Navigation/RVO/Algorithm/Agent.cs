@@ -41,6 +41,7 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
      */
     internal class Agent
     {
+        public uint id;
         internal readonly IList<KeyValuePair<Fix64, Agent>> AgentNeighbors = new List<KeyValuePair<Fix64, Agent>>();
         internal readonly IList<KeyValuePair<Fix64, Obstacle>> ObstacleNeighbors = new List<KeyValuePair<Fix64, Obstacle>>();
         internal readonly IList<Line> OrcaLines = new List<Line>();

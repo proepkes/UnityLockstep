@@ -8,6 +8,7 @@ namespace Lockstep.Core.State.Game
     /// </summary>
     public class NeighborsComponent : IComponent
     {
-        public uint[] neighbors;
+        public uint[] neighborsDefault;
+        public uint[] neighborsECS;
     }
 }
