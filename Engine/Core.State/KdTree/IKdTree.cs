@@ -20,7 +20,7 @@ namespace Lockstep.Core.State.KdTree
 
 		void Clear();
 
-		KdTreeNode<TKey, TValue>[] GetNearestNeighbours(TKey[] point, int count = int.MaxValue);
+		KdTreeNode<TKey, TValue>[] GetNearestNeighbors(TKey[] point, int count = int.MaxValue);
 		
 		int Count { get; }
 	}

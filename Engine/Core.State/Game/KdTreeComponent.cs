@@ -9,6 +9,6 @@ namespace Lockstep.Core.State.Game
     [Unique]
     public class KdTreeComponent : IComponent
     {
-        public KdTree<Fix64, uint> value;
+        public KdTree<Fix64, GameEntity> value;
     }
 }

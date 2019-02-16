@@ -31,20 +31,18 @@ namespace Lockstep.Core.State.KdTree.Math
 		public abstract T MaxValue { get; }
 
 		public T Min(T a, T b)
-		{
-			if (Compare(a, b) < 0)
+        {
+            if (Compare(a, b) < 0)
 				return a;
-			else
-				return b;
-		}
+            return b;
+        }
 
 		public T Max(T a, T b)
-		{
-			if (Compare(a, b) > 0)
+        {
+            if (Compare(a, b) > 0)
 				return a;
-			else
-				return b;
-		}
+            return b;
+        }
 
 		public abstract T Zero { get; }
 

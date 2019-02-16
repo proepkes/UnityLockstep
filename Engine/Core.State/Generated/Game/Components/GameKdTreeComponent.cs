@@ -6,16 +6,13 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-
-using Lockstep.Core.State.KdTree;
-
 public partial class GameContext {
 
     public GameEntity kdTreeEntity { get { return GetGroup(GameMatcher.KdTree).GetSingleEntity(); } }
     public Lockstep.Core.State.Game.KdTreeComponent kdTree { get { return kdTreeEntity.kdTree; } }
     public bool hasKdTree { get { return kdTreeEntity != null; } }
 
-    public GameEntity SetKdTree(KdTree<FixMath.NET.Fix64, uint> newValue) {
+    public GameEntity SetKdTree(Lockstep.Core.State.KdTree.KdTree<FixMath.NET.Fix64, GameEntity> newValue) {
         if (hasKdTree) {
             throw new Entitas.EntitasException("Could not set KdTree!\n" + this + " already has an entity with Lockstep.Core.State.Game.KdTreeComponent!",
                 "You should check if the context already has a kdTreeEntity before setting it or use context.ReplaceKdTree().");
@@ -25,7 +22,7 @@ public partial class GameContext {
         return entity;
     }
 
-    public void ReplaceKdTree(KdTree<FixMath.NET.Fix64, uint> newValue) {
+    public void ReplaceKdTree(Lockstep.Core.State.KdTree.KdTree<FixMath.NET.Fix64, GameEntity> newValue) {
         var entity = kdTreeEntity;
         if (entity == null) {
             entity = SetKdTree(newValue);
@@ -52,14 +49,14 @@ public partial class GameEntity {
     public Lockstep.Core.State.Game.KdTreeComponent kdTree { get { return (Lockstep.Core.State.Game.KdTreeComponent)GetComponent(GameComponentsLookup.KdTree); } }
     public bool hasKdTree { get { return HasComponent(GameComponentsLookup.KdTree); } }
 
-    public void AddKdTree(KdTree<FixMath.NET.Fix64, uint> newValue) {
+    public void AddKdTree(Lockstep.Core.State.KdTree.KdTree<FixMath.NET.Fix64, GameEntity> newValue) {
         var index = GameComponentsLookup.KdTree;
         var component = (Lockstep.Core.State.Game.KdTreeComponent)CreateComponent(index, typeof(Lockstep.Core.State.Game.KdTreeComponent));
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceKdTree(KdTree<FixMath.NET.Fix64, uint> newValue) {
+    public void ReplaceKdTree(Lockstep.Core.State.KdTree.KdTree<FixMath.NET.Fix64, GameEntity> newValue) {
         var index = GameComponentsLookup.KdTree;
         var component = (Lockstep.Core.State.Game.KdTreeComponent)CreateComponent(index, typeof(Lockstep.Core.State.Game.KdTreeComponent));
         component.value = newValue;

@@ -25,7 +25,7 @@ namespace Lockstep.Core.State.KdTree
 
 		public NearestNeighbourList(ITypeMath<TDistance> distanceMath)
 		{
-			this.maxCapacity = int.MaxValue;
+			maxCapacity = int.MaxValue;
 			this.distanceMath = distanceMath;
 
 			queue = new PriorityQueue<TItem, TDistance>(distanceMath);
@@ -43,8 +43,8 @@ namespace Lockstep.Core.State.KdTree
 		public bool Add(TItem item, TDistance distance)
 		{
 			if (queue.Count >= maxCapacity)
-			{
-				// If the distance of this item is less than the distance of the last item
+            {
+                // If the distance of this item is less than the distance of the last item
 				// in our neighbour list then pop that neighbour off and push this one on
 				// otherwise don't even bother adding this item
 				if (distanceMath.Compare(distance, queue.GetHighestPriority()) < 0)
@@ -53,31 +53,27 @@ namespace Lockstep.Core.State.KdTree
 					queue.Enqueue(item, distance);
 					return true;
 				}
-				else
-					return false;
-			}
-			else
-			{
-				queue.Enqueue(item, distance);
-				return true;
-			}
-		}
+
+                return false;
+            }
+
+            queue.Enqueue(item, distance);
+            return true;
+        }
 
 		public TItem GetFurtherest()
-		{
-			if (Count == 0)
+        {
+            if (Count == 0)
 				throw new Exception("List is empty");
-			else
-				return queue.GetHighest();
-		}
+            return queue.GetHighest();
+        }
 
 		public TDistance GetFurtherestDistance()
-		{
-			if (Count == 0)
+        {
+            if (Count == 0)
 				throw new Exception("List is empty");
-			else
-				return queue.GetHighestPriority();
-		}
+            return queue.GetHighestPriority();
+        }
 
 		public TItem RemoveFurtherest()
 		{

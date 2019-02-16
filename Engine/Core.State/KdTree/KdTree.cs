@@ -13,7 +13,7 @@ namespace Lockstep.Core.State.KdTree
 	{
 		Skip,
 		Error,
-		Update
+		Update 
 	}
 
 	public class DuplicateNodeError : Exception
@@ -29,8 +29,8 @@ namespace Lockstep.Core.State.KdTree
 	{
 		public KdTree(int dimensions, ITypeMath<TKey> typeMath)
 		{
-			this.dimensions = dimensions;
-			this.typeMath = typeMath;
+			_dimensions = dimensions;
+			_typeMath = typeMath;
 			Count = 0;
 		}
 
@@ -40,34 +40,34 @@ namespace Lockstep.Core.State.KdTree
 			AddDuplicateBehavior = addDuplicateBehavior;
 		}
 
-		private readonly int dimensions;
+		private readonly int _dimensions;
 
-		private readonly ITypeMath<TKey> typeMath;
+		private readonly ITypeMath<TKey> _typeMath;
 
-		private KdTreeNode<TKey, TValue> root = null;
+		private KdTreeNode<TKey, TValue> _root;
 
-		public AddDuplicateBehavior AddDuplicateBehavior { get; private set; }
+        private AddDuplicateBehavior AddDuplicateBehavior { get; }
 
 		public bool Add(TKey[] point, TValue value)
 		{
 			var nodeToAdd = new KdTreeNode<TKey, TValue>(point, value);
 
-			if (root == null)
+			if (_root == null)
 			{
-				root = new KdTreeNode<TKey, TValue>(point, value);
+				_root = new KdTreeNode<TKey, TValue>(point, value);
 			}
 			else
 			{
-				int dimension = -1;
-				KdTreeNode<TKey, TValue> parent = root;
+				var dimension = -1;
+				var parent = _root;
 
 				do
 				{
 					// Increment the dimension we're searching in
-					dimension = (dimension + 1) % dimensions;
+					dimension = (dimension + 1) % _dimensions;
 
 					// Does the node we're adding have the same hyperpoint as this node?
-					if (typeMath.AreEqual(point, parent.Point))
+					if (_typeMath.AreEqual(point, parent.Point))
 					{
 						switch (AddDuplicateBehavior)
 						{
@@ -79,27 +79,25 @@ namespace Lockstep.Core.State.KdTree
 
 							case AddDuplicateBehavior.Update:
 								parent.Value = value;
-								return true;
+								return true;   
 
-							default:
+                            default:
 								// Should never happen
 								throw new Exception("Unexpected AddDuplicateBehavior");
 						}
 					}
 
 					// Which side does this node sit under in relation to it's parent at this level?
-					int compare = typeMath.Compare(point[dimension], parent.Point[dimension]);
+					var compare = _typeMath.Compare(point[dimension], parent.Point[dimension]);
 
 					if (parent[compare] == null)
 					{
 						parent[compare] = nodeToAdd;
 						break;
 					}
-					else
-					{
-						parent = parent[compare];
-					}
-				}
+
+                    parent = parent[compare];
+                }
 				while (true);
 			}
 
@@ -107,87 +105,87 @@ namespace Lockstep.Core.State.KdTree
 			return true;
 		}
 
-		private void ReaddChildNodes(KdTreeNode<TKey, TValue> removedNode)
+		private void ReadChildNodes(KdTreeNode<TKey, TValue> removedNode)
 		{
 			if (removedNode.IsLeaf)
 				return;
 
-			// The folllowing code might seem a little redundant but we're using 
+			// The following code might seem a little redundant but we're using 
 			// 2 queues so we can add the child nodes back in, in (more or less) 
 			// the same order they were added in the first place
-			var nodesToReadd = new Queue<KdTreeNode<TKey, TValue>>();
+			var nodesToRead = new Queue<KdTreeNode<TKey, TValue>>();
 
-			var nodesToReaddQueue = new Queue<KdTreeNode<TKey, TValue>>();
+			var nodesToReadQueue = new Queue<KdTreeNode<TKey, TValue>>();
 
 			if (removedNode.LeftChild != null)
-				nodesToReaddQueue.Enqueue(removedNode.LeftChild);
+				nodesToReadQueue.Enqueue(removedNode.LeftChild);
 
 			if (removedNode.RightChild != null)
-				nodesToReaddQueue.Enqueue(removedNode.RightChild);
+				nodesToReadQueue.Enqueue(removedNode.RightChild);
 
-			while (nodesToReaddQueue.Count > 0)
+			while (nodesToReadQueue.Count > 0)
 			{
-				var nodeToReadd = nodesToReaddQueue.Dequeue();
+				var nodeToRead = nodesToReadQueue.Dequeue();
 
-				nodesToReadd.Enqueue(nodeToReadd);
+				nodesToRead.Enqueue(nodeToRead);
 
-				for (int side = -1; side <= 1; side += 2)
+				for (var side = -1; side <= 1; side += 2)
 				{
-					if (nodeToReadd[side] != null)
+					if (nodeToRead[side] != null)
 					{
-						nodesToReaddQueue.Enqueue(nodeToReadd[side]);
+						nodesToReadQueue.Enqueue(nodeToRead[side]);
 
-						nodeToReadd[side] = null;
+						nodeToRead[side] = null;
 					}
 				}
 			}
 
-			while (nodesToReadd.Count > 0)
+			while (nodesToRead.Count > 0)
 			{
-				var nodeToReadd = nodesToReadd.Dequeue();
+				var nodeToRead = nodesToRead.Dequeue();
 
 				Count--;
-				Add(nodeToReadd.Point, nodeToReadd.Value);
+				Add(nodeToRead.Point, nodeToRead.Value);
 			}
 		}
 
 		public void RemoveAt(TKey[] point)
 		{
 			// Is tree empty?
-			if (root == null)
+			if (_root == null)
 				return;
 
 			KdTreeNode<TKey, TValue> node;
 
-			if (typeMath.AreEqual(point, root.Point))
+			if (_typeMath.AreEqual(point, _root.Point))
 			{
-				node = root;
-				root = null;
+				node = _root;
+				_root = null;
 				Count--;
-				ReaddChildNodes(node);
+				ReadChildNodes(node);
 				return;
 			}
 
-			node = root;
+			node = _root;
 
-			int dimension = -1;
+			var dimension = -1;
 			do
 			{
-				dimension = (dimension + 1) % dimensions;
+				dimension = (dimension + 1) % _dimensions;
 
-				int compare = typeMath.Compare(point[dimension], node.Point[dimension]);
+				var compare = _typeMath.Compare(point[dimension], node.Point[dimension]);
 
 				if (node[compare] == null)
 					// Can't find node
 					return;
 
-				if (typeMath.AreEqual(point, node[compare].Point))
+				if (_typeMath.AreEqual(point, node[compare].Point))
 				{
 					var nodeToRemove = node[compare];
 					node[compare] = null;
 					Count--;
 
-					ReaddChildNodes(nodeToRemove);
+					ReadChildNodes(nodeToRemove);
 				}
 				else
 					node = node[compare];
@@ -195,7 +193,7 @@ namespace Lockstep.Core.State.KdTree
 			while (node != null);
 		}
 
-		public KdTreeNode<TKey, TValue>[] GetNearestNeighbours(TKey[] point, int count)
+		public KdTreeNode<TKey, TValue>[] GetNearestNeighbors(TKey[] point, int count)
 		{
 			if (count > Count)
 				count = Count;
@@ -208,25 +206,23 @@ namespace Lockstep.Core.State.KdTree
 			if (count == 0)
 				return new KdTreeNode<TKey, TValue>[0];
 
-			var neighbours = new KdTreeNode<TKey, TValue>[count];
+            var nearestNeighbors = new NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey>(count, _typeMath);
 
-			var nearestNeighbours = new NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey>(count, typeMath);
+			var rect = HyperRect<TKey>.Infinite(_dimensions, _typeMath);
 
-			var rect = HyperRect<TKey>.Infinite(dimensions, typeMath);
+			AddNearestNeighbors(_root, point, rect, 0, nearestNeighbors, _typeMath.MaxValue);
 
-			AddNearestNeighbours(root, point, rect, 0, nearestNeighbours, typeMath.MaxValue);
+			count = nearestNeighbors.Count;
 
-			count = nearestNeighbours.Count;
-
-			var neighbourArray = new KdTreeNode<TKey, TValue>[count];
+			var neighborArray = new KdTreeNode<TKey, TValue>[count];
 
 			for (var index = 0; index < count; index++)
-				neighbourArray[count - index - 1] = nearestNeighbours.RemoveFurtherest();
+				neighborArray[count - index - 1] = nearestNeighbors.RemoveFurtherest();
 
-			return neighbourArray;
+			return neighborArray;
 		}
 
-		/*
+        /*
 		 * 1. Search for the target
 		 * 
 		 *   1.1 Start by splitting the specified hyper rect
@@ -245,25 +241,25 @@ namespace Lockstep.Core.State.KdTree
 		 *       recursively with nearer rect and node and incrementing 
 		 *       the depth
 		 * 
-		 * 2. Add leaf to list of nearest neighbours
+		 * 2. Add leaf to list of nearest neighbors
 		 * 
 		 * 3. Walk back up tree and at each level:
 		 * 
-		 *    3.1 Add node to nearest neighbours if
-		 *        we haven't filled our nearest neighbour
+		 *    3.1 Add node to nearest neighbors if
+		 *        we haven't filled our nearest neighbor
 		 *        list yet or if it has a distance to target less
 		 *        than any of the distances in our current nearest 
-		 *        neighbours.
+		 *        neighbors.
 		 *        
 		 *    3.2 If there is any point in the further rectangle that is closer to
-		 *        the target than our furtherest nearest neighbour then travel into
+		 *        the target than our furthest nearest neighbor then travel into
 		 *        that rect and node
 		 * 
 		 *  That's it, when it finally finishes traversing the branches 
 		 *  it needs to we'll have our list!
 		 */
 
-		private void AddNearestNeighbours(
+        private void AddNearestNeighbors(
 			KdTreeNode<TKey, TValue> node,
 			TKey[] target,
 			HyperRect<TKey> rect,
@@ -275,7 +271,7 @@ namespace Lockstep.Core.State.KdTree
 				return;
 
 			// Work out the current dimension
-			int dimension = depth % dimensions;
+			var dimension = depth % _dimensions;
 
 			// Split our hyper-rect into 2 sub rects along the current 
 			// node's point on the current dimension
@@ -286,7 +282,7 @@ namespace Lockstep.Core.State.KdTree
 			rightRect.MinPoint[dimension] = node.Point[dimension];
 
 			// Which side does the target reside in?
-			int compare = typeMath.Compare(target[dimension], node.Point[dimension]);
+			var compare = _typeMath.Compare(target[dimension], node.Point[dimension]);
 
 			var nearerRect = compare <= 0 ? leftRect : rightRect;
 			var furtherRect = compare <= 0 ? rightRect : leftRect;
@@ -297,7 +293,7 @@ namespace Lockstep.Core.State.KdTree
 			// Let's walk down into the nearer branch
 			if (nearerNode != null)
 			{
-				AddNearestNeighbours(
+				AddNearestNeighbors(
 					nearerNode,
 					target,
 					nearerRect,
@@ -310,16 +306,16 @@ namespace Lockstep.Core.State.KdTree
 
 			// Walk down into the further branch but only if our capacity hasn't been reached 
 			// OR if there's a region in the further rect that's closer to the target than our
-			// current furtherest nearest neighbour
-			TKey[] closestPointInFurtherRect = furtherRect.GetClosestPoint(target, typeMath);
-			distanceSquaredToTarget = typeMath.DistanceSquaredBetweenPoints(closestPointInFurtherRect, target);
+			// current furthest nearest neighbor
+			var closestPointInFurtherRect = furtherRect.GetClosestPoint(target, _typeMath);
+			distanceSquaredToTarget = _typeMath.DistanceSquaredBetweenPoints(closestPointInFurtherRect, target);
 
-			if (typeMath.Compare(distanceSquaredToTarget, maxSearchRadiusSquared) <= 0)
+			if (_typeMath.Compare(distanceSquaredToTarget, maxSearchRadiusSquared) <= 0)
 			{
 				if (nearestNeighbours.IsCapacityReached)
 				{
-					if (typeMath.Compare(distanceSquaredToTarget, nearestNeighbours.GetFurtherestDistance()) < 0)
-						AddNearestNeighbours(
+					if (_typeMath.Compare(distanceSquaredToTarget, nearestNeighbours.GetFurtherestDistance()) < 0)
+						AddNearestNeighbors(
 							furtherNode,
 							target,
 							furtherRect,
@@ -329,7 +325,7 @@ namespace Lockstep.Core.State.KdTree
 				}
 				else
 				{
-					AddNearestNeighbours(
+					AddNearestNeighbors(
 						furtherNode,
 						target,
 						furtherRect,
@@ -339,10 +335,10 @@ namespace Lockstep.Core.State.KdTree
 				}
 			}
 
-			// Try to add the current node to our nearest neighbours list
-			distanceSquaredToTarget = typeMath.DistanceSquaredBetweenPoints(node.Point, target);
+			// Try to add the current node to our nearest neighbors list
+			distanceSquaredToTarget = _typeMath.DistanceSquaredBetweenPoints(node.Point, target);
 
-			if (typeMath.Compare(distanceSquaredToTarget, maxSearchRadiusSquared) <= 0)
+			if (_typeMath.Compare(distanceSquaredToTarget, maxSearchRadiusSquared) <= 0)
 				nearestNeighbours.Add(node, distanceSquaredToTarget);
 		}
 
@@ -353,8 +349,7 @@ namespace Lockstep.Core.State.KdTree
 		/// <param name="radius">Radius to find neighbours within</param>
 		public KdTreeNode<TKey, TValue>[] RadialSearch(TKey[] center, TKey radius)
 		{
-			var nearestNeighbours = new NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey>(typeMath);
-			return RadialSearch(center, radius, nearestNeighbours);
+			return RadialSearch(center, radius, new NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey>(_typeMath));
 		}
 
 		/// <summary>
@@ -365,68 +360,67 @@ namespace Lockstep.Core.State.KdTree
 		/// <param name="count">Maximum number of neighbours</param>
 		public KdTreeNode<TKey, TValue>[] RadialSearch(TKey[] center, TKey radius, int count)
 		{
-			var nearestNeighbours = new NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey>(count, typeMath);
-			return RadialSearch(center, radius, nearestNeighbours);
+			return RadialSearch(center, radius, new NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey>(count, _typeMath));
 		}
 
-		private KdTreeNode<TKey, TValue>[] RadialSearch(TKey[] center, TKey radius, NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey> nearestNeighbours)
+		private KdTreeNode<TKey, TValue>[] RadialSearch(TKey[] center, TKey radius, NearestNeighbourList<KdTreeNode<TKey, TValue>, TKey> nearestNeighbors)
 		{
-			AddNearestNeighbours(
-				root,
+			AddNearestNeighbors(
+				_root,
 				center,
-				HyperRect<TKey>.Infinite(dimensions, typeMath),
+				HyperRect<TKey>.Infinite(_dimensions, _typeMath),
 				0,
-				nearestNeighbours,
-				typeMath.Multiply(radius, radius));
+				nearestNeighbors,
+				_typeMath.Multiply(radius, radius));
 
-			var count = nearestNeighbours.Count;
+			var count = nearestNeighbors.Count;
 
-			var neighbourArray = new KdTreeNode<TKey, TValue>[count];
+			var neighborArray = new KdTreeNode<TKey, TValue>[count];
 
 			for (var index = 0; index < count; index++)
-				neighbourArray[count - index - 1] = nearestNeighbours.RemoveFurtherest();
+				neighborArray[count - index - 1] = nearestNeighbors.RemoveFurtherest();
 
-			return neighbourArray;
+			return neighborArray;
 		}
 
 		public int Count { get; private set; }
 
 		public bool TryFindValueAt(TKey[] point, out TValue value)
 		{
-			var parent = root;
-			int dimension = -1;
+			var parent = _root;
+			var dimension = -1;
 			do
 			{
 				if (parent == null)
 				{
-					value = default(TValue);
+					value = default;
 					return false;
 				}
-				else if (typeMath.AreEqual(point, parent.Point))
-				{
-					value = parent.Value;
-					return true;
-				}
 
-				// Keep searching
-				dimension = (dimension + 1) % dimensions;
-				int compare = typeMath.Compare(point[dimension], parent.Point[dimension]);
+                if (_typeMath.AreEqual(point, parent.Point))
+                {
+                    value = parent.Value;
+                    return true;
+                }
+
+                // Keep searching
+				dimension = (dimension + 1) % _dimensions;
+				var compare = _typeMath.Compare(point[dimension], parent.Point[dimension]);
 				parent = parent[compare];
 			}
 			while (true);
 		}
 
 		public TValue FindValueAt(TKey[] point)
-		{
-			if (TryFindValueAt(point, out TValue value))
+        {
+            if (TryFindValueAt(point, out var value))
 				return value;
-			else
-				return default(TValue);
-		}
+            return default;
+        }
 
 		public bool TryFindValue(TValue value, out TKey[] point)
 		{
-			if (root == null)
+			if (_root == null)
 			{
 				point = null;
 				return false;
@@ -435,7 +429,7 @@ namespace Lockstep.Core.State.KdTree
 			// First-in, First-out list of nodes to search
 			var nodesToSearch = new Queue<KdTreeNode<TKey, TValue>>();
 
-			nodesToSearch.Enqueue(root);
+			nodesToSearch.Enqueue(_root);
 
 			while (nodesToSearch.Count > 0)
 			{
@@ -446,29 +440,26 @@ namespace Lockstep.Core.State.KdTree
 					point = nodeToSearch.Point;
 					return true;
 				}
-				else
-				{
-					for (int side = -1; side <= 1; side += 2)
-					{
-						var childNode = nodeToSearch[side];
 
-						if (childNode != null)
-							nodesToSearch.Enqueue(childNode);
-					}
-				}
-			}
+                for (var side = -1; side <= 1; side += 2)
+                {
+                    var childNode = nodeToSearch[side];
+
+                    if (childNode != null)
+                        nodesToSearch.Enqueue(childNode);
+                }
+            }
 
 			point = null;
 			return false;
 		}
 
 		public TKey[] FindValue(TValue value)
-		{
-			if (TryFindValue(value, out TKey[] point))
+        {
+            if (TryFindValue(value, out var point))
 				return point;
-			else
-				return null;
-		}
+            return null;
+        }
 
 		private void AddNodeToStringBuilder(KdTreeNode<TKey, TValue> node, StringBuilder sb, int depth)
 		{
@@ -490,11 +481,11 @@ namespace Lockstep.Core.State.KdTree
 
 		public override string ToString()
 		{
-			if (root == null)
+			if (_root == null)
 				return "";
 
 			var sb = new StringBuilder();
-			AddNodeToStringBuilder(root, sb, 0);
+			AddNodeToStringBuilder(_root, sb, 0);
 			return sb.ToString();
 		}
 
@@ -525,7 +516,7 @@ namespace Lockstep.Core.State.KdTree
 				{
 					var a = nodes[newIndex - 1];
 					var b = nodes[newIndex];
-					if (typeMath.Compare(b.Point[byDimension], a.Point[byDimension]) < 0)
+					if (_typeMath.Compare(b.Point[byDimension], a.Point[byDimension]) < 0)
 					{
 						nodes[newIndex - 1] = b;
 						nodes[newIndex] = a;
@@ -549,14 +540,14 @@ namespace Lockstep.Core.State.KdTree
 			SortNodesArray(nodes, byDimension, fromIndex, toIndex);
 
 			// Find the splitting point
-			int midIndex = fromIndex + (int)System.Math.Round((toIndex + 1 - fromIndex) / 2f) - 1;
+			var midIndex = fromIndex + (int)System.Math.Round((toIndex + 1 - fromIndex) / 2f) - 1;
 
 			// Add the splitting point
 			Add(nodes[midIndex].Point, nodes[midIndex].Value);
 			nodes[midIndex] = null;
 
 			// Recurse
-			int nextDimension = (byDimension + 1) % dimensions;
+			var nextDimension = (byDimension + 1) % _dimensions;
 
 			if (fromIndex < midIndex)
 				AddNodesBalanced(nodes, nextDimension, fromIndex, midIndex - 1);
@@ -568,7 +559,7 @@ namespace Lockstep.Core.State.KdTree
 		public void Balance()
 		{
 			var nodeList = new List<KdTreeNode<TKey, TValue>>();
-			AddNodesToList(root, nodeList);
+			AddNodesToList(_root, nodeList);
 
 			Clear();
 
@@ -589,14 +580,14 @@ namespace Lockstep.Core.State.KdTree
 
 		public void Clear()
 		{
-			if (root != null)
-				RemoveChildNodes(root);
+			if (_root != null)
+				RemoveChildNodes(_root);
 		}
 
 		public void SaveToFile(string filename)
 		{
-			BinaryFormatter formatter = new BinaryFormatter();
-			using (FileStream stream = File.Create(filename))
+			var formatter = new BinaryFormatter();
+			using (var stream = File.Create(filename))
 			{
 				formatter.Serialize(stream, this);
 				stream.Flush();
@@ -605,8 +596,8 @@ namespace Lockstep.Core.State.KdTree
 
 		public static KdTree<TKey, TValue> LoadFromFile(string filename)
 		{
-			BinaryFormatter formatter = new BinaryFormatter();
-			using (FileStream stream = File.Open(filename, FileMode.Open))
+			var formatter = new BinaryFormatter();
+			using (var stream = File.Open(filename, FileMode.Open))
 			{
 				return (KdTree<TKey, TValue>)formatter.Deserialize(stream);
 			}
@@ -618,7 +609,7 @@ namespace Lockstep.Core.State.KdTree
 			var left = new Stack<KdTreeNode<TKey, TValue>>();
 			var right = new Stack<KdTreeNode<TKey, TValue>>();
 
-			void addLeft(KdTreeNode<TKey, TValue> node)
+			void AddLeft(KdTreeNode<TKey, TValue> node)
 			{
 				if (node.LeftChild != null)
 				{
@@ -626,7 +617,7 @@ namespace Lockstep.Core.State.KdTree
 				}
 			}
 
-			void addRight(KdTreeNode<TKey, TValue> node)
+			void AddRight(KdTreeNode<TKey, TValue> node)
 			{
 				if (node.RightChild != null)
 				{
@@ -634,12 +625,12 @@ namespace Lockstep.Core.State.KdTree
 				}
 			}
 
-			if (root != null)
+			if (_root != null)
 			{
-				yield return root;
+				yield return _root;
 
-				addLeft(root);
-				addRight(root);
+				AddLeft(_root);
+				AddRight(_root);
 
 				while (true)
 				{
@@ -647,8 +638,8 @@ namespace Lockstep.Core.State.KdTree
 					{
 						var item = left.Pop();
 
-						addLeft(item);
-						addRight(item);
+						AddLeft(item);
+						AddRight(item);
 
 						yield return item;
 					}
@@ -656,8 +647,8 @@ namespace Lockstep.Core.State.KdTree
 					{
 						var item = right.Pop();
 
-						addLeft(item);
-						addRight(item);
+						AddLeft(item);
+						AddRight(item);
 
 						yield return item;
 					}

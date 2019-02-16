@@ -15,10 +15,5 @@ namespace Lockstep.Core.Logic
             ActorId = actorId;
             Commands = commands;
         }
-
-        public override string ToString()
-        {
-            return ActorId + " >> " + Tick + ": " + Commands.GetType().FullName;
-        }
     }
 }

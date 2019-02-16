@@ -1,6 +1,6 @@
 ﻿namespace Lockstep.Core.State.KdTree
 {
-    public interface IPriorityQueue<TItem, TPriority>
+    public interface IPriorityQueue<TItem, in TPriority>
 	{
 		void Enqueue(TItem item, TPriority priority);
 

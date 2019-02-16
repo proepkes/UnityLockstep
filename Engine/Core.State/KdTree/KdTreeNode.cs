@@ -5,32 +5,27 @@ namespace Lockstep.Core.State.KdTree
 {
     [Serializable]
 	public class KdTreeNode<TKey, TValue>
-	{
-		public KdTreeNode()
-		{
-		}
-
+	{      
 		public KdTreeNode(TKey[] point, TValue value)
 		{
 			Point = point;
 			Value = value;
 		}
 
-		public TKey[] Point;
-		public TValue Value = default(TValue);
+		public readonly TKey[] Point;
+		public TValue Value;
 
-		internal KdTreeNode<TKey, TValue> LeftChild = null;
-		internal KdTreeNode<TKey, TValue> RightChild = null;
+		internal KdTreeNode<TKey, TValue> LeftChild;
+		internal KdTreeNode<TKey, TValue> RightChild;
 
 		internal KdTreeNode<TKey, TValue> this[int compare]
 		{
 			get
-			{
-				if (compare <= 0)
+            {
+                if (compare <= 0)
 					return LeftChild;
-				else
-					return RightChild;
-			}
+                return RightChild;
+            }
 			set
 			{
 				if (compare <= 0)
@@ -40,27 +35,21 @@ namespace Lockstep.Core.State.KdTree
 			}
 		}
 
-		public bool IsLeaf
-		{
-			get
-			{
-				return (LeftChild == null) && (RightChild == null);
-			}
-		}
+		public bool IsLeaf => (LeftChild == null) && (RightChild == null);
 
-		public override string ToString()
+        public override string ToString()
 		{
 			var sb = new StringBuilder();
 
-			for (var dimension = 0; dimension < Point.Length; dimension++)
-			{
-				sb.Append(Point[dimension].ToString() + "\t");
-			}
+			foreach (var value in Point)
+            {
+                sb.Append(value + "\t");
+            }
 
 			if (Value == null)
 				sb.Append("null");
 			else
-				sb.Append(Value.ToString());
+				sb.Append(Value);
 
 			return sb.ToString();
 		}

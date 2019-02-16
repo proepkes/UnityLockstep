@@ -27,7 +27,7 @@ namespace Lockstep.Core.State.KdTree
         ///</remarks>
         public PriorityQueue(ITypeMath<TPriority> priorityMath)
         {
-            this.capacity = 4;
+            capacity = 4;
             queue = new ItemPriority<TItem, TPriority>[capacity];
 
             this.priorityMath = priorityMath;
@@ -74,7 +74,7 @@ namespace Lockstep.Core.State.KdTree
         {
             TItem item = queue[0].Item;
 
-            queue[0].Item = default(TItem);
+            queue[0].Item = default;
             queue[0].Priority = priorityMath.MinValue;
 
             ReorderItem(0, 1);
@@ -122,16 +122,14 @@ namespace Lockstep.Core.State.KdTree
         {
             if (count == 0)
                 throw new Exception("Queue is empty");
-            else
-                return queue[0].Item;
+            return queue[0].Item;
         }
 
         public TPriority GetHighestPriority()
         {
             if (count == 0)
                 throw new Exception("Queue is empty");
-            else
-                return queue[0].Priority;
+            return queue[0].Priority;
         }
     }
 }
