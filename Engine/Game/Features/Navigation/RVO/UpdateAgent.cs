@@ -15,11 +15,11 @@ namespace Lockstep.Game.Features.Navigation.RVO
 
         public void Execute()
         {
-            Parallel.ForEach(_movableEntities.GetEntities(), entity =>
+            foreach (var entity in _movableEntities)
             {
                 entity.ReplaceVelocity(entity.agent.velocity);
-                entity.ReplacePosition(entity.position.value + entity.velocity.value);
-            });
+                entity.ReplacePosition(entity.position.value + entity.velocity.value);  
+            }
         }
     }
 }

@@ -122,7 +122,7 @@ namespace Lockstep.Network.Server
                     var clientTick = reader.GetUInt();
                     reader.GetByte(); //Client's lag-compensation
                     var commandsCount = reader.GetInt();
-                    if (commandsCount > 0 || _inputMessageCounter % 8 == 0)
+                    if (commandsCount > 0 || _inputMessageCounter % 4 == 0)
                     {
                         _server.Distribute(clientId, data);
                     } 

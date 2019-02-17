@@ -83,7 +83,7 @@ namespace Lockstep.Game
 
                     ProcessInputQueue();
 
-                    _world.Predict();
+                    _world.Predict();  
                 }
 
                 _accumulatedTime -= _tickDt;

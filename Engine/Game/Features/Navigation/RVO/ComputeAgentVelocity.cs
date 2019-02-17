@@ -22,7 +22,7 @@ namespace Lockstep.Game.Features.Navigation.RVO
 
         public void Execute()
         {
-            Parallel.ForEach(_movableEntities.GetEntities(), entity =>
+            foreach (var entity in _movableEntities)
             {
                 entity.agent.orcaLines.Clear();
                 Fix64 invTimeHorizon = Fix64.One / entity.agent.timeHorizon;
@@ -108,7 +108,7 @@ namespace Lockstep.Game.Features.Navigation.RVO
                     linearProgram3(entity.agent.orcaLines, 0, lineFail, entity.agent.maxSpeed,
                         ref entity.agent.velocity);
                 }
-            });
+            }
         }
 
         /**
