@@ -1,7 +1,7 @@
 ﻿using System;
-using Lockstep.Core.State.KdTree.Math;
+using Lockstep.Core.State.Game.KdTree.Math;
 
-namespace Lockstep.Core.State.KdTree
+namespace Lockstep.Core.State.Game.KdTree
 {
     struct ItemPriority<TItem, TPriority>
     {

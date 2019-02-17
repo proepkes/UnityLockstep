@@ -2,11 +2,11 @@
 
 namespace Lockstep.Core.Logic.Systems.Actor
 {
-    public class InitializeEntityCount : IInitializeSystem
+    public class InitializeActors : IInitializeSystem
     {
         private readonly ActorContext _actorContext;
 
-        public InitializeEntityCount(Contexts contexts)
+        public InitializeActors(Contexts contexts)
         {
             _actorContext = contexts.actor;
         }

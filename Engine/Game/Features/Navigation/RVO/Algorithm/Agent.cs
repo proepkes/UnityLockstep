@@ -33,6 +33,7 @@
 using System.Collections.Generic;
 using BEPUutilities;
 using FixMath.NET;
+using Lockstep.Core.State.Game;
 
 namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
 {
@@ -75,17 +76,17 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
          */
         internal void computeNeighbors()
         {
-            ObstacleNeighbors.Clear();
-            Fix64 rangeSq = RVOMath.sqr(timeHorizonObst_ * MaxSpeed + radius_);
-            Simulator.Instance.kdTree_.computeObstacleNeighbors(this, rangeSq);
+            //ObstacleNeighbors.Clear();
+            //Fix64 rangeSq = RVOMath.sqr(timeHorizonObst_ * MaxSpeed + radius_);
+            //Simulator.Instance.kdTree_.computeObstacleNeighbors(this, rangeSq);
 
-            AgentNeighbors.Clear();
+            //AgentNeighbors.Clear();
 
-            if (maxNeighbors_ > 0)
-            {
-                rangeSq = RVOMath.sqr(neighborDist_);
-                Simulator.Instance.kdTree_.computeAgentNeighbors(this, ref rangeSq);
-            }
+            //if (maxNeighbors_ > 0)
+            //{
+            //    rangeSq = RVOMath.sqr(neighborDist_);
+            //    Simulator.Instance.kdTree_.computeAgentNeighbors(this, ref rangeSq);
+            //}
         }
 
         /**

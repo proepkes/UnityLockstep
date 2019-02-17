@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace Lockstep.Core.State.KdTree
+namespace Lockstep.Core.State.Game.KdTree
 {
     [Serializable]
 	public class KdTreeNode<TKey, TValue>

@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using Entitas;
 using FixMath.NET;
-using Lockstep.Core.State.KdTree;
-using Lockstep.Core.State.KdTree.Math;
+using Lockstep.Core.State.Game.KdTree;
+using Lockstep.Core.State.Game.KdTree.Math;
 
 namespace Lockstep.Core.Logic.Systems.Game
 {

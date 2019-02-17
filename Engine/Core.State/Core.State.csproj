@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generated\Config\Components\ConfigNavigationTimeStepComponent.cs" />
     <Compile Include="Generated\Game\Components\GameKdTreeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStateHashCodeComponent.cs" />
     <Compile Include="Generated\GameState\Components\GameStatePausedComponent.cs" />
@@ -65,7 +66,7 @@
     <Compile Include="Generated\GameState\Components\GameStateTickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameNeighborsComponent.cs" />
     <Compile Include="Generated\Game\Components\GameRadiusComponent.cs" />
-    <Compile Include="Generated\Game\Components\GameRvoAgentSettingsComponent.cs" />
+    <Compile Include="Generated\Game\Components\GameAgentComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestroyedComponent.cs" />
     <Compile Include="Generated\Game\Components\GameActorIdComponent.cs" />
     <Compile Include="Generated\Game\Components\GameAssetComponent.cs" />
@@ -95,13 +96,13 @@
     <Compile Include="Generated\Input\Components\InputTickComponent.cs" />
     <Compile Include="Generated\Game\Components\GameDestinationListenerComponent.cs" />
     <Compile Include="Generated\Game\Components\GamePositionListenerComponent.cs" />
+    <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameComponentsLookup.cs" />
     <Compile Include="Generated\Debug\DebugComponentsLookup.cs" />
     <Compile Include="Generated\Snapshot\SnapshotComponentsLookup.cs" />
     <Compile Include="Generated\Actor\ActorComponentsLookup.cs" />
     <Compile Include="Generated\GameState\GameStateComponentsLookup.cs" />
     <Compile Include="Generated\Input\InputComponentsLookup.cs" />
-    <Compile Include="Generated\Config\ConfigComponentsLookup.cs" />
     <Compile Include="Generated\Game\GameAttribute.cs" />
     <Compile Include="Generated\Actor\ActorAttribute.cs" />
     <Compile Include="Generated\Input\InputAttribute.cs" />
@@ -143,6 +144,9 @@
     <Compile Include="Generated\Feature.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Config\NavigationTimeStepComponent.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Game\NeighborsComponent.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +159,7 @@
     <Compile Include="Game\RadiusComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\RvoAgentSettingsComponent.cs" />
+    <Compile Include="Game\AgentComponent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\DestroyedComponent.cs" />
@@ -165,16 +169,16 @@
     <Compile Include="Debug\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KdTree\HyperRect.cs" />
-    <Compile Include="KdTree\IKdTree.cs" />
-    <Compile Include="KdTree\IPriorityQueue.cs" />
-    <Compile Include="KdTree\KdTree.cs" />
-    <Compile Include="KdTree\KdTreeNode.cs" />
-    <Compile Include="KdTree\Math\Fix64Math.cs" />
-    <Compile Include="KdTree\Math\ITypeMath.cs" />
-    <Compile Include="KdTree\Math\TypeMath.cs" />
-    <Compile Include="KdTree\NearestNeighbourList.cs" />
-    <Compile Include="KdTree\PriorityQueue.cs" />
+    <Compile Include="Game\KdTree\HyperRect.cs" />
+    <Compile Include="Game\KdTree\IKdTree.cs" />
+    <Compile Include="Game\KdTree\IPriorityQueue.cs" />
+    <Compile Include="Game\KdTree\KdTree.cs" />
+    <Compile Include="Game\KdTree\KdTreeNode.cs" />
+    <Compile Include="Game\KdTree\Math\Fix64Math.cs" />
+    <Compile Include="Game\KdTree\Math\ITypeMath.cs" />
+    <Compile Include="Game\KdTree\Math\TypeMath.cs" />
+    <Compile Include="Game\KdTree\NearestNeighbourList.cs" />
+    <Compile Include="Game\KdTree\PriorityQueue.cs" />
     <Compile Include="Snapshot\TickComponent.cs" />
   </ItemGroup>
   <ItemGroup>

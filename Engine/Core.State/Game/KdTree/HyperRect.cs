@@ -1,6 +1,6 @@
-﻿using Lockstep.Core.State.KdTree.Math;
+﻿using Lockstep.Core.State.Game.KdTree.Math;
 
-namespace Lockstep.Core.State.KdTree
+namespace Lockstep.Core.State.Game.KdTree
 {
     public struct HyperRect<T>
 	{

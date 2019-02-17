@@ -1,21 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FixMath.NET;
+using Lockstep.Core.State.Game;
 using UnityEngine;
 using Vector2 = BEPUutilities.Vector2;
 
+[Serializable]
 public class RTSAgent : MonoBehaviour, IEntityConfigurator
-{
-    [FixedNumber]
-    public Fix64 Radius;
+{                  
+    public int MaxSpeed = 2;
 
-    [FixedNumber]
-    public Fix64 MaxSpeed = 1;
+    public int Radius = 2;
 
     public void Configure(GameEntity e)
     {
         e.isNavigable = true;
         e.AddRadius(Radius);
         e.AddMaxSpeed(MaxSpeed);
-        e.AddRvoAgentSettings(Vector2.Zero, 15, 10, new List<KeyValuePair<Fix64, GameEntity>>());
+        e.AddAgent(Vector2.Zero, Vector2.Zero, MaxSpeed, 15, 10, 5, new List<Line>());
     }
 }

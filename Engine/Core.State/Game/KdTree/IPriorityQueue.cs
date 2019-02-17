@@ -1,4 +1,4 @@
-﻿namespace Lockstep.Core.State.KdTree
+﻿namespace Lockstep.Core.State.Game.KdTree
 {
     public interface IPriorityQueue<TItem, in TPriority>
 	{

@@ -8,15 +8,15 @@
 //------------------------------------------------------------------------------
 public static class ConfigComponentsLookup {
 
+    public const int NavigationTimeStep = 0;
 
-
-    public const int TotalComponents = 0;
+    public const int TotalComponents = 1;
 
     public static readonly string[] componentNames = {
-
+        "NavigationTimeStep"
     };
 
     public static readonly System.Type[] componentTypes = {
-
+        typeof(Lockstep.Core.State.Config.NavigationTimeStepComponent)
     };
 }

@@ -1,6 +1,6 @@
 ﻿using FixMath.NET;
 
-namespace Lockstep.Core.State.KdTree.Math
+namespace Lockstep.Core.State.Game.KdTree.Math
 {
     public class Fix64Math  : TypeMath<Fix64>
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Lockstep.Core.State.KdTree.Math
+namespace Lockstep.Core.State.Game.KdTree.Math
 {
     // Algebraic!
     [Serializable]

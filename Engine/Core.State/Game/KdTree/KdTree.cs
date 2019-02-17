@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using Lockstep.Core.State.KdTree.Math;
+using Lockstep.Core.State.Game.KdTree.Math;
 
-namespace Lockstep.Core.State.KdTree
+namespace Lockstep.Core.State.Game.KdTree
 {
 	public enum AddDuplicateBehavior
 	{

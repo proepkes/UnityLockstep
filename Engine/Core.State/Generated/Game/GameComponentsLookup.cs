@@ -10,22 +10,22 @@ public static class GameComponentsLookup {
 
     public const int DestinationListener = 0;
     public const int ActorId = 1;
-    public const int Asset = 2;
-    public const int Backup = 3;
-    public const int Controllable = 4;
-    public const int Destination = 5;
-    public const int Destroyed = 6;
-    public const int Hashable = 7;
-    public const int Health = 8;
-    public const int Id = 9;
-    public const int KdTree = 10;
-    public const int LocalId = 11;
-    public const int MaxSpeed = 12;
-    public const int Navigable = 13;
-    public const int Neighbors = 14;
-    public const int Position = 15;
-    public const int Radius = 16;
-    public const int RvoAgentSettings = 17;
+    public const int Agent = 2;
+    public const int Asset = 3;
+    public const int Backup = 4;
+    public const int Controllable = 5;
+    public const int Destination = 6;
+    public const int Destroyed = 7;
+    public const int Hashable = 8;
+    public const int Health = 9;
+    public const int Id = 10;
+    public const int KdTree = 11;
+    public const int LocalId = 12;
+    public const int MaxSpeed = 13;
+    public const int Navigable = 14;
+    public const int Neighbors = 15;
+    public const int Position = 16;
+    public const int Radius = 17;
     public const int Team = 18;
     public const int Velocity = 19;
     public const int PositionListener = 20;
@@ -35,6 +35,7 @@ public static class GameComponentsLookup {
     public static readonly string[] componentNames = {
         "DestinationListener",
         "ActorId",
+        "Agent",
         "Asset",
         "Backup",
         "Controllable",
@@ -50,7 +51,6 @@ public static class GameComponentsLookup {
         "Neighbors",
         "Position",
         "Radius",
-        "RvoAgentSettings",
         "Team",
         "Velocity",
         "PositionListener"
@@ -59,6 +59,7 @@ public static class GameComponentsLookup {
     public static readonly System.Type[] componentTypes = {
         typeof(DestinationListenerComponent),
         typeof(Lockstep.Core.State.Game.ActorIdComponent),
+        typeof(Lockstep.Core.State.Game.AgentComponent),
         typeof(Lockstep.Core.State.Game.AssetComponent),
         typeof(Lockstep.Core.State.Game.BackupComponent),
         typeof(Lockstep.Core.State.Game.ControllableComponent),
@@ -74,7 +75,6 @@ public static class GameComponentsLookup {
         typeof(Lockstep.Core.State.Game.NeighborsComponent),
         typeof(Lockstep.Core.State.Game.PositionComponent),
         typeof(Lockstep.Core.State.Game.RadiusComponent),
-        typeof(Lockstep.Core.State.Game.RvoAgentSettingsComponent),
         typeof(Lockstep.Core.State.Game.TeamComponent),
         typeof(Lockstep.Core.State.Game.VelocityComponent),
         typeof(PositionListenerComponent)

@@ -13,8 +13,7 @@ GameObject:
   - component: {fileID: 6983145694885263930}
   - component: {fileID: 3205010279849117019}
   - component: {fileID: 2445714693608354278}
-  - component: {fileID: 4939567743248303687}
-  - component: {fileID: 4333161694529690669}
+  - component: {fileID: 2871254029492720804}
   - component: {fileID: 1187737726889838053}
   m_Layer: 0
   m_Name: Entity
@@ -106,19 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ba1be29e31f14a40a1216d6f6a1abe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4939567743248303687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6983145694885263932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 516cdcd6b4b7da345810311630ad30c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4333161694529690669
+--- !u!114 &2871254029492720804
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,8 +117,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ae10611fa6ca3d47b19312a95273340, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Radius:
-    RawValue: 15
+  MaxSpeed: 1
+  Radius: 1
 --- !u!65 &1187737726889838053
 BoxCollider:
   m_ObjectHideFlags: 0

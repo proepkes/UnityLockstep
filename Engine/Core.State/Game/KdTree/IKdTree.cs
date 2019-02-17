@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lockstep.Core.State.KdTree
+namespace Lockstep.Core.State.Game.KdTree
 {
     public interface IKdTree<TKey, TValue> : IEnumerable<KdTreeNode<TKey, TValue>>
 	{
