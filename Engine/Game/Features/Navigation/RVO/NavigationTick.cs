@@ -43,13 +43,7 @@ namespace Lockstep.Game.Features.Navigation.RVO
             foreach (var (agentId, agent) in Simulator.Instance.agents_)
             {
                 var entity = _contexts.game.GetEntityWithLocalId(agentId);
-
-                int i = 0;
-                foreach (var neighbor in agent.AgentNeighbors)
-                {
-                    entity.neighbors.neighborsDefault[i++] = neighbor.Value.id;
-                }
-
+                             
                 var newPosition = entity.position.value + agent.Velocity;
                 if ((newPosition - entity.position.value).LengthSquared() < F64.C0p5)
                 {

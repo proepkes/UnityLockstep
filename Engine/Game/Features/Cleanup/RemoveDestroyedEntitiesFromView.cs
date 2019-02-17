@@ -22,7 +22,7 @@ namespace Lockstep.Game.Features.Cleanup
         {
             foreach (var e in _group.GetEntities(_buffer))
             {
-                _viewService.DeleteView(e.localId.value);        
+                _viewService.Destroy(e.localId.value);        
             }
         }
     }

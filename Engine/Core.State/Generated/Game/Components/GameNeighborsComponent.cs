@@ -11,19 +11,17 @@ public partial class GameEntity {
     public Lockstep.Core.State.Game.NeighborsComponent neighbors { get { return (Lockstep.Core.State.Game.NeighborsComponent)GetComponent(GameComponentsLookup.Neighbors); } }
     public bool hasNeighbors { get { return HasComponent(GameComponentsLookup.Neighbors); } }
 
-    public void AddNeighbors(uint[] newNeighborsDefault, GameEntity[] newNeighborsECS) {
+    public void AddNeighbors(GameEntity[] newArray) {
         var index = GameComponentsLookup.Neighbors;
         var component = (Lockstep.Core.State.Game.NeighborsComponent)CreateComponent(index, typeof(Lockstep.Core.State.Game.NeighborsComponent));
-        component.neighborsDefault = newNeighborsDefault;
-        component.neighborsECS = newNeighborsECS;
+        component.array = newArray;
         AddComponent(index, component);
     }
 
-    public void ReplaceNeighbors(uint[] newNeighborsDefault, GameEntity[] newNeighborsECS) {
+    public void ReplaceNeighbors(GameEntity[] newArray) {
         var index = GameComponentsLookup.Neighbors;
         var component = (Lockstep.Core.State.Game.NeighborsComponent)CreateComponent(index, typeof(Lockstep.Core.State.Game.NeighborsComponent));
-        component.neighborsDefault = newNeighborsDefault;
-        component.neighborsECS = newNeighborsECS;
+        component.array = newArray;
         ReplaceComponent(index, component);
     }
 

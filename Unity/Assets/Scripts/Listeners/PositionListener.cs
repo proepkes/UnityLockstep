@@ -10,7 +10,7 @@ public class PositionListener : MonoBehaviour, IEventListener, IPositionListener
         _entity.AddPositionListener(this);
     }
 
-    public void UnregisterListeners()
+    public void DeregisterListeners()
     {
         _entity.RemovePositionListener(this);
     }

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RTSHashcode : MonoBehaviour, IComponentSetter
+public class RTSHashcode : MonoBehaviour, IEntityConfigurator
 {
-    public void SetComponent(GameEntity entity)
+    public void Configure(GameEntity entity)
     {
         entity.isHashable = true;
     }

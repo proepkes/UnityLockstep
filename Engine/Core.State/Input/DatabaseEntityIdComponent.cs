@@ -3,7 +3,7 @@
 namespace Lockstep.Core.State.Input
 {
     [Input]
-    public class EntityConfigIdComponent : IComponent
+    public class DatabaseEntityIdComponent : IComponent
     {                        
         public int value;  
     }

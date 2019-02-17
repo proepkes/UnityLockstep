@@ -45,7 +45,6 @@ public class RTSNetworkedSimulation : MonoBehaviour
         };
 
         Simulation = new Simulation(Contexts.sharedInstance, _commandQueue, new UnityGameService(EntityDatabase));
-        
     }             
 
 

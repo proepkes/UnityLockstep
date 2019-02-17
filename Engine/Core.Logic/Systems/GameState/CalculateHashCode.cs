@@ -42,7 +42,7 @@ namespace Lockstep.Core.Logic.Systems.GameState
                 }
                 if (entity.hasNeighbors)
                 {
-                    foreach (var neighbor in entity.neighbors.neighborsECS.Where(e => e != null))
+                    foreach (var neighbor in entity.neighbors.array.Where(e => e != null))
                     {   
                         hashCode ^= neighbor.actorId.value;
                         hashCode ^= neighbor.id.value;

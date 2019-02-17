@@ -17,7 +17,7 @@ namespace Game.UrhoSharp.Desktop.Coupling
             _cache = cache;
             _parent = parent;
         }
-        public void LoadView(GameEntity entity, int configId)
+        public void Instantiate(GameEntity entity, int configId)
         {
             var node = Spawn(new Vector3((float) entity.position.value.X, 0, (float) entity.position.value.Y));
             node.GetComponent<PositionListener>().RegisterListeners(entity);
@@ -27,7 +27,7 @@ namespace Game.UrhoSharp.Desktop.Coupling
             _linkedEntities.Add(entity.localId.value, node);   
         }
 
-        public void DeleteView(uint entityId)
+        public void Destroy(uint entityId)
         {
             var viewGo = _linkedEntities[entityId];      
             viewGo.GetComponent<PositionListener>().UnregisterListeners();

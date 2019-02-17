@@ -4,12 +4,12 @@ namespace Lockstep.Game.DefaultServices
 {
     public class DefaultViewService : IViewService
     {           
-        public void LoadView(GameEntity entity, int configId)
+        public void Instantiate(GameEntity entity, int configId)
         {
             entity.isNavigable = true;
         }
 
-        public void DeleteView(uint entityId)
+        public void Destroy(uint entityId)
         {
             
         }     

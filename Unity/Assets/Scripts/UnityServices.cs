@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;       
 using Entitas.Unity;
 using Entitas.VisualDebugging.Unity;               
@@ -8,13 +7,13 @@ using Lockstep.Game.Interfaces;
 public interface IEventListener
 {
     void RegisterListeners(GameEntity entity);
-    void UnregisterListeners();
+    void DeregisterListeners();
 
 }
 
-public interface IComponentSetter
+public interface IEntityConfigurator
 {
-    void SetComponent(GameEntity entity);
+    void Configure(GameEntity entity);
 }
 
 public class UnityGameService : IViewService
@@ -29,19 +28,19 @@ public class UnityGameService : IViewService
         _entityContainer = GameObject.Find("EntityContainer").transform;
     }
 
-    public void LoadView(GameEntity entity, int configId)
+    public void Instantiate(GameEntity entity, int databaseId)
     {
         //TODO: pooling    
-        var viewGo = UnityEngine.Object.Instantiate(_entityDatabase.Entities[configId], _entityContainer).gameObject;
+        var viewGo = Object.Instantiate(_entityDatabase.Entities[databaseId], _entityContainer).gameObject;
         if (viewGo != null)
         {
             viewGo.Link(entity);
 
-            var componentSetters = viewGo.GetComponents<IComponentSetter>();
-            foreach (var componentSetter in componentSetters)
+            var configurators = viewGo.GetComponents<IEntityConfigurator>();
+            foreach (var configurator in configurators)
             {
-                componentSetter.SetComponent(entity);
-                UnityEngine.Object.Destroy((MonoBehaviour)componentSetter);
+                configurator.Configure(entity);
+                Object.Destroy((MonoBehaviour)configurator);
             }
 
             var eventListeners = viewGo.GetComponents<IEventListener>();
@@ -54,13 +53,13 @@ public class UnityGameService : IViewService
         }      
     }
 
-    public void DeleteView(uint entityId)
+    public void Destroy(uint entityId)
     {                                            
         var viewGo = _linkedEntities[entityId];
         var eventListeners = viewGo.GetComponents<IEventListener>();
         foreach (var listener in eventListeners)
         {
-            listener.UnregisterListeners();
+            listener.DeregisterListeners();
         }
 
         _linkedEntities[entityId].Unlink();

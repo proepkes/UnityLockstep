@@ -32,13 +32,13 @@ namespace Lockstep.Core.Logic.Systems.Game
 
                 Parallel.ForEach(_entities, e =>
                 {
-                    e.neighbors.neighborsECS = new GameEntity[10];
+                    e.neighbors.array = new GameEntity[10];
 
-                    var k = 0;
+                    var i = 0;
                     var neighbors = tree.GetNearestNeighbors(new[] { e.position.value.X, e.position.value.Y }, 10);
                     foreach (var neighbor in neighbors)
                     {
-                        e.neighbors.neighborsECS[k++] = neighbor.Value;
+                        e.neighbors.array[i++] = neighbor.Value;
                     }             
                 });         
             }

@@ -23,8 +23,19 @@ public class UnityInput : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
-        {
-            LeftClick();
+        {             
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out var hit, 1000))
+            {
+                if (hit.transform.gameObject.GetEntityLink() != null) //Did the player click a selectable object?
+                {
+                    if (hit.transform.gameObject.GetEntityLink().entity is GameEntity entity)
+                    {
+                        selection = entity;
+                    }
+                }
+            }
         }
 
         if (Input.GetMouseButton(1))
@@ -49,7 +60,7 @@ public class UnityInput : MonoBehaviour
 
         if (selection != null)
         {
-            foreach (var n in selection.neighbors.neighborsECS.Where(e => e != null))
+            foreach (var n in selection.neighbors.array.Where(e => e != null))
             {
                 var pos = new Vector3((float) selection.position.value.X, 1, (float) selection.position.value.Y);
                 var dir = new Vector3((float) n.position.value.X, 1, (float) n.position.value.Y) - pos;
@@ -63,52 +74,30 @@ public class UnityInput : MonoBehaviour
             }
         }
     }
-
-    public void LeftClick()
-    {
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
-
-        if (Physics.Raycast(ray, out var hit, 1000)) 
-        {
-            if (hit.transform.gameObject.GetEntityLink() != null) //Did the player click a selectable object?
-            {
-                if (hit.transform.gameObject.GetEntityLink().entity is GameEntity entity)
-                {
-                    selection = entity;
-                }
-            }
-        }
-    }
 }
 
 public static class DrawArrow
-{
-    public static void ForGizmo(Vector3 pos, Vector3 direction, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
-    {
-        Gizmos.DrawRay(pos, direction);
-        DrawArrowEnd(true, pos, direction, Gizmos.color, arrowHeadLength, arrowHeadAngle);
-    }
-
+{         
     public static void ForGizmo(Vector3 pos, Vector3 direction, Color color, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
     {
         Gizmos.DrawRay(pos, direction);
         DrawArrowEnd(true, pos, direction, color, arrowHeadLength, arrowHeadAngle);
     }
 
-    public static void ForDebug(Vector3 pos, Vector3 direction, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
-    {
-        Debug.DrawRay(pos, direction);
-        DrawArrowEnd(false, pos, direction, Gizmos.color, arrowHeadLength, arrowHeadAngle);
-    }
+    public static void ForDebug(Vector3 from, Vector3 to, Color color, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
+    {        
+        var direction = to - from; 
+        if (direction == Vector3.zero)
+        {
+            return;
+        }
 
-    public static void ForDebug(Vector3 pos, Vector3 direction, Color color, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
-    {
-        Debug.DrawRay(pos, direction, color);
-        DrawArrowEnd(false, pos, direction, color, arrowHeadLength, arrowHeadAngle);
+        Debug.DrawRay(from, direction, color);
+        DrawArrowEnd(false, from, direction, color, arrowHeadLength, arrowHeadAngle);
     }
 
     private static void DrawArrowEnd(bool gizmos, Vector3 pos, Vector3 direction, Color color, float arrowHeadLength = 0.25f, float arrowHeadAngle = 20.0f)
-    {
+    {        
         Vector3 right = Quaternion.LookRotation(direction) * Quaternion.Euler(arrowHeadAngle, 0, 0) * Vector3.back;
         Vector3 left = Quaternion.LookRotation(direction) * Quaternion.Euler(-arrowHeadAngle, 0, 0) * Vector3.back;
         Vector3 up = Quaternion.LookRotation(direction) * Quaternion.Euler(0, arrowHeadAngle, 0) * Vector3.back;

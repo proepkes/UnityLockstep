@@ -27,7 +27,7 @@ namespace Lockstep.Game.Features.Input
 
             _spawnInputs = contexts.input.GetGroup(
                 InputMatcher.AllOf(
-                    InputMatcher.EntityConfigId,
+                    InputMatcher.DatabaseEntityId,
                     InputMatcher.ActorId,
                     InputMatcher.Coordinate,
                     InputMatcher.Tick));
@@ -53,20 +53,9 @@ namespace Lockstep.Game.Features.Input
                 
                 //some default components that every game-entity must have
                 e.AddVelocity(Vector2.Zero);
-                e.AddPosition(input.coordinate.value);
-                e.AddDestination(input.coordinate.value);
+                e.AddPosition(input.coordinate.value);      
 
-                _viewService.LoadView(e, input.entityConfigId.value);
-
-                if (e.isNavigable)
-                {
-                    //TODO: factory method to create entity? 
-                    //Default agent settings
-                    e.AddRadius(F64.C1);
-                    e.AddMaxSpeed(F64.C2);
-                    e.AddRvoAgentSettings(Vector2.Zero, 15, 10, new List<KeyValuePair<Fix64, GameEntity>>());
-                    e.AddNeighbors(new uint[10], new GameEntity[10]);
-                }
+                _viewService.Instantiate(e, input.databaseEntityId.value);
 
                 actor.ReplaceEntityCount(nextEntityId + 1);
                 _localIdCounter += 1;

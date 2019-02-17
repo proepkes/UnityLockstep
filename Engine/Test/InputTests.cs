@@ -21,60 +21,6 @@ namespace Test
             _output = output;
             Console.SetOut(new Converter(output));
         }
-        [Fact]
-        public void TestKdTree()
-        {
-            var contexts = new Contexts();
-
-            var commandBuffer = new CommandQueue();
-            var simulation = new Simulation(contexts, commandBuffer, new DefaultViewService());
-
-            simulation.Start(1, 0, new byte[] { 0, 1 });
-                                                                     
-            simulation.Update(1000); //0          
-
-            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, 
-                new Spawn { Position = new Vector2(1, 1) }, 
-                new Spawn { Position = new Vector2(1, 2) }, 
-                new Spawn { Position = new Vector2(1, 3) });
-
-            simulation.Update(1000); //1    
-            simulation.Update(1000); //2     
-
-            commandBuffer.Enqueue(1, 1);
-
-            simulation.Update(1000); //3              
-
-            commandBuffer.Enqueue(2, 1, new MoveAll(contexts.game, 0)); //Revert to 2
-
-            simulation.Update(1000); //4               
-
-            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn { Position = new Vector2(2, 1) });
-
-            simulation.Update(1000); //5   
-
-            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn { Position = new Vector2(3, 1) });
-
-            simulation.Update(1000); //6
-
-            commandBuffer.Enqueue(4, 1); //Revert to 4
-
-            simulation.Update(1000);
-
-            simulation.Update(1000);
-            commandBuffer.Enqueue(5, 1);
-            commandBuffer.Enqueue(contexts.gameState.tick.value, simulation.LocalActorId, new Spawn { Position = new Vector2(4, 1) });
-
-            simulation.Update(1000);
-
-            simulation.Update(1000);
-            simulation.Update(1000);
-            commandBuffer.Enqueue(6, 1, new Spawn());
-
-            simulation.Update(1000);
-
-            TestUtil.TestReplayMatchesHashCode(contexts, simulation.GameLog, _output);
-        }
 
         [Fact]
         public void TestCreateEntityRollbackLocal()
@@ -495,14 +441,14 @@ namespace Test
 
             public ushort Tag { get; }
 
-            public int EntityConfigId;
+            public int DatabaseEntityId;
 
             public Vector2 Position; 
 
             public void Execute(InputEntity e)
             {                                   
                 e.AddCoordinate(Position);
-                e.AddEntityConfigId(EntityConfigId);   
+                e.AddDatabaseEntityId(DatabaseEntityId);   
             }
 
             public void Serialize(Serializer writer)

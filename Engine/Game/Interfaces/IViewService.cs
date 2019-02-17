@@ -2,8 +2,8 @@
 {
     public interface IViewService : IService
     {                                                        
-        void LoadView(GameEntity entity, int configId);
+        void Instantiate(GameEntity entity, int configId);
 
-        void DeleteView(uint entityId);
+        void Destroy(uint entityId);
     }
 }

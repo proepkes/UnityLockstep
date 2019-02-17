@@ -24,7 +24,7 @@ public class RTSEntitySpawner : MonoBehaviour
         {
             RTSNetworkedSimulation.Instance.Execute(new SpawnCommand
             {
-                EntityConfigId = EntityDatabase.Entities.IndexOf(Prefab),
+                DatabaseEntityId = EntityDatabase.Entities.IndexOf(Prefab),
                 Position = position
             });
         }

@@ -10,26 +10,26 @@ namespace Lockstep.Game.Commands
     {
         public ushort Tag => 2;
 
-        public int EntityConfigId;
+        public int DatabaseEntityId;
 
         public Vector2 Position;
 
         public void Execute(InputEntity e)
         {
             e.AddCoordinate(Position);
-            e.AddEntityConfigId(EntityConfigId);
+            e.AddDatabaseEntityId(DatabaseEntityId);
         }
 
         public void Serialize(Serializer writer)
         {
-            writer.Put(EntityConfigId);
+            writer.Put(DatabaseEntityId);
             writer.Put(Position.X.RawValue);
             writer.Put(Position.Y.RawValue);
         }
 
         public void Deserialize(Deserializer reader)
         {
-            EntityConfigId = reader.GetInt();
+            DatabaseEntityId = reader.GetInt();
             Position.X.RawValue = reader.GetLong();
             Position.Y.RawValue = reader.GetLong();
         }

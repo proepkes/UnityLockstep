@@ -10,7 +10,7 @@ public static class InputComponentsLookup {
 
     public const int ActorId = 0;
     public const int Coordinate = 1;
-    public const int EntityConfigId = 2;
+    public const int DatabaseEntityId = 2;
     public const int Selection = 3;
     public const int TargetActorId = 4;
     public const int Tick = 5;
@@ -20,7 +20,7 @@ public static class InputComponentsLookup {
     public static readonly string[] componentNames = {
         "ActorId",
         "Coordinate",
-        "EntityConfigId",
+        "DatabaseEntityId",
         "Selection",
         "TargetActorId",
         "Tick"
@@ -29,7 +29,7 @@ public static class InputComponentsLookup {
     public static readonly System.Type[] componentTypes = {
         typeof(Lockstep.Core.State.Input.ActorIdComponent),
         typeof(Lockstep.Core.State.Input.CoordinateComponent),
-        typeof(Lockstep.Core.State.Input.EntityConfigIdComponent),
+        typeof(Lockstep.Core.State.Input.DatabaseEntityIdComponent),
         typeof(Lockstep.Core.State.Input.SelectionComponent),
         typeof(Lockstep.Core.State.Input.TargetActorIdComponent),
         typeof(Lockstep.Core.State.Input.TickComponent)

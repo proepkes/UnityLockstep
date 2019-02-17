@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RTSNavigable : MonoBehaviour, IComponentSetter
+public class RTSNavigable : MonoBehaviour, IEntityConfigurator
 {      
-    public void SetComponent(GameEntity entity)
+    public void Configure(GameEntity entity)
     {
         entity.isNavigable = true;
     }
