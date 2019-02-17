@@ -42,7 +42,6 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
      */
     internal class Agent
     {
-        public uint id;
         internal readonly IList<KeyValuePair<Fix64, Agent>> AgentNeighbors = new List<KeyValuePair<Fix64, Agent>>();
         internal readonly IList<KeyValuePair<Fix64, Obstacle>> ObstacleNeighbors = new List<KeyValuePair<Fix64, Obstacle>>();
         internal readonly IList<Line> OrcaLines = new List<Line>();
@@ -58,18 +57,6 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
         internal Fix64 timeHorizonObst_ = Fix64.Zero;
 
         private Vector2 newVelocity_;
-
-        internal void CalculatePrefVelocity()
-        {           
-            var goalVector = Destination - Position;
-
-            if (goalVector.LengthSquared() > Fix64.One)
-            {
-                goalVector = Vector2.Normalize(goalVector);
-            }
-
-            PrefVelocity = goalVector;     
-        }
 
         /**
          * <summary>Computes the neighbors of this agent.</summary>

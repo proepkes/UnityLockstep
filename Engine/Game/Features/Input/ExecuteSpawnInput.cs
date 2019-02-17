@@ -51,13 +51,13 @@ namespace Lockstep.Game.Features.Input
                 //unique id for internal usage
                 e.AddLocalId(_localIdCounter);
 
-                _viewService.Instantiate(e, input.databaseEntityId.value);
-
                 //some default components that every game-entity must have
                 e.AddVelocity(Vector2.Zero);
                 e.AddPosition(input.coordinate.value);
-                e.AddDestination(input.coordinate.value);  
+                e.AddDestination(input.coordinate.value);
                 e.AddNeighbors(new GameEntity[10]);
+
+                _viewService.Instantiate(e, input.databaseEntityId.value);  
 
                 actor.ReplaceEntityCount(nextEntityId + 1);
                 _localIdCounter += 1;

@@ -17,7 +17,7 @@ namespace Lockstep.Core.State.Game.KdTree
 	{
 		public NearestNeighbourList(int maxCapacity, ITypeMath<TDistance> distanceMath)
 		{
-			this.maxCapacity = maxCapacity;
+			this.MaxCapacity = maxCapacity;
 			this.distanceMath = distanceMath;
 
 			queue = new PriorityQueue<TItem, TDistance>(maxCapacity, distanceMath);
@@ -25,7 +25,7 @@ namespace Lockstep.Core.State.Game.KdTree
 
 		public NearestNeighbourList(ITypeMath<TDistance> distanceMath)
 		{
-			maxCapacity = int.MaxValue;
+			MaxCapacity = int.MaxValue;
 			this.distanceMath = distanceMath;
 
 			queue = new PriorityQueue<TItem, TDistance>(distanceMath);
@@ -35,14 +35,13 @@ namespace Lockstep.Core.State.Game.KdTree
 
 		private ITypeMath<TDistance> distanceMath;
 
-		private int maxCapacity;
-		public int MaxCapacity { get { return maxCapacity; } }
+        public int MaxCapacity { get; }
 
-		public int Count { get { return queue.Count; } }
+        public int Count => queue.Count;
 
-		public bool Add(TItem item, TDistance distance)
+        public bool Add(TItem item, TDistance distance)
 		{
-			if (queue.Count >= maxCapacity)
+			if (queue.Count >= MaxCapacity)
             {
                 // If the distance of this item is less than the distance of the last item
 				// in our neighbour list then pop that neighbour off and push this one on
@@ -80,9 +79,6 @@ namespace Lockstep.Core.State.Game.KdTree
 			return queue.Dequeue();
 		}
 
-		public bool IsCapacityReached
-		{
-			get { return Count == MaxCapacity; }
-		}
-	}
+		public bool IsCapacityReached => Count == MaxCapacity;
+    }
 }
