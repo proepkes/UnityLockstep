@@ -371,7 +371,7 @@ namespace Lockstep.Core.State.Game.KdTree
 				HyperRect<TKey>.Infinite(_dimensions, _typeMath),
 				0,
 				nearestNeighbors,
-				_typeMath.Multiply(radius, radius));
+				radius);
 
 			var count = nearestNeighbors.Count;
 

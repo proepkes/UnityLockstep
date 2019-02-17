@@ -96,6 +96,13 @@ namespace Supercluster.KDTree
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Clear()
+        {
+            priorityList.Clear();
+            elementList.Clear();
+        }
+
         /// <summary>
         /// Attempts to add the provided  <paramref name="item"/>. If the list
         /// is currently at maximum capacity and the elements priority is greater

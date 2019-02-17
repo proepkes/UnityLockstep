@@ -131,13 +131,10 @@ namespace Supercluster.KDTree
         /// <param name="point">The point whose neighbors we search for.</param>
         /// <param name="neighbors">The number of neighbors to look for.</param>
         /// <returns>The</returns>
-        public Tuple<TDimension[], TNode>[] NearestNeighbors(TDimension[] point, int neighbors)
+        public void NearestNeighbors(TDimension[] point, BoundedPriorityList<int, Fix64> result)
         {
-            var nearestNeighborList = new BoundedPriorityList<int, Fix64>(neighbors, true);
             var rect = HyperRect<TDimension>.Infinite(this.Dimensions, this.MaxValue, this.MinValue);
-            this.SearchForNearestNeighbors(0, point, rect, 0, nearestNeighborList, Fix64.MaxValue);
-
-            return nearestNeighborList.ToResultSet(this);
+            this.SearchForNearestNeighbors(0, point, rect, 0, result, Fix64.MaxValue);
         }
 
         /// <summary>
@@ -145,33 +142,16 @@ namespace Supercluster.KDTree
         /// </summary>
         /// <param name="center">The center of the hyper-sphere</param>
         /// <param name="radius">The radius of the hyper-sphere</param>
-        /// <param name="neighboors">The number of neighbors to return.</param>
         /// <returns>The specified number of closest points in the hyper-sphere</returns>
-        public Tuple<TDimension[], TNode>[] RadialSearch(TDimension[] center, Fix64 radius, int neighboors = -1)
+        public void RadialSearch(TDimension[] center, Fix64 radius, BoundedPriorityList<int, Fix64> nearestNeighbors)
         {
-            var nearestNeighbors = new BoundedPriorityList<int, Fix64>(this.Count);
-            if (neighboors == -1)
-            {
-                this.SearchForNearestNeighbors(
-                    0,
-                    center,
-                    HyperRect<TDimension>.Infinite(this.Dimensions, this.MaxValue, this.MinValue),
-                    0,
-                    nearestNeighbors,
-                    radius);
-            }
-            else
-            {
-                this.SearchForNearestNeighbors(
-                    0,
-                    center,
-                    HyperRect<TDimension>.Infinite(this.Dimensions, this.MaxValue, this.MinValue),
-                    0,
-                    nearestNeighbors,
-                    radius);
-            }
-
-            return nearestNeighbors.ToResultSet(this);
+            this.SearchForNearestNeighbors(
+                0,
+                center,
+                HyperRect<TDimension>.Infinite(this.Dimensions, this.MaxValue, this.MinValue),
+                0,
+                nearestNeighbors,
+                radius);
         }
 
         /// <summary>
