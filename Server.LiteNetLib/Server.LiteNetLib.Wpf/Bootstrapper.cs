@@ -2,7 +2,7 @@
 
 namespace Server.LiteNetLib.Wpf
 {
-    class Bootstrapper : Bootstrapper<ShellViewModel>
+    class Bootstrapper : NinjectBootstrapper<ShellViewModel>
     {
     }
 }
