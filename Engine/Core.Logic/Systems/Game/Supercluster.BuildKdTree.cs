@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Entitas;
 using FixMath.NET;
 using Supercluster.KDTree;
@@ -36,7 +37,7 @@ namespace Lockstep.Core.Logic.Systems.Game
 
                 foreach (var e in _entities)
                 {
-                    e.neighbors.array = new GameEntity[10];
+                    Array.Clear(e.neighbors.array, 0, 10);
 
                     var i = 0;
                     var neighbors = tree.NearestNeighbors(new[] { e.position.value.X, e.position.value.Y }, 10);
