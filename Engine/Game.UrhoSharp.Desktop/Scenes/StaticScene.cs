@@ -198,7 +198,7 @@ namespace Game.UrhoSharp.Desktop.Scenes
             }
 
             // Set destination or spawn a new jack with left mouse button
-            if (Input.GetMouseButtonPress(MouseButton.Left))
+            if (Input.GetMouseButtonDown(MouseButton.Left))
             {
                 SetPathPoint(Input.GetQualifierDown(qualShift));
             }
@@ -208,7 +208,8 @@ namespace Game.UrhoSharp.Desktop.Scenes
             if (simulation.Running)
             {
                 worldInfoText.Value = "ActorId: " + simulation.LocalActorId + Environment.NewLine +
-                                      "Tick: " + Contexts.sharedInstance.gameState.tick.value + Environment.NewLine + 
+                                      "Tick: " + Contexts.sharedInstance.gameState.tick.value + Environment.NewLine +
+                                      "Entities: " + Contexts.sharedInstance.game.GetEntities(GameMatcher.LocalId).Length + Environment.NewLine +
                                       "HashCode: " + Contexts.sharedInstance.gameState.hashCode.value;
             }
         }

@@ -19,18 +19,15 @@ namespace Game.UrhoSharp.Desktop.Coupling
             _parent = parent;
         }
         public void Instantiate(GameEntity e, int configId)
-        {                    
-            Application.InvokeOnMain(() =>
-            {               
-                var node = Spawn(new Vector3((float)e.position.value.X, 0, (float)e.position.value.Y));
-                node.GetComponent<PositionListener>().RegisterListeners(e);
+        {                   
+            var node = Spawn(new Vector3((float)e.position.value.X, 0, (float)e.position.value.Y));
+            node.GetComponent<PositionListener>().RegisterListeners(e);
 
-                e.AddRadius(1);
-                e.AddMaxSpeed(1);
-                e.AddAgent(BEPUutilities.Vector2.Zero, BEPUutilities.Vector2.Zero, 1, 15, 10, 5, new List<Line>());
+            e.AddRadius(1);
+            e.AddMaxSpeed(1);
+            e.AddAgent(BEPUutilities.Vector2.Zero, BEPUutilities.Vector2.Zero, 1, 15, 10, 5, new List<Line>());
 
-                _linkedEntities.Add(e.localId.value, node);
-            });
+            _linkedEntities.Add(e.localId.value, node);
         }
 
         public void Destroy(uint entityId)

@@ -12,8 +12,8 @@ namespace Lockstep.Core.Logic.Systems
                 .Add(new InitializeConfig(contexts))
                 .Add(new InitializeActors(contexts)));
 
-            Add(new BuildKdTree(contexts));
-            Add(new SetNeighbors(contexts));
+            //Add(new BuildKdTree(contexts));
+            //Add(new SetNeighbors(contexts));
 
             Add(new OnNewPredictionCreateSnapshot(contexts));
 

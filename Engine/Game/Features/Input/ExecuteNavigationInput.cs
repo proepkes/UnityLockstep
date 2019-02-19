@@ -1,19 +1,24 @@
 ﻿using System.Linq;
 using Entitas;
 using Lockstep.Common.Logging;
+using Lockstep.Game.Interfaces;
 
 namespace Lockstep.Game.Features.Input
 {
     public class ExecuteNavigationInput : IExecuteSystem
-    {                                                           
+    {
+        private INavigationService _navigationService;
+
         private readonly GameContext _gameContext;
         readonly IGroup<InputEntity> _navigationInput;
         private readonly GameStateContext _gameStateContext;
 
-        public ExecuteNavigationInput(Contexts contexts, ServiceContainer serviceContainer)
+        public ExecuteNavigationInput(Contexts contexts, ServiceContainer services)
         {                                             
             _gameContext = contexts.game;
-            _gameStateContext = contexts.gameState;                          
+            _gameStateContext = contexts.gameState;
+
+            _navigationService = services.Get<INavigationService>();
 
             _navigationInput = contexts.input.GetGroup(InputMatcher.AllOf(
                 InputMatcher.Coordinate, 
@@ -41,7 +46,7 @@ namespace Lockstep.Game.Features.Input
 
                 foreach (var entity in selectedEntities)
                 {
-                    entity.ReplaceDestination(destination);           
+                    _navigationService.SetDestination(entity.localId.value, destination);
                 }
             }
         }

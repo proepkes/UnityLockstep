@@ -58,22 +58,34 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
 
         private Vector2 newVelocity_;
 
+        internal void CalculatePrefVelocity()
+        {           
+            var goalVector = Destination - Position;
+
+            if (goalVector.LengthSquared() > Fix64.One)
+            {
+                goalVector = Vector2.Normalize(goalVector);
+            }
+
+            PrefVelocity = goalVector;     
+        }
+
         /**
          * <summary>Computes the neighbors of this agent.</summary>
          */
         internal void computeNeighbors()
         {
-            //ObstacleNeighbors.Clear();
-            //Fix64 rangeSq = RVOMath.sqr(timeHorizonObst_ * MaxSpeed + radius_);
-            //Simulator.Instance.kdTree_.computeObstacleNeighbors(this, rangeSq);
+            ObstacleNeighbors.Clear();
+            Fix64 rangeSq = RVOMath.sqr(timeHorizonObst_ * MaxSpeed + radius_);
+            Simulator.Instance.kdTree_.computeObstacleNeighbors(this, rangeSq);
 
-            //AgentNeighbors.Clear();
+            AgentNeighbors.Clear();
 
-            //if (maxNeighbors_ > 0)
-            //{
-            //    rangeSq = RVOMath.sqr(neighborDist_);
-            //    Simulator.Instance.kdTree_.computeAgentNeighbors(this, ref rangeSq);
-            //}
+            if (maxNeighbors_ > 0)
+            {
+                rangeSq = RVOMath.sqr(neighborDist_);
+                Simulator.Instance.kdTree_.computeAgentNeighbors(this, ref rangeSq);
+            }
         }
 
         /**
@@ -496,7 +508,7 @@ namespace Lockstep.Game.Features.Navigation.RVO.Algorithm
         internal void update()
         {
             Velocity = newVelocity_;
-            //position_ += velocity_ * Simulator.Instance.timeStep_;
+            Position += Velocity * Simulator.Instance.timeStep_;
         }
 
         /**

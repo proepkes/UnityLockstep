@@ -11,6 +11,8 @@ namespace Lockstep.Game.Features.Input
     public class ExecuteSpawnInput : IExecuteSystem
     {                                              
         private readonly IViewService _viewService;
+        private readonly INavigationService _navigationService;
+
         private readonly GameContext _gameContext;
         private readonly GameStateContext _gameStateContext;   
         private readonly IGroup<InputEntity> _spawnInputs;    
@@ -20,7 +22,9 @@ namespace Lockstep.Game.Features.Input
 
         public ExecuteSpawnInput(Contexts contexts, ServiceContainer serviceContainer)
         {                                                  
-            _viewService = serviceContainer.Get<IViewService>();              
+            _viewService = serviceContainer.Get<IViewService>();
+            _navigationService = serviceContainer.Get<INavigationService>();
+
             _gameContext = contexts.game;
             _gameStateContext = contexts.gameState;
             _actorContext = contexts.actor;
@@ -57,7 +61,8 @@ namespace Lockstep.Game.Features.Input
                 e.AddDestination(input.coordinate.value);
                 e.AddNeighbors(new GameEntity[10]);
 
-                _viewService.Instantiate(e, input.databaseEntityId.value);  
+                _viewService.Instantiate(e, input.databaseEntityId.value);
+                _navigationService.RegisterAgent(_localIdCounter, input.coordinate.value);
 
                 actor.ReplaceEntityCount(nextEntityId + 1);
                 _localIdCounter += 1;

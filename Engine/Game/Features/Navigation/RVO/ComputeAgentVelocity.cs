@@ -22,7 +22,7 @@ namespace Lockstep.Game.Features.Navigation.RVO
 
         public void Execute()
         {
-            foreach (var entity in _movableEntities)
+            foreach (var entity in _movableEntities.GetEntities())
             {
                 entity.agent.orcaLines.Clear();
                 Fix64 invTimeHorizon = Fix64.One / entity.agent.timeHorizon;

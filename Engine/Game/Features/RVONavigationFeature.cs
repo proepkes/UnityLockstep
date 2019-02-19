@@ -6,11 +6,11 @@ namespace Lockstep.Game.Features
     {
         public RVONavigationFeature(Contexts contexts, ServiceContainer services) : base("RVONavigation")
         {
-            Add(new ComputeAgentPreferredVelocity(contexts, services));
-            Add(new ComputeAgentVelocity(contexts, services));
-            Add(new UpdateAgent(contexts, services));
+            //Add(new ComputeAgentPreferredVelocity(contexts, services));
+            //Add(new ComputeAgentVelocity(contexts, services));
+            //Add(new UpdateAgent(contexts, services));
 
-            //Add(new NavigationTick(contexts, services));
+            Add(new NavigationTick(contexts, services));
         }
     }
 }
