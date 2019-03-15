@@ -275,3 +275,8 @@ Unity/Assembly-CSharp-Editor\.csproj
 /Unity/Assets/Debug.meta
 /Unity/Assets/GitIgnored
 /Unity/Assets/GitIgnored.meta
+/Unity/Zenject.csproj
+/Unity/Zenject-TestFramework.csproj
+/Unity/Zenject-ReflectionBaking-Editor.csproj
+/Unity/Zenject-PoolMonitor-Editor.csproj
+/Unity/Zenject-Editor.csproj

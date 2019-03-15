@@ -1,1 +1,0 @@
-﻿This project contains all classes that describe the state of the simulation

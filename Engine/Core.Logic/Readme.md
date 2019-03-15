@@ -1,1 +1,0 @@
-﻿The logic layer provides an infrastructure for the simulation. It contains a World-class which is able to tick forward or rollback to a previous state.

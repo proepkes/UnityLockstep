@@ -39,21 +39,6 @@
     <Reference Include="LiteNetLib">
       <HintPath>..\Integration\LiteNetLib.dll</HintPath>
     </Reference>
-    <Reference Include="Lockstep.Common">
-      <HintPath>..\Integration\Lockstep.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Lockstep.Core.Logic">
-      <HintPath>..\Integration\Lockstep.Core.Logic.dll</HintPath>
-    </Reference>
-    <Reference Include="Lockstep.Core.State">
-      <HintPath>..\Integration\Lockstep.Core.State.dll</HintPath>
-    </Reference>
-    <Reference Include="Lockstep.Network">
-      <HintPath>..\Integration\Lockstep.Network.dll</HintPath>
-    </Reference>
-    <Reference Include="Lockstep.Network.Server">
-      <HintPath>..\Integration\Lockstep.Network.Server.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -139,6 +124,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Network\Network.csproj">
+      <Project>{940F20D0-C738-4F0A-BE62-DED2A5D52ED7}</Project>
+      <Name>Network</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Server.LiteNetLib\Server.LiteNetLib.csproj">
       <Project>{EF64A6B7-0958-4E6B-A3E2-102A51324BF6}</Project>
       <Name>Server.LiteNetLib</Name>
